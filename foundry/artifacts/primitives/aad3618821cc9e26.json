@@ -1,0 +1,553 @@
+{
+  "book_id": "aad3618821cc9e26",
+  "title": "Mind Gym: An Athlete's Guide to Inner Excellence",
+  "source": "Gary Mack with David Casstevens (foreword by Alex Rodriguez), Mind Gym: An Athlete's Guide to Inner Excellence (McGraw-Hill, 2001). Garrett-hand-delivered Downloads PDF, 232 pages (full book). Verified title/author; not a retraction; not a derivative AI summary.",
+  "source_note": "Mental-conditioning operator catalogue (the head edge, imagery/mental rehearsal, the Pressure Principle, the seven C's of mental toughness, the inverted-U performance curve / know-your-numbers, responsibility psychology, self-concept and gremlins, kaizen and working weaknesses, A.C.T.-backward dreaming, Locke-Latham goal setting, performance-vs-outcome goals, SMART goals, progress-not-perfection). Qualitative: zero printed equations; the performance curve is a described inverted-U, the 'fifteen percent' pressure swing is a quoted athlete estimate. OCR has scattered garbled words; only clean verbatim prose selected. LaTeX empty with no_equation_domain. Pages are PDF page indices.",
+  "primary_domain": "psych",
+  "extraction_mode": "FULL_BOOK_QUALITATIVE_CLEAN_OCR",
+  "primitives": [
+    {
+      "primitive_id": "head_edge_science",
+      "name": "Sport psychology as the science of success",
+      "verbatim_quote": "Sports psychology has been called the science of success because it studies what successful people do.",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "sport psychology": "the science of success (studies what successful people do)",
+        "method": "study successful performers"
+      },
+      "assumptions": [
+        "Success leaves observable mental patterns",
+        "Studying winners reveals transferable operators"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The science-of-success framing IS GSE's reverse-engineering of winning decision patterns; studying what successful performers do is the empirical basis for extracting mental operators rather than inventing them.",
+        "source_operator": "head_edge_science",
+        "telemetry": "study of successful performers -> mental operator extraction"
+      }
+    },
+    {
+      "primitive_id": "mental_training_outperforms",
+      "name": "The head edge: mental training beats no training",
+      "verbatim_quote": "If you take twenty athletes of equal ability and give ten mental training they will outperform the ten who received no mental training every time.",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "head edge": "the advantage from mental training",
+        "claim": "equal-ability athletes with mental training outperform those without"
+      },
+      "assumptions": [
+        "Physical ability held equal",
+        "Mental training is the differentiator"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The head-edge claim IS the value of the mental layer: holding physical talent constant, mental training adds performance, which is why GSE models the psychological state as a first-class input rather than a residual.",
+        "source_operator": "mental_training_outperforms",
+        "telemetry": "equal-ability mental-training advantage -> mental-layer value"
+      }
+    },
+    {
+      "primitive_id": "imagery_accuracy",
+      "name": "Imagery matches physical practice",
+      "verbatim_quote": "The imagery had as much impact on accuracy as shooting baskets.",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "imagery": "mental rehearsal of the skill",
+        "finding": "imagery improved free-throw accuracy as much as physical shooting"
+      },
+      "assumptions": [
+        "The free-throw study compared physical, mental, and combined practice",
+        "The combined group improved most"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The imagery-equals-practice finding IS the mechanism behind mental rehearsal: vivid simulation trains the same pathways as execution, so GSE's snap-by-snap simulation is a form of imagery that primes the decision policy.",
+        "source_operator": "imagery_accuracy",
+        "telemetry": "imagery ~ physical practice -> simulation-as-rehearsal"
+      }
+    },
+    {
+      "primitive_id": "mental_rehearsal",
+      "name": "Pre-game mental rehearsal",
+      "verbatim_quote": "The night before a game, I visualize the pitcher and the pitches I'm going to see the next day.",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "mental rehearsal": "visualizing upcoming opponents and actions before competition",
+        "example": "Yastrzemski visualizing pitches"
+      },
+      "assumptions": [
+        "Rehearsal anticipates specific opponent behavior",
+        "It primes recognition and response"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pre-game rehearsal IS GSE's pre-snap anticipation: visualizing the opponent's likely actions builds the prior that speeds recognition, the mental analogue of pre-computing the defensive-shell read.",
+        "source_operator": "mental_rehearsal",
+        "telemetry": "visualize opponent actions -> pre-snap anticipation prior"
+      }
+    },
+    {
+      "primitive_id": "pressure_principle",
+      "name": "The Pressure Principle",
+      "verbatim_quote": "Under pressure you can perform fifteen percent better or worse.",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "pressure swing": "~15% better or worse under pressure (Scott Hamilton's estimate)",
+        "nature": "a quoted athlete estimate, not a measured constant"
+      },
+      "assumptions": [
+        "Pressure can enhance or degrade performance",
+        "The direction depends on the athlete's mental state"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Pressure Principle IS the arousal-performance variance: pressure is a multiplier that can raise or lower output, so GSE must model the athlete's pressure response rather than assume a fixed talent output.",
+        "source_operator": "pressure_principle",
+        "telemetry": "pressure as +/- performance multiplier -> pressure-response modeling"
+      }
+    },
+    {
+      "primitive_id": "let_go_outcome",
+      "name": "Letting go of the outcome raises its probability",
+      "verbatim_quote": "The probability of achieving the outcome you want increases when you let go of the need to have it.",
+      "page": 23,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "paradox": "releasing outcome-need increases outcome probability",
+        "mechanism": "immersion in process over fixation on result"
+      },
+      "assumptions": [
+        "Outcome fixation creates tension that degrades execution",
+        "Process immersion frees execution"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The let-go paradox IS the process-over-outcome principle: fixating on the result raises anxiety and degrades the very execution that produces it, so GSE's decision policy should optimize the process, not clutch at the outcome.",
+        "source_operator": "let_go_outcome",
+        "telemetry": "release outcome-need -> process-focus optimization"
+      }
+    },
+    {
+      "primitive_id": "zone_immersion",
+      "name": "The zone: immersion, not performance-monitoring",
+      "verbatim_quote": "They weren't thinking about their performance. They were immersed in the activity.",
+      "page": 23,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "the zone": "a state of full immersion with no fear of failure",
+        "finding": ">80% of athletes' greatest moments had no fear of failure"
+      },
+      "assumptions": [
+        "Peak states are marked by absorption, not self-monitoring",
+        "Self-conscious monitoring disrupts flow"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The zone IS the flow state where self-monitoring is suspended; GSE's execution layer should run automatized policy without a meta-critic interfering mid-play, because the inner monitor that second-guesses is the choke mechanism.",
+        "source_operator": "zone_immersion",
+        "telemetry": "immersion without self-monitoring -> automatized execution without mid-play meta-critic"
+      }
+    },
+    {
+      "primitive_id": "mental_toughness_7c",
+      "name": "The seven C's of mental toughness",
+      "verbatim_quote": "In this section we will define the seven characteristics of mental toughness.",
+      "page": 25,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "seven C's": "Competitive, Confident, Control, Committed, Composure, Courage, Consistency",
+        "nature": "learnable behaviors and beliefs"
+      },
+      "assumptions": [
+        "Mental toughness is a set of learnable characteristics",
+        "It is not an inherited trait"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The seven C's IS a decomposed mental-toughness vector: GSE can score an athlete along these seven learnable dimensions rather than treating toughness as a single opaque trait, enabling targeted mental development.",
+        "source_operator": "mental_toughness_7c",
+        "telemetry": "seven learnable toughness dimensions -> decomposed mental-toughness vector"
+      }
+    },
+    {
+      "primitive_id": "toughness_acquired",
+      "name": "Toughness is acquired, not inherited",
+      "verbatim_quote": "Competitive toughness is an acquired skill and not an inherited gift.",
+      "page": 24,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "claim": "competitive toughness is learned",
+        "implication": "it can be trained through instruction and practice"
+      },
+      "assumptions": [
+        "Toughness is a skill, not a fixed trait",
+        "Quality instruction and practice build it"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The acquired-toughness claim IS the growth-mindset premise: mental toughness is trainable, so GSE should treat it as a developable state variable that responds to intervention, not a fixed player constant.",
+        "source_operator": "toughness_acquired",
+        "telemetry": "toughness as trainable skill -> developable state variable"
+      }
+    },
+    {
+      "primitive_id": "control_focus",
+      "name": "Focus on the controllable",
+      "verbatim_quote": "They focus on what they can control and don't allow things that are out of their control to affect them.",
+      "page": 26,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "control dichotomy": "controllable (self, effort, response) vs uncontrollable (opponents, calls, outcomes)",
+        "rule": "attend only to the controllable"
+      },
+      "assumptions": [
+        "Uncontrollable events cannot be changed by attention",
+        "Attending to them wastes emotional energy"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The control dichotomy IS GSE's decision-scope partition: the policy should act only on controllable variables and treat uncontrollable ones as environment, never leaking outcome anxiety into the action selection.",
+        "source_operator": "control_focus",
+        "telemetry": "controllable/uncontrollable partition -> decision-scope partition"
+      }
+    },
+    {
+      "primitive_id": "performance_curve",
+      "name": "The inverted-U performance curve",
+      "verbatim_quote": "The horizontal line represents stress and arousal; the vertical line represents performance and productivity.",
+      "page": 29,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "performance curve": "inverted-U of performance vs arousal",
+        "axes": "arousal (x), performance (y)",
+        "peak": "an optimal arousal apex"
+      },
+      "assumptions": [
+        "Too little arousal underperforms; too much over-revs",
+        "Each athlete has an optimal arousal level"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The inverted-U IS the Yerkes-Dodson arousal-performance law: performance peaks at an optimal arousal and falls on either side, so GSE must estimate each player's arousal optimum and flag over- or under-arousal as a performance veto.",
+        "source_operator": "performance_curve",
+        "telemetry": "inverted-U arousal-performance -> per-player arousal optimum + veto"
+      }
+    },
+    {
+      "primitive_id": "optimal_number",
+      "name": "Know your numbers",
+      "verbatim_quote": "Everyone has an optimal number that corresponds with peak performance.",
+      "page": 30,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "your number": "the personal arousal level at peak performance",
+        "depends on": "temperament, event duration, task nature"
+      },
+      "assumptions": [
+        "Optimal arousal is individual",
+        "It varies by task and event length"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Know-your-numbers IS per-player arousal calibration: the optimal number depends on temperament, event length, and task, so GSE's arousal model must be player- and role-specific, not a league-wide constant.",
+        "source_operator": "optimal_number",
+        "telemetry": "individual optimal arousal -> player/role-specific calibration"
+      }
+    },
+    {
+      "primitive_id": "control_self",
+      "name": "Control yourself before the performance",
+      "verbatim_quote": "You can't control your performance until you are in control of yourself.",
+      "page": 34,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "self-control": "mastery of thoughts, feelings, physiology",
+        "precondition": "for performance control"
+      },
+      "assumptions": [
+        "Physiology and thought precede execution",
+        "Self-regulation gates performance"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Self-control-before-performance IS the regulation gate: GSE's execution confidence should be gated on the athlete's self-regulation state, because an unregulated physiology undermines even a correct decision.",
+        "source_operator": "control_self",
+        "telemetry": "self-regulation gates performance -> regulation-gated execution confidence"
+      }
+    },
+    {
+      "primitive_id": "responsibility_response",
+      "name": "Response, not situation, makes the difference",
+      "verbatim_quote": "It's not the situation but how you respond to it that makes the difference.",
+      "page": 39,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "responsibility psychology": "you cannot control events but can control your response",
+        "locus of control": "internal"
+      },
+      "assumptions": [
+        "Events are uncontrollable; responses are controllable",
+        "The response determines the outcome"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Response-over-situation IS the internal locus of control: GSE should model the athlete's response policy as the lever, since the triggering event is environment but the response is the trainable decision that shapes what happens next.",
+        "source_operator": "responsibility_response",
+        "telemetry": "response over situation -> response-policy as the lever"
+      }
+    },
+    {
+      "primitive_id": "self_concept",
+      "name": "Self-concept drives performance",
+      "verbatim_quote": "If you don't feel good about yourself, you tend not to perform well.",
+      "page": 41,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "self-concept": "one's self-image",
+        "self-consistency": "people act consistent with their self-image"
+      },
+      "assumptions": [
+        "Behavior aligns with self-image",
+        "A negative self-image invites self-sabotage"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Self-concept IS the self-consistency prior: an athlete acts consistent with their self-image, so GSE's confidence model should treat self-concept as a prior that biases execution toward confirming it, for better or worse.",
+        "source_operator": "self_concept",
+        "telemetry": "self-consistency prior -> confidence prior biasing execution"
+      }
+    },
+    {
+      "primitive_id": "gremlins",
+      "name": "Gremlins: self-defeating thoughts",
+      "verbatim_quote": "We all have self-defeating thoughts and behaviors that undermine performance.",
+      "page": 42,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "gremlins": "fear, anger, anxiety, self-consciousness, perfectionism, stubbornness, lack of motivation, distractions",
+        "effect": "undermine performance"
+      },
+      "assumptions": [
+        "Self-sabotage is identifiable and nameable",
+        "Each gremlin has a specific counter"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The gremlin taxonomy IS a failure-mode catalogue: GSE can detect named self-sabotage patterns (fear, perfectionism, distraction) as veto-able mental states, each with a specific regulatory counter, rather than a generic 'off' flag.",
+        "source_operator": "gremlins",
+        "telemetry": "named self-sabotage failure modes -> detectable veto-able mental states"
+      }
+    },
+    {
+      "primitive_id": "kaizen",
+      "name": "Kaizen: constant daily improvement",
+      "verbatim_quote": "One thing I learned from my association with the Orix Blue Wave is a concept called kaizen.",
+      "page": 47,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "kaizen": "constant daily learning and improvement",
+        "origin": "Japanese practice, applied to sport and business"
+      },
+      "assumptions": [
+        "Improvement is incremental and daily",
+        "It compounds over time"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Kaizen IS the incremental-improvement loop: GSE's model updates should be continuous small refinements from each game's feedback rather than periodic overhauls, mirroring the daily-learning discipline that compounds.",
+        "source_operator": "kaizen",
+        "telemetry": "continuous daily improvement -> incremental feedback-driven model updates"
+      }
+    },
+    {
+      "primitive_id": "work_weaknesses",
+      "name": "Turn weaknesses into strengths",
+      "verbatim_quote": "Work on your weaknesses until they become your strong points.",
+      "page": 51,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "rule": "deliberately practice weaknesses, not just strengths",
+        "paradox": "you may get worse before better"
+      },
+      "assumptions": [
+        "People naturally practice what they do well",
+        "Improvement requires targeting the weak parts"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Work-on-weaknesses IS the targeted-training principle: GSE's development focus should allocate practice to the lowest-performing sub-skills, because opponents exploit the weakness and overall performance is capped by it.",
+        "source_operator": "work_weaknesses",
+        "telemetry": "target the weakest sub-skill -> weakness-targeted training allocation"
+      }
+    },
+    {
+      "primitive_id": "process_vs_outcome",
+      "name": "Process focus beats outcome focus",
+      "verbatim_quote": "Japanese players focus on the process of knowing themselves and improving their weaknesses.",
+      "page": 48,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "process focus": "self-knowledge and improvement",
+        "outcome focus": "statistics and results",
+        "contrast": "Japanese process vs American outcome orientation"
+      },
+      "assumptions": [
+        "Process focus sustains long-term improvement",
+        "Outcome fixation creates pressure"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Process-over-outcome IS the learning-objective choice: GSE should reward process quality (correct reads, good decisions) rather than only results, because results are noisy and process is the controllable driver of long-run edge.",
+        "source_operator": "process_vs_outcome",
+        "telemetry": "process reward over noisy results -> process-quality objective"
+      }
+    },
+    {
+      "primitive_id": "goal_setting_locke",
+      "name": "Goal orientation predicts success",
+      "verbatim_quote": "What Edwin Locke and Gary Latham discovered is that people who succeed are goal oriented.",
+      "page": 60,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "Locke-Latham": "goal-setting theory",
+        "finding": "successful people are goal oriented; they turn vision into action via goals"
+      },
+      "assumptions": [
+        "Goals direct attention and effort",
+        "They sustain motivation"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Goal-setting theory IS the objective-specification layer: GSE's development and decision objectives should be explicit goals that direct effort, because a clear target mobilizes the resources that vague aspiration does not.",
+        "source_operator": "goal_setting_locke",
+        "telemetry": "explicit goals direct effort -> objective-specification layer"
+      }
+    },
+    {
+      "primitive_id": "performance_goal",
+      "name": "Performance goals are controllable",
+      "verbatim_quote": "A performance goal, or action goal, is something you can control.",
+      "page": 61,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "performance/action goal": "controllable process target (e.g., four quality at-bats)",
+        "outcome goal": "result target (e.g., two hits)"
+      },
+      "assumptions": [
+        "Action goals are within the athlete's control",
+        "Outcome goals depend on factors beyond control"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Performance-vs-outcome goals IS the controllable-objective distinction: GSE should set process goals (quality decisions) as the primary target and let outcomes follow, because only the process is directly controllable.",
+        "source_operator": "performance_goal",
+        "telemetry": "controllable action goal vs outcome goal -> process-primary objective"
+      }
+    },
+    {
+      "primitive_id": "smart_goals",
+      "name": "SMART goals",
+      "verbatim_quote": "An acronym for setting goals is SMART. The S stands for specific.",
+      "page": 62,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "SMART": "Specific, Measurable, Achievable, Realistic, Time-bound",
+        "rule": "a goal is a dream with a timeline"
+      },
+      "assumptions": [
+        "Effective goals are specific and measurable",
+        "They are challenging but attainable and time-bound"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SMART IS the goal-validation checklist: GSE's objectives should pass the specific/measurable/achievable/realistic/time-bound gate, rejecting vague or unattainable targets that cannot drive actionable improvement.",
+        "source_operator": "smart_goals",
+        "telemetry": "SMART validation gate -> objective well-formedness check"
+      }
+    },
+    {
+      "primitive_id": "goals_dreams_timelines",
+      "name": "Goals are dreams with timelines",
+      "verbatim_quote": "Goals are dreams with time lines. Turn your vision into action with goal setting.",
+      "page": 64,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "goal": "a dream plus a target date",
+        "progress": "seek progress, not perfection"
+      },
+      "assumptions": [
+        "A dream without a deadline is not a goal",
+        "Progress compounds through small steps"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dreams-with-timelines IS the deadline-binding of vision: GSE's long-term targets need concrete milestones and dates, and the progress-not-perfection stance keeps the loop iterating on partial gains instead of stalling on an ideal.",
+        "source_operator": "goals_dreams_timelines",
+        "telemetry": "deadline-bound vision + progress-not-perfection -> milestone-driven iteration"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "mindgym2001_trace_01",
+      "think": "Mind Gym is a catalogue of mental-conditioning operators, and its sovereign core is the claim that the mental layer is a trainable, measurable determinant of performance rather than a mystical residual. Mack calls sport psychology the science of success because it studies what successful people do, and the head edge is the empirical finding that, holding physical ability equal, athletes who receive mental training outperform those who do not. The retrocausal genealogy runs from Yastrzemski's pre-game visualization of pitches through the free-throw study where imagery improved accuracy as much as physical shooting, to the present claim that mental rehearsal trains the same pathways as execution. This is the mechanism that justifies simulation-as-rehearsal: a vivid mental run-through primes recognition and response the way physical reps do, which is exactly what a snap-by-snap simulation does for a decision policy. The lineage is not metaphor; it is the observed transfer from imagined to executed skill. The recursive theory of mind centers on pressure and self-monitoring. The Pressure Principle holds that under pressure an athlete can perform fifteen percent better or worse, so pressure is a multiplier whose sign depends on the mental state, not a fixed talent output. The paradox is that the probability of the desired outcome rises when you let go of the need to have it, because outcome fixation creates the tension that degrades execution. The zone is the state where athletes are immersed in the activity and not thinking about their performance; more than eighty percent of athletes' greatest moments had no fear of failure. The recursive trap is the inner monitor: the self-conscious voice that watches and judges the performance is the choke mechanism, so peak execution requires suspending that meta-critic. The seven C's of mental toughness (competitive, confident, control, committed, composure, courage, consistency) decompose toughness into learnable dimensions, and the claim that competitive toughness is an acquired skill not an inherited gift means it is a developable state variable, not a fixed constant. The control dichotomy directs attention to the controllable and away from the uncontrollable, which is the decision-scope partition a policy needs. The cross-layer veto adjudication is governed by the inverted-U performance curve. Performance peaks at an optimal arousal and falls on either side, so too little arousal underperforms and too much over-revs; everyone has an optimal number that depends on temperament, event duration, and task nature. This is a per-player, per-role calibration, and an athlete outside their optimal band is a performance veto. Self-control gates performance: you cannot control your performance until you control yourself, so execution confidence must be gated on the self-regulation state. Responsibility psychology locates the lever in the response, not the situation, and self-concept acts as a self-consistency prior that biases execution toward confirming the self-image. The gremlins (fear, anger, anxiety, self-consciousness, perfectionism, stubbornness, low motivation, distraction) are a named failure-mode catalogue, each veto-able with a specific counter rather than a generic off flag. The universal lens is continuous, process-oriented improvement. Kaizen is constant daily learning and improvement; the discipline is to work on weaknesses until they become strengths, because opponents exploit the weak part and overall performance is capped by it. The process-versus-outcome contrast favors self-knowledge and improvement over statistics fixation. Locke and Latham's goal-setting theory shows successful people are goal oriented, and the performance-versus-outcome goal distinction keeps the target on the controllable action. SMART (specific, measurable, achievable, realistic, time-bound) is the goal-validation checklist, and goals are dreams with timelines, pursued as progress not perfection. Connecting this to the engine, the mental layer is a set of first-class state variables: a per-player arousal optimum with an inverted-U performance response, a self-regulation gate on execution confidence, a self-concept prior, a controllable/uncontrollable decision-scope partition, and a named gremlin failure-mode detector. The implementation invariants are that pressure is a signed multiplier not a constant, that the optimal arousal number is player- and role-specific, that the meta-critic must be suspended during automatized execution, that objectives must pass the SMART gate and target the controllable process, and that improvement is allocated to the weakest sub-skill. The book supplies no equations, so these are qualitative operators to be calibrated, not formulas to be evaluated; the fifteen-percent pressure swing is an athlete's estimate, not a measured constant, and must be treated as a hypothesis to test rather than a law to apply. A sixth strand is the concrete self-regulation toolkit that turns these operators into practice. The distraction-word technique gives the conscious mind a single neutral token, like Al Del Greco's birdie before a kick, so the subconscious can execute without interference; Benson's relaxation response pairs slow breathing with a repeated word to lower heart rate and blood pressure before pressure moments. Early warning signs, physical like tight shoulders or a dry mouth, emotional like irritability, and mental like racing thoughts, are the telemetry that arousal is drifting off the optimal number, and catching them early is what keeps the athlete inside the performance band. The A.C.T.-backward dream method accepts the present state, creates the desired state in positive sensory-oriented detail, then takes action steps toward it, binding vision to behavior. Each gremlin has a specific counter: fear yields to the controllables focus, perfectionism to progress-not-perfection, and distraction to the neutral word, so the mental layer is not a vague pep talk but a set of named, triggerable interventions that an engine can detect and fire.",
+      "retrocausal_genealogy": "The lineage runs from the science-of-success framing (study what winners do) through the head-edge finding (equal-ability athletes with mental training outperform those without) and the imagery studies (mental rehearsal improved free-throw accuracy as much as physical practice), to Yastrzemski's pre-game visualization and Pele's mental camera. The through-line is that imagined execution trains the same pathways as real execution, so mental rehearsal is a genuine performance input, not a placebo; this justifies treating simulation and visualization as first-class training operators.",
+      "theory_of_mind": "Pressure is a signed multiplier (fifteen percent better or worse), and the paradox is that releasing the need for the outcome raises its probability because outcome fixation creates execution-degrading tension. The zone is immersion without self-monitoring; the recursive trap is the inner meta-critic whose judgment chokes performance. The seven C's decompose mental toughness into learnable dimensions, and the control dichotomy partitions the controllable from the uncontrollable so attention is not wasted on what cannot be changed.",
+      "cross_layer_veto": "The inverted-U performance curve vetoes any athlete outside their optimal arousal band, and the optimal number is player- and role-specific (temperament, event length, task). Self-regulation gates execution confidence; self-concept acts as a self-consistency prior; the gremlins are named veto-able failure modes with specific counters. Responsibility psychology locates the lever in the response, and the control-scope partition keeps the policy acting only on controllables, so an unregulated or over-aroused state is a hard stop on execution confidence."
+    }
+  ],
+  "universal_lens": "Mental conditioning as trainable operators: a per-player inverted-U arousal optimum, a self-regulation gate on execution, a self-concept prior, a controllable/uncontrollable decision-scope partition, named gremlin failure modes, and process-oriented goal setting (SMART, progress-not-perfection, kaizen) that allocates improvement to the weakest sub-skill.",
+  "gsi_mapping": "GSI ingests the mental layer as state variables: arousal vs the individual optimum, self-regulation readiness, self-concept confidence prior, and gremlin detection. Pressure is modeled as a signed performance multiplier; the meta-critic is suspended during automatized execution; objectives pass the SMART gate and target controllable process over noisy outcomes.",
+  "gse_mapping": "GSE uses the inverted-U to veto over/under-aroused execution, gates confidence on self-regulation, partitions decisions to controllables, and detects named self-sabotage states. Development targets the weakest sub-skill (work-on-weaknesses), rewards process quality over results, and iterates via kaizen-style incremental feedback rather than periodic overhauls."
+}
