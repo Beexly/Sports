@@ -1,0 +1,759 @@
+{
+ "book_id": "3d7cafefb6ffa2ae",
+ "source_status": "COMPLETE",
+ "source_note": "Mark J. Dixon and Stuart G. Coles, 'Modelling Association Football Scores and Inefficiencies in the Football Betting Market', Applied Statistics (Journal of the Royal Statistical Society, Series A), Volume 46, Issue 2, 1997, pages 265-280; both authors at Lancaster University, UK; received November 1995, revised September 1996. The local file is the JSTOR scan of that article (PDF produced by page2pdf / PDFlib in 2002), 17 PDF pages including the JSTOR cover page, 453174 bytes. The PDF has no text layer: the library extraction under text/books-a-sports/ is 17 bytes of form feeds only. Quotes in this artifact are therefore proven against a full OCR of the same PDF (indra-ocr with math mode) stored at ~/workspace/motif-foundry/work/dixon-coles/ocr.txt (41907 bytes), following the fleet precedent for scanned works (Wiener; Knight); the load-bearing equations (4.1) to (4.7) and (5.1) were additionally read directly from page images of the scan. Scan digest sha256(str(size) + file bytes) = 3d7cafefb6ffa2aeaffeb0cda60ba4f26879f5c7a648e2a44fb586f91ab54c8c; book_id is its first 16 hex characters; plain file sha256 = e15e8d90a08e1fcc3e30cb75dec6532352792f511b5ae86c3927bb34301ffe09. OCR prose is clean throughout; a few displayed equations are garbled in the OCR and were taken from the page images instead. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "maher_independent_poisson_scores",
+   "name": "Match scores are independent Poisson variables whose means factor into attack, defence and home-effect terms (Maher model, equation 4.1)",
+   "verbatim_quote": "The basic assumption of Maher's model is that the number of goals scored by the home and away teams in any particular game are independent Poisson variables, whose means are determined by the respective attack and defence qualities of each side.",
+   "page": "p. 269, Section 4.1",
+   "latex": "X_{i,j} \\sim \\mathrm{Poisson}(\\alpha_i \\beta_j \\gamma), \\quad Y_{i,j} \\sim \\mathrm{Poisson}(\\alpha_j \\beta_i)",
+   "symbol_and_unit_ledger": {
+    "alpha_i": "attack rate of team i, dimensionless, league mean normalized to 1",
+    "beta_j": "defence rate of team j, dimensionless; larger means more goals conceded against a reference attack",
+    "gamma": "common home effect multiplier, > 0, dimensionless",
+    "X_{i,j}": "goals scored by home team i against away team j, count",
+    "Y_{i,j}": "goals scored by away team j at home team i, count"
+   },
+   "assumptions": [
+    "Home and away scores are independent given the parameters",
+    "Each team's scoring rate is the product of its own attack rate and the opponent's defence rate",
+    "One common home effect applies to every team"
+   ],
+   "breakdown_regime": "The paper's own Section 3 diagnostic shows independence failing for the low scores 0-0, 1-0, 0-1 and 1-1, which is why this skeleton is modified by the tau correction; static parameters also ignore form dynamics, and Poisson equidispersion is an assumption, not a fact, for other competitions.",
+   "domain": "football_score_modelling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine rates every team on two latent axes, scoring strength and concession strength, and forms an expected-goals pair for any fixture by multiplying the home side's attack by the away side's defence with a home multiplier, exactly the factorization the GSE soccer core uses to seed its scoreline matrix.",
+    "source_operator": "maher_independent_poisson_scores",
+    "telemetry": "final scores of completed matches, fixture venue, team identities"
+   }
+  },
+  {
+   "primitive_id": "dixon_coles_tau_dependence",
+   "name": "A tau adjustment perturbs the independent Poisson joint distribution only on the four low-score cells (0,0), (0,1), (1,0), (1,1), leaving the Poisson marginals intact (equation 4.2)",
+   "verbatim_quote": "Maher (1982) suggested the use of a bivariate Poisson family as an extension of the basic model, but this family is unable to represent the departure from independence for low scoring games that we identified in Section 3.",
+   "page": "p. 270, Section 4.1",
+   "latex": "\\Pr(X_{i,j}=x, Y_{i,j}=y) = \\tau_{\\lambda,\\mu}(x,y) \\frac{\\lambda^x \\exp(-\\lambda)}{x!} \\frac{\\mu^y \\exp(-\\mu)}{y!}, \\quad \\tau_{\\lambda,\\mu}(x,y) = \\begin{cases} 1-\\lambda\\mu\\rho & x=y=0 \\\\ 1+\\lambda\\rho & x=0, y=1 \\\\ 1+\\mu\\rho & x=1, y=0 \\\\ 1-\\rho & x=y=1 \\\\ 1 & \\text{otherwise} \\end{cases}",
+   "symbol_and_unit_ledger": {
+    "lambda": "expected home goals, alpha_i beta_j gamma, goals per match",
+    "mu": "expected away goals, alpha_j beta_i, goals per match",
+    "rho": "dependence parameter, dimensionless, bounded as in the rho primitive",
+    "tau_{lambda,mu}(x,y)": "multiplicative correction factor applied to the independence probability of cell (x,y)"
+   },
+   "assumptions": [
+    "Dependence between the two scores is concentrated entirely in the four cells where both scores are at most 1",
+    "A single dependence parameter rho serves every match",
+    "The tau factors are constructed so the marginal distributions remain exactly Poisson with means lambda and mu"
+   ],
+   "breakdown_regime": "The correction cannot express dependence in higher-score cells or margin correlation beyond the 2 by 2 corner; the authors note the bivariate Poisson family Maher suggested cannot represent this low-score departure at all, which is the reason for the tau form.",
+   "domain": "football_score_modelling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "After the independence score matrix is built, the engine applies the four-cell correction governed by one fitted dependence parameter, repairing the known underweighting of low-score draws and one-goal margins in the raw independent matrix without disturbing the Poisson marginals the rest of the pipeline relies on.",
+    "source_operator": "maher_independent_poisson_scores",
+    "telemetry": "observed frequencies of the four low-score cells versus independence predictions, per competition"
+   }
+  },
+  {
+   "primitive_id": "rho_dependence_parameter_bounds",
+   "name": "The dependence parameter rho is bounded by max(-1/lambda, -1/mu) <= rho <= min(1/(lambda mu), 1), and rho = 0 recovers independence",
+   "verbatim_quote": "enters as a dependence parameter: $\\rho = 0$ corresponds to independence, but otherwise",
+   "page": "p. 270, Section 4.1",
+   "latex": "\\max(-1/\\lambda,\\ -1/\\mu) \\leq \\rho \\leq \\min(1/\\lambda\\mu,\\ 1)",
+   "symbol_and_unit_ledger": {
+    "rho": "dependence parameter, dimensionless",
+    "lambda": "expected home goals for the fixture",
+    "mu": "expected away goals for the fixture"
+   },
+   "assumptions": [
+    "The bounds are exactly the values that keep all four tau-adjusted cell probabilities non-negative for the given lambda and mu"
+   ],
+   "breakdown_regime": "The feasible interval for rho shrinks as lambda times mu grows, so expressible dependence is weakest precisely for high-scoring fixtures; a single global rho is also fitted even though dependence could vary by matchup type.",
+   "domain": "football_score_modelling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats rho as a bounded dial whose feasible interval is recomputed from each fixture's lambda and mu, so the dependence correction can never push a cell probability outside the valid range no matter how extreme the expected-goals pair is.",
+    "source_operator": "dixon_coles_tau_dependence",
+    "telemetry": "fitted rho per competition; expected-goals pair of each fixture"
+   }
+  },
+  {
+   "primitive_id": "attack_defence_separation",
+   "name": "Team ability is summarized by two separate ratings, an ability to attack and an ability to defend, rather than one overall strength (model requirement d)",
+   "verbatim_quote": "the nature of football is such that a team's ability is likely to be best summarized in separate measures of their ability to attack (to score goals) and their ability to defend (not to concede goals)",
+   "page": "p. 269, Section 4.1",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Attacking and defensive abilities vary separately across teams",
+    "Goals scored and goals conceded carry distinct information about a team"
+   ],
+   "breakdown_regime": "A single latent factor (squad-wide injury crisis, a tactical system that trades attack for defence) can couple the two channels in ways the separated ratings cannot express.",
+   "domain": "football_score_modelling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every downstream engine layer consumes attack and defence as separate channels: matchup reasoning compares one side's attack channel against the other side's defence channel instead of collapsing a team into a single strength number.",
+    "source_operator": "attack_defence_separation",
+    "telemetry": "goals scored and conceded per team per match"
+   }
+  },
+  {
+   "primitive_id": "home_advantage_term",
+   "name": "A common multiplicative home effect gamma scales the home team's expected goals (model requirement b)",
+   "verbatim_quote": "there should be allowance for the fact that teams playing at home generally have some advantage",
+   "page": "p. 269, Section 4.1; means defined p. 270",
+   "latex": "\\lambda = \\alpha_i \\beta_j \\gamma, \\quad \\mu = \\alpha_j \\beta_i",
+   "symbol_and_unit_ledger": {
+    "gamma": "home effect multiplier on the home team's expected goals, dimensionless, > 0",
+    "lambda": "expected home goals",
+    "mu": "expected away goals (no home multiplier)"
+   },
+   "assumptions": [
+    "Home advantage is a single multiplier shared by all teams",
+    "The away team's expected goals carry no venue term"
+   ],
+   "breakdown_regime": "Club-specific home effects (the paper cites Clarke and Norman 1995 on individual clubs) and neutral-venue fixtures violate the common-gamma assumption.",
+   "domain": "football_score_modelling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Venue enters the engine as one shared multiplier on the home side's expected goals, estimated jointly with the ratings rather than bolted on afterwards, and the paper's finding that gamma stays nearly constant over time licenses treating it as a slow structural constant.",
+    "source_operator": "home_advantage_term",
+    "telemetry": "home and away scoring rates across the competition"
+   }
+  },
+  {
+   "primitive_id": "recency_summary_principle",
+   "name": "A team's ability is best summarized by a summary measure of its recent performance (model requirement c)",
+   "verbatim_quote": "the most reasonable measure of a team's ability is likely to be based on a summary measure of their recent performance",
+   "page": "p. 269, Section 4.1",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Form persists over short horizons, so recent matches are the most informative about current ability",
+    "Older results carry less information than recent ones"
+   ],
+   "breakdown_regime": "Very short effective windows overfit noise; structural breaks such as transfers or a managerial change are invisible in scores-only data until results accumulate.",
+   "domain": "football_score_modelling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's memory is recency-weighted by construction: a result's influence on current ratings decays with its age, so the rating any layer reads is always a summary of recent performance rather than a lifetime average.",
+    "source_operator": "recency_summary_principle",
+    "telemetry": "match dates and results in chronological order"
+   }
+  },
+  {
+   "primitive_id": "opponent_adjusted_ratings",
+   "name": "In summarizing a team's performance, account must be taken of the ability of the teams it has played against (model requirement e)",
+   "verbatim_quote": "in summarizing a team's performance by recent results, account should be taken of the ability of the teams that they have played against",
+   "page": "p. 269, Section 4.1",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The fixture graph connects teams densely enough for relative strengths to be identified jointly"
+   ],
+   "breakdown_regime": "Groups of teams with no fixtures between them are not comparable; the paper resolves this for divisions only because cup ties and promotion and relegation link the groups.",
+   "domain": "football_score_modelling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Because ratings are fitted jointly over the whole fixture graph, a win against a strong defence raises attack more than the same win against a weak one; the engine never credits a result without simultaneously accounting for the opponent context that produced it.",
+    "source_operator": "maher_independent_poisson_scores",
+    "telemetry": "the full fixture graph with both participants of every match"
+   }
+  },
+  {
+   "primitive_id": "team_specific_probability_resolution",
+   "name": "Prediction must be estimated on a team-specific basis: probabilities for two specific teams on a particular date, not aggregate outcome frequencies",
+   "verbatim_quote": "probabilities must be estimated on a team-specific basis, so that the probabilities of the various match outcomes between two specific teams on a particular date can be calculated.",
+   "page": "p. 266, Section 1",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Aggregate score distributions lack the resolution to price an individual fixture"
+   ],
+   "breakdown_regime": "Team-specific estimation multiplies the parameter count and demands a large match database; it is infeasible for sparsely observed competitions.",
+   "domain": "football_score_modelling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's unit of output is a probability distribution for a named fixture on a named date, never a league-average tendency; any layer that can only speak in aggregates is treated as a prior, not as a prediction.",
+    "source_operator": "team_specific_probability_resolution",
+    "telemetry": "fixture list with dates and participants"
+   }
+  },
+  {
+   "primitive_id": "identifiability_scale_constraint",
+   "name": "The attack parameters are identified by imposing the scale constraint that their mean across teams equals one",
+   "verbatim_quote": "It follows from model (4.2) that with n teams there are attack parameters",
+   "page": "p. 270, Section 4.2",
+   "latex": "n^{-1} \\sum_{i=1}^{n} \\alpha_i = 1",
+   "symbol_and_unit_ledger": {
+    "n": "number of teams in the pooled system (92 for the English leagues in the paper)",
+    "alpha_i": "attack parameter of team i"
+   },
+   "assumptions": [
+    "Without a normalization, the product form alpha beta gamma is identified only up to a constant rescaling",
+    "With the constraint and n = 92, the paper's model has 185 identifiable parameters"
+   ],
+   "breakdown_regime": "The constraint fixes the overall scale only; it does not by itself separate home effect from attack strength, which the fixture structure must do.",
+   "domain": "statistical_inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine pins the attack scale by forcing the league mean attack to one at every fit, which makes ratings comparable across refits and competitions and prevents slow scale drift in the rating store.",
+    "source_operator": "maher_independent_poisson_scores",
+    "telemetry": "the full set of fitted attack parameters at each refit"
+   }
+  },
+  {
+   "primitive_id": "likelihood_product_form",
+   "name": "The likelihood is the product over all matches of the tau-adjusted Poisson cell probabilities, with per-match means from the attack, defence and home parameters (equations 4.3 and 4.4)",
+   "verbatim_quote": "Our basic tool of inference is the likelihood function.",
+   "page": "pp. 270-271, Section 4.2",
+   "latex": "L(\\alpha_i, \\beta_i, \\rho, \\gamma; i=1,\\ldots,n) = \\prod_{k=1}^{N} \\tau_{\\lambda_k,\\mu_k}(x_k, y_k) \\exp(-\\lambda_k) \\lambda_k^{x_k} \\exp(-\\mu_k) \\mu_k^{y_k}, \\quad \\lambda_k = \\alpha_{i(k)} \\beta_{j(k)} \\gamma, \\quad \\mu_k = \\alpha_{j(k)} \\beta_{i(k)}",
+   "symbol_and_unit_ledger": {
+    "k": "match index, 1..N",
+    "i(k), j(k)": "indices of the home and away teams in match k",
+    "x_k, y_k": "observed home and away goals in match k, counts",
+    "lambda_k, mu_k": "expected home and away goals in match k"
+   },
+   "assumptions": [
+    "Matches are conditionally independent given the parameters",
+    "Factorial terms are constants and drop out of the likelihood up to proportionality",
+    "Teams from all four divisions enter the same likelihood"
+   ],
+   "breakdown_regime": "Within-match dependence beyond the tau corner and any correlation between matches are outside this likelihood; the estimates inherit any misspecification of the Poisson means.",
+   "domain": "statistical_inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fitting is one joint maximum likelihood problem over every match in the corpus, not a sequence of per-team averages; the engine's rating job maximizes exactly this product, each match contributing its tau-adjusted Poisson cell probability.",
+    "source_operator": "dixon_coles_tau_dependence",
+    "telemetry": "all historical scorelines with team identities and dates"
+   }
+  },
+  {
+   "primitive_id": "numerical_maximization_orthogonality",
+   "name": "Once the model is generalized, closed-form estimators are unavailable, but direct numerical maximization of the likelihood is straightforward because many parameter combinations are near orthogonal",
+   "verbatim_quote": "The near orthogonality of many parameter combinations means that this is straightforward, despite the high dimensionality of the model.",
+   "page": "p. 271, Section 4.2",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Maher's linear-equation solution exists only for complete balanced data under independence (rho = 0)"
+   ],
+   "breakdown_regime": "Numerical maximization in 185 dimensions depends on the near-orthogonality the authors report; a badly conditioned fixture graph could still defeat it.",
+   "domain": "statistical_inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine does not require closed-form rating updates; it re-optimizes the joint likelihood numerically, relying on the near orthogonality the authors report, which is what makes a 185-parameter refit cheap enough to run at every time step.",
+    "source_operator": "numerical_maximization_orthogonality",
+    "telemetry": "optimizer convergence diagnostics per refit"
+   }
+  },
+  {
+   "primitive_id": "cross_division_calibration",
+   "name": "Pooling all divisions in one likelihood, linked by cup matches and by promotion and relegation mobility, calibrates the parameters across divisions so cross-division fixtures can be evaluated",
+   "verbatim_quote": "Then, because the parameters are calibrated across the divisions, the model can validly be used to estimate the probabilities of match outcomes involving teams of different divisions, as in cup games for example.",
+   "page": "p. 271, Section 4.2",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Some matches between teams of different divisions exist in the data (cup games, plus mobility between seasons)",
+    "Relative division quality is absorbed by the team parameters themselves"
+   ],
+   "breakdown_regime": "A closed competition with no inter-division fixtures leaves the relative strength of its divisions unidentified.",
+   "domain": "statistical_inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "One pooled fit across divisions lets the engine evaluate a cup tie between divisions on the same scale as a league match, because cup results and promotion movement stitch the divisions into a single identified system.",
+    "source_operator": "cross_division_calibration",
+    "telemetry": "cross-division fixtures (cup ties) and promotion and relegation movements"
+   }
+  },
+  {
+   "primitive_id": "division_strength_gradient",
+   "name": "The fitted mean parameters reproduce the league hierarchy: mean attack falls and mean defence weakness rises down the divisions (Table 3: Premier 1.38 and 0.68; Division 3 0.73 and 1.32)",
+   "verbatim_quote": "These points are illustrated by Table 3, which shows the mean attack and defence parameters for teams in each division.",
+   "page": "p. 271, Section 4.2, Table 3",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The means are taken over the teams within each division from the pooled fit (Division 1: 1.07 and 0.86; Division 2: 0.83 and 1.14)"
+   ],
+   "breakdown_regime": "Division means hide within-division spread, and the gradient is a descriptive check on the fit, not a constraint imposed on it.",
+   "domain": "model_validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The fitted division gradient is the engine's sanity check on any refit: if mean attack does not fall and mean defence weakness does not rise down the divisions, the fit is rejected as broken before its probabilities are used downstream.",
+    "source_operator": "division_strength_gradient",
+    "telemetry": "division membership of every team; fitted parameter means by division"
+   }
+  },
+  {
+   "primitive_id": "time_weighted_pseudolikelihood",
+   "name": "Dynamic ratings come from refitting at each time t a pseudolikelihood in which each past match contribution is raised to the power phi(t - t_k) (equation 4.5)",
+   "verbatim_quote": "Thus we assume that the parameters are, in a loose sense, locally constant through time and that historical information is of less value than recent information, and we determine parameter estimates for each time point t that are based on the history of match scores up to time t.",
+   "page": "p. 272, Section 4.3",
+   "latex": "L_t(\\alpha_i, \\beta_i, \\rho, \\gamma; i=1,\\ldots,n) = \\prod_{k \\in A_t} \\left\\{ \\tau_{\\lambda_k,\\mu_k}(x_k, y_k) \\exp(-\\lambda_k) \\lambda_k^{x_k} \\exp(-\\mu_k) \\mu_k^{y_k} \\right\\}^{\\phi(t-t_k)}, \\quad A_t = \\{k : t_k < t\\}",
+   "symbol_and_unit_ledger": {
+    "t": "time point of the fit (the paper uses half-week units)",
+    "t_k": "time match k was played",
+    "A_t": "set of matches played before t",
+    "phi": "non-increasing weighting function of elapsed time"
+   },
+   "assumptions": [
+    "Parameters are locally constant in time and each fit at t uses only matches played before t",
+    "The parameters are themselves time dependent even though the notation suppresses it"
+   ],
+   "breakdown_regime": "Refitting at every time point is computationally heavy, and the sequence of pseudolikelihoods is not a set of independent likelihoods, so ordinary likelihood machinery cannot choose the weighting function; the paper chooses it on predictive performance instead.",
+   "domain": "statistical_inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "At each prediction time the engine refits on history strictly before that time, with every past match raised to a decay weight; this is the mechanism that turns a static rating table into a time series of ratings with no look-ahead.",
+    "source_operator": "likelihood_product_form",
+    "telemetry": "timestamped match history; the refit schedule"
+   }
+  },
+  {
+   "primitive_id": "exponential_decay_weighting",
+   "name": "The weighting function is exponential decay, phi(t) = exp(-xi t); the static model is the special case xi = 0, and larger xi weights recent results more heavily",
+   "verbatim_quote": "in which all previous results, downweighted exponentially according to a parameter \\xi> 0, are included in the inference at time t.",
+   "page": "p. 272, Section 4.4",
+   "latex": "\\phi(t) = \\exp(-\\xi t)",
+   "symbol_and_unit_ledger": {
+    "xi": "decay rate, > 0, per unit time (half-weeks in the paper)",
+    "phi(t)": "weight given to a result t time units old"
+   },
+   "assumptions": [
+    "All previous results are retained with decaying weight, rather than the hard window (weight 1 within the last t_0 units, 0 beyond) the authors consider and set aside",
+    "One xi applies to every team and parameter"
+   ],
+   "breakdown_regime": "A single decay rate imposes the same memory length on stable and volatile teams alike, and abrupt strength changes are tracked only gradually.",
+   "domain": "statistical_inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Memory length is one explicit number, xi, shared by the whole system; setting xi to zero collapses the engine to the static model, so dynamic and static behaviour are the same code path with a different dial setting.",
+    "source_operator": "time_weighted_pseudolikelihood",
+    "telemetry": "ages of matches relative to prediction time"
+   }
+  },
+  {
+   "primitive_id": "outcome_probability_aggregation",
+   "name": "Outcome probabilities are obtained by summing the fitted score distribution over the win, draw and loss regions of the score grid (equation 4.6)",
+   "verbatim_quote": "First note that the probability of a home win in match k is estimated as",
+   "page": "pp. 272-273, Section 4.4",
+   "latex": "p_k^H = \\sum_{l,m \\in B_H} \\Pr(X_k = l, Y_k = m), \\quad B_H = \\{(l, m) : l > m\\}",
+   "symbol_and_unit_ledger": {
+    "p_k^H": "probability of a home win in match k",
+    "B_H": "set of score pairs (l, m) with l > m",
+    "X_k, Y_k": "home and away goals in match k"
+   },
+   "assumptions": [
+    "Score probabilities come from the pseudolikelihood fit made at the time of match k",
+    "Analogous sums over l < m and l = m give the away-win and draw probabilities"
+   ],
+   "breakdown_regime": "Computing the sums requires truncating the infinite score grid; the discarded tail is small but nonzero, and any error in the score distribution propagates directly into the outcome probabilities.",
+   "domain": "football_score_modelling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Win, draw and loss probabilities are never modelled directly; the engine sums its scoreline distribution over the three regions, so every outcome output inherits the full score matrix and stays consistent with it.",
+    "source_operator": "dixon_coles_tau_dependence",
+    "telemetry": "the fitted score probability matrix per fixture"
+   }
+  },
+  {
+   "primitive_id": "predictive_loglikelihood_xi_selection",
+   "name": "The decay rate xi is chosen to maximize S(xi), the predictive profile log-likelihood of realized outcomes (equation 4.7); the maximum is at xi = 0.0065 per half-week and results are robust across xi",
+   "verbatim_quote": "Considering only the outcomes, and not the scores, equation (4.7) is the analogue of a predictive profile log-likelihood.",
+   "page": "p. 273, Section 4.4",
+   "latex": "S(\\xi) = \\sum_{k=1}^{N} \\left( \\delta_k^H \\log p_k^H + \\delta_k^A \\log p_k^A + \\delta_k^D \\log p_k^D \\right)",
+   "symbol_and_unit_ledger": {
+    "delta_k^H, delta_k^A, delta_k^D": "indicators equal to 1 for the outcome that occurred in match k, else 0",
+    "p_k^H, p_k^A, p_k^D": "model outcome probabilities for match k at the chosen xi",
+    "xi": "decay rate being selected"
+   },
+   "assumptions": [
+    "Outcome prediction, not scoreline fit, is the target the hyperparameter is tuned on",
+    "Each match's probabilities come from the fit at that match's own time"
+   ],
+   "breakdown_regime": "S(xi) is flat near its maximum, so xi is only weakly identified; the criterion also reuses the fitting data, a mild optimism the authors accept pragmatically.",
+   "domain": "model_validation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Hyperparameters are tuned on the log score of realized outcomes, a proper scoring rule, rather than on fit to scorelines; the engine adopts the same discipline: any memory or dependence dial must earn its value in predictive log score.",
+    "source_operator": "outcome_probability_aggregation",
+    "telemetry": "realized outcomes together with the probabilities issued before each match"
+   }
+  },
+  {
+   "primitive_id": "corpus_6629_matches",
+   "name": "The estimation corpus is 6629 full-time league and cup match results from the seasons 1992-93, 1993-94 and 1994-95, each recorded as a home score and an away score",
+   "verbatim_quote": "The available data, which comprise 6629 full-time league and cup match results from the seasons 1992-93, 1993-94 and 1994-95, each consist of a home score and an away score.",
+   "page": "p. 267, Section 3",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Scorelines are the input signal; goal times, scorers and league positions exist but are not used by the model"
+   ],
+   "breakdown_regime": "Three seasons of one country's league system; transport of the fitted structure to other competitions is assumed, not demonstrated.",
+   "domain": "model_validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's estimation corpus for a competition is the complete set of full-time scores, league and cup, over multiple seasons; partial or highlights-only data cannot identify the joint system.",
+    "source_operator": "corpus_6629_matches",
+    "telemetry": "complete fixture results archive"
+   }
+  },
+  {
+   "primitive_id": "base_rates_46_27_27",
+   "name": "The aggregate outcome base rates in the corpus are 46 percent home wins, 27 percent draws and 27 percent away wins",
+   "verbatim_quote": "Aggregating, the ratio of frequencies of home wins, draws and away wins is found to be 46:27:27.",
+   "page": "pp. 267-268, Section 3",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Empirical frequencies over the pooled corpus estimate the distribution of a randomly selected match (home win probability 0.46)"
+   ],
+   "breakdown_regime": "Base rates average over all pairings and periods; they are a reference distribution, not a fixture-specific prediction.",
+   "domain": "model_validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The 46/27/27 split is the engine's null distribution for this competition and era: any fixture probability is read as a deviation from these base rates, and a model that cannot beat the base rates in log score has added nothing.",
+    "source_operator": "base_rates_46_27_27",
+    "telemetry": "aggregate outcome frequencies over the corpus"
+   }
+  },
+  {
+   "primitive_id": "poisson_marginal_adequacy",
+   "name": "A Poisson distribution fitted to the aggregated home and away scores is a near perfect fit, supporting the Poisson regression structure before any team-level modelling",
+   "verbatim_quote": "Fitting a Poisson distribution to the aggregated home and away scores in Table I reveals that by any criterion the Poisson model is a near perfect fit to the aggregated score data.",
+   "page": "p. 268, Section 3",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Aggregate marginal fit is evidence about the marginals only, not about team-level conditional fit"
+   ],
+   "breakdown_regime": "Earlier literature the paper reviews (Moroney 1956; Reep et al. 1971) preferred the negative binomial for score counts, so the Poisson marginal adequacy is data-set specific, not a law.",
+   "domain": "model_validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Before trusting the conditional model, the engine checks the marginal score distributions of a competition against Poisson; a failed marginal check vetoes the rating run for that competition.",
+    "source_operator": "poisson_marginal_adequacy",
+    "telemetry": "aggregated home and away goal counts"
+   }
+  },
+  {
+   "primitive_id": "independence_diagnostic_low_scores",
+   "name": "A ratio diagnostic of the observed joint frequency to the frequency implied by independence shows independence is reasonable except for the scores 0-0, 1-0, 0-1 and 1-1",
+   "verbatim_quote": "that the assumption of independence between scores is reasonable, except for the scores 0-0, 1-0, 0-1 and 1-1.",
+   "page": "p. 269, Section 3 (Table 2)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Bootstrap standard errors accompany the ratios; the apparently significant 0-3 deviation is judged sampling error in the context of the full table"
+   ],
+   "breakdown_regime": "The diagnostic is aggregate over all teams; dependence specific to particular pairings or game states would be invisible to it.",
+   "domain": "model_validation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine runs the same ratio diagnostic, observed joint frequency over independence prediction, on its own residuals; cells whose ratios escape their bootstrap errors are the only places dependence surgery is permitted, which is exactly how tau earned its four cells.",
+    "source_operator": "poisson_marginal_adequacy",
+    "telemetry": "joint scoreline frequency table; bootstrap errors on the ratios"
+   }
+  },
+  {
+   "primitive_id": "held_out_validation_design",
+   "name": "The 1995-96 season is reserved as a validation sample, not used in model development, which is carried out on the 1992 to 1995 data",
+   "verbatim_quote": "Data from 1995-96 are also available but are used as a validation sample to test the utility of the model subsequently when used as a basis for a betting strategy.",
+   "page": "p. 267, Section 3",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A temporal holdout mimics genuine forecasting conditions"
+   ],
+   "breakdown_regime": "A single validation season yields noisy performance estimates, and conditions can shift between the fit period and the validation period.",
+   "domain": "model_validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Each season is validated on the next untouched season: parameters, xi and diagnostics are frozen on the fit window before the validation window is scored, which is the engine's defence against self-deceiving backtests.",
+    "source_operator": "held_out_validation_design",
+    "telemetry": "season boundaries; frozen parameter snapshots"
+   }
+  },
+  {
+   "primitive_id": "odds_implied_probability_conversion",
+   "name": "Fractional odds o1 to o2 convert to an implied probability p = o2 / (o1 + o2); the paper's worked example gives probabilities (0.62, 0.29, 0.20) summing to 1.11",
+   "verbatim_quote": "The above set of odds then corresponds to the set of probabilities (0.62, 0.29, 0.20), which has a sum of 1.11.",
+   "page": "p. 276, Section 5",
+   "latex": "p = \\frac{o_2}{o_1 + o_2}",
+   "symbol_and_unit_ledger": {
+    "o_1 : o_2": "fractional odds, profit o_1 per stake o_2",
+    "p": "implied probability of the outcome"
+   },
+   "assumptions": [
+    "The conversion is the standard inversion of a single quoted price"
+   ],
+   "breakdown_regime": "The three implied probabilities of one match sum to more than one (1.11 in the example), so they are not a probability distribution until rescaled.",
+   "domain": "probability_calibration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any external probability the engine compares against is first expressed on the probability scale by the same inversion, so model and reference numbers are commensurable before any divergence between them is measured.",
+    "source_operator": "odds_implied_probability_conversion",
+    "telemetry": "externally published probability quotes for the same fixtures"
+   }
+  },
+  {
+   "primitive_id": "overround_margin",
+   "name": "Quoted prices embed a margin: where the quote setter is accurate, the implied probabilities carry an in-built take, 11 percent in the paper's worked example",
+   "verbatim_quote": "if the bookmakers are accurate in their probability specifications, they have an in-built 'take', corresponding to their expected profit",
+   "page": "p. 276, Section 5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The margin is a property of the quoted set as a whole, not of any single price"
+   ],
+   "breakdown_regime": "The margin need not be spread uniformly across outcomes, so any single scalar correction of it is approximate.",
+   "domain": "probability_calibration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Reference probability vectors are treated as systematically inflated by a margin; the engine records the total overround of every reference vector it ingests and never compares a raw vector against its own probabilities.",
+    "source_operator": "overround_margin",
+    "telemetry": "the sum of each ingested reference probability vector"
+   }
+  },
+  {
+   "primitive_id": "multiplicative_rescaling_normalization",
+   "name": "Before comparison, the reference probabilities are rescaled multiplicatively so that they sum to 1",
+   "verbatim_quote": "We first rescale multiplicatively the bookmakers' odds so that they sum to 1.",
+   "page": "p. 276, Section 5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Proportional rescaling preserves the relative structure of the reference estimates"
+   ],
+   "breakdown_regime": "If the margin is in reality concentrated on particular outcomes, proportional rescaling misallocates it; the paper does not test alternative allocations.",
+   "domain": "probability_calibration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Multiplicative rescaling to unit sum is the engine's standard normalization step for reference distributions: it removes the reference's built-in margin while preserving its relative beliefs, producing the fair reference distribution the engine calibrates against.",
+    "source_operator": "odds_implied_probability_conversion",
+    "telemetry": "reference probability vectors before and after normalization"
+   }
+  },
+  {
+   "primitive_id": "expected_gain_ratio",
+   "name": "The expected gain from acting on a probability estimate, per unit committed, is the ratio of the model probability to the unscaled reference probability minus one (equation 5.1)",
+   "verbatim_quote": "If the model probabilities were without error, then the expected gain from a unit stake bet on a home win, for example, is",
+   "page": "p. 277, Section 5",
+   "latex": "E(G) = p_k^H / \\tilde{b}_k^H - 1",
+   "symbol_and_unit_ledger": {
+    "E(G)": "expected gain per unit stake, dimensionless",
+    "p_k^H": "model probability of a home win in match k",
+    "tilde b_k^H": "unscaled reference (implied) probability of a home win in match k"
+   },
+   "assumptions": [
+    "The formula is stated for the case where the model probabilities are without error, which the authors immediately qualify: in reality neither estimate is the true probability",
+    "With the reference's 11 percent margin included, an uninformative estimate has expected gain -0.11 rather than 0"
+   ],
+   "breakdown_regime": "Estimation error in the model probability enters the numerator directly, so the ratio overstates the advantage wherever the model is overconfident; value appears only if the model estimates are sufficiently more accurate than the reference.",
+   "domain": "probability_calibration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine computes the model-to-reference probability ratio for every outcome as a divergence statistic: a ratio near one means agreement with the reference, and the size of the ratio ranks where the model's information most departs from the reference.",
+    "source_operator": "multiplicative_rescaling_normalization",
+    "telemetry": "model probabilities and reference probabilities per fixture"
+   }
+  },
+  {
+   "primitive_id": "threshold_decision_rule",
+   "name": "A fixed ratio threshold r gates action: an outcome is acted on only when its model-to-reference probability ratio exceeds r, and increasing r makes the regime stricter but sparser",
+   "verbatim_quote": "Increasing r leads to a stricter betting regime, but consequently fewer bets.",
+   "page": "pp. 277-278, Section 5",
+   "latex": "\\hat{p}_k^H / \\tilde{b}_k^H > r",
+   "symbol_and_unit_ledger": {
+    "r": "predetermined threshold, > 1",
+    "hat p": "estimated model probability",
+    "tilde b": "unscaled reference probability"
+   },
+   "assumptions": [
+    "One threshold applies across matches and outcome types",
+    "The paper evaluates the rule over a range of r values rather than a single choice"
+   ],
+   "breakdown_regime": "The paper's return curve over r is noisy; at r = 1.2 the result is only borderline significantly different from the -0.11 no-skill return, so the threshold's value is weakly established.",
+   "domain": "probability_calibration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A single divergence threshold decides which model-versus-reference disagreements are large enough to surface for review; disagreements below the threshold are logged as noise, keeping the reasoning layer's attention on the few fixtures where the model genuinely disagrees.",
+    "source_operator": "expected_gain_ratio",
+    "telemetry": "the distribution of divergence ratios across a fixture round"
+   }
+  },
+  {
+   "primitive_id": "bootstrap_return_uncertainty",
+   "name": "The performance of the threshold rule is reported with 90 percent bootstrap confidence intervals, and the authors state plainly that the variability makes definitive conclusions difficult",
+   "verbatim_quote": "This is plotted as a function of r in Fig. 4, together with 90% confidence intervals obtained using the bootstrap.",
+   "page": "p. 278, Section 5 (Fig. 4)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Bootstrap resampling represents the sampling variability of the observed return",
+    "Mean return is calculated only where more than 10 sample values exist"
+   ],
+   "breakdown_regime": "One validation season of data; intervals are wide and the headline improvement over the no-skill return is borderline, a limitation the authors state rather than hide.",
+   "domain": "model_validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any performance claim the engine makes about a rule or a dial is reported with a bootstrap interval, and a claim whose interval straddles the no-skill line is stated as borderline, following the authors' own reporting standard.",
+    "source_operator": "bootstrap_return_uncertainty",
+    "telemetry": "resampled outcome histories for the evaluated rule"
+   }
+  },
+  {
+   "primitive_id": "delta_method_outcome_errors",
+   "name": "Standard errors of the outcome probability estimates, computed by the delta method, are small relative to the standard errors of the attack and defence parameters, particularly for draw probabilities (Table 6)",
+   "verbatim_quote": "The standard errors of the outcome estimates, particularly those of the draw probability estimates, are small relative to the standard errors of the attack and defence parameter estimates.",
+   "page": "p. 275, Section 4.5 (Table 6, p. 276)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Delta-method linearization around the maximum likelihood estimates",
+    "Table 4 Premiership attack standard errors run roughly 0.14 to 0.21, yet outcome probability standard errors in Table 6 are around 0.02 to 0.08"
+   ],
+   "breakdown_regime": "Parameter uncertainty does not vanish; it compresses through the probability transform, and the delta method understates error where the likelihood is far from quadratic.",
+   "domain": "statistical_inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Parameter uncertainty is pushed through the probability transform by the delta method, so every outcome probability the engine emits carries a standard error; probabilities whose errors swamp the point estimate are flagged inside the reasoning trace.",
+    "source_operator": "likelihood_product_form",
+    "telemetry": "parameter covariance from the likelihood fit; outcome probabilities per fixture"
+   }
+  },
+  {
+   "primitive_id": "burn_in_minimum_history",
+   "name": "Data from at least 60 half-weeks are required to estimate the parameters accurately; the paper's time-varying fits are produced for t ranging from 60 to 174",
+   "verbatim_quote": "are required to estimate parameters accurately, so estimates are obtained for t ranging from 60 to 174.",
+   "page": "p. 273, Section 4.5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Time is measured in half-weeks on a continuous fixture calendar, including the summer break"
+   ],
+   "breakdown_regime": "A newly formed competition or a heavily rebuilt squad restarts the identification clock in practice, whatever the nominal history length.",
+   "domain": "statistical_inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine enforces a minimum-history gate: a competition's ratings are not treated as evidence until roughly 60 half-weeks of fixtures identify them, which in this corpus meant withholding time-varying estimates until deep into the second season.",
+    "source_operator": "burn_in_minimum_history",
+    "telemetry": "number of fixture-weeks available per competition at each refit"
+   }
+  },
+  {
+   "primitive_id": "dynamic_rating_profiles",
+   "name": "The time profiles of attack and defence estimates for individual teams are non-uniform, which the authors read as evidence that team performance is genuinely dynamic; the flat segment from t = 82 to 90 is the summer break",
+   "verbatim_quote": "the non-uniformity in these estimates suggests that teams' performances are genuinely dynamic.",
+   "page": "p. 275, Section 4.5 (Fig. 2)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Profiles shown for Sheffield United, Norwich and Everton; the common home effect gamma(t) is shown alongside"
+   ],
+   "breakdown_regime": "Profile movement mixes real form change with estimation noise; the fitted xi is what balances the two, so the profiles cannot independently prove how much movement is real.",
+   "domain": "model_validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rating time series are first-class engine objects: a layer can read a team's attack trajectory, not just its current value, and the visible non-uniformity of these profiles is the standing evidence that form is real signal rather than pure noise.",
+    "source_operator": "dynamic_rating_profiles",
+    "telemetry": "per-team attack and defence estimates at every refit time"
+   }
+  },
+  {
+   "primitive_id": "chance_dominance_noise_floor",
+   "name": "An earlier generation of aggregate models concluded that chance dominates the game, finding no way of predicting outcomes within their class of models given the inherent noise in the data (Reep et al. 1971, reviewed)",
+   "verbatim_quote": "They concluded that 'chance dominates the game', finding no way of predicting outcomes within their class of models given the inherent noise in observed data.",
+   "page": "p. 266, Section 2",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The verdict is stated about the aggregate negative-binomial class of models of Moroney (1956) and Reep et al. (1971), not about team-specific models"
+   ],
+   "breakdown_regime": "The claim is relative to a model class; the paper's whole programme is that team-specific resolution escapes it, so the noise floor is a warning, not a bound on what is predictable.",
+   "domain": "model_validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The chance-dominates verdict is the engine's noise-floor reminder: aggregate models saw only noise because they averaged away team identity, so any engine layer that pools across teams must prove it has not recreated that blindness.",
+    "source_operator": "chance_dominance_noise_floor",
+    "telemetry": "predictive log score of aggregate versus team-specific models"
+   }
+  },
+  {
+   "primitive_id": "scores_only_information_discipline",
+   "name": "The model deliberately exploits only each team's history of match scores, because richer match information is less easily formalized and its qualitative value is subjective",
+   "verbatim_quote": "Consequently, our model exploits only each team's history of match scores, which we have assimilated over a 3-year period, though the possibility of including other forms of data is investigated in Section 6.",
+   "page": "p. 267, Section 3",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Goal times, scorers, league position, signings and managerial changes are available in principle but excluded from the fit",
+    "The possibility of including other forms of data is deferred to the paper's Section 6"
+   ],
+   "breakdown_regime": "Injuries, signings and managerial changes move true strength before scores reveal it, so the scores-only core has a known information ceiling.",
+   "domain": "football_score_modelling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The estimation core deliberately consumes scorelines alone, a clean and complete signal; richer context enters the reasoning layer as separate, labelled evidence rather than being folded into the ratings, where it could not be identified.",
+    "source_operator": "scores_only_information_discipline",
+    "telemetry": "final scores only, for the core fit"
+   }
+  },
+  {
+   "primitive_id": "stochastic_parameter_evolution_open",
+   "name": "Stochastically updated parameters are identified as the natural refinement, but the detailed implementation may be difficult: generalizing dynamic Poisson regression (Smith 1981) to the scale of this model is not immediate",
+   "verbatim_quote": "Stochastically updated parameters are a natural idea in this context, but the detailed implementation may be difficult.",
+   "page": "p. 279, Section 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The authors cite Smith (1981), the multiparameter steady model, as the dynamic-regression template"
+   ],
+   "breakdown_regime": "Left unimplemented by the authors; state-space updating of some 185 parameters was beyond the paper's computational scope.",
+   "domain": "statistical_inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's open roadmap item is the one the authors left open: replacing refit-with-decay by true stochastic parameter evolution, carrying rating uncertainty forward as state instead of re-deriving it at each time point.",
+    "source_operator": "time_weighted_pseudolikelihood",
+    "telemetry": "rating state and its uncertainty across time"
+   }
+  },
+  {
+   "primitive_id": "bayesian_covariate_extension",
+   "name": "Broadening the model with covariate information of unclear quantitative value is proposed through a Bayesian structure, which could exploit the subjective value of such data",
+   "verbatim_quote": "The quantitative value of such data is not always obvious, so such a development might need a Bayesian structure to exploit their subjective value.",
+   "page": "p. 279, Section 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Covariates beyond scores have no obvious quantitative value, so a likelihood-only route cannot price them"
+   ],
+   "breakdown_regime": "Subjective inputs risk contaminating a clean scores-only identification if the priors encoding them are overconfident; the proposal is a direction, not a result.",
+   "domain": "statistical_inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Where a covariate's quantitative value is genuinely unknown, the engine's sanctioned route is a Bayesian one: the covariate enters through a prior whose strength is explicit, instead of through an invented coefficient in the core fit.",
+    "source_operator": "scores_only_information_discipline",
+    "telemetry": "covariate series with prior strength settings per source"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "3d7cafefb6ffa2ae-t1",
+   "think": "The paper is Dixon and Coles, Applied Statistics 1997, the founding team-specific model of football scorelines, and its architecture is a chain in which every link answers a diagnostic that came before it. The skeleton is Maher's: home and away goals are independent Poisson variables whose means factor into an attack rating, a defence rating and a common home multiplier, so a fixture's expected goals are read off two latent ratings per team rather than estimated fixture by fixture. Because the likelihood pools all 6629 results from the four English divisions plus cup ties, every rating is opponent-adjusted automatically: scoring against a strong defence moves a team's attack more than scoring the same goals against a weak one, and promotion, relegation and cup draws stitch the divisions into one identified system whose only arbitrary choice is the scale constraint that mean attack equals one. The authors then do something more important than the skeleton: they test its assumptions in public. The aggregated marginals fit Poisson almost perfectly, but the ratio of the observed joint scoreline frequencies to the independence prediction indicts exactly four cells, 0-0, 1-0, 0-1 and 1-1, so the dependence repair, the tau function, is built to touch exactly those four cells and nothing else, preserving the Poisson marginals and collapsing to independence when rho is zero. Static ratings are the next indicted assumption: form moves, so the likelihood is rebuilt at every time point as a pseudolikelihood in which each past match is raised to an exponentially decaying weight, turning the rating table into a time series of locally constant fits with no look-ahead. The one free dial in that machinery, the decay rate xi, is not tuned on scoreline fit but on S(xi), the predictive log-likelihood of realized outcomes, an early and clean use of a proper scoring rule for hyperparameter selection, and the chosen xi of 0.0065 per half-week sits on a reassuringly flat optimum. Outcome probabilities are never modelled directly; they are sums of the score distribution over the win, draw and loss regions, and their standard errors are carried through by the delta method, which shows the probabilities are far stabler than the ratings that generate them. The estimation practice is as instructive as the model itself. Under independence with complete balanced data Maher's likelihood collapses to a system of linear equations, but the authors surrender that closed form deliberately for generality and maximize numerically in 185 dimensions, reporting that the near orthogonality of many parameter combinations makes it straightforward. What comes out is legible: a Premiership table in which Manchester United's attack estimate of 1.869 and defence estimate of 0.402 head both lists for August 1995, division means that fall monotonically down the leagues, and time profiles for individual clubs whose visible wandering is the empirical warrant for the whole dynamic apparatus, with the flat stretch across the summer break showing the calendar honestly. Uncertainty is handled at two levels: the delta method gives outcome probabilities standard errors of only a few points even though the attack and defence parameters carry errors of 0.15 to 0.20, because the probability transform compresses them, and the bootstrap later prices the strategy-level claim. Equally deliberate is the information discipline: goal times, scorers, league positions, signings and sackings are all acknowledged to exist and all excluded, because they cannot be formalized cleanly, a restraint that keeps the likelihood identified on a complete and verifiable signal. The final third of the paper converts this into an evaluation discipline: the model is refit at every time point of the held-out 1995-96 season, external probabilities are inverted from quoted prices, their built-in overround is measured at 11 percent and normalized away by multiplicative rescaling, and the comparison plot shows broad agreement with instructive scatter: the model does not claim the reference is naive, only that its own estimates differ in places by more than noise. A single ratio threshold is swept across values so the reader can see the trade between selectivity and sample size, returns are reported against the correct null, the negative return an uninformative rule earns after the reference's margin rather than zero, and at a threshold of 1.2 the improvement over that null is borderline significant, which the authors state in exactly those terms, with bootstrap intervals and the plain admission that the variability makes definitive conclusions difficult. For a reasoning engine the transferable lessons are the order of operations: latent two-sided ratings identified jointly, model surgery only where a stated diagnostic indicts the current structure, memory as an explicit decaying kernel, hyperparameters earning their values on out-of-sample-style log score, probabilities always accompanied by their errors, and every external reference normalized before it is allowed to testify. The weaknesses are equally instructive. The tau corner is the whole of the dependence structure, so game-state effects and margin correlation beyond 1-1 are unmodelled; one rho and one gamma serve every team and era; the pseudolikelihood refits are a computational blunt instrument compared with the stochastic parameter evolution the authors themselves point to and cannot yet build; the scores-only information ceiling means injuries and signings move true strength before the ratings can see it; and the validation, one held-out season with borderline bootstrap significance, shows how thin the evidence for any single season of edge really is. The paper endures because it is simultaneously a model, a diagnostic method and an honesty standard. That combination, a small model held to a high evidentiary standard, is why the paper remains the reference point for scoreline modelling nearly three decades after publication.",
+   "retrocausal_genealogy": "The lineage runs through aggregate count models first: Moroney (1956) fitting Poisson and negative binomial distributions to scorelines, Reep and Benjamin (1968) on passing moves, and Reep, Pollard and Benjamin (1971) concluding that chance dominates the game within that aggregate class. Hill (1974) showed expert league predictions carried real signal, and Maher (1982) supplied the direct ancestor: independent Poisson scores with attack and defence means fitted by maximum likelihood, plus the bivariate Poisson extension Dixon and Coles explicitly reject for low-score dependence. Around the core sit Clarke and Norman (1995) on home advantage, Smith (1981) on dynamic Poisson regression, Fahrmeir (1994) on dynamic paired comparisons, and Pope and Peel (1989) on fixed-odds market efficiency, each contributing one component the synthesis absorbs.",
+   "theory_of_mind": "The authors write for a statistically literate reader they expect to be sceptical, so they prosecute their own model before defending it: tables of empirical frequencies and independence ratios come first, and each piece of machinery is introduced only after the simpler structure has been shown failing in a specific, measured place. Their model of the domain is that football is low-scoring, noisy and form-driven, that probability accuracy rather than outcome picking is the real skill, and that a model can be wrong in its details yet right in its global structure, a sentence they state almost verbatim. They also assume the reader values candour about uncertainty: standard errors, bootstrap intervals and borderline significance are reported as findings, not buried as weaknesses.",
+   "cross_layer_veto": "Several layers of any engine built on this work are vetoed by it directly. No outcome probability may be issued from ratings that are not opponent-adjusted and time-weighted, because the paper shows raw or static summaries fail its own requirements. No scoreline distribution may assume independence in the low-score corner, because the Table 2 diagnostic measures that assumption failing. No rating may be treated as evidence before roughly sixty half-weeks of history identify it. No comparison against an external reference is valid before that reference has been normalized to sum to one. And no performance claim survives whose bootstrap interval straddles the no-skill line; the paper's own borderline result is the standing example of the veto applied to oneself."
+  }
+ ],
+ "universal_lens": "Take any domain of repeated paired contests with countable output: two latent ratings per competitor, one for producing and one for conceding, multiplied with a venue term to form expected output; fit them jointly over the whole contest graph so every result is opponent-adjusted; repair independence only in the cells a ratio diagnostic indicts; give the system an explicit exponential memory and refit at each decision time; tune the memory on the predictive log score of realized outcomes; and audit the resulting probabilities against an external reference only after that reference's built-in margin has been normalized away. Chess, tennis, sales leagues and product duels all instantiate the same template.",
+ "gsi_mapping": "The Institute takes this paper as the canonical teaching case for rating-engine design: identification through an explicit scale constraint, opponent adjustment as a consequence of joint likelihood rather than a post hoc correction, diagnostic-driven model surgery confined to the four cells the data indict, hyperparameter selection by proper scoring rule, temporal holdout as the only honest validation, and uncertainty reported at the same prominence as the estimates themselves. It is also the documented root of the modern football-modelling literature, the point from which bivariate Poisson variants, time-weighted ratings and later expected-goals era models all descend, so it anchors the curriculum's history of how quantitative sport modelling became a discipline.",
+ "gse_mapping": "The engine takes the paper as its soccer rating core and its calibration conscience: attack and defence ratings per team fitted jointly by maximum likelihood, the tau-adjusted score matrix as the single source from which win, draw and loss probabilities are summed, exponential time weighting with the decay rate selected by predictive log-likelihood, delta-method standard errors travelling with every probability, and a minimum-history gate before ratings count as evidence. Around that core, the paper's comparison methodology becomes the engine's calibration mirror: external reference probabilities are normalized before comparison, divergence ratios locate where the model genuinely disagrees, and bootstrap intervals decide which disagreements are signal."
+}
