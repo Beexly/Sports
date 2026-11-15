@@ -19,6 +19,7 @@ import gzip
 import hashlib
 import json
 import sys
+from datetime import date
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -611,12 +612,13 @@ def load_stage0_game_roster_allowlist(
     home: str = "BAL",
     week: int = 9,
     board_rel_path: str = "data/engine/tnf_jax_bal_dk_full_board_2026_11_05.json",
+    today: date | None = None,
 ) -> dict[str, Any]:
     """
     Build the cryptographically hashed Stage-0 roster, injury, and empirical 2026 PBP
     usage allowlist for (away, home, week).
     """
-    stage0_cfg = require_week(week)
+    stage0_cfg = require_week(week, today=today)
     # Simulation QB1s must honor the Stage-0 preflight live-starter resolutions
     # (qb1_ban_conflicts), not just the DFS rostering gate's backup substitution.
     stage0_cfg = apply_stage0_qb1_live_starter_resolutions(stage0_cfg, week)

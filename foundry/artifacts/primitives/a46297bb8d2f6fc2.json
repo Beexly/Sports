@@ -1,0 +1,863 @@
+{
+ "book_id": "a46297bb8d2f6fc2",
+ "source_status": "COMPLETE",
+ "source_note": "Karl Johan Astrom and Richard M. Murray, Feedback Systems: An Introduction for Scientists and Engineers, Princeton University Press, 2008 (ISBN-13 978-0-691-13576-2, Library of Congress TJ216.A78 2008, as printed in the file). The local file is the electronic edition, version v2.10b dated February 22, 2009, distributed from the companion site at Caltech; the catalog filename AstromMurray-2008-FeedbackSystems1.pdf names the 2008 print edition, and this file is its 2009 electronic revision with errata corrected. File size 8,621,576 bytes; scan digest sha256(str(size) + file bytes) = a46297bb8d2f6fc22310368eb842deae68f205f17c3e2ccee734eaf6580768b3, book_id a46297bb8d2f6fc2. Extracted text: 1,353,151 characters in 22,579 lines, clean LaTeX-composed text; display equations carry extraction artifacts (norms rendered as k, the perturbation symbol rendered as 1, hats and dots as separate marks), so all verbatim quotes were taken from prose and proven as contiguous substrings of the extracted text after the verifier normalization. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "feedback_interconnection",
+   "name": "Feedback: two or more dynamical systems interconnected so that each influences the other, forming a closed loop that must be analyzed as a whole",
+   "verbatim_quote": "The term feedback refers to a situation in which two (or more) dynamical systems are connected together such that each system influences the other and their dynamics are thus strongly coupled.",
+   "page": "Section 1.1, p. 1; text lines 385-390",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The coupled systems are dynamical: their behavior evolves over time in response to inputs",
+    "The interconnection is cyclic, so cause and effect cannot be assigned in a single direction"
+   ],
+   "breakdown_regime": "Circular causality defeats one-directional causal reasoning; a badly designed loop creates dynamic instability, oscillation or runaway behavior, and injects sensor noise into the actuation path.",
+   "domain": "control foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine is itself a feedback interconnection: projections change decisions, decisions change what data gets collected and trusted, and outcomes flow back as corrections. Any subsystem whose output re-enters its own input (form updates from results, confidence updates from settled outcomes) must be modeled as a loop with its own stability question, not as a one-way pipeline.",
+    "source_operator": "feedback_interconnection",
+    "telemetry": "Loop inventories: which engine outputs feed back into which inputs, cycle times of each update path, and the observed response of downstream estimates after each correction."
+   }
+  },
+  {
+   "primitive_id": "robustness_to_uncertainty",
+   "name": "Robustness to uncertainty: feedback supplies corrective action from the measured error, making performance insensitive to process changes and component variation",
+   "verbatim_quote": "One of the key uses of feedback is to provide robustness to uncertainty.",
+   "page": "Section 1.4, pp. 17-18; text lines 1096-1108",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The regulated signal is measured and compared against its desired value",
+    "The corrective action acts in the direction that reduces the sensed error"
+   ],
+   "breakdown_regime": "Robustness is achieved only over the band where the loop actually responds; unmeasured disturbances and unmodeled dynamics outside that band are not corrected, and pushing the loop harder trades robustness against noise amplification and instability.",
+   "domain": "control foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A projection pipeline that derives its corrections from measured error (predicted versus observed outcomes) inherits this robustness: roster and scheme changes that were never modeled still move the observed error, and the loop responds. Open loop projections computed once from a fixed model have no such property, so the engine must close the loop on settled results rather than only recalibrate on a schedule.",
+    "source_operator": "robustness_to_uncertainty",
+    "telemetry": "Rolling prediction errors by signal family, roster-change events, and the correction magnitude applied after each evaluation window."
+   }
+  },
+  {
+   "primitive_id": "feedforward_complements_feedback",
+   "name": "Feedforward: measure a disturbance, or know the command, in advance and counteract it before it affects the output; it complements reactive feedback",
+   "verbatim_quote": "Feedback is reactive: there must be an error before corrective actions are taken. However, in some circumstances it is possible to measure a disturbance before it enters the system, and this information can then be used to take corrective action before the disturbance has influenced the system.",
+   "page": "Section 1.4, p. 22; text lines 1310-1318",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The disturbance or command signal is measurable before it influences the process",
+    "A process model good enough to size and time the counteraction is available"
+   ],
+   "breakdown_regime": "Feedforward matches two signals against each other, so model error becomes output error directly: corrections with the wrong size or timing can make performance worse than feedback alone, and unmeasured disturbances are invisible to it.",
+   "domain": "control architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine signals split into the same two classes. Announced information (confirmed starters, weather fronts, schedule spots) is feedforward: it should move a projection before any error is observed, in proportion to a modeled effect. Everything learned only from outcomes is feedback and must wait for the error. Misclassifying a feedforward signal as feedback delays it by a full cycle; misclassifying feedback as feedforward double counts it.",
+    "source_operator": "feedforward_complements_feedback",
+    "telemetry": "Announcement timestamps versus event timestamps for injuries, weather and lineup news; modeled effect sizes per announcement type; residual error after feedforward adjustment."
+   }
+  },
+  {
+   "primitive_id": "on_off_control",
+   "name": "On-off control: bang-bang actuation that applies the maximum correction in the direction of the error sign",
+   "verbatim_quote": "The feedback in equation (1.1) is called on-off control. One of its chief advantages is that it is simple and there are no parameters to choose.",
+   "page": "Section 1.5, pp. 23-24, eq. (1.1); text lines 1376-1390",
+   "latex": "u = \\begin{cases} u_{\\max}, & e > 0 \\\\ u_{\\min}, & e < 0 \\end{cases}, \\quad e = r - y",
+   "symbol_and_unit_ledger": {
+    "u": "control (actuation) signal",
+    "e": "control error, reference minus output",
+    "r": "reference (command) signal",
+    "y": "system output",
+    "u_max, u_min": "actuator saturation limits"
+   },
+   "assumptions": [
+    "Only the sign of the error is used, not its magnitude",
+    "The actuator can switch between its two extreme values"
+   ],
+   "breakdown_regime": "Full-range switching overreacts to small errors and typically produces a persistent oscillation around the reference; dead zones and hysteresis limit switching frequency at the cost of a steady error band.",
+   "domain": "control laws",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Threshold rules in the engine (include or exclude a signal, act or pass, alert on or off) are on-off controllers acting on an error signal. The book's warning transfers directly: a hard threshold on a noisy error estimate produces chattering decisions near the boundary, and the standard fixes are the same, a dead zone (require a minimum margin before acting) and hysteresis (different entry and exit thresholds).",
+    "source_operator": "on_off_control",
+    "telemetry": "Decision flip counts near thresholds, error estimate distribution around each threshold, oscillation period of borderline cases."
+   }
+  },
+  {
+   "primitive_id": "pid_control_law",
+   "name": "PID control: the control action is the sum of proportional (present), integral (past) and derivative (predicted future) terms of the error",
+   "verbatim_quote": "The control action is thus a sum of three terms: the past as represented by the integral of the error, the present as represented by the proportional term and the future as represented by a linear extrapolation of the error (the derivative term).",
+   "page": "Section 1.5, p. 24, eq. (1.5); text lines 1448-1462",
+   "latex": "u(t) = k_p e(t) + k_i \\int_0^t e(\\tau)\\, d\\tau + k_d \\frac{de(t)}{dt}",
+   "symbol_and_unit_ledger": {
+    "u(t)": "control signal at time t",
+    "e(t)": "control error at time t",
+    "k_p": "proportional gain",
+    "k_i": "integral gain",
+    "k_d": "derivative gain",
+    "tau": "integration dummy variable (time)",
+    "T_d (text)": "prediction horizon of the linear error extrapolation"
+   },
+   "assumptions": [
+    "The error is measured continuously and the three terms combine linearly",
+    "A linear extrapolation of the error is an adequate short-horizon prediction for the derivative term"
+   ],
+   "breakdown_regime": "Derivative action amplifies measurement noise and is often omitted (PI control); integral action can wind up under actuator saturation (Section 10.4); the three gains interact, so the law needs systematic tuning rather than independent adjustment.",
+   "domain": "control laws",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The PID decomposition is a template for any correction rule in the engine: react to the current error (proportional), eliminate persistent bias by accumulating signed error (integral), and anticipate by extrapolating the error trend (derivative). A calibration rule missing the integral term keeps a permanent bias; one missing the derivative term overshoots after regime changes; one missing the proportional term reacts too slowly to matter.",
+    "source_operator": "pid_control_law",
+    "telemetry": "Signed error series per projection family, its running integral, and its short-window slope; correction applied per cycle."
+   }
+  },
+  {
+   "primitive_id": "integral_control_zero_steady_state_error",
+   "name": "Integral action forces zero steady-state error: any persistent nonzero error keeps accumulating until the actuation removes it",
+   "verbatim_quote": "This control form is called integral control, and ki is the integral gain. It can be shown through simple arguments that a controller with integral action has zero steady-state error (Exercise 1.5).",
+   "page": "Section 1.5, p. 24, eq. (1.4); text lines 1440-1447",
+   "latex": "u(t) = k_i \\int_0^t e(\\tau)\\, d\\tau",
+   "symbol_and_unit_ledger": {
+    "u(t)": "control signal",
+    "k_i": "integral gain",
+    "e(tau)": "control error over time"
+   },
+   "assumptions": [
+    "The closed loop reaches a steady state (it is not oscillating or diverging)",
+    "The actuator does not saturate permanently"
+   ],
+   "breakdown_regime": "The guarantee is void if no steady state exists: under saturation the integral winds up and produces large transients, and in an unstable or oscillating loop the error never settles for the integral to cancel.",
+   "domain": "control laws",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's bias-elimination theorem. If a projection family shows a persistent signed bias, an integral term in the update rule guarantees the bias is driven to zero in steady state, whereas proportional-only recalibration mathematically cannot remove it when a constant corrective input is required. The check is mechanical: track cumulative signed error; if it drifts linearly, integral action is missing.",
+    "source_operator": "integral_control_zero_steady_state_error",
+    "telemetry": "Cumulative signed error (bias integral) per projection family and per context bucket; time for the bias integral to return to zero after corrections."
+   }
+  },
+  {
+   "primitive_id": "state_definition",
+   "name": "State: the collection of variables that summarizes the past of a system for the purpose of predicting its future",
+   "verbatim_quote": "The state of a system is a collection of variables that summarize the past of a system for the purpose of predicting the future.",
+   "page": "Section 2.2, p. 34; text lines 1895-1898 (also Section 2.1, p. 28)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A finite set of variables suffices to capture everything about the past that matters for the future",
+    "For physical systems the state accounts for storage of mass, momentum and energy"
+   ],
+   "breakdown_regime": "If a variable that stores relevant history is omitted, the model is not Markov in the chosen state and predictions degrade in ways that look like noise; state choice is a modeling decision, not a given.",
+   "domain": "modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine feature set is implicitly a state claim: these variables summarize everything about a team, player or matchup that the future depends on. The definition gives the audit test: if two situations share the same recorded state but systematically different futures, the state is incomplete and the missing storage variable (fatigue load, scheme change, role change) must be found and added.",
+    "source_operator": "state_definition",
+    "telemetry": "State vector schema per entity; residual analysis searching for history variables that still predict outcomes after conditioning on the current state."
+   }
+  },
+  {
+   "primitive_id": "state_space_model",
+   "name": "State space model: dynamics and measurement as two maps, dx/dt = f(x,u) and y = h(x,u)",
+   "verbatim_quote": "The model consists of two functions: the function f gives the rate of change of the state vector as a function of state x and control u, and the function h gives the measured values as functions of state x and control u.",
+   "page": "Section 2.2, p. 34, eq. (2.5); text lines 1899-1912",
+   "latex": "\\dot{x} = f(x, u), \\quad y = h(x, u)",
+   "symbol_and_unit_ledger": {
+    "x": "state vector in R^n",
+    "u": "control/input vector in R^p",
+    "y": "measured output vector in R^q",
+    "f": "dynamics map, rate of change of the state",
+    "h": "measurement map",
+    "n": "system order (state dimension)"
+   },
+   "assumptions": [
+    "f and h are smooth mappings",
+    "The model is time-invariant: f and h do not depend explicitly on t"
+   ],
+   "breakdown_regime": "Real systems are often time-varying, discontinuous or hybrid; the smooth time-invariant form then holds only locally or piecewise, and a single global f rarely survives regime changes.",
+   "domain": "modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The two-map split disciplines engine design: f is the transition model (how a team's true strength state evolves from game to game) and h is the observation model (how that state shows up in box scores, tracking and reports). Errors must be attributed to the right map: a bad projection can come from wrong dynamics or from a wrong measurement model, and the fixes are different.",
+    "source_operator": "state_space_model",
+    "telemetry": "Transition residuals (state prediction errors) logged separately from observation residuals (measurement prediction errors) for every tracked entity."
+   }
+  },
+  {
+   "primitive_id": "linear_state_space_model",
+   "name": "Linear time-invariant state space model: dx/dt = Ax + Bu, y = Cx + Du, with dynamics, control, sensor and direct-term matrices",
+   "verbatim_quote": "The matrix A is called the dynamics matrix, the matrix B is called the control matrix, the matrix C is called the sensor matrix and the matrix D is called the direct term.",
+   "page": "Section 2.2, p. 34, eq. (2.6); text lines 1913-1924",
+   "latex": "\\dot{x} = Ax + Bu, \\quad y = Cx + Du",
+   "symbol_and_unit_ledger": {
+    "A": "dynamics matrix (n by n)",
+    "B": "control matrix (n by p)",
+    "C": "sensor matrix (q by n)",
+    "D": "direct term (q by p)",
+    "x, u, y": "state, input and output vectors"
+   },
+   "assumptions": [
+    "f and h are linear in x and u",
+    "A, B, C and D are constant matrices"
+   ],
+   "breakdown_regime": "Linearity fails away from the operating point where it was fit; superposition, the property every LTI tool depends on, is then only an approximation whose error grows with excursion size.",
+   "domain": "modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Most engine update rules are LTI in disguise: a linear rating update is an A, a signal's influence weight is a B, and a box-score readout is a C. Writing them in this form unlocks the whole linear toolkit in this book (eigenvalue stability, reachability, observability, transfer functions) as literal checks on the engine rather than as metaphors.",
+    "source_operator": "linear_state_space_model",
+    "telemetry": "Estimated A, B, C matrices for rating dynamics per league; linearity checks comparing predicted versus realized responses at small and large input excursions."
+   }
+  },
+  {
+   "primitive_id": "equilibrium_point",
+   "name": "Equilibrium point: a state xe with F(xe) = 0, where the dynamics are stationary and constant operating conditions live",
+   "verbatim_quote": "Equilibrium points are one of the most important features of a dynamical system since they define the states corresponding to constant operating conditions.",
+   "page": "Section 4.2, pp. 100-101; text lines 5659-5668",
+   "latex": "F(x_e) = 0",
+   "symbol_and_unit_ledger": {
+    "x_e": "equilibrium state",
+    "F": "vector field of the autonomous dynamics dx/dt = F(x)"
+   },
+   "assumptions": [
+    "The system is autonomous (no explicit time dependence or input)",
+    "An equilibrium exists; a system can have zero, one or many"
+   ],
+   "breakdown_regime": "Equilibria say nothing by themselves about behavior nearby: the same point can attract, repel or saddle, which is decided by the stability analysis, and time-varying systems may have no fixed equilibrium at all.",
+   "domain": "dynamical systems analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Equilibrium thinking gives the engine its baseline concept: a consensus rating, a team's settled rotation, or a league's scoring environment is an operating point, and most analysis should be done as deviations from it. The discipline is to name the equilibrium explicitly before modeling deviations, instead of fitting deviations against a moving, unnamed baseline.",
+    "source_operator": "equilibrium_point",
+    "telemetry": "Named baseline states per entity (resting rating, normal rotation, league-average environment) and deviation series measured against them."
+   }
+  },
+  {
+   "primitive_id": "lyapunov_stability_definition",
+   "name": "Stability in the sense of Lyapunov: solutions that start near a solution stay near it for all future time",
+   "verbatim_quote": "A solution is stable if other solutions that start near a stay close to x(t; a).",
+   "page": "Section 4.3, p. 102; text lines 5786-5796",
+   "latex": "\\|b - a\\| < \\delta \\ \\Rightarrow\\ \\|x(t; b) - x(t; a)\\| < \\epsilon \\quad \\forall\\, t > 0",
+   "symbol_and_unit_ledger": {
+    "a, b": "initial conditions",
+    "x(t; a)": "solution starting from a",
+    "epsilon": "allowed deviation of solutions",
+    "delta": "required closeness of initial conditions (may depend on epsilon)"
+   },
+   "assumptions": [
+    "Solutions exist and are unique for the initial conditions considered",
+    "The guarantee is about staying near, not about converging"
+   ],
+   "breakdown_regime": "Stability alone permits neutrally stable behavior (persistent oscillation at fixed amplitude); convergence requires the stronger asymptotic stability, and both are local unless the condition holds for all radii.",
+   "domain": "dynamical systems analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the acceptance test for any iterative engine procedure: perturb the inputs slightly (a revised box score, a corrected injury status) and the outputs must move slightly, not jump. A projection or ranking procedure that fails the epsilon-delta test is unstable in Lyapunov's sense and will produce whipsawing outputs that no downstream consumer can trust.",
+    "source_operator": "lyapunov_stability_definition",
+    "telemetry": "Perturbation tests: output deltas under small input revisions, logged per model version; maximum output jump per unit input change."
+   }
+  },
+  {
+   "primitive_id": "eigenvalue_stability_theorem",
+   "name": "Theorem 4.1: a linear system dx/dt = Ax is asymptotically stable if and only if every eigenvalue of A has strictly negative real part",
+   "verbatim_quote": "is asymptotically stable if and only if all eigenvalues of A all have a strictly negative real part and is unstable if any eigenvalue of A has a strictly positive real part.",
+   "page": "Section 4.3, pp. 105-106, Theorem 4.1; text lines 6103-6106",
+   "latex": "\\dot{x} = Ax \\ \\text{is asymptotically stable} \\iff \\mathrm{Re}\\, \\lambda_j(A) < 0 \\ \\text{for all } j",
+   "symbol_and_unit_ledger": {
+    "A": "dynamics matrix",
+    "lambda_j(A)": "j-th eigenvalue of A, root of det(sI - A) = 0"
+   },
+   "assumptions": [
+    "The system is linear and time-invariant",
+    "Eigenvalues are counted with their algebraic multiplicity (Jordan structure is treated in Chapter 5)"
+   ],
+   "breakdown_regime": "Eigenvalues on the imaginary axis are the inconclusive boundary for nonlinear systems; for repeated eigenvalues the Jordan blocks add polynomial factors in t, so eigenvalues must be read together with the Jordan form.",
+   "domain": "dynamical systems analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any linear update rule in the engine (rating updates, exponentially weighted averages, linear recalibration) has a literal stability certificate: compute the eigenvalues of its update matrix. A single eigenvalue with positive real part (or outside the unit circle in discrete time) means the rule diverges no matter how good it looks on a short backtest.",
+    "source_operator": "eigenvalue_stability_theorem",
+    "telemetry": "Eigenvalue spectra of every fitted linear update rule at fit time; alerts when the dominant eigenvalue approaches the stability boundary."
+   }
+  },
+  {
+   "primitive_id": "linearization_at_equilibrium",
+   "name": "Linearization: near an equilibrium, a nonlinear system is approximated by dz/dt = Az with A the Jacobian of F at xe",
+   "verbatim_quote": "We call the system (4.11) the linear approximation of the original nonlinear system or the linearization at xe .",
+   "page": "Section 4.3, pp. 108-109, eq. (4.11); text lines 6218-6232",
+   "latex": "\\dot{z} = Az, \\quad A = \\left. \\frac{\\partial F}{\\partial x} \\right|_{x_e}, \\quad z = x - x_e",
+   "symbol_and_unit_ledger": {
+    "z": "deviation state from the equilibrium",
+    "F": "nonlinear vector field",
+    "Jacobian": "matrix of partial derivatives of F with respect to x",
+    "x_e": "equilibrium point"
+   },
+   "assumptions": [
+    "F is differentiable at xe and the deviation z stays small",
+    "The equilibrium is hyperbolic for the stability conclusion to transfer (Theorem 4.3 in the text)"
+   ],
+   "breakdown_regime": "The approximation is local: far from xe the higher-order terms dominate, and if the linearization is only neutrally stable the nonlinear terms decide stability, so linearization is inconclusive there.",
+   "domain": "dynamical systems analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Linearization is the license for the engine's local models: matchup adjustments, rest effects and pace effects are Jacobians, valid for small deviations around a named operating point. The failure mode it warns against is extrapolating a locally fit effect to extreme deviations (blowout game scripts, third-string lineups) where the higher-order terms are the story.",
+    "source_operator": "linearization_at_equilibrium",
+    "telemetry": "Deviation magnitudes at prediction time versus the range used to fit each local effect; flags when a prediction extrapolates beyond the fit range."
+   }
+  },
+  {
+   "primitive_id": "lyapunov_function",
+   "name": "Lyapunov function: a positive definite energy-like function that decreases along trajectories proves stability without solving the dynamics",
+   "verbatim_quote": "Roughly speaking, if we can find a nonnegative function that always decreases along trajectories of the system, we can conclude that the minimum of the function is a stable equilibrium point (locally).",
+   "page": "Section 4.4, pp. 110-112, Theorem 4.2; text lines 6351-6398",
+   "latex": "\\dot{V} = \\frac{\\partial V}{\\partial x} F(x)",
+   "symbol_and_unit_ledger": {
+    "V": "Lyapunov function, positive definite with V(0) = 0",
+    "F": "system vector field",
+    "V dot": "time derivative of V along trajectories"
+   },
+   "assumptions": [
+    "The equilibrium is shifted to the origin",
+    "V is continuous and positive definite on a ball around the origin; V dot negative semidefinite gives stability, negative definite gives asymptotic stability"
+   ],
+   "breakdown_regime": "Lyapunov functions are not unique and can be hard to find; failure to find one proves nothing, and a function that works locally certifies only the local region.",
+   "domain": "dynamical systems analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Lyapunov idea transfers as a design pattern: define a scalar potential for the engine (total calibration error, total ranking inconsistency) and require every update rule to provably decrease it. An update that cannot be shown to decrease the chosen potential is rejected, which converts stability from a hope into a per-update check.",
+    "source_operator": "lyapunov_function",
+    "telemetry": "Potential value (aggregate error functional) recorded after every model update; any update that increases it is flagged with the responsible component."
+   }
+  },
+  {
+   "primitive_id": "lyapunov_equation",
+   "name": "Lyapunov equation: for a linear system, the quadratic Lyapunov function V = x^T P x is found by solving A^T P + P A = -Q",
+   "verbatim_quote": "Thus, to find a Lyapunov function for a linear system it is sufficient to choose a Q > 0 and solve the Lyapunov equation:",
+   "page": "Section 4.4, p. 114, eq. (4.14); text lines 6478-6494",
+   "latex": "A^T P + PA = -Q",
+   "symbol_and_unit_ledger": {
+    "P": "symmetric positive definite matrix defining V(x) = x^T P x",
+    "Q": "chosen symmetric positive definite matrix",
+    "A": "dynamics matrix"
+   },
+   "assumptions": [
+    "A has all eigenvalues in the left half-plane (the system is stable)",
+    "Q is positive definite; then the solution P exists and is positive definite"
+   ],
+   "breakdown_regime": "If A is not Hurwitz the equation may have no positive definite solution; solving it is cubic-cost in the state dimension, which limits very large state spaces.",
+   "domain": "dynamical systems analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The equation turns stability checking for the engine's linear subsystems into a linear algebra call: given a fitted A and any Q > 0, solve for P; if P comes back positive definite, the subsystem has a certified energy function and a computable decay margin. It is the constructive half of the Lyapunov idea, usable in automated model validation.",
+    "source_operator": "lyapunov_function",
+    "telemetry": "Solved P matrices and their minimum eigenvalues for each production linear model; decay-rate estimates derived from P and Q."
+   }
+  },
+  {
+   "primitive_id": "matrix_exponential",
+   "name": "Matrix exponential: e^X defined by the Taylor series, generalizing the scalar exponential to matrices",
+   "verbatim_quote": "We define the matrix exponential as the infinite series",
+   "page": "Section 5.2, pp. 136-137, eq. (5.7); text lines 7652-7662",
+   "latex": "e^{X} = \\sum_{k=0}^{\\infty} \\frac{1}{k!} X^k = I + X + \\frac{1}{2} X^2 + \\frac{1}{3!} X^3 + \\cdots",
+   "symbol_and_unit_ledger": {
+    "X": "square matrix (n by n)",
+    "I": "identity matrix",
+    "X^k": "k-th matrix power, with X^0 = I"
+   },
+   "assumptions": [
+    "The series converges for every square matrix X",
+    "Differentiation term by term is valid, giving d/dt e^{At} = A e^{At}"
+   ],
+   "breakdown_regime": "Direct series evaluation is numerically poor for large or stiff matrices; practical computation uses scaling and squaring or the eigenstructure, and e^{A+B} equals e^A e^B only when A and B commute.",
+   "domain": "linear systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The matrix exponential is the exact propagator for the engine's linear state models: it converts a per-step update matrix into the state after any horizon in one shot, which is how multi-game projections of ratings and availability states should be computed instead of iterating a simulator step by step.",
+    "source_operator": "matrix_exponential",
+    "telemetry": "Horizon propagators e^{A h} for standard horizons (1, 3, 7 games); numerical checks that iterated one-step updates match the closed-form propagator."
+   }
+  },
+  {
+   "primitive_id": "convolution_equation",
+   "name": "Convolution equation: the full solution of a linear system is the initial-condition response plus the convolution of the input with the matrix exponential kernel",
+   "verbatim_quote": "Equation (5.15) is called the convolution equation, and it represents the general form of the solution of a system of coupled linear differential equations.",
+   "page": "Section 5.3, pp. 145-146, Theorem 5.4 and eq. (5.15); text lines 8372-8422",
+   "latex": "x(t) = e^{At} x(0) + \\int_0^t e^{A(t-\\tau)} B u(\\tau)\\, d\\tau",
+   "symbol_and_unit_ledger": {
+    "x(0)": "initial state",
+    "u(tau)": "input history",
+    "e^{A(t-tau)} B": "impulse response kernel",
+    "A, B": "dynamics and control matrices"
+   },
+   "assumptions": [
+    "The system is linear and time-invariant",
+    "The output is jointly linear in the initial condition and the input (superposition)"
+   ],
+   "breakdown_regime": "The formula is exact only for LTI dynamics; time-varying or nonlinear systems need the state transition matrix generalization, and the integral form hides the fact that the kernel decays only when A is stable.",
+   "domain": "linear systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The convolution equation is the engine's accounting identity for any linear signal: current state equals decayed initial state plus the sum of all past inputs, each decayed by its age through the kernel e^{A(t-tau)}. It dictates exactly how game results, injuries and news should be weighted by age inside a linear model, and exposes double counting when an input enters through two paths.",
+    "source_operator": "convolution_equation",
+    "telemetry": "Kernel weights by input age for each linear signal family; audits that realized weighting in production matches the kernel."
+   }
+  },
+  {
+   "primitive_id": "reachability_rank_condition",
+   "name": "Reachability rank condition (Theorem 6.1): a linear system is reachable if and only if the reachability matrix Wr = [B AB ... A^(n-1)B] is invertible",
+   "verbatim_quote": "Theorem 6.1 (Reachability rank condition). A linear system is reachable if and only if the reachability matrix Wr is invertible.",
+   "page": "Section 6.1, pp. 169-170, eq. (6.3) and Theorem 6.1; text lines 9760-9802",
+   "latex": "W_r = \\begin{bmatrix} B & AB & \\cdots & A^{n-1} B \\end{bmatrix}",
+   "symbol_and_unit_ledger": {
+    "W_r": "reachability matrix",
+    "A, B": "dynamics and control matrices",
+    "n": "state dimension"
+   },
+   "assumptions": [
+    "Linear time-invariant system",
+    "Reachability means every state can be reached from any initial state in finite time by some input"
+   ],
+   "breakdown_regime": "Rank is a yes/no structural test: a barely invertible Wr means reachability in principle but with enormous inputs, so practical reachability needs the Gramian conditioning, not just the rank.",
+   "domain": "state feedback design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Reachability is the audit for the engine's levers: given the signals it can actually move (lineup projections, pace expectations, usage rates), which states of a matchup can it distinguish and steer its estimate toward? If the effective Wr of a model is rank deficient, some game states are unreachable by its inputs and its projections there are uncontrolled extrapolation.",
+    "source_operator": "reachability_rank_condition",
+    "telemetry": "Rank and condition number of the empirical reachability matrix per model; list of state directions with near-zero reachability."
+   }
+  },
+  {
+   "primitive_id": "state_feedback_eigenvalue_assignment",
+   "name": "State feedback u = -Kx + kr r moves the closed loop eigenvalues to those of A - BK; choosing them is the eigenvalue assignment (pole placement) problem",
+   "verbatim_quote": "This control problem is called the eigenvalue assignment problem or pole placement problem (we will define poles more formally in Chapter 8).",
+   "page": "Section 6.2, pp. 175-176, eqs. (6.10)-(6.12); text lines 10190-10210",
+   "latex": "u = -Kx + k_r r, \\quad \\dot{x} = (A - BK)x + Bk_r r",
+   "symbol_and_unit_ledger": {
+    "K": "state feedback gain",
+    "k_r": "reference (feedforward) gain, set to give unity zero-frequency gain",
+    "r": "reference value",
+    "A - BK": "closed loop dynamics matrix"
+   },
+   "assumptions": [
+    "All state components are measured",
+    "The system is reachable, which is exactly the condition for arbitrary eigenvalue placement (Theorem 6.3)"
+   ],
+   "breakdown_regime": "Eigenvalue placement says nothing about transient size or robustness: aggressive placement gives huge gains K, amplifies noise and can destroy the margins of Chapter 9; the kr calibration is exact-model dependent.",
+   "domain": "state feedback design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine correction rule is a K: how strongly each component of the state error feeds back into the next estimate. Pole placement reframes tuning: choose the desired decay rates of error modes first (how fast a bad read on a team should wash out), then derive the gains, instead of hand-tuning gains and discovering the decay rates afterward.",
+    "source_operator": "state_feedback_eigenvalue_assignment",
+    "telemetry": "Desired versus achieved error-mode decay rates per model; feedback gain magnitudes monitored for noise amplification."
+   }
+  },
+  {
+   "primitive_id": "ackermann_formula",
+   "name": "Ackermann's formula: the single-input feedback gain for a desired characteristic polynomial is computed directly from the reachability matrix and its canonical form",
+   "verbatim_quote": "Equation (6.21), which is called Ackermann's formula [Ack72, Ack85], can be used for numeric computations.",
+   "page": "Section 6.3, p. 181, eq. (6.21) and Theorem 6.3; text lines 10482-10540",
+   "latex": "K = \\begin{bmatrix} p_1 - a_1 & p_2 - a_2 & \\cdots & p_n - a_n \\end{bmatrix} \\tilde{W}_r W_r^{-1}",
+   "symbol_and_unit_ledger": {
+    "p_i": "coefficients of the desired closed loop characteristic polynomial",
+    "a_i": "coefficients of the open loop characteristic polynomial of A",
+    "W_r": "reachability matrix",
+    "W tilde_r": "reachability matrix of the reachable canonical form"
+   },
+   "assumptions": [
+    "Single input, single output",
+    "The system is reachable so Wr is invertible"
+   ],
+   "breakdown_regime": "The formula is numerically ill-conditioned for high-order systems (the text recommends the place algorithm instead); it also inherits every limitation of pure eigenvalue assignment.",
+   "domain": "state feedback design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Ackermann's formula is the closed-form end of the pole placement idea: desired error dynamics in, exact gains out, no iterative search. In the engine it serves as the reference implementation against which any learned or tuned feedback gains can be compared: if tuned gains differ wildly from the Ackermann gains for the same target poles, the tuning process, not the target, is suspect.",
+    "source_operator": "state_feedback_eigenvalue_assignment",
+    "telemetry": "Reference gains computed per model release; divergence between production gains and reference gains logged."
+   }
+  },
+  {
+   "primitive_id": "integral_action_augmentation",
+   "name": "Integral action by state augmentation: add the integrated tracking error as a controller state z with dz/dt = y - r, and feed back u = -Kx - ki z + kr r",
+   "verbatim_quote": "An alternative to calibration is to make use of integral feedback, in which the controller uses an integrator to provide zero steady-state error.",
+   "page": "Section 6.4, pp. 195-196, eqs. (6.28)-(6.29); text lines 11472-11498",
+   "latex": "u = -Kx - k_i z + k_r r, \\quad \\dot{z} = y - r",
+   "symbol_and_unit_ledger": {
+    "z": "integrator state, the accumulated output error",
+    "k_i": "integral feedback gain",
+    "K": "state feedback gain",
+    "r": "reference output"
+   },
+   "assumptions": [
+    "The augmented system (plant plus integrator) is stabilized by the chosen K and ki",
+    "At equilibrium z dot = 0 forces y = r regardless of the exact A, B and K values"
+   ],
+   "breakdown_regime": "The integrator adds a state that can wind up under saturation and slows the loop; the zero-error guarantee holds only at a stable equilibrium of the augmented system.",
+   "domain": "state feedback design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the constructive version of the bias theorem for the engine: append one integrator state per tracked output (per projection family) whose value is the cumulative signed error, and feed it back with a small gain. The guarantee transfers verbatim: at any stable equilibrium of the augmented system the family's steady bias is exactly zero, independent of model error in the plant.",
+    "source_operator": "integral_control_zero_steady_state_error",
+    "telemetry": "Integrator state values per projection family (visible accumulated bias), their feedback gains, and saturation events."
+   }
+  },
+  {
+   "primitive_id": "observability_rank_condition",
+   "name": "Observability rank condition (Theorem 7.1): a linear system is observable if and only if the observability matrix Wo = [C; CA; ...; CA^(n-1)] is full rank",
+   "verbatim_quote": "Theorem 7.1 (Observability rank condition). A linear system of the form (7.1) is observable if and only if the observability matrix Wo is full rank.",
+   "page": "Section 7.1, pp. 202-203, eq. (7.4) and Theorem 7.1; text lines 11905-11950",
+   "latex": "W_o = \\begin{bmatrix} C \\\\ CA \\\\ \\vdots \\\\ CA^{n-1} \\end{bmatrix}",
+   "symbol_and_unit_ledger": {
+    "W_o": "observability matrix",
+    "C": "sensor matrix",
+    "A": "dynamics matrix",
+    "n": "state dimension"
+   },
+   "assumptions": [
+    "Linear time-invariant system",
+    "Outputs are available over an interval; derivatives beyond n-1 add no rank by the Cayley-Hamilton theorem"
+   ],
+   "breakdown_regime": "Full rank is again only structural: near rank deficiency means some state directions are observable only through enormous noise amplification, and differentiating outputs to reconstruct state is impractical under measurement noise, which is why observers exist.",
+   "domain": "output feedback design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Observability is the audit for the engine's data feeds: given what is actually measured (box scores, snap counts, tracking summaries), which components of the true state (player health, scheme intent, fatigue) are reconstructible at all? A rank-deficient Wo names the blind spots precisely, and no estimator, however sophisticated, can recover those directions from the given measurements.",
+    "source_operator": "observability_rank_condition",
+    "telemetry": "Empirical observability rank per data feed combination; singular values of Wo identifying the weakest observed state directions."
+   }
+  },
+  {
+   "primitive_id": "observer_state_estimation",
+   "name": "Observer: a copy of the model driven by the output error, dxhat/dt = A xhat + Bu + L(y - C xhat), combining measurements with the dynamical model",
+   "verbatim_quote": "The observer is a dynamical system whose inputs are the process input u and the process output y.",
+   "page": "Section 7.2, pp. 206-209; text lines 12390-12398",
+   "latex": "\\dot{\\hat{x}} = A\\hat{x} + Bu + L(y - C\\hat{x})",
+   "symbol_and_unit_ledger": {
+    "x hat": "state estimate",
+    "L": "observer gain matrix",
+    "y - C x hat": "output estimation error (innovation)",
+    "A, B, C": "model matrices"
+   },
+   "assumptions": [
+    "The system is observable, so L can place the error dynamics eigenvalues of A - LC",
+    "The model (A, B, C) is a usable description of the process"
+   ],
+   "breakdown_regime": "Estimation error dynamics are only as good as the model: unmodeled dynamics bias the estimate, and a fast observer (large L) amplifies measurement noise into the estimate.",
+   "domain": "output feedback design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The observer is the engine's state tracker architecture: run the model forward, and correct it by the innovation (measured minus predicted output) weighted by L. It prescribes exactly how live information should update a rating: not by replacement, but as a gain-weighted correction to a model prediction, with the gain set by how fast the error modes should decay.",
+    "source_operator": "observer_state_estimation",
+    "telemetry": "Innovation series (predicted versus measured outputs) per tracked entity; observer gain settings and resulting estimate error decay."
+   }
+  },
+  {
+   "primitive_id": "separation_principle",
+   "name": "Separation principle: output feedback design separates into independent state feedback and observer designs; the closed loop eigenvalues are the union of the A - BK and A - LC eigenvalues",
+   "verbatim_quote": "The property that the eigenvalue assignment for output feedback can be separated into an eigenvalue assignment for a state feedback and an observer is called the separation principle.",
+   "page": "Section 7.3, p. 213; text lines 12628-12640",
+   "latex": "\\lambda(s) = \\det(sI - A + BK)\\, \\det(sI - A + LC)",
+   "symbol_and_unit_ledger": {
+    "K": "state feedback gain (depends only on A and B)",
+    "L": "observer gain (depends only on A and C)",
+    "lambda(s)": "closed loop characteristic polynomial"
+   },
+   "assumptions": [
+    "Linear system, reachable and observable",
+    "The controller is exactly the observer plus state feedback structure"
+   ],
+   "breakdown_regime": "Separation is an eigenvalue statement, not a robustness statement: the separated design can have poor margins and large transients even with well placed eigenvalues, and it fails outright for most nonlinear systems.",
+   "domain": "output feedback design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Separation licenses the engine's modular architecture: the estimation side (trackers that infer true state from noisy measurements) and the decision side (rules that act on state) can be designed, tested and versioned independently, and the combined system's error modes are the union of the two designs. The caveat transfers too: independent design does not guarantee the combination is robust, so the joint system still needs margin checks.",
+    "source_operator": "separation_principle",
+    "telemetry": "Separate validation suites for estimator and decision modules; joint-system margin checks run at integration time, not assumed from module tests."
+   }
+  },
+  {
+   "primitive_id": "kalman_filter",
+   "name": "Kalman filter: the observer whose gain is chosen from the noise covariances to minimize the mean square estimation error, via the Riccati equation",
+   "verbatim_quote": "It can also be shown that the Kalman filter extracts the maximum possible information about output data.",
+   "page": "Section 7.4, pp. 215-217, Theorems 7.4 and 7.5; text lines 12742-12820",
+   "latex": "L = PC^T R_w^{-1}, \\quad AP + PA^T - PC^T R_w^{-1} CP + FR_v F^T = 0",
+   "symbol_and_unit_ledger": {
+    "P": "steady-state error covariance E{(x - xhat)(x - xhat)^T}",
+    "R_v": "process noise covariance",
+    "R_w": "measurement noise covariance",
+    "F": "disturbance input matrix",
+    "L": "optimal observer (Kalman) gain"
+   },
+   "assumptions": [
+    "Disturbances and measurement noise are zero-mean Gaussian white noise with known covariances",
+    "For the constant-gain form, the system is stationary and P converges"
+   ],
+   "breakdown_regime": "Optimality is relative to the assumed noise model: wrong covariances or non-Gaussian, correlated noise silently degrade the filter, and the residual whiteness test is the diagnostic the text provides.",
+   "domain": "output feedback design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The Kalman filter is the engine's principled answer to how much a new observation should move an estimate: the gain is the ratio of state uncertainty to total uncertainty, computed from declared noise levels for each data source. It replaces hand-set update weights with covariances that can be estimated from data, and its whiteness test (innovations should be uncorrelated) is a built-in audit of whether the tracker is extracting all available information.",
+    "source_operator": "observer_state_estimation",
+    "telemetry": "Innovation autocorrelation per tracker (whiteness test), declared versus realized noise covariances per data source, error covariance P published with every estimate."
+   }
+  },
+  {
+   "primitive_id": "transfer_function_from_state_space",
+   "name": "Transfer function G(s) = C(sI - A)^{-1}B + D: the input/output description of a state space system, invariant to state coordinates and seeing only the reachable and observable part",
+   "verbatim_quote": "Another property of the transfer function is that it corresponds to the portion of the state space dynamics that is both reachable and observable.",
+   "page": "Section 8.2, pp. 234-235, eq. (8.4); text lines 13800-13814",
+   "latex": "G(s) = C(sI - A)^{-1} B + D",
+   "symbol_and_unit_ledger": {
+    "s": "complex frequency variable",
+    "A, B, C, D": "state space matrices",
+    "G(s)": "transfer function from input to output"
+   },
+   "assumptions": [
+    "Linear time-invariant system, zero initial conditions for the pure input/output reading",
+    "The realization may be non-minimal; pole-zero cancellations hide internal modes"
+   ],
+   "breakdown_regime": "The transfer function is blind to unreachable or unobservable internal dynamics, which can be unstable while G(s) looks benign; internal stability must be checked on the state space model.",
+   "domain": "frequency domain analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The invariance result is a warning and a tool for the engine: many different internal models produce identical input/output behavior, so input/output fit alone cannot certify an internal story (a rating model and a matchup model may be the same G). Conversely, when only input/output behavior matters, the transfer function is the complete, coordinate-free object to fit and compare.",
+    "source_operator": "transfer_function_from_state_space",
+    "telemetry": "Input/output response fits per model; cancellation audits comparing transfer function poles against full state space eigenvalues."
+   }
+  },
+  {
+   "primitive_id": "poles_and_zeros",
+   "name": "Poles and zeros: roots of the denominator and numerator polynomials of G(s) = b(s)/a(s); poles are the system modes, zeros block transmission of their exponential signals",
+   "verbatim_quote": "The roots of the polynomial a(s) are called the poles of the system, and the roots of b(s) are called the zeros of the system.",
+   "page": "Section 8.3, pp. 239-240; text lines 14051-14064",
+   "latex": "G(s) = \\frac{b(s)}{a(s)}",
+   "symbol_and_unit_ledger": {
+    "a(s)": "characteristic (denominator) polynomial; its roots are the poles",
+    "b(s)": "numerator polynomial; its roots are the zeros",
+    "p": "a pole, giving the modal solution e^{pt}"
+   },
+   "assumptions": [
+    "G(s) is a rational function (finite-dimensional LTI system without delays)",
+    "For a state space system the poles are the eigenvalues of A"
+   ],
+   "breakdown_regime": "Right half-plane zeros (non-minimum phase) impose hard performance limits and initial undershoot that no controller removes; a pure time delay is not rational at all and appears only as the factor e^{-tau s}.",
+   "domain": "frequency domain analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Poles and zeros give the engine a vocabulary for signal behavior: a data source whose effect decays as a sum of modes has identifiable poles (time constants), and a signal that a model structurally cannot transmit at some pattern (a zero) explains systematic misses better than noise does. Checking for right half-plane zero behavior in fitted responses flags models whose corrections will initially move the wrong way.",
+    "source_operator": "transfer_function_from_state_space",
+    "telemetry": "Fitted pole/zero maps per signal response; undershoot events logged where a correction initially moves opposite its target."
+   }
+  },
+  {
+   "primitive_id": "bode_plot_frequency_response",
+   "name": "Frequency response and Bode plot: G(iw) represented as gain and phase curves over a logarithmic frequency axis; a sinusoid is amplified by |G(iw)| and shifted by arg G(iw)",
+   "verbatim_quote": "The frequency response G(iω) can thus be represented by two curves: the gain curve and the phase curve.",
+   "page": "Section 8.4, pp. 250-251; text lines 14642-14670",
+   "latex": "M = |G(i\\omega)|, \\quad \\phi = \\arg G(i\\omega)",
+   "symbol_and_unit_ledger": {
+    "omega": "frequency in rad/s",
+    "M": "gain (amplitude ratio) at frequency omega",
+    "phi": "phase shift at frequency omega"
+   },
+   "assumptions": [
+    "Linear system in sinusoidal steady state",
+    "Gain and phase contributions of factors add on the log scale, enabling straight-line sketching"
+   ],
+   "breakdown_regime": "The frequency response describes steady state only; transients are invisible in it, and for nonlinear systems the response depends on amplitude, so a single Bode plot does not exist.",
+   "domain": "frequency domain analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Bode thinking gives the engine a frequency axis for its signals: some information is slow (season-long strength), some is fast (game-to-game noise), and every filter the engine applies has a gain and a phase at each band. Phase is the neglected half: a signal that is accurate but late is a phase lag, and stacking several lagged signals destabilizes decisions exactly as it destabilizes control loops.",
+    "source_operator": "bode_plot_frequency_response",
+    "telemetry": "Effective gain and delay (phase) per data source measured against realized outcomes, by frequency band (game, week and month scales)."
+   }
+  },
+  {
+   "primitive_id": "loop_transfer_function",
+   "name": "Loop transfer function L(s) = P(s)C(s): the transfer function around the broken feedback loop; sustained oscillation requires L(iw0) = -1",
+   "verbatim_quote": "we introduce the loop transfer function L(s) = P(s)C(s), which is the transfer function obtained by breaking the feedback loop, as shown in Figure 9.1b.",
+   "page": "Section 9.1, pp. 267-269, eq. (9.1); text lines 15660-15672",
+   "latex": "L(s) = P(s)C(s), \\quad L(i\\omega_0) = -1",
+   "symbol_and_unit_ledger": {
+    "P(s)": "process transfer function",
+    "C(s)": "controller transfer function",
+    "omega_0": "frequency of a sustained oscillation",
+    "-1": "critical point"
+   },
+   "assumptions": [
+    "Negative feedback convention, with the sign carried in the definition of L",
+    "The loop can be broken at a point where a signal can be injected and measured"
+   ],
+   "breakdown_regime": "The oscillation condition is exact only for the linear loop; saturation and other nonlinearities turn the criterion into describing-function approximations, and loops with right half-plane poles need the full Nyquist counting.",
+   "domain": "frequency domain analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Loop analysis is how the engine should study its own feedback paths: identify the loop (estimate, decision, external reaction, revised estimate), write its loop transfer function, and check how close it comes to the critical point at any timescale. Herding and overcorrection in an updating system are loop phenomena, visible in L long before they are visible in outcomes.",
+    "source_operator": "loop_transfer_function",
+    "telemetry": "Loop gain estimates per feedback path and timescale; distance of the empirical loop response from the critical point."
+   }
+  },
+  {
+   "primitive_id": "nyquist_stability_criterion",
+   "name": "Nyquist criterion (Theorem 9.1, simplified form): with no right half-plane loop poles, the closed loop is stable if and only if the Nyquist plot of L has no net encirclements of the critical point -1",
+   "verbatim_quote": "Then the closed loop system is stable if and only if the closed contour given by  = {L(iω) : −∞ < ω < ∞} ⊂ C has no net encirclements of the critical point s = −1.",
+   "page": "Section 9.2, pp. 270-271, Theorem 9.1; text lines 15801-15807",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "L has no poles in the closed right half-plane except single poles on the imaginary axis (simplified version)",
+    "The full version counts encirclements against the right half-plane poles of L"
+   ],
+   "breakdown_regime": "The criterion is exact for rational LTI loops but gives a binary answer; it must be supplemented with margins to know how close to instability the loop is, and it does not directly handle nonlinear or time-varying loops.",
+   "domain": "frequency domain analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Nyquist is the engine's whole-loop stability certificate: instead of testing components one at a time, trace the full loop response and count encirclements of the critical point. It is the formal version of a practical rule: a self-referential updating system is stable or not as a whole loop, and component-level quality does not settle the question.",
+    "source_operator": "loop_transfer_function",
+    "telemetry": "Nyquist-style plots of empirical loop responses per release; encirclement counts recorded in model validation reports."
+   }
+  },
+  {
+   "primitive_id": "gain_and_phase_margins",
+   "name": "Gain and phase margins: the smallest gain increase and the smallest phase lag that destabilize the loop, read from the crossover frequencies",
+   "verbatim_quote": "Formally, the gain margin gm of a system is defined as the smallest amount that the open loop gain can be increased before the closed loop system goes unstable.",
+   "page": "Section 9.3, pp. 278-280, eqs. (9.5)-(9.6); text lines 16235-16252",
+   "latex": "g_m = \\frac{1}{|L(i\\omega_{pc})|}, \\quad \\phi_m = \\pi + \\arg L(i\\omega_{gc})",
+   "symbol_and_unit_ledger": {
+    "g_m": "gain margin",
+    "phi_m": "phase margin",
+    "omega_pc": "phase crossover frequency, where the phase of L is -180 degrees",
+    "omega_gc": "gain crossover frequency, where |L| = 1"
+   },
+   "assumptions": [
+    "The classical reading assumes a single gain crossover and a single phase crossover",
+    "Both margins together still do not bound the distance to the critical point; the stability margin sm does"
+   ],
+   "breakdown_regime": "With multiple crossovers the Bode reading of margins can be wrong, and a system can have good gain and phase margins separately while passing very close to -1 diagonally.",
+   "domain": "frequency domain analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Margins convert stability from a yes/no property into a budget the engine can spend: how much can a signal's weight grow (gain margin) or its timing slip (phase margin) before the update loop goes unstable? Setting release gates as minimum margins, rather than as accuracy thresholds alone, prevents shipping a model that is accurate and one data revision away from oscillating.",
+    "source_operator": "nyquist_stability_criterion",
+    "telemetry": "Gain and phase margins computed for every production update loop at release; margin history tracked across versions."
+   }
+  },
+  {
+   "primitive_id": "small_gain_theorem",
+   "name": "Small gain theorem (Theorem 9.4): an interconnection of two stable systems is input/output stable if the product of their gains is less than one",
+   "verbatim_quote": "The small gain theorem is thus an extension of the Nyquist stability theorem.",
+   "page": "Section 9.5, p. 287, Theorem 9.4; text lines 16708-16716",
+   "latex": "\\gamma_1 \\gamma_2 < 1",
+   "symbol_and_unit_ledger": {
+    "gamma_1, gamma_2": "input/output gains of the two subsystems",
+    "gamma": "resulting closed loop gain, gamma_1 / (1 - gamma_1 gamma_2)"
+   },
+   "assumptions": [
+    "Both subsystems are stable and their gains are well defined on the signal spaces used",
+    "No phase information is used"
+   ],
+   "breakdown_regime": "Ignoring phase makes the theorem conservative: many stable interconnections fail the test, so it certifies stability when it applies but cannot certify instability when it does not.",
+   "domain": "frequency domain analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Small gain is the compositional safety rule for the engine's model network: if every component's amplification of its input error is measured, any loop whose gain product is below one is guaranteed not to amplify errors around the loop. It gives a pre-deployment check that needs only per-component gain measurements, not a model of the whole network.",
+    "source_operator": "small_gain_theorem",
+    "telemetry": "Per-component error amplification factors (output error per unit input error) measured on validation data; loop products computed for every cyclic dependency."
+   }
+  },
+  {
+   "primitive_id": "sensitivity_gang_of_four",
+   "name": "Sensitivity functions (Gang of Four): S = 1/(1+PC), T = PC/(1+PC), PS = P/(1+PC) and CS = C/(1+PC) completely describe how a feedback loop responds to references, disturbances and noise",
+   "verbatim_quote": "The linear behavior of the system is determined by the six transfer functions in equation (11.2), and specifications can be expressed in terms of these transfer functions.",
+   "page": "Section 11.1, pp. 316-317, eq. (11.3); text lines 18320-18350",
+   "latex": "S = \\frac{1}{1 + PC}, \\quad T = \\frac{PC}{1 + PC}, \\quad S + T = 1",
+   "symbol_and_unit_ledger": {
+    "S": "sensitivity function (disturbance path to output)",
+    "T": "complementary sensitivity function",
+    "P, C": "process and controller transfer functions",
+    "PS": "load sensitivity function",
+    "CS": "noise sensitivity function"
+   },
+   "assumptions": [
+    "Linear feedback loop with pure error feedback (F = 1) for the Gang of Four",
+    "Specifications on the loop translate into bounds on these four functions"
+   ],
+   "breakdown_regime": "S + T = 1 is an identity, so disturbance rejection (small S) and noise rejection (small T) cannot both be achieved at the same frequency; hidden cancellations can leave PS unstable while S and T look fine, as Example 11.1 in the text shows.",
+   "domain": "frequency domain design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The Gang of Four is the engine's complete response card for any feedback-adjusted estimate: S says how much of a real change in the world reaches the output, T says how much measurement noise reaches it, and S + T = 1 states the conservation law between them. Any proposal to make projections more responsive must name which of the four functions improves and which one pays.",
+    "source_operator": "sensitivity_gang_of_four",
+    "telemetry": "Empirical S and T curves per model (response to real regime changes versus response to noise injections) estimated on held-out data."
+   }
+  },
+  {
+   "primitive_id": "bode_sensitivity_integral",
+   "name": "Bode's sensitivity integral (Theorem 11.1): the integral of log|S(iw)| over all frequencies is fixed by the right half-plane poles of L, so sensitivity reduced somewhere must increase elsewhere (the waterbed effect)",
+   "verbatim_quote": "Equation (11.19) implies that there are fundamental limitations to what can be achieved by control and that control design can be viewed as a redistribution of disturbance attenuation over different frequencies.",
+   "page": "Section 11.5, pp. 335-336, Theorem 11.1 and eq. (11.19); text lines 19389-19406",
+   "latex": "\\int_0^{\\infty} \\log |S(i\\omega)|\\, d\\omega = \\pi \\sum_k p_k",
+   "symbol_and_unit_ledger": {
+    "S": "sensitivity function",
+    "p_k": "right half-plane poles of the loop transfer function L",
+    "omega": "frequency in rad/s"
+   },
+   "assumptions": [
+    "L rolls off faster than 1/s at high frequency",
+    "For an open-loop stable L the right-hand side is zero"
+   ],
+   "breakdown_regime": "The formula is a hard conservation law, not a guideline: it assumes the stated roll-off, and right half-plane poles make the required total sensitivity strictly positive, so unstable dynamics tax every design.",
+   "domain": "frequency domain design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The waterbed effect is the engine's no-free-lunch theorem for calibration: suppressing projection error in one band (one season phase, one game type) with a fixed feedback structure pushes error into another band, and the integral accounts for it exactly. Calibration reviews should therefore always report the full error spectrum, never a single band's improvement, and structural changes (new signals) are the only way to beat the trade.",
+    "source_operator": "sensitivity_gang_of_four",
+    "telemetry": "Error spectra by band before and after every calibration change; the log-sensitivity integral tracked as a conservation check."
+   }
+  },
+  {
+   "primitive_id": "robust_stability_condition",
+   "name": "Robust stability condition: the closed loop stays stable for all process perturbations whose relative size is below 1/|T(iw)| at every frequency",
+   "verbatim_quote": "Equation (12.6) implies that the closed loop system will at least be stable for substantial variations in the process dynamics.",
+   "page": "Section 12.2, pp. 353-354, eq. (12.6); text lines 20330-20342",
+   "latex": "\\frac{|\\Delta(i\\omega)|}{|P(i\\omega)|} < \\frac{1}{|T(i\\omega)|} \\quad \\text{for all } \\omega \\geq 0",
+   "symbol_and_unit_ledger": {
+    "Delta(iw)": "additive perturbation of the process at frequency w (the perturbation glyph is rendered as 1 in the extracted text)",
+    "P(iw)": "nominal process frequency response",
+    "T(iw)": "complementary sensitivity function",
+    "1/|T|": "maximum tolerable relative error"
+   },
+   "assumptions": [
+    "The nominal closed loop is stable and the perturbation is stable",
+    "The bound is sufficient, derived from the small gain theorem, hence conservative in directions away from the critical point"
+   ],
+   "breakdown_regime": "Conservatism cuts both ways: the condition guarantees stability only inside the bound, and designs that keep T small everywhere for safety sacrifice responsiveness; robustness is bought band by band, tightest near crossover.",
+   "domain": "robust performance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This condition turns model risk into a computable budget for the engine: at each timescale, the tolerable relative error in the world model is the reciprocal of the complementary sensitivity. Where the engine is most responsive (T near 1) it must also be most accurate; where it is sluggish, large model error is tolerable. Data quality investment should be allocated by this budget, not uniformly.",
+    "source_operator": "sensitivity_gang_of_four",
+    "telemetry": "Estimated model error by band versus the 1/|T| budget; bands where realized error approaches the budget flagged for data investment."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "a46297bb8d2f6fc2-t1",
+   "think": "This book is a complete theory of how to make dynamical systems behave by closing loops around them, and its architecture is itself a design pattern. It begins with modeling: a system is compressed into a state, the variables that summarize the past for the purpose of predicting the future, together with two maps, the dynamics f and the measurement h. Everything after that is consequences. Chapter 4 asks what the free behavior of such a model looks like: equilibria where F(xe) = 0, limit cycles, and the Lyapunov definitions that separate staying near a solution from converging to it. Chapter 5 solves the linear case exactly. The matrix exponential propagates initial conditions, the convolution equation adds inputs, and superposition lets the two be summed. Once the linear machine exists, the book splits design into the two questions that organize the rest of the text. Can the inputs steer the state anywhere (reachability), and can the outputs reveal the state (observability)? These are dual rank conditions on two explicit matrices, and they are the gatekeepers for everything constructive that follows. If a system is reachable, state feedback can place the closed loop eigenvalues arbitrarily (Ackermann's formula makes it a computation), and integral action can be added by augmenting the state so that steady state error vanishes by construction rather than by calibration. If a system is observable, an observer can reconstruct the state by running a model in parallel and correcting it with the output error, and the separation principle says the two designs compose: the closed loop eigenvalues are just the union of the feedback and observer eigenvalues. The Kalman filter then answers the question the deterministic observer leaves open, namely how the correction gain should be set when both the process and the sensors are noisy, and its answer is a Riccati equation driven by the two noise covariances. The second half of the book changes coordinates from time to frequency. The transfer function G(s) = C(sI - A)^{-1}B + D discards the internal coordinates and keeps only input/output behavior, with poles as modes and zeros as blocked transmissions. On this object the Nyquist criterion gives a complete stability test for a feedback loop in terms of encirclements of a single critical point, and gain and phase margins convert that test into distances: how much gain or phase the loop can absorb before it fails. The final chapters are about limits. The Gang of Four sensitivity functions describe every response of a loop to references, disturbances and noise, and the identity S + T = 1 makes the central trade unavoidable: a loop cannot be insensitive to disturbances and to sensor noise at the same frequency. Bode's integral turns the trade into a conservation law with an exact accounting, the waterbed effect, and the robust stability condition converts it into a budget: the tolerable relative model error at each frequency is the reciprocal of the complementary sensitivity there. A final structural lesson is duality: reachability and observability, state feedback and state estimation, are the same mathematics read in opposite directions, so every design tool in the book exists twice, and a weakness on one side has a mirror on the other. What this changes for a reasoning engine is discipline at three levels. Architecturally, it separates estimation from decision and licenses independent design of each, with a composition theorem and an explicit warning that composition still needs margin checks. Operationally, it replaces tuned update rules with derived ones: gains come from desired error decay rates, noise covariances or margin targets, and each choice is auditable. Epistemically, it supplies the limit theorems that tell you when a requested improvement is impossible for structural reasons and must be bought with new information rather than more tuning. Where it breaks is equally clear. The constructive theory is linear; nonlinear systems inherit it only locally, through linearization near an equilibrium, and the guarantees thin exactly when deviations are large. Rank conditions are structural and silent about conditioning, so reachable and observable can still mean practically impossible. The frequency domain tools assume time invariance and steady state. And every robustness result is relative to an uncertainty description that the designer must supply honestly; the theory budgets model error, it does not forgive an unexamined one. Two design details deserve emphasis because they recur everywhere the theory is used. The first is the PID controller, which the book treats not as a heuristic but as the canonical feedback law whose three terms are the past, present and future of the error, and whose tuning rules, from Ziegler and Nichols to relay autotuning, are the practical bridge between the time domain and frequency domain views. The second is the two degrees of freedom architecture, which separates the response to commands from the response to disturbances: feedforward shapes how the system follows a reference, feedback shapes how it rejects disturbances and noise, and conflating the two jobs is the most common structural error in loop design. The limits chapters add two more hard constraints to the sensitivity accounting: right half-plane zeros force an initial response in the wrong direction and cap the achievable bandwidth, and time delays consume phase margin directly, so a loop that is slow to sense or slow to act has a stability budget that no gain choice can restore. The book is also honest about its own frame: the constructive theory is continuous time, while real implementations are sampled, and the robustness results are stated for unstructured uncertainty even though real model error is usually structured, which is why the small gain based conditions are sufficient rather than necessary. The deepest habit the book teaches is accounting: every design claim is paired with an identity or an inequality that prices it, the sensitivity integral, the margin definitions, the Riccati equation, so that a disagreement about a design can always be moved from taste to arithmetic.",
+   "retrocausal_genealogy": "The lineage the book itself traces runs from Watt's centrifugal governor on the steam engine, through Harold Black's 1927 negative feedback amplifier at Bell Telephone Laboratories, which traded gain for insensitivity to tube variation, to the Ziegler and Nichols tuning rules of the 1940s and the frequency domain machinery of Nyquist and Bode. The state space half descends from mechanics, where positions and velocities first played the role of state, and from Kalman's 1961 results, which the text states as Theorems 7.4 and 7.5 and which unified estimation with the same eigenvalue machinery used for feedback. Astrom and Murray's contribution is the synthesis: one notation, one set of rank conditions and one sensitivity accounting covering both halves.",
+   "theory_of_mind": "The authors write for scientists and engineers from any discipline who share calculus and linear algebra but not a common application language, so they teach every concept twice: once as intuition with a physical or biological example (glucose regulation, balance systems, congestion control, drug administration) and once as a theorem. Their model of the reader is someone who will build real loops and be hurt by the failure modes, so the text repeatedly privileges operable checks (rank tests, margins, integral identities) over abstract existence results, and it treats examples as part of the theory rather than decoration. Control, in their framing, is an information science: sensing, computation and actuation are coequal citizens.",
+   "cross_layer_veto": "This work vetoes several moves that other layers of a reasoning system routinely attempt. It vetoes any claim of improved disturbance rejection that does not present the full sensitivity accounting, because Bode's integral forces the displaced error to reappear somewhere. It vetoes pole-zero cancellation as a design shortcut, since the Gang of Four shows the cancelled mode surviving in the load sensitivity function, potentially unstable. It vetoes calibration as a route to zero steady state error, because only integral action makes that error vanish structurally. It vetoes fast estimation without a noise budget, because the observer gain trades model error against measurement noise and the Kalman covariance accounting is the price of optimality. And it vetoes component-level sign-off for looped systems: stability is a property of the closed loop, certified by Nyquist counting and margins, never by the quality of the parts."
+  }
+ ],
+ "universal_lens": "Read outside engineering, this book is a general grammar for any system that senses, decides and acts in a changing world. Its recurring moves are: compress history into a state; separate what the world does (dynamics) from what you can see (measurement); ask what your levers can reach and what your sensors can reveal before designing anything; close the loop and budget the resulting trade between responsiveness and noise; and respect the conservation laws that make some improvements impossible without new information. Organizations, markets, bodies and software all instantiate the same diagram, and the same failure modes (oscillation from delayed overcorrection, windup from saturated actuators, blindness from unobservable states) recur in each.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book supplies the research method for studying sport as a dynamical system. Contests become state transitions, athletes become states with storage (fitness, fatigue, skill) that the state definition forces us to make explicit, and coaching interventions become inputs whose reachability can be tested rather than assumed. The observability rank condition tells researchers which latent quantities a given data collection can in principle recover, and the Kalman machinery tells them how to recover those quantities optimally from noisy measurements. The Institute's empirical claims can then be stated in the book's auditable forms: estimated dynamics, declared noise covariances, sensitivity spectra and stability margins.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the book is an operating manual for a self-correcting prediction system. Ratings are states propagated by a transition model and corrected by observers whose gains come from noise covariances, not habit. Feedback gains are set by desired error decay rates through eigenvalue assignment, integral states are carried per projection family so steady bias is eliminated structurally, and every release is gated on gain and phase margins of the update loops rather than on accuracy alone. The sensitivity accounting governs all claims: responsiveness to real change and immunity to noise are traded through S and T under the Bode conservation law, and data investment follows the robustness budget 1/|T|."
+}

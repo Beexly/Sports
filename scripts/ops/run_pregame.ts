@@ -31,6 +31,7 @@ import {
 } from "@sports/prediction-engine/src/evidence/completeness-gate.js";
 import { sealRun } from "@sports/prediction-engine/src/evidence/manifest-hash.js";
 import { computeFamilyDiagnostics } from "@sports/prediction-engine/src/evidence/family-diagnostics.js";
+import { applyCorpusShrink, toGameGrounding, CORPUS_SHRINK_FLOOR } from "@sports/prediction-engine/src/evidence/corpus-adapter.js";
 import { isPresent, type PregameVerdict } from "@sports/prediction-engine/src/evidence/types.js";
 import { canonicalTeamCode, teamNickname, type NflTeamCode } from "@sports/prediction-engine/src/evidence/team-codes.js";
 import { simulateCoachGame } from "@sports/prediction-engine/src/coach-sim/markov-simulator.js";
@@ -207,15 +208,32 @@ async function main(): Promise<number> {
   // Every family is computed and reported with the deviation it actually saw.
   // None has a fitted coefficient, so every weight is zero and every delta is
   // zero. The deviation is what a future fit would be fitted against.
+  //
+  // The corpus then SHRINKS the measured deviation toward zero for the families
+  // that have a documented counterpart. It never grows, flips or creates one.
   const familyDeltas = computeFamilyDiagnostics(bundle);
+  const grounding = isPresent(bundle.corpus)
+    ? toGameGrounding(bundle.corpus.value, gameId)
+    : null;
+  const shrink = applyCorpusShrink(familyDeltas, grounding);
+  const familyDeltasShrunk = shrink.diagnostics;
+
   log("");
   log("STAGE D — situational overlay (all families shadow, weight 0)");
-  for (const f of familyDeltas) {
+  for (const f of familyDeltasShrunk) {
     const v = f.value === null ? "MISSING" : f.value.toFixed(4);
     const d = f.deviation === null ? "—" : f.deviation.toFixed(4);
-    log(`  ${f.family.padEnd(20)} ${f.status.padEnd(8)} value ${v.padEnd(10)} dev ${d.padEnd(10)} ${f.unit}`);
+    const s = f.shrunkDeviation === null ? "—" : f.shrunkDeviation.toFixed(4);
+    const m = f.corpusMultiplier === 1 ? "—" : `x${f.corpusMultiplier.toFixed(3)}`;
+    log(
+      `  ${f.family.padEnd(20)} ${f.status.padEnd(8)} value ${v.padEnd(10)} dev ${d.padEnd(10)} shrunk ${s.padEnd(10)} ${m.padEnd(8)} ${f.unit}`,
+    );
   }
-  log(`  ${familyDeltas.filter((f) => f.status === "REAL").length} measured, 0 live`);
+  log(
+    `  ${familyDeltasShrunk.filter((f) => f.status === "REAL").length} measured, 0 live; ` +
+      `corpus shrunk ${shrink.appliedFamilies.length} (${shrink.appliedFamilies.join(", ") || "none"}), ` +
+      `${shrink.unmappedFamilies.length} unmapped`,
+  );
 
   // ---- Stage E -----------------------------------------------------------
   const marketPrior = isPresent(bundle.market.consensusNoVigHome)
@@ -228,7 +246,7 @@ async function main(): Promise<number> {
     emit(args.out, { manifest, bundle, outputs: { ...outputs, verdict: "MISSING_DATA" } });
     return 2;
   }
-  const liveDelta = familyDeltas.reduce((s, f) => s + f.delta * f.emissionWeight, 0);
+  const liveDelta = familyDeltasShrunk.reduce((s, f) => s + f.delta * f.emissionWeight, 0);
   const posterior = marketPrior + liveDelta;
   log("");
   log("STAGE E — posterior");
@@ -236,14 +254,35 @@ async function main(): Promise<number> {
   log("  calibration map: not applied (no fitted map in this path yet)");
 
   // ---- Stage F -----------------------------------------------------------
+  // Both sides are priced. Checking only the home side would report a no-bet on
+  // a game where the away side is the value, which is the same error as
+  // publishing a pick without looking at the other half of the market.
   const bestHome = isPresent(bundle.market.bestHomePrice) ? bundle.market.bestHomePrice.value : null;
+  const bestAway = isPresent(bundle.market.bestAwayPrice) ? bundle.market.bestAwayPrice.value : null;
   const impliedHome = bestHome === null ? null : americanToProb(bestHome);
-  const edge = impliedHome === null ? null : posterior - impliedHome;
+  const impliedAway = bestAway === null ? null : americanToProb(bestAway);
+  const homeEdge = impliedHome === null ? null : posterior - impliedHome;
+  const awayEdge = impliedAway === null ? null : 1 - posterior - impliedAway;
+
   const MIN_EDGE = 0.02;
-  const verdict: PregameVerdict = edge !== null && edge >= MIN_EDGE ? "SHADOW" : "NO_BET";
+  const candidates: Array<{ side: "HOME" | "AWAY"; edge: number }> = [];
+  if (homeEdge !== null) candidates.push({ side: "HOME", edge: homeEdge });
+  if (awayEdge !== null) candidates.push({ side: "AWAY", edge: awayEdge });
+  const best = candidates.reduce<{ side: "HOME" | "AWAY"; edge: number } | null>(
+    (acc, c) => (acc === null || c.edge > acc.edge ? c : acc),
+    null,
+  );
+  const verdict: PregameVerdict = best !== null && best.edge >= MIN_EDGE ? "SHADOW" : "NO_BET";
+
   log("");
-  log("STAGE F — decision");
-  log(`  best home price ${bestHome ?? "MISSING"}  implied ${impliedHome === null ? "n/a" : impliedHome.toFixed(4)}  edge ${edge === null ? "n/a" : edge.toFixed(4)}  threshold ${MIN_EDGE}`);
+  log("STAGE F — decision (two-sided)");
+  log(
+    `  home  price ${bestHome ?? "MISSING"}  implied ${impliedHome === null ? "n/a" : impliedHome.toFixed(4)}  edge ${homeEdge === null ? "n/a" : homeEdge.toFixed(4)}`,
+  );
+  log(
+    `  away  price ${bestAway ?? "MISSING"}  implied ${impliedAway === null ? "n/a" : impliedAway.toFixed(4)}  edge ${awayEdge === null ? "n/a" : awayEdge.toFixed(4)}`,
+  );
+  log(`  best  ${best === null ? "no priced side" : `${best.side} ${best.edge.toFixed(4)}`}  threshold ${MIN_EDGE}`);
   log(`  verdict ${verdict}`);
   log("  publishable false — the walk-forward emission gate is closed");
 
@@ -254,11 +293,23 @@ async function main(): Promise<number> {
     reasoningTrace,
     publicationAuthority,
     projection,
-    familyDeltas,
+    familyDeltas: familyDeltasShrunk,
+    corpusShrink: {
+      appliedFamilies: shrink.appliedFamilies,
+      unmappedFamilies: shrink.unmappedFamilies,
+      adjustments: shrink.adjustments,
+      floor: CORPUS_SHRINK_FLOOR,
+    },
     marketPrior,
     liveDelta,
     posterior,
-    edge,
+    pricing: {
+      home: { price: bestHome, implied: impliedHome, edge: homeEdge },
+      away: { price: bestAway, implied: impliedAway, edge: awayEdge },
+      bestSide: best === null ? null : best.side,
+      bestEdge: best === null ? null : best.edge,
+      threshold: MIN_EDGE,
+    },
     publishable: false,
   };
   const manifest = sealRun({ bundle, outputs: finalOutputs }, bundle.codeVersion, now.toISOString());

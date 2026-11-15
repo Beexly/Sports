@@ -101,6 +101,11 @@ function latestPerBook(
   return out;
 }
 
+/** American price -> implied probability. Used only to spot outlier quotes. */
+function americanToProb(price: number): number {
+  return price > 0 ? 100 / (price + 100) : -price / (-price + 100);
+}
+
 function median(values: readonly number[]): number | null {
   if (values.length === 0) return null;
   const sorted = [...values].sort((a, b) => a - b);
@@ -156,18 +161,49 @@ export async function loadMarket(
   const perBook: { home: number; away: number; draw: number | null }[] = [];
   const homePrices: number[] = [];
   const awayPrices: number[] = [];
-  let bestHome: number | null = null;
-  let bestAway: number | null = null;
   for (const r of latestPerBook(rows, "H2H").values()) {
     if (r.homePrice === null || r.awayPrice === null) continue;
     perBook.push({ home: r.homePrice, away: r.awayPrice, draw: r.drawPrice });
     homePrices.push(r.homePrice);
     awayPrices.push(r.awayPrice);
-    bestHome = bestHome === null ? r.homePrice : Math.max(bestHome, r.homePrice);
-    bestAway = bestAway === null ? r.awayPrice : Math.max(bestAway, r.awayPrice);
   }
   const read = consensusNoVig(perBook);
   const noH2hReason = "no h2h odds rows with two-sided prices for game";
+
+  // A "best price" is only usable if it is a real quote. A +440 on a team the
+  // market prices at +150 is a 290-cent outlier — a stale row, a different
+  // market, or a mislabelled book — and using it manufactures a 19-point edge
+  // out of nothing. Keep only prices whose implied probability is within
+  // PRICE_OUTLIER_TOLERANCE of the de-vigged consensus, and report how many
+  // were dropped.
+  const PRICE_OUTLIER_TOLERANCE = 0.05;
+  const consensusHome = read?.fairHomeProb ?? null;
+  const consensusAway = read?.fairAwayProb ?? null;
+  let bestHome: number | null = null;
+  let bestAway: number | null = null;
+  let homeOutliers = 0;
+  let awayOutliers = 0;
+  // Prices that agree with the consensus. The representative moneyline is the
+  // median of THESE, not of every row: a book whose H2H row is really a spread
+  // price (observed on SF @ DAL: draftkings -120/-102, williamhill -131/+100,
+  // 886 rows each) drags a raw median to a number no book ever quoted.
+  const inToleranceHome: number[] = [];
+  const inToleranceAway: number[] = [];
+  for (const r of latestPerBook(rows, "H2H").values()) {
+    if (r.homePrice === null || r.awayPrice === null) continue;
+    if (consensusHome !== null && Math.abs(americanToProb(r.homePrice) - consensusHome) > PRICE_OUTLIER_TOLERANCE) {
+      homeOutliers += 1;
+    } else {
+      bestHome = bestHome === null ? r.homePrice : Math.max(bestHome, r.homePrice);
+      inToleranceHome.push(r.homePrice);
+    }
+    if (consensusAway !== null && Math.abs(americanToProb(r.awayPrice) - consensusAway) > PRICE_OUTLIER_TOLERANCE) {
+      awayOutliers += 1;
+    } else {
+      bestAway = bestAway === null ? r.awayPrice : Math.max(bestAway, r.awayPrice);
+      inToleranceAway.push(r.awayPrice);
+    }
+  }
 
   const consensusNoVigHome: Evidence<number> =
     read !== null
@@ -196,8 +232,8 @@ export async function loadMarket(
 
   // Representative moneylines: median across books (the best available price
   // is reported separately in bestHomePrice/bestAwayPrice).
-  const homeMlMedian = median(homePrices);
-  const awayMlMedian = median(awayPrices);
+  const homeMlMedian = median(inToleranceHome);
+  const awayMlMedian = median(inToleranceAway);
   const homeMoneyline: Evidence<number> =
     homeMlMedian !== null
       ? real(homeMlMedian, "the-odds-api", maxIso)
@@ -214,13 +250,39 @@ export async function loadMarket(
 
   const bestHomePrice: Evidence<number> =
     bestHome !== null
-      ? real(bestHome, "the-odds-api", maxIso)
-      : missing(noH2hReason, "the-odds-api", maxIso);
+      ? real(
+          bestHome,
+          "the-odds-api",
+          maxIso,
+          homeOutliers > 0
+            ? `best price within ${PRICE_OUTLIER_TOLERANCE} of consensus; ${homeOutliers} outlier quote(s) excluded`
+            : undefined,
+        )
+      : missing(
+          homeOutliers > 0
+            ? `every home price was more than ${PRICE_OUTLIER_TOLERANCE} from consensus (${homeOutliers} outliers)`
+            : noH2hReason,
+          "the-odds-api",
+          maxIso,
+        );
 
   const bestAwayPrice: Evidence<number> =
     bestAway !== null
-      ? real(bestAway, "the-odds-api", maxIso)
-      : missing(noH2hReason, "the-odds-api", maxIso);
+      ? real(
+          bestAway,
+          "the-odds-api",
+          maxIso,
+          awayOutliers > 0
+            ? `best price within ${PRICE_OUTLIER_TOLERANCE} of consensus; ${awayOutliers} outlier quote(s) excluded`
+            : undefined,
+        )
+      : missing(
+          awayOutliers > 0
+            ? `every away price was more than ${PRICE_OUTLIER_TOLERANCE} from consensus (${awayOutliers} outliers)`
+            : noH2hReason,
+          "the-odds-api",
+          maxIso,
+        );
 
   return {
     consensusNoVigHome,

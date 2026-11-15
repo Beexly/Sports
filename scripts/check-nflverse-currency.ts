@@ -45,7 +45,7 @@ function fields(line: string): string[] {
 
 async function reach(url: string): Promise<{ ok: boolean; status: number | string; maxSeason?: number }> {
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { signal: AbortSignal.timeout(25_000) });
     if (!res.ok) return { ok: false, status: res.status };
     const buf = Buffer.from(await res.arrayBuffer());
     const isGz = buf.length > 1 && buf[0] === 0x1f && buf[1] === 0x8b;
@@ -64,11 +64,10 @@ async function main(): Promise<void> {
   console.log(`\nnflverse currency guard — required current season >= ${SEASON}\n`);
   const failures: string[] = [];
   const warnings: string[] = [];
-
+  const tasks: { key: NflverseDatasetKey; variant: string }[] = [];
   for (const key of Object.keys(NFLVERSE_CATALOG) as NflverseDatasetKey[]) {
-    const d = NFLVERSE_CATALOG[key];
-    const variants = VARIANTS[key] ?? [undefined as unknown as string];
-    for (const variant of variants) {
+    const variants = VARIANTS[key] ?? [undefined as unknown as string]; for (const variant of variants) tasks.push({ key, variant }); } const CONCURRENCY = 4; let nextIdx = 0; await Promise.all(Array.from({ length: Math.min(CONCURRENCY, tasks.length) }, async () => { while (nextIdx < tasks.length) { const { key, variant } = tasks[nextIdx++]!; const d = NFLVERSE_CATALOG[key];
+                                                                                                                                                                                                                                                                                                            
       const url = nflverseUrl(key, SEASON, variant);
       const label = `${key}${variant ? `(${variant})` : ""}`;
       const soft = SOFT[key];
@@ -95,7 +94,7 @@ async function main(): Promise<void> {
         else if (!reaches) (soft ? warnings : failures).push(`${label}: combined asset max season ${r.maxSeason} < ${SEASON}${soft ? ` (${soft})` : ""}`);
       }
     }
-  }
+  }));
 
   console.log(`\n${"=".repeat(50)}`);
   if (warnings.length) { console.log(`WARNINGS (soft / known upstream lag):`); for (const w of warnings) console.log(`  - ${w}`); }
@@ -109,4 +108,4 @@ async function main(): Promise<void> {
   console.log(`\nAll required nflverse datasets reach season ${SEASON}. ✅\n`);
 }
 
-main().catch((err) => { console.error(err); process.exit(2); });
+main().catch((err) => { console.error("Unhandled nflverse probe error"); console.error(err); process.exit(2); });

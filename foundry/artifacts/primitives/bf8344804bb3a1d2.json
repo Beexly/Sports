@@ -1,0 +1,651 @@
+{
+ "book_id": "bf8344804bb3a1d2",
+ "source_status": "COMPLETE",
+ "source_note": "Alekh Agarwal, Kiante Brantley, Nan Jiang, Sham M. Kakade and Wen Sun, Reinforcement Learning: Theory and Algorithms, working draft dated June 27, 2026. Local file is the draft PDF in books-d-models, size 1183518 bytes, full sha256 bf8344804bb3a1d2c3cd7d5987e17ba39482c232c32dd61002bae8a495ff5149. Text extraction is clean born digital text with occasional hyphenation artifacts at line breaks, noted where a quote reflects the extracted form. Catalog filename year 2026 matches the draft date on the title page. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "mdp_definition",
+   "name": "Discounted MDP defined by states actions transitions rewards discount and initial distribution",
+   "verbatim_quote": "In reinforcement learning, the interactions between the agent and the environment are often described by an infinitehorizon, discounted Markov decision process (MDP)",
+   "page": "Chapter 1 Section 1.1, p. 3",
+   "latex": "M = (S, A, P, r, \\gamma, \\mu)",
+   "symbol_and_unit_ledger": {
+    "S": "state space",
+    "A": "action space",
+    "P": "transition distribution",
+    "r": "reward in [0,1]",
+    "gamma": "discount factor in [0,1)",
+    "mu": "initial state distribution"
+   },
+   "assumptions": [
+    "Finite or countably infinite state space and finite action space as stated in the chapter",
+    "Rewards bounded in [0,1] in the basic setup",
+    "Markov transitions depend only on current state and action"
+   ],
+   "breakdown_regime": "Fails when the true process is non Markovian, partially observed without belief state, or rewards are unbounded or nonstationary.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Map a sequential forecasting problem to states, actions, transition dynamics, reward and discount so value reasoning has an explicit state space instead of unstructured narrative.",
+    "source_operator": "mdp_definition",
+    "telemetry": "State histories, action logs, transition counts and reward outcomes by state action pair"
+   }
+  },
+  {
+   "primitive_id": "stationary_policy",
+   "name": "Stationary policy chooses actions from current state only",
+   "verbatim_quote": "A stationary policy π : S → ∆(A) specifies a decision-making strategy in which the agent chooses actions based only on the current state",
+   "page": "Chapter 1 Section 1.1.1, p. 4",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Policy does not use full history beyond current state",
+    "Action distribution is well defined for every state"
+   ],
+   "breakdown_regime": "Fails when optimal behavior needs memory, for example in partially observed settings where history carries information.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Represent an engine policy as a state conditioned decision rule, which makes policy comparison and occupancy computation tractable.",
+    "source_operator": "stationary_policy",
+    "telemetry": "Current state features at decision time and sampled action frequencies"
+   }
+  },
+  {
+   "primitive_id": "value_function",
+   "name": "Action value is expected discounted return from a state action pair",
+   "verbatim_quote": "Similarly, the action-value (or Q-value) function QπM : S × A → R is defined as",
+   "page": "Chapter 1 Section 1.1.1, p. 4",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Discount factor below one so the infinite sum is bounded",
+    "Expectation is over transitions and policy randomness"
+   ],
+   "breakdown_regime": "Fails under model misspecification or when returns are estimated from biased off policy data without correction.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Score each candidate action by its long run discounted consequence rather than its immediate payoff, which is the core of value based reasoning.",
+    "source_operator": "value_function",
+    "telemetry": "Realized discounted returns grouped by starting state and first action"
+   }
+  },
+  {
+   "primitive_id": "bellman_consistency",
+   "name": "Stationary policy values satisfy Bellman consistency equations",
+   "verbatim_quote": "Suppose that π is a stationary policy (possibly randomized). Then V π and Qπ satisfy the following Bellman consistency equations: for all s ∈ S and a ∈ A,",
+   "page": "Chapter 1 Section 1.1.2, p. 5",
+   "latex": "Q^\\pi = r + \\gamma P^\\pi Q^\\pi",
+   "symbol_and_unit_ledger": {
+    "Q_pi": "action value vector",
+    "r": "reward vector",
+    "gamma": "discount factor dimensionless",
+    "P_pi": "state action transition matrix induced by pi"
+   },
+   "assumptions": [
+    "Stationary policy",
+    "Linear operator form with discount below one gives a unique fixed point"
+   ],
+   "breakdown_regime": "Fails when function approximation breaks exact consistency or transitions are estimated with large error.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Enforce self consistency between a value estimate and its one step lookahead, so inconsistent projections are flagged instead of averaged away.",
+    "source_operator": "bellman_consistency",
+    "telemetry": "One step rewards, next state values and empirical transition frequencies"
+   }
+  },
+  {
+   "primitive_id": "occupancy_measure",
+   "name": "Occupancy measure is the discounted visitation distribution induced by a policy",
+   "verbatim_quote": "so we can view the (s, a)-th row of this matrix as an induced distribution over state-action pairs when following π",
+   "page": "Chapter 1 Section 1.1.2, p. 5",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Policy and starting distribution are fixed",
+    "Discount below one normalizes the occupancy"
+   ],
+   "breakdown_regime": "Fails when deployment visitation differs sharply from training visitation, a distribution shift problem.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Weight states and actions by how often a policy actually visits them, so evaluation focuses on reachable situations rather than uniform coverage.",
+    "source_operator": "occupancy_measure",
+    "telemetry": "Empirical visitation frequencies discounted over trajectories"
+   }
+  },
+  {
+   "primitive_id": "optimal_policy_existence",
+   "name": "A stationary deterministic policy is simultaneously optimal for all states",
+   "verbatim_quote": "A remarkable and convenient property of discounted MDPs is that there exists a stationary and deterministic policy that simultaneously maximizes V π (s) for all s ∈ S.",
+   "page": "Chapter 1 Section 1.1.3, p. 6",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Discounted infinite horizon MDP",
+    "Finite action space for the argmax argument"
+   ],
+   "breakdown_regime": "Fails in constrained, multi objective or finite horizon time dependent settings where no single stationary rule dominates.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Justify searching for one stable decision rule per state instead of a different rule per start state, simplifying engine policy representation.",
+    "source_operator": "optimal_policy_existence",
+    "telemetry": "Value estimates for all states under candidate policies"
+   }
+  },
+  {
+   "primitive_id": "bellman_optimality",
+   "name": "Optimal Q is the unique fixed point of the Bellman optimality operator",
+   "verbatim_quote": "Thus, the previous theorem states that Q = Q⋆ if and only if Q is a fixed point of the operator T .",
+   "page": "Chapter 1 Section 1.1.3, p. 8",
+   "latex": "\\mathcal{T} Q := r + \\gamma P V_Q",
+   "symbol_and_unit_ledger": {
+    "T": "Bellman optimality operator",
+    "r": "reward vector",
+    "gamma": "discount factor",
+    "P": "transition matrix",
+    "V_Q": "componentwise max over actions of Q"
+   },
+   "assumptions": [
+    "Contraction in sup norm with factor gamma",
+    "Greedy policy ties broken consistently"
+   ],
+   "breakdown_regime": "Fails numerically when gamma is near one and residuals shrink slowly, and under approximation the fixed point may not exist in the class.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Turn optimality into a fixed point residual that can be measured, so the engine can report how far a value estimate is from self consistent optimality.",
+    "source_operator": "bellman_optimality",
+    "telemetry": "Bellman residuals per state action pair and max action gaps"
+   }
+  },
+  {
+   "primitive_id": "performance_difference",
+   "name": "Advantage measures action value minus state value and drives performance difference",
+   "verbatim_quote": "The advantage of a policy π is defined as Aπ (s, a) := Qπ (s, a) − V π (s) .",
+   "page": "Chapter 1 Section 1.5, p. 18",
+   "latex": "A^\\pi(s,a) := Q^\\pi(s,a) - V^\\pi(s)",
+   "symbol_and_unit_ledger": {
+    "A_pi": "advantage dimensionless in reward units",
+    "Q_pi": "action value",
+    "V_pi": "state value"
+   },
+   "assumptions": [
+    "Advantage is defined relative to the current policy values",
+    "Performance difference uses the new policy occupancy"
+   ],
+   "breakdown_regime": "Fails when advantage estimates are noisy in rarely visited states, which inflates apparent improvement.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Decompose a policy change into per state action advantages weighted by visitation, giving an auditable reason for why one decision rule beats another.",
+    "source_operator": "performance_difference",
+    "telemetry": "Advantage estimates per state action and visitation weights"
+   }
+  },
+  {
+   "primitive_id": "generative_model_sample_complexity",
+   "name": "Sample complexity quantifies episodes or samples needed for near optimal learning",
+   "verbatim_quote": "Both are statements about the statistical (sample) complexity of learning.",
+   "page": "Chapter 1 Section 1.4, p. 17",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Sampling model is specified, for example generative model or episodic access",
+    "Near optimality tolerance is fixed in advance"
+   ],
+   "breakdown_regime": "Fails when access model in deployment differs from the assumed sampling model.",
+   "domain": "sample complexity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Attach a sample budget to every learned component, so the engine distinguishes a theorem backed estimate from one based on a handful of observations.",
+    "source_operator": "generative_model_sample_complexity",
+    "telemetry": "Sample counts per state action, confidence level and target accuracy"
+   }
+  },
+  {
+   "primitive_id": "bellman_completeness",
+   "name": "Linear Bellman completeness is closure of linear functions under Bellman backup",
+   "verbatim_quote": "The most algorithmically useful assumption in this chapter is a closure condition: roughly, applying the Bellman optimality operator to a linear function yields another linear function (with respect to the same feature map).",
+   "page": "Chapter 3 Section 3.1, p. 36",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Same feature map is used before and after backup",
+    "Closure holds for all functions in the class, not only optimal Q"
+   ],
+   "breakdown_regime": "Fails under mere realizability of optimal Q without closure, where the book proves exponential lower bounds.",
+   "domain": "linear function approximation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Check whether a feature representation is closed under the reasoning update applied to it; if not, iteration leaves the representable set and error compounds.",
+    "source_operator": "bellman_completeness",
+    "telemetry": "Feature vectors, Bellman targets and projection residuals"
+   }
+  },
+  {
+   "primitive_id": "lsvi",
+   "name": "Least Squares Value Iteration fits Bellman targets by regression under completeness",
+   "verbatim_quote": "LSVI runs a backward dynamic program, where each Bellman backup is implemented by a least-squares regression onto the feature class F.",
+   "page": "Chapter 3 Section 3.2.2, p. 38",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Bellman completeness or approximate completeness",
+    "Data model provides adequate coverage of queried state actions"
+   ],
+   "breakdown_regime": "Fails when targets are bootstrapped from poor estimates and coverage is thin, causing error amplification.",
+   "domain": "linear function approximation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Implement value iteration as repeated regression to Bellman targets, a direct template for fitting projection models stage by stage.",
+    "source_operator": "lsvi",
+    "telemetry": "Regression targets, feature matrix and ridge regularization strength"
+   }
+  },
+  {
+   "primitive_id": "linear_realizability_hardness",
+   "name": "Linear realizability of optimal Q alone can require exponentially many samples",
+   "verbatim_quote": "any estimator can require exponentially many samples (Section 3.4).",
+   "page": "Chapter 3 introduction, p. 35",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Lower bound construction is in the class of MDPs considered",
+    "Estimator is arbitrary, not a specific algorithm"
+   ],
+   "breakdown_regime": "This is a worst case statement; structured subclasses with additional assumptions can still be tractable.",
+   "domain": "lower bounds",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Veto any claim that a representation is sufficient merely because the target is linear in it; demand closure or coverage evidence before trusting sample efficiency.",
+    "source_operator": "linear_realizability_hardness",
+    "telemetry": "Representation diagnostics, closure residuals and sample counts"
+   }
+  },
+  {
+   "primitive_id": "fqi_coverage",
+   "name": "Fitted Q Iteration requires both coverage and Bellman approximation",
+   "verbatim_quote": "The main message of this chapter is that fitted methods yield meaningful guarantees under two explicit requirements:",
+   "page": "Chapter 4 Section 4.1.1, p. 54",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Offline dataset is fixed and logged by a behavior policy",
+    "Function class approximation error is measured under data distribution"
+   ],
+   "breakdown_regime": "Fails without coverage even with a rich class, as the chapter minimal impossibility example shows.",
+   "domain": "offline reinforcement learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Require two separate checks for offline learned values: the data must cover the evaluated policy and the function class must approximate Bellman backups.",
+    "source_operator": "fqi_coverage",
+    "telemetry": "Coverage coefficients, concentrability measures and Bellman approximation error"
+   }
+  },
+  {
+   "primitive_id": "etc_bandit",
+   "name": "Explore then commit pulls each arm equally then commits to the empirical best",
+   "verbatim_quote": "Pull each arm a ∈ [K] exactly m times (in any order), and compute the empirical mean",
+   "page": "Chapter 5 Section 5.1.1, p. 64",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Rewards are independent samples with fixed means",
+    "Exploration length is chosen in advance"
+   ],
+   "breakdown_regime": "Fails when gaps are small or horizon is short, because uniform exploration wastes pulls on clearly bad arms.",
+   "domain": "bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Provide a simple baseline allocation rule for trying options uniformly before committing resources to the current leader.",
+    "source_operator": "etc_bandit",
+    "telemetry": "Pull counts and empirical mean rewards per arm"
+   }
+  },
+  {
+   "primitive_id": "linucb",
+   "name": "LinUCB acts optimistically using an ellipsoidal confidence set around ridge estimates",
+   "verbatim_quote": "LinUCB is an \"optimism in the face of uncertainty\" algorithm. At time t, it forms a confidence region (an ellipsoid) around the regularized least-squares estimate",
+   "page": "Chapter 5 Section 5.2.1, p. 67",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Linear reward model with sub Gaussian noise",
+    "Regularization parameter positive"
+   ],
+   "breakdown_regime": "Fails under nonlinear rewards or misspecified features, where the ellipsoid does not contain the true parameter.",
+   "domain": "linear bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Select actions by an upper confidence score that adds an uncertainty bonus scaled by feature leverage, balancing exploitation and information gain.",
+    "source_operator": "linucb",
+    "telemetry": "Feature vectors, ridge covariance matrix and reward history"
+   }
+  },
+  {
+   "primitive_id": "strategic_exploration",
+   "name": "Exploration in episodic MDPs must be strategic rather than naive",
+   "verbatim_quote": "As we shall see in Chapter 6, this exploration must be strategic: simply behaving randomly can be far too inefficient.",
+   "page": "Chapter 6 Section 6.2, p. 74",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Episodic finite horizon setting",
+    "Learner can influence which states are visited"
+   ],
+   "breakdown_regime": "Fails as a guarantee when exploration bonuses are mis scaled or the MDP has unreachable informative states.",
+   "domain": "exploration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Require exploration to target informative state actions, because random dithering can take exponential time to reach informative states.",
+    "source_operator": "strategic_exploration",
+    "telemetry": "Visit counts, reachability structure and bonus values"
+   }
+  },
+  {
+   "primitive_id": "ucbvi",
+   "name": "UCB Value Iteration adds bonuses to value iteration for optimistic planning",
+   "verbatim_quote": "UCB Value Iteration (UCBVI), an optimismbased algorithm that achieves (sublinear) regret. The algorithm combines (i) an empirical transition model built from trajectory data with (ii) an explicit exploration bonus, and then plans greedily in the resulting optimistic model.",
+   "page": "Chapter 6 Section 6.3, p. 74",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Tabular finite horizon MDP",
+    "Bonuses use Bernstein or Hoeffding style concentration"
+   ],
+   "breakdown_regime": "Fails in large state spaces where tabular counts never accumulate.",
+   "domain": "exploration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Run planning on an optimistic model built from counts and bonuses, a concrete recipe for uncertainty aware projection updates.",
+    "source_operator": "ucbvi",
+    "telemetry": "Transition counts, empirical model and bonus schedule by visit count"
+   }
+  },
+  {
+   "primitive_id": "linear_mdp",
+   "name": "In a linear MDP Bellman backups of arbitrary functions stay linear in features",
+   "verbatim_quote": "A key property: Bellman backups are linear in features",
+   "page": "Chapter 7 Section 7.3, p. 88",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Transition and reward are linear in the same feature map",
+    "Feature dimension is much smaller than state count"
+   ],
+   "breakdown_regime": "Fails when dynamics are not low rank or linear in the chosen features.",
+   "domain": "linear MDPs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Use feature linear transition structure to represent backups without enumerating states, enabling generalization across similar situations.",
+    "source_operator": "linear_mdp",
+    "telemetry": "Feature map, signed measure weights and reward weights"
+   }
+  },
+  {
+   "primitive_id": "bellman_rank",
+   "name": "Bounded Bellman rank measures low dimensional structure of Bellman errors",
+   "verbatim_quote": "many such models have low Bellman rank (and related complexity measures such as witness rank [Sun et al., 2019a]); we return to these notions in Chapter 8.",
+   "page": "Chapter 8 title, p. 95",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Bellman errors factor through a low dimensional embedding",
+    "Uniform convergence holds for the loss class"
+   ],
+   "breakdown_regime": "Fails when rank is large or the factorization involves unbounded norm vectors.",
+   "domain": "generalization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Summarize learnability by the rank of the Bellman error matrix across policies and functions, a single complexity number for a model family.",
+    "source_operator": "bellman_rank",
+    "telemetry": "Bellman errors across candidate functions and distributions"
+   }
+  },
+  {
+   "primitive_id": "softmax_policy",
+   "name": "Softmax parameterization gives a differentiable stochastic policy containing deterministic limits",
+   "verbatim_quote": "The closure of this policy class contains all stationary deterministic policies.",
+   "page": "Chapter 9 Section 9.1, p. 112",
+   "latex": "\\pi_\\theta(a|s) = \\frac{\\exp(\\theta_{s,a})}{\\sum_{a'} \\exp(\\theta_{s,a'})}",
+   "symbol_and_unit_ledger": {
+    "theta_{s,a}": "logit parameter for state action pair",
+    "pi_theta": "policy probability dimensionless"
+   },
+   "assumptions": [
+    "Parameters are unconstrained reals",
+    "Closure contains deterministic policies as logits diverge"
+   ],
+   "breakdown_regime": "Fails when logits saturate, probabilities vanish and gradients disappear, as Chapter 10 analyzes.",
+   "domain": "policy optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Represent a decision rule as smooth probabilities over options, so gradient methods can adjust it and uncertainty stays explicit.",
+    "source_operator": "softmax_policy",
+    "telemetry": "Action probabilities and logits per state"
+   }
+  },
+  {
+   "primitive_id": "policy_gradient_baseline",
+   "name": "Monte Carlo policy gradient estimation uses baselines to control variance",
+   "verbatim_quote": "A basic and extremely useful variance-reduction device is to subtract a baseline.",
+   "page": "Chapter 9 Section 9.2, p. 114",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Baseline does not depend on the sampled action",
+    "Trajectories are sampled from the current policy"
+   ],
+   "breakdown_regime": "Fails with poor baselines or very long horizons where variance still dominates.",
+   "domain": "policy optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Subtract a state dependent baseline from return based gradient estimates to reduce variance without bias, improving update stability.",
+    "source_operator": "policy_gradient_baseline",
+    "telemetry": "Trajectory returns, baseline values and score function values"
+   }
+  },
+  {
+   "primitive_id": "vanishing_gradients_coverage",
+   "name": "Policy gradient can vanish without coverage of good actions",
+   "verbatim_quote": "states outside the support of dπµθ may receive vanishing updates even when they are crucial for performance under another start-state distribution ρ.",
+   "page": "Chapter 10 Section 10.1, p. 119",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Softmax or similar smooth parameterization",
+    "Comparison is to a fixed optimal action per state"
+   ],
+   "breakdown_regime": "Fails as a diagnostic when function approximation shares parameters across states and restores signal.",
+   "domain": "policy optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Flag policies that assign near zero probability to a superior action, because gradient signal to recover that action vanishes with its probability.",
+    "source_operator": "vanishing_gradients_coverage",
+    "telemetry": "Action probabilities for optimal or near optimal actions and gradient norms"
+   }
+  },
+  {
+   "primitive_id": "log_barrier",
+   "name": "Log barrier regularization keeps action probabilities away from zero",
+   "verbatim_quote": "A major source of difficulty with softmax policies is that the parameters can grow large in magnitude, driving the policy toward determinism and causing some action probabilities to become extremely small.",
+   "page": "Chapter 10 Section 10.3, p. 121",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Regularization weight is tuned to balance bias and stability",
+    "Policy stays in the interior of the simplex"
+   ],
+   "breakdown_regime": "Fails when barrier weight is too large and biases the solution away from the true optimum.",
+   "domain": "policy optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Add a barrier penalty that preserves exploration mass on every action, preventing premature collapse to a single choice.",
+    "source_operator": "log_barrier",
+    "telemetry": "Action probabilities and barrier penalty weight"
+   }
+  },
+  {
+   "primitive_id": "npg_fisher",
+   "name": "Natural policy gradient preconditions the gradient by inverse Fisher information",
+   "verbatim_quote": "For policies, we average this quantity over the discounted state-visitation distribution:",
+   "page": "Chapter 10 Section 10.4, p. 125",
+   "latex": "\\theta^{(t+1)} = \\theta^{(t)} + \\eta F_\\rho(\\theta^{(t)})^\\dagger \\nabla_\\theta V(\\rho)",
+   "symbol_and_unit_ledger": {
+    "F_rho": "Fisher information matrix averaged over visitation",
+    "eta": "step size",
+    "theta": "policy parameters",
+    "dagger": "Moore Penrose pseudoinverse"
+   },
+   "assumptions": [
+    "Fisher matrix is estimated from the current policy distribution",
+    "Pseudoinverse handles singular Fisher matrices"
+   ],
+   "breakdown_regime": "Fails when Fisher estimation is noisy or the parameterization is overcomplete and the pseudoinverse is unstable.",
+   "domain": "policy optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rescale updates by the geometry of the policy distribution itself, so a step means a controlled change in behavior rather than in raw parameters.",
+    "source_operator": "npg_fisher",
+    "telemetry": "Score function outer products averaged over visited states and actions"
+   }
+  },
+  {
+   "primitive_id": "compatible_fa",
+   "name": "Compatible function approximation characterizes the natural gradient update",
+   "verbatim_quote": "We begin by recalling the geometric meaning of the natural policy gradient.",
+   "page": "Chapter 11 Section 11.1, p. 131",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Critic uses features equal to score function gradients",
+    "Approximation error is measured under state visitation"
+   ],
+   "breakdown_regime": "Fails when the compatible class cannot represent the advantage, leaving a persistent transfer error.",
+   "domain": "policy optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Project advantage information onto the score function features, which is exactly the compatible critic that makes natural gradient updates implementable.",
+    "source_operator": "compatible_fa",
+    "telemetry": "Advantage estimates and score function features"
+   }
+  },
+  {
+   "primitive_id": "cpi_trpo",
+   "name": "Conservative and trust region updates guarantee improvement when advantage is positive",
+   "verbatim_quote": "The above theorem indicates that with the right choice of α, we guarantee that the policy is making improvement as long as A > 0.",
+   "page": "Chapter 12 Section 12.2, p. 146",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Advantage is estimated under the old policy visitation",
+    "Trust region uses max or average KL as specified"
+   ],
+   "breakdown_regime": "Fails when only average KL is constrained, because a few states can still change drastically, as the chapter notes.",
+   "domain": "policy optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Limit each policy change to a trust region sized by distribution shift, so improvement claims require both positive advantage and bounded movement.",
+    "source_operator": "cpi_trpo",
+    "telemetry": "Advantage estimates, KL divergence between successive policies and mixture coefficient"
+   }
+  },
+  {
+   "primitive_id": "behavior_cloning_compounding",
+   "name": "Behavior cloning suffers compounding error quadratic in horizon",
+   "verbatim_quote": "The following theorem shows that a compounding error occurs when we study the performance of the learned policy",
+   "page": "Chapter 13 Section 13.2, p. 161",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Expert data are sampled from expert visitation",
+    "Learner is evaluated under its own induced visitation"
+   ],
+   "breakdown_regime": "Fails to be tight when the expert is recoverable or dynamics are contracting and errors do not compound.",
+   "domain": "imitation learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Penalize imitation of an expert policy by horizon squared error growth, because small per step mistakes shift the visited distribution.",
+    "source_operator": "behavior_cloning_compounding",
+    "telemetry": "Per step classification error, horizon or discount factor and expert visitation data"
+   }
+  },
+  {
+   "primitive_id": "maxent_irl",
+   "name": "Maximum entropy IRL infers a reward that makes expert behavior likely while maximizing entropy",
+   "verbatim_quote": "The maximum entropy objective ensures that the solution is unique.",
+   "page": "Chapter 13 Section 13.4, p. 165",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Reward is linear in features in the basic formulation",
+    "Expert is modeled as entropy regularized optimal"
+   ],
+   "breakdown_regime": "Fails when expert behavior is not entropy regularized optimal or features omit the true reward drivers.",
+   "domain": "imitation learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Infer an underlying scoring function from observed expert choices under a maximum entropy principle, rather than copying choices directly.",
+    "source_operator": "maxent_irl",
+    "telemetry": "Expert trajectories, feature expectations and reward weights"
+   }
+  },
+  {
+   "primitive_id": "lqr_riccati",
+   "name": "LQR optimal control is solved by algebraic Riccati equations",
+   "verbatim_quote": "These equations are simply the value iteration algorithm for the special case of LQRs.",
+   "page": "Chapter 14 Section 14.2, p. 174",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Linear dynamics with Gaussian or deterministic noise as specified",
+    "Quadratic stage costs with positive definite control cost"
+   ],
+   "breakdown_regime": "Fails for nonlinear dynamics, non quadratic costs or unstable uncontrollable systems.",
+   "domain": "control theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Provide a closed form continuous control analogue of value iteration, where quadratic costs and linear dynamics yield a matrix equation for optimal value.",
+    "source_operator": "lqr_riccati",
+    "telemetry": "System matrices, cost matrices and Riccati solution"
+   }
+  },
+  {
+   "primitive_id": "concentration_appendix",
+   "name": "Concentration inequalities supply the confidence bounds used throughout",
+   "verbatim_quote": "A centered Gaussian X ∼ N (0, σ 2 ) is σ-sub-Gaussian.",
+   "page": "Appendix A Section A.1, p. 189",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Random variables satisfy boundedness or sub Gaussian assumptions as stated",
+    "Martingale structure holds where martingale bounds are used"
+   ],
+   "breakdown_regime": "Fails when heavy tails or dependence violate the stated tail assumptions.",
+   "domain": "probability tools",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Ground every bonus, confidence ellipsoid and sample bound in an explicit concentration statement with a failure probability, instead of heuristic error bars.",
+    "source_operator": "concentration_appendix",
+    "telemetry": "Sample sizes, variance proxies and failure probability delta"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "bf8344804bb3a1d2-t1",
+   "think": "This book is a theory first treatment of reinforcement learning that builds the whole subject from a single object, the discounted Markov decision process, and then asks at every stage what can be learned, from what data, with how many samples, and under which structural assumptions. The opening chapter fixes notation and proves the two facts everything else rests on. First, stationary policies satisfy Bellman consistency equations that express a value function as the fixed point of a linear operator. Second, there exists a stationary deterministic policy that is simultaneously optimal for every starting state, and the optimal action value function is exactly the fixed point of the Bellman optimality operator, a contraction in the supremum norm. Those results convert the vague goal of behaving well into concrete algebra: evaluate a policy by solving a linear system, improve it by acting greedily, and measure suboptimality by a Bellman residual. The performance difference lemma then connects the two, expressing the gap between two policies as an occupancy weighted sum of advantages, which later chapters reuse for policy gradient, conservative updates and imitation learning. The second movement of the book is statistical. With a generative model the authors show how model based estimation achieves minimax optimal sample complexity, using variance lemmas to avoid paying the naive horizon price twice. With linear features the tone changes: realizability of the optimal value function alone is not enough, and the book proves exponential lower bounds, while closure under Bellman backups, called Bellman completeness, restores polynomial guarantees for least squares value iteration. Offline learning sharpens the point further. Fitted Q iteration needs both Bellman approximation and coverage, formalized through concentrability, and a minimal example shows impossibility without coverage. For a reasoning engine this is the central lesson of the first half: a representation claim is meaningless unless it is paired with a closure claim and a coverage claim, and each of those is checkable separately. The third movement treats exploration as a strategic resource. Bandits isolate the dilemma in its purest form, where explore then commit gives a baseline and upper confidence bound methods improve it by acting optimistically. LinUCB lifts the idea to linear models with ellipsoidal confidence sets built from ridge regression and self normalized concentration. In tabular episodic MDPs, UCB value iteration adds bonuses to planning, and the analysis decomposes regret into optimism, a one episode performance difference, and a counting argument that bounds total bonus payments by an elliptical potential style sum. Linear MDPs and bounded Bellman rank then generalize the same pattern: structure is whatever makes Bellman backups stay inside a low dimensional family, and learnability follows from that invariance plus uniform convergence. The fourth movement is policy optimization. The policy gradient theorem expresses the gradient through advantages and score functions, Monte Carlo estimation needs baselines for variance, and nonconvexity means global guarantees must come from structure rather than convexity. Softmax policies can suffer vanishing gradients when a good action loses probability mass, log barrier regularization keeps policies interior, and the natural policy gradient preconditions by Fisher information so steps are measured in distribution space. Compatible function approximation explains when a critic can implement that update exactly and what transfer error remains when it cannot. Conservative policy iteration and trust region methods close the loop back to the performance difference lemma: improvement is guaranteed only when positive advantage is combined with a bound on how far the new visitation distribution moves. The final chapters apply the machinery to imitation, where behavior cloning pays a horizon squared compounding cost and interactive methods and maximum entropy inverse reinforcement learning attack that cost from two directions, and to linear quadratic regulators, where linear dynamics and quadratic costs make value iteration collapse to Riccati equations and connect reinforcement learning back to classical control and convex programming. The appendix on concentration is not decoration; Hoeffding, Bernstein, martingale and self normalized bounds are the literal source of every bonus and confidence width in the book. Read as a whole, the work gives a reasoning engine three transferable disciplines: state values as fixed points with measurable residuals, uncertainty as explicit confidence sets that drive optimistic but bounded action, and updates as trust region steps whose improvement must be certified by advantage and coverage rather than asserted.  A further strength of the book is how deliberately it separates planning, estimation and exploration, three problems that are often blurred in applied work. Planning assumes the model is known and asks for computation, estimation assumes data are given and asks for statistical accuracy under a stated access model, and exploration asks how the learner should act while data are still being collected so that future estimation becomes possible. Keeping those questions separate lets each theorem state exactly which resource is being counted: iterations for planning, samples for estimation, and regret for exploration. The finite horizon and discounted infinite horizon settings are developed in parallel throughout, so the reader can see which phenomena are artifacts of discounting and which persist when time is explicit and policies must be nonstationary. The treatment of sampling models is equally careful. A generative model, episodic interaction, and a fixed offline dataset are not interchangeable conveniences; they define different problems with different minimax rates, and several chapters are organized around proving that a rate changes when the access model changes. That discipline matters for any engine that learns from logged history, because a guarantee proved under simulator access does not transfer to logged data, and a guarantee proved for logged data does not require the ability to query arbitrary state action pairs. Finally, the book repeatedly returns to distribution shift as the unifying obstacle: it appears as concentrability offline, as visitation mismatch in policy gradient, as compounding error in imitation, and as the reason trust regions constrain policy movement. Naming the same obstacle in four formalisms is itself a contribution, because it lets a practitioner recognize a familiar failure in an unfamiliar setting and reach for the corresponding remedy.",
+   "retrocausal_genealogy": "The genealogy runs from Bellman dynamic programming in the 1950s through Howard policy iteration and the linear programming formulation, then through Watkins temporal difference learning and the function approximation era that produced fitted iteration and least squares methods. Bandit optimism descends from Lai and Robbins and the Auer Cesa Bianchi Fischer UCB analysis, while linear bandits and linear MDPs import ridge regression and self normalized martingale theory from statistics. Policy gradient descends from Williams REINFORCE and Sutton policy gradient theorem, natural gradient from Amari information geometry and Kakade adaptation to policies, and trust region methods from Schulman and the conservative policy iteration of Kakade and Langford. Imitation and inverse reinforcement learning trace to Ng and Russell and to Ziebart maximum entropy formulation, and the LQR chapter reconnects to Kalman and classical Riccati control theory.",
+   "theory_of_mind": "The authors model the reader as a mathematically mature learner who wants necessary and sufficient conditions, not recipes. Their model of the domain is that reinforcement learning difficulty is never generic; it is always attributable to a named missing ingredient such as closure, coverage, low rank, or controlled distribution shift. They believe an algorithm should be presented together with the assumption that makes it work and a lower bound or counterexample showing what fails without that assumption. The pedagogy pairs every positive theorem with a boundary case, so the reader is trained to ask which assumption a new method is silently using and whether data in hand actually satisfy it, rather than to trust empirical success alone.",
+   "cross_layer_veto": "This work vetoes several tempting shortcuts in any layered reasoning system. Realizability vetoes sample efficiency claims unless Bellman closure is also shown. Offline data veto any evaluation of a policy whose visitation is not covered by the logging distribution, regardless of model fit on logged actions. Vanishing gradient analysis vetoes premature determinism, because a policy that has collapsed cannot recover a superior action by gradient ascent. Trust region results veto large uncertified updates, since positive advantage under the old visitation does not imply improvement after a large shift. Together these are cross layer constraints: representation, data, optimization and deployment each hold a veto over the others, and a conclusion is only sound when none of the vetoes fire."
+  }
+ ],
+ "universal_lens": "Any sequential decision problem can be studied by naming its state, action, transition, reward and discount, then asking three questions in order: is the value representation closed under its own update, does the data cover the decisions being evaluated, and is each update small enough that its predicted improvement survives the shift it causes. That triple question is a general template for auditing learned systems far beyond control, including forecasting, planning and resource allocation systems that iterate on their own outputs.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the assumption audit method: every taught technique is presented with the closure, coverage and stability conditions that make it valid, plus a counterexample where it fails. Students learn Bellman consistency as a self consistency check, optimism as disciplined uncertainty accounting, and trust region thinking as a rule for changing any model or curriculum in certified increments rather than by wholesale replacement.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes fixed point residuals for value consistency, occupancy weighting for situation importance, confidence bonuses that shrink with evidence, and coverage gates that block evaluation of situations absent from the data. Policy or model updates are treated as trust region steps: advantage like evidence must be positive and the change in the situation distribution must be bounded before a new projection rule replaces an old one."
+}

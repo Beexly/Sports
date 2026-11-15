@@ -1,0 +1,835 @@
+{
+ "book_id": "47cb4b82ec573e91",
+ "source_status": "COMPLETE",
+ "source_note": "Stefano V. Albrecht, Filippos Christianos, and Lukas Schafer, Multi-Agent Reinforcement Learning: Foundations and Modern Approaches, The MIT Press, Cambridge MA, 2024 (hardcover ISBN 9780262049375; PDF ISBN 9780262380515; LCCN 2024002669). The local file is the publisher PDF of the work, held in two byte-identical copies (library/books-d-models/AlbrechtEtAl-2024-MultiAgentReinforcementLearning.pdf and library/books-c-systems/Albrecht-Christianos-Schaefer-2024-MultiAgentReinforcementLearning.pdf), size 8014508 bytes; scan digest sha256(str(size) + file bytes) = 47cb4b82ec573e9145b084d7db9b4a6bc651d5eb78a4a5b2e27bce8cf6a72e6d; raw sha256 of file bytes = 50f0dc03b991d252b415dfd90ac393f1dcf855656dd93b0d4deb51ddfec704cc. Extracted text is clean publisher text with occasional interleaved page headers and hyphenated line breaks; every verbatim quote was proven to appear as one contiguous string inside a single page of the extracted text. Catalog correction: the commissioning task named a fourth author, Stefano Ramamoorthi, who is not an author of this work; the title page and Library of Congress cataloging data list exactly three authors. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "multi_agent_system_definition",
+   "name": "A multi-agent system is an environment plus multiple goal-directed decision-making agents interacting in it",
+   "verbatim_quote": "A multi-agent system consists of an environment and multiple decision-making agents that interact in the environment to achieve certain goals.",
+   "page": "Section 1.1 (book p. 2; text line 782)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Agents receive observations about the environment state and choose actions that influence it.",
+    "Agents are goal-directed; in MARL the goals are encoded by reward functions giving scalar signals."
+   ],
+   "breakdown_regime": "The definition is structural, not a solution method: it says nothing about how agents should coordinate, and it strains when the agent set itself changes over time (open systems) or when agents are not clearly separable from the environment.",
+   "domain": "multi-agent systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every evaluated situation as a system of several decision makers in one shared environment, not as a single actor against a static backdrop: each participant gets its own goal, observation set, and action set before any value is computed.",
+    "source_operator": "multi_agent_system_definition",
+    "telemetry": "Rosters of decision makers in the situation, their available actions, and the observations each one can actually see."
+   }
+  },
+  {
+   "primitive_id": "marl_definition_and_objective",
+   "name": "MARL learns optimal policies for multiple agents by trial, error, and reward, maximizing summed rewards over time",
+   "verbatim_quote": "MARL is based on reinforcement learning (RL), in which agents learn optimal decision policies by trying actions and receiving rewards, with the goal of choosing actions to maximize the sum of received rewards over time.",
+   "page": "Chapter 1 introduction (book p. 1; text line 730)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Goals can be expressed as scalar reward signals received after actions in states.",
+    "Policies can be improved from experienced state, action, and reward data."
+   ],
+   "breakdown_regime": "The summed-reward objective hides whose reward counts when agents conflict; with general-sum rewards the objective is only well defined per agent, and solution concepts (Chapter 4 of the book) must replace the single maximization.",
+   "domain": "reinforcement learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any learned evaluation in the engine is framed as policy improvement from logged experience: candidate behaviors are scored by the discounted consequences they produce, and the learning signal is the gap between realized and expected outcomes.",
+    "source_operator": "marl_definition_and_objective",
+    "telemetry": "Logged episodes of situations, chosen actions, and realized outcomes with timestamps."
+   }
+  },
+  {
+   "primitive_id": "zero_sum_reward_regime",
+   "name": "Reward regimes classify games: in a zero-sum game the agents' rewards always sum to zero",
+   "verbatim_quote": "In a zero-sum game, the sum of the agents' rewards is always 0",
+   "page": "Section 3.1 (book p. 45; text line 2659)",
+   "latex": "\\sum_{i \\in I} R_i(a) = 0 \\quad \\forall a \\in A",
+   "symbol_and_unit_ledger": {
+    "I": "finite set of agents",
+    "R_i(a)": "reward of agent i for joint action a, in reward units",
+    "A": "joint action space, the Cartesian product of the agents' action sets"
+   },
+   "assumptions": [
+    "Rewards are comparable on one shared scale so that summing them is meaningful.",
+    "The classification (zero-sum, common-reward, general-sum) is a property of the reward functions, fixed before learning starts."
+   ],
+   "breakdown_regime": "Most real multi-actor settings are general-sum, where the zero-sum identity fails and minimax reasoning alone gives wrong answers; common-reward is the opposite pole, and mixed motives sit between the two.",
+   "domain": "game theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Before evaluating any contested situation, the engine classifies the payoff structure: pure opposition licenses worst-case reasoning, shared payoffs license joint optimization, and mixed motives require equilibrium reasoning instead of either shortcut.",
+    "source_operator": "zero_sum_reward_regime",
+    "telemetry": "Per-participant outcome values for each candidate joint action, enough to test whether the payoffs sum to a constant."
+   }
+  },
+  {
+   "primitive_id": "non_stationarity_from_concurrent_learning",
+   "name": "Concurrent learning makes each agent's environment non-stationary and can produce cyclic, unstable learning dynamics",
+   "verbatim_quote": "This non-stationarity can lead to a moving target problem because each agent adapts to the policies of other agents whose policies in turn also adapt to changes in other agents, thereby potentially causing cyclic and unstable learning dynamics.",
+   "page": "Section 1.4 (book p. 12; text line 1205)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "All agents learn at the same time rather than taking turns against fixed opponents.",
+    "Each agent adapts to the others' current policies, so the adaptation targets keep moving."
+   ],
+   "breakdown_regime": "Single-agent convergence guarantees that assume a stationary environment do not transfer; learning can cycle or diverge, and the failure worsens when agents learn at different rates from different local observations.",
+   "domain": "multi-agent learning dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine never treats another adaptive participant as a fixed distribution: estimates conditioned on an opponent's past behavior carry an explicit drift term, and any signal that assumes the other side stands still is down-weighted when the other side is itself updating.",
+    "source_operator": "non_stationarity_from_concurrent_learning",
+    "telemetry": "Time-stamped behavior of each participant across repeated encounters, to measure how fast each policy is drifting."
+   }
+  },
+  {
+   "primitive_id": "multi_agent_credit_assignment_problem",
+   "name": "Multi-agent credit assignment: with a shared reward it is an open problem whose action caused it, counterfactual reasoning is the principled route",
+   "verbatim_quote": "While ideas based on counterfactual reasoning can address this problem in principle, it is still an open problem how to resolve multi-agent credit assignment in an efficient and scalable way.",
+   "page": "Section 1.4 (book p. 13; text lines 1233-1245)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only joint state, action, and reward information is observed; individual contributions are not directly labeled.",
+    "Temporal credit assignment (which past action mattered) is compounded by the agent dimension (whose action mattered)."
+   ],
+   "breakdown_regime": "Naive equal sharing of a team reward mis-teaches agents whose actions had no effect, and exact counterfactual attribution is expensive; the problem remains open at scale, which is why algorithms such as COMA (Section 9.4.4 of the book) only approximate it.",
+   "domain": "multi-agent learning challenges",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When several actors jointly produce one outcome, the engine attributes credit by counterfactual comparison: what changes if this actor's contribution is replaced by its average behavior, holding the others fixed, instead of splitting the outcome evenly.",
+    "source_operator": "multi_agent_credit_assignment_problem",
+    "telemetry": "Joint action records with per-actor action identities, so counterfactual substitutions can be evaluated per actor."
+   }
+  },
+  {
+   "primitive_id": "mdp_definition",
+   "name": "A finite MDP is states, actions, a reward function, and a transition probability function, the standard model of sequential decision processes",
+   "verbatim_quote": "The standard model used in RL to define the sequential decision process is the Markov decision process",
+   "page": "Section 2.2, Definition 1 (book p. 22; text line 1531)",
+   "latex": "\\forall s \\in S, a \\in A : \\sum_{s' \\in S} T(s, a, s') = 1",
+   "symbol_and_unit_ledger": {
+    "S": "finite set of states, with terminal subset",
+    "A": "finite set of actions",
+    "T(s, a, s')": "probability of transitioning to state s' after action a in state s, dimensionless",
+    "R": "reward function from state, action, and successor state to a real reward"
+   },
+   "assumptions": [
+    "The agent fully observes the current state at each time step.",
+    "Dynamics T and reward function R are usually unknown to the agent; only S and A are assumed known."
+   ],
+   "breakdown_regime": "Full observability fails in most real settings, which forces the POMDP and POSG generalizations; continuous states and actions need the analogous measure-theoretic version rather than finite sums.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every sequential evaluation in the engine is cast as state, action, transition, reward: the current situation summary must be rich enough that the future depends on it alone before any value recursion is allowed to run.",
+    "source_operator": "mdp_definition",
+    "telemetry": "Situation state vectors, action catalogs, logged transition outcomes, and realized rewards."
+   }
+  },
+  {
+   "primitive_id": "markov_property",
+   "name": "The Markov property: future state and reward are conditionally independent of the past given the current state and action",
+   "verbatim_quote": "The term \"Markov\" comes from the Markov property, which states that the future state and reward are conditionally independent of past states and actions, given the current state and action",
+   "page": "Section 2.2, Equation 2.3 (book p. 23; text line 1614)",
+   "latex": "\\Pr(s_{t+1}, r_t \\mid s_t, a_t, s_{t-1}, a_{t-1}, \\ldots, s_0, a_0) = \\Pr(s_{t+1}, r_t \\mid s_t, a_t)",
+   "symbol_and_unit_ledger": {
+    "s_t, a_t, r_t": "state, action, and reward at time step t",
+    "Pr": "probability under the process dynamics and the agent's policy"
+   },
+   "assumptions": [
+    "The state representation captures everything about the past that is relevant to the future.",
+    "If the raw observation is not Markov, the history or a belief state must be used as the state."
+   ],
+   "breakdown_regime": "With partial observability the observed signal is not Markov, so value recursions on raw observations are biased; history-conditioned or belief-state formulations are required, as in the POSG model.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's state builder is audited against this identity: if adding history features keeps changing predictions, the state summary is incomplete and the situation is re-represented before values are trusted.",
+    "source_operator": "mdp_definition",
+    "telemetry": "Prediction errors with and without history features, per situation type, to detect non-Markov state summaries."
+   }
+  },
+  {
+   "primitive_id": "discounted_return_objective",
+   "name": "The learning objective is the expected discounted return, with discount factor gamma in [0, 1] keeping non-terminating returns finite",
+   "verbatim_quote": "The standard approach to ensuring finite returns in non-terminating MDPs is to use a discount factor γ ∈ [0, 1], based on which we define the discounted return",
+   "page": "Section 2.3, Equation 2.6 (book pp. 24-25; text line 1687)",
+   "latex": "\\mathbb{E}_\\pi \\left[ r_0 + \\gamma r_1 + \\gamma^2 r_2 + \\cdots \\right] = \\mathbb{E}_\\pi \\left[ \\sum_{t=0}^{\\infty} \\gamma^t r_t \\right]",
+   "symbol_and_unit_ledger": {
+    "gamma": "discount factor in [0, 1], dimensionless; part of the learning objective, not a tunable algorithm parameter",
+    "r_t": "reward at time step t, in reward units",
+    "E_pi": "expectation under initial state distribution, policy pi, and transition probabilities"
+   },
+   "assumptions": [
+    "Rewards lie in a finite range, so for gamma < 1 the discounted return is bounded by r_max / (1 - gamma).",
+    "Gamma has two equivalent readings: per-step termination probability 1 - gamma, or geometric weighting of later rewards."
+   ],
+   "breakdown_regime": "At gamma = 1 in non-terminating problems the return can be infinite and policies become indistinguishable; a myopic gamma near 0 destroys long-horizon credit assignment.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Long-horizon evaluations in the engine discount later outcomes geometrically with an explicit horizon parameter, so a projection's time preference is a declared input of the problem rather than a hidden knob of the algorithm.",
+    "source_operator": "discounted_return_objective",
+    "telemetry": "Outcome sequences with realized timing, used to fit the effective horizon of each evaluation class."
+   }
+  },
+  {
+   "primitive_id": "state_value_function_bellman_equation",
+   "name": "The state-value function is the expected return from a state under a policy and satisfies the recursive Bellman equation",
+   "verbatim_quote": "Given a policy π, the state-value function V (s) gives the \"value\" of state s under π, which is the expected return when starting in state s and following policy π to select actions",
+   "page": "Section 2.4, Equations 2.10-2.13 (book p. 26; text line 1753)",
+   "latex": "V^\\pi(s) = \\sum_{a \\in A} \\pi(a \\mid s) \\sum_{s' \\in S} T(s' \\mid s, a) \\left[ R(s, a, s') + \\gamma V^\\pi(s') \\right]",
+   "symbol_and_unit_ledger": {
+    "V^pi(s)": "expected discounted return starting in state s and following policy pi, in reward units",
+    "pi(a | s)": "probability that policy pi selects action a in state s",
+    "T(s' | s, a)": "transition probability to successor state s'",
+    "gamma": "discount factor in [0, 1]"
+   },
+   "assumptions": [
+    "The Markov property holds, so the value can be defined per state without history.",
+    "Terminal (absorbing) states have value 0."
+   ],
+   "breakdown_regime": "The equation is a system of |S| linear equations in the tabular case; with function approximation the same recursion becomes the moving-target problem, and with a wrong state representation the fixed point values the wrong quantity.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine values are stored as recursive quantities, not one-shot scores: the value of a situation equals its immediate expected outcome plus the discounted value of the situations it leads to, which is what makes projections composable across time.",
+    "source_operator": "state_value_function_bellman_equation",
+    "telemetry": "Per-situation outcome estimates and successor situation frequencies, the two ingredients of the recursion."
+   }
+  },
+  {
+   "primitive_id": "bellman_optimality_equation",
+   "name": "The optimal action-value function satisfies the Bellman optimality equation, and the greedy policy against it is optimal",
+   "verbatim_quote": "The Bellman optimality equations define a system of m non-linear equations, where m is again the number of states in the finite MDP.",
+   "page": "Section 2.4, Equations 2.24-2.26 (book p. 28; text line 1870)",
+   "latex": "Q^*(s, a) = \\sum_{s' \\in S} T(s' \\mid s, a) \\left[ R(s, a, s') + \\gamma \\max_{a' \\in A} Q^*(s', a') \\right]",
+   "symbol_and_unit_ledger": {
+    "Q*(s, a)": "optimal expected discounted return for action a in state s, in reward units",
+    "max over a'": "best successor action value, the source of the non-linearity",
+    "m": "number of states |S| in the finite MDP"
+   },
+   "assumptions": [
+    "A deterministic optimal policy always exists in an MDP, obtained by acting greedily against Q*.",
+    "The optimal value function is unique even when several optimal policies exist."
+   ],
+   "breakdown_regime": "The max operator makes the system non-linear and, under function approximation with off-policy data, is one leg of the deadly triad that can drive values to diverge.",
+   "domain": "reinforcement learning foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Candidate actions in the engine are ranked by a one-step lookahead against learned successor values, the direct computational form of this equation, rather than by immediate payoff alone.",
+    "source_operator": "state_value_function_bellman_equation",
+    "telemetry": "Successor value estimates for each candidate action, plus realized outcomes to correct them."
+   }
+  },
+  {
+   "primitive_id": "td_learning_bootstrapping",
+   "name": "Temporal-difference learning updates value estimates from sampled experience toward bootstrapped targets, without knowing the model",
+   "verbatim_quote": "Temporal-difference learning (TD) is a family of RL algorithms that learn value functions and optimal policies based on experiences from interactions with the environment.",
+   "page": "Section 2.6, Equation 2.50 (book pp. 32-33; text line 2108)",
+   "latex": "Q(s_t, a_t) \\leftarrow Q(s_t, a_t) + \\alpha \\left[ X - Q(s_t, a_t) \\right]",
+   "symbol_and_unit_ledger": {
+    "alpha": "learning rate (step size) in (0, 1]",
+    "X": "update target built from the sampled experience tuple, in reward units",
+    "Q(s_t, a_t)": "current action-value estimate being corrected"
+   },
+   "assumptions": [
+    "Experiences are generated by following the agent-environment interaction loop under some policy.",
+    "Bootstrapping: targets are built from current value estimates of other states and actions."
+   ],
+   "breakdown_regime": "Convergence needs every state-action pair visited infinitely often and step sizes satisfying the stochastic approximation conditions; constant step sizes trade exact convergence for tracking speed.",
+   "domain": "reinforcement learning algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine estimates are updated incrementally from each new observed outcome toward a bootstrapped target, with the step size controlling how much one observation may move an established estimate.",
+    "source_operator": "state_value_function_bellman_equation",
+    "telemetry": "Streaming outcome observations paired with the estimates that were live when they arrived."
+   }
+  },
+  {
+   "primitive_id": "sarsa_on_policy_update",
+   "name": "Sarsa is the on-policy TD control update whose target uses the action actually taken in the successor state",
+   "verbatim_quote": "the action at+1 is sampled from the policy π in the successor state st+1",
+   "page": "Section 2.6, Equations 2.52-2.53 (book p. 33; text line 2146)",
+   "latex": "Q(s_t, a_t) \\leftarrow Q(s_t, a_t) + \\alpha \\left[ r_t + \\gamma Q(s_{t+1}, a_{t+1}) - Q(s_t, a_t) \\right]",
+   "symbol_and_unit_ledger": {
+    "a_{t+1}": "action actually sampled from the behavior policy in the successor state, which is what makes the update on-policy",
+    "r_t": "reward received after action a_t",
+    "gamma": "discount factor in [0, 1]"
+   },
+   "assumptions": [
+    "The behavior policy is gradually made greedy (generalized policy iteration) for Sarsa to approach the optimal policy.",
+    "All state-action pairs are tried infinitely often in the limit."
+   ],
+   "breakdown_regime": "Because the target follows the behavior policy including its exploration, Sarsa values include exploration risk; it learns the value of the policy actually being followed, not of the greedy policy.",
+   "domain": "reinforcement learning algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When the engine evaluates a strategy that will actually be executed including its own hesitations and fallbacks, the Sarsa form is the correct target: value the successor behavior that will really happen, not the idealized best move.",
+    "source_operator": "td_learning_bootstrapping",
+    "telemetry": "Successor actions actually taken under the live behavior policy, logged alongside outcomes."
+   }
+  },
+  {
+   "primitive_id": "q_learning_off_policy_update",
+   "name": "Q-learning is the off-policy TD update whose target uses the maximum successor value, so any behavior policy can generate the data",
+   "verbatim_quote": "For this reason, Q-learning is called an off-policy TD algorithm while Sarsa is an on-policy TD algorithm",
+   "page": "Section 2.6, Equations 2.57-2.58 (book p. 35; text line 2265)",
+   "latex": "Q(s_t, a_t) \\leftarrow Q(s_t, a_t) + \\alpha \\left[ r_t + \\gamma \\max_{a' \\in A} Q(s_{t+1}, a') - Q(s_t, a_t) \\right]",
+   "symbol_and_unit_ledger": {
+    "max over a'": "greedy successor action value, independent of the action the behavior policy actually took",
+    "alpha": "learning rate in (0, 1]"
+   },
+   "assumptions": [
+    "Convergence requires all state-action pairs tried infinitely often and the stochastic approximation conditions on step sizes.",
+    "The behavior policy need not approach the optimal policy, unlike Sarsa."
+   ],
+   "breakdown_regime": "The max target overestimates values when estimates are noisy (maximization bias), and combined with function approximation and bootstrapping it is the canonical divergence case of the deadly triad.",
+   "domain": "reinforcement learning algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine can learn the value of the best response from data generated by any behavior, including historical logs produced by other strategies, because the Q-learning target does not depend on which action the data-generating policy chose next.",
+    "source_operator": "td_learning_bootstrapping",
+    "telemetry": "Historical state, action, reward, successor logs from arbitrary behavior policies."
+   }
+  },
+  {
+   "primitive_id": "epsilon_greedy_exploration",
+   "name": "The epsilon-greedy policy exploits the greedy action with probability 1 - epsilon and explores uniformly otherwise, resolving the exploration-exploitation dilemma operationally",
+   "verbatim_quote": "Thus, the ϵ-greedy policy chooses the greedy action with probability 1 − ϵ, and with probability ϵ chooses a random other action.",
+   "page": "Section 2.6, Equation 2.55 (book p. 34; text line 2203)",
+   "latex": "\\pi(a \\mid s) = \\begin{cases} 1 - \\epsilon + \\frac{\\epsilon}{|A|} & \\text{if } a \\in \\arg\\max_{a' \\in A} Q(s, a') \\\\ \\frac{\\epsilon}{|A|} & \\text{otherwise} \\end{cases}",
+   "symbol_and_unit_ledger": {
+    "epsilon": "exploration probability in [0, 1]",
+    "|A|": "number of available actions",
+    "Q(s, a')": "current action-value estimates the greedy choice is computed from"
+   },
+   "assumptions": [
+    "With epsilon > 0 every action keeps being tried, satisfying the infinite-visitation condition in the limit.",
+    "Decaying epsilon toward 0 makes the behavior policy converge to the greedy policy."
+   ],
+   "breakdown_regime": "Uniform exploration wastes samples on hopeless actions and cannot represent probabilistic optimal policies except at epsilon = 1, which is why parameterized policies are needed in games like Rock-Paper-Scissors.",
+   "domain": "reinforcement learning algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's data collection keeps a declared exploration rate: a fixed share of probes goes to non-greedy options so value estimates for alternatives stay honest instead of freezing at their initial guesses.",
+    "source_operator": "epsilon_greedy_exploration",
+    "telemetry": "Counts of greedy versus exploratory selections per situation class, and the outcomes of exploratory probes."
+   }
+  },
+  {
+   "primitive_id": "normal_form_game",
+   "name": "A normal-form game is one simultaneous interaction: a set of agents, each with actions and a reward function over joint actions",
+   "verbatim_quote": "A normal-form game (also known as \"strategic-form\" game) defines a single interaction between two or more agents.",
+   "page": "Section 3.1, Definition 2 (book pp. 44-45; text line 2634)",
+   "latex": "R_i : A \\to \\mathbb{R}, \\quad A = A_1 \\times \\cdots \\times A_n",
+   "symbol_and_unit_ledger": {
+    "I = {1, ..., n}": "finite set of agents",
+    "A_i": "finite action set of agent i",
+    "R_i": "reward function of agent i over joint actions, in reward units"
+   },
+   "assumptions": [
+    "Agents choose actions simultaneously, each by sampling from its own policy.",
+    "There is no evolving environment state; the model is the basic building block that stochastic games extend with state."
+   ],
+   "breakdown_regime": "Without state or repetition the model cannot express sequential adaptation; it is a kernel for analysis, and sequential settings need repeated games or stochastic games built on top of it.",
+   "domain": "game theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any single-round confrontation in the engine is first written as a payoff matrix over joint choices, which makes the incentive structure explicit before dynamics, reputation, or repetition are layered on.",
+    "source_operator": "normal_form_game",
+    "telemetry": "Outcome values for every combination of the participants' available choices in the single round."
+   }
+  },
+  {
+   "primitive_id": "stochastic_game",
+   "name": "A stochastic game (Markov game) lifts normal-form games to a stateful environment whose transitions depend on the joint action",
+   "verbatim_quote": "stochastic games define a state-based environment in which the state evolves over time based on the agents' actions and probabilistic state transitions (Shapley 1953).",
+   "page": "Section 3.3, Definition 3 (book p. 47; text line 2778)",
+   "latex": "\\Pr(s_{t+1}, r_t \\mid s_t, a_t, s_{t-1}, a_{t-1}, \\ldots, s_0, a_0) = \\Pr(s_{t+1}, r_t \\mid s_t, a_t)",
+   "symbol_and_unit_ledger": {
+    "a_t": "joint action (a_t^1, ..., a_t^n) of all agents at time t",
+    "r_t": "joint reward vector at time t",
+    "T": "transition probability function over states given state and joint action"
+   },
+   "assumptions": [
+    "Full observability: all agents observe the current state and the history of states and joint actions.",
+    "Each state induces a normal-form game with rewards R_i(s, .), so normal-form games are the building blocks."
+   ],
+   "breakdown_regime": "The model includes MDPs (one agent) and repeated normal-form games (one state) as special cases, but full observability is its limit; hidden state or hidden actions force the POSG extension.",
+   "domain": "game theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Multi-actor projections in the engine run on the stochastic-game form: the next situation depends on the joint choice of all actors, so no actor's value can be computed from its own action alone.",
+    "source_operator": "normal_form_game",
+    "telemetry": "Joint action logs with successor situations and per-actor rewards."
+   }
+  },
+  {
+   "primitive_id": "posg_and_dec_pomdp",
+   "name": "A POSG adds per-agent observations and observation functions to a stochastic game; a common-reward POSG is a Dec-POMDP",
+   "verbatim_quote": "POSGs with common rewards, in which all agents have the same reward function, are also known as \"Decentralized POMDP\" (Dec-POMDP) and have been widely studied in the area of multi-agent planning",
+   "page": "Section 3.4, Definition 4 (book p. 51; text line 2941)",
+   "latex": "\\forall a \\in A, s \\in S : \\sum_{o_i \\in O_i} O_i(a, s, o_i) = 1",
+   "symbol_and_unit_ledger": {
+    "O_i": "finite observation set of agent i",
+    "O_i(a, s, o_i)": "probability that agent i receives observation o_i after joint action a in state s, dimensionless",
+    "h_i": "agent i's observation history, what its policy may condition on"
+   },
+   "assumptions": [
+    "Policies condition on local observation histories, not on the true state.",
+    "Stochastic games and POMDPs are the special cases of full observability and of a single agent, respectively."
+   ],
+   "breakdown_regime": "Exact solution of Dec-POMDPs is computationally intractable in general (NEXP-hard in the finite-horizon case), so practice relies on learning and approximation rather than planning to optimality.",
+   "domain": "game theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine models each participant as seeing only its own observation stream: projections are computed from what each side could actually know at decision time, never from the omniscient state, which prevents hindsight leakage into evaluations.",
+    "source_operator": "posg_and_dec_pomdp",
+    "telemetry": "Per-participant observation streams and sensor noise characteristics, recorded separately from the true state."
+   }
+  },
+  {
+   "primitive_id": "best_response_operator",
+   "name": "A best response for agent i is a policy maximizing its expected return against the fixed policies of the other agents",
+   "verbatim_quote": "Besides being useful for compact definitions of solution concepts, best response operators have also been used in game theory and MARL to iteratively compute solutions.",
+   "page": "Section 4.2, Equation 4.9 (book p. 63; text line 3568)",
+   "latex": "\\mathrm{BR}_i(\\pi_{-i}) = \\arg\\max_{\\pi_i} U_i(\\langle \\pi_i, \\pi_{-i} \\rangle)",
+   "symbol_and_unit_ledger": {
+    "pi_{-i}": "policies of all agents other than agent i",
+    "U_i": "expected discounted return of agent i under the joint policy, in reward units",
+    "BR_i": "set of best-response policies of agent i, which need not be a singleton"
+   },
+   "assumptions": [
+    "The other agents' policies are held fixed while agent i optimizes.",
+    "Expected returns U_i are defined for the underlying game model (normal-form, stochastic, or POSG)."
+   ],
+   "breakdown_regime": "Best responses need not be unique, and iterated best response can cycle instead of converging; the operator defines optimality relative to others, not an absolute optimum.",
+   "domain": "game theory solution concepts",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every actor evaluation in the engine is a best-response computation: given the modeled behavior of the other participants, what is this actor's highest-value reply, computed before any equilibrium claim is made.",
+    "source_operator": "best_response_operator",
+    "telemetry": "Modeled policies of the other participants and per-actor expected returns for candidate replies."
+   }
+  },
+  {
+   "primitive_id": "minimax_solution",
+   "name": "In a two-agent zero-sum game the minimax solution guarantees the maximin value, and maximin equals minimax",
+   "verbatim_quote": "Minimax is a solution concept defined for two-agent zero-sum games, in which one agent's reward is the negative of the other agent's reward (Section 3.1).",
+   "page": "Sections 4.3 and 4.3.1, Definition 5, Equations 4.10-4.11 (book p. 63; text line 3574)",
+   "latex": "U_i(\\pi) = \\max_{\\pi_i'} \\min_{\\pi_j'} U_i(\\pi_i', \\pi_j') = \\min_{\\pi_j'} \\max_{\\pi_i'} U_i(\\pi_i', \\pi_j')",
+   "symbol_and_unit_ledger": {
+    "i, j": "the two agents in the zero-sum game",
+    "U_i": "expected return of agent i, equal to the negative of agent j's return",
+    "pi_i', pi_j'": "deviation policies ranged over by the max and min operators"
+   },
+   "assumptions": [
+    "Exactly two agents with exactly opposed rewards.",
+    "Finite action spaces (or the standard compactness conditions) so the maximin and minimax values coincide."
+   ],
+   "breakdown_regime": "Outside two-agent zero-sum games the guarantee dissolves: in general-sum games minimax play can be needlessly conservative and is replaced by Nash equilibrium, which coincides with minimax in the zero-sum case.",
+   "domain": "game theory solution concepts",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For purely opposed two-sided evaluations the engine reports the guaranteed value, the outcome a side can secure against a worst-case opponent, as the floor of the projection rather than the value against the expected opponent.",
+    "source_operator": "best_response_operator",
+    "telemetry": "Payoff matrices for two-sided contests and worst-case opponent response values."
+   }
+  },
+  {
+   "primitive_id": "nash_equilibrium",
+   "name": "A Nash equilibrium is a joint policy in which every agent's policy is a best response to the others, so no unilateral deviation pays",
+   "verbatim_quote": "In a Nash equilibrium, no agent i can improve its expected return by changing its policy πi specified in the equilibrium joint policy π, assuming the policies of the other agents stay fixed.",
+   "page": "Section 4.4, Definition 6, Equation 4.16 (book p. 68; text line 3698)",
+   "latex": "\\forall i, \\pi_i' : U_i(\\pi_i', \\pi_{-i}) \\le U_i(\\pi)",
+   "symbol_and_unit_ledger": {
+    "U_i(pi)": "expected return of agent i at the candidate equilibrium joint policy",
+    "pi_i'": "any unilateral deviation policy of agent i",
+    "epsilon-Nash relaxation": "Definition 7 of the book allows a deviation gain of at most epsilon > 0"
+   },
+   "assumptions": [
+    "Every finite normal-form game has at least one Nash equilibrium (Nash 1950), possibly requiring probabilistic policies.",
+    "Agents cannot coordinate deviations; stability is checked one agent at a time."
+   ],
+   "breakdown_regime": "Equilibria can be multiple with very different returns per agent (the equilibrium selection problem), some games have only probabilistic equilibria, and exact Nash computation is PPAD-hard in general, with epsilon-Nash equilibria possibly far from any exact one.",
+   "domain": "game theory solution concepts",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A multi-actor projection in the engine is only called stable when it passes the unilateral-deviation test: each participant's modeled behavior must be a best reply to the rest, otherwise the projection is flagged as a disequilibrium that someone has an incentive to break.",
+    "source_operator": "best_response_operator",
+    "telemetry": "Per-participant deviation gains at candidate joint behaviors, computed from the payoff model."
+   }
+  },
+  {
+   "primitive_id": "pareto_optimality",
+   "name": "A joint policy is Pareto-optimal when no other joint policy makes some agent better off without making any agent worse off",
+   "verbatim_quote": "A joint policy π is Pareto-optimal if it is not Pareto-dominated by any other joint policy.",
+   "page": "Section 4.8, Definition 9, Equation 4.25 (book p. 76; text line 4080)",
+   "latex": "\\pi \\text{ is Pareto-dominated by } \\pi' \\iff \\forall i : U_i(\\pi') \\ge U_i(\\pi) \\ \\text{and} \\ \\exists i : U_i(\\pi') > U_i(\\pi)",
+   "symbol_and_unit_ledger": {
+    "U_i(pi), U_i(pi')": "expected returns of agent i under the two compared joint policies",
+    "Pareto frontier": "the set of return vectors of Pareto-optimal joint policies"
+   },
+   "assumptions": [
+    "Returns are compared agent by agent; no interpersonal aggregation is assumed.",
+    "Used as a refinement criterion on top of equilibrium concepts to narrow the solution set."
+   ],
+   "breakdown_regime": "Pareto optimality alone does not select a unique solution and does not require equilibrium stability; a Pareto-optimal outcome can still be one every agent wants to deviate from.",
+   "domain": "game theory solution concepts",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When several stable joint outcomes exist, the engine ranks them on the Pareto frontier: a candidate that another candidate dominates for every participant is discarded before finer criteria are applied.",
+    "source_operator": "pareto_optimality",
+    "telemetry": "Expected return vectors of all candidate joint behaviors, one component per participant."
+   }
+  },
+  {
+   "primitive_id": "social_welfare_and_fairness",
+   "name": "Social welfare sums the agents' expected returns; fairness (Nash social welfare) multiplies them, and each defines its own optimality criterion",
+   "verbatim_quote": "A welfare-optimal joint policy maximizes the sum of the agents' expected returns, while a fairness-optimal joint policy maximizes the product of the agents' expected returns.",
+   "page": "Section 4.9, Definitions 10-11, Equations 4.26-4.27 (book p. 79; text line 4199)",
+   "latex": "W(\\pi) = \\sum_{i \\in I} U_i(\\pi)",
+   "symbol_and_unit_ledger": {
+    "W(pi)": "social welfare of joint policy pi, in reward units",
+    "F(pi)": "social fairness, the product of the agents' expected returns (Equation 4.27 of the book)",
+    "U_i(pi)": "expected return of agent i"
+   },
+   "assumptions": [
+    "Returns across agents are commensurable enough to sum or multiply.",
+    "Among equal-welfare policies, the fairness product favors the one giving equal returns to all agents."
+   ],
+   "breakdown_regime": "Welfare optimality implies Pareto optimality but fairness optimality does not; the product form misbehaves when some return is zero or negative, and in common-reward and zero-sum games the criteria add nothing.",
+   "domain": "game theory solution concepts",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For cooperative multi-actor evaluations the engine reports both aggregates: the summed return for total value created and the product form as an equity check, so a solution that enriches one participant by starving another is visibly distinguished.",
+    "source_operator": "social_welfare_and_fairness",
+    "telemetry": "Per-participant expected returns for each candidate joint behavior."
+   }
+  },
+  {
+   "primitive_id": "no_regret_solution_concept",
+   "name": "No-regret: in the limit, each agent's average regret against the best fixed action in hindsight is at most zero",
+   "verbatim_quote": "An agent is said to have no-regret if its average regret in the limit of z → ∞ is at most zero.",
+   "page": "Section 4.10, Definition 12, Equations 4.28-4.29 (book p. 81; text line 4297)",
+   "latex": "\\forall i : \\lim_{z \\to \\infty} \\frac{1}{z} \\mathrm{Regret}_i^z \\le 0",
+   "symbol_and_unit_ledger": {
+    "Regret_i^z": "agent i's regret over z episodes: best fixed action's total reward minus the total reward actually obtained, in reward units",
+    "z": "number of episodes played"
+   },
+   "assumptions": [
+    "Regret is measured against the best single fixed action in hindsight, holding the other agents' realized actions fixed.",
+    "As a solution concept it requires all agents to have no-regret simultaneously."
+   ],
+   "breakdown_regime": "No-regret is a property of a learning process over time, not of a single joint policy; it benchmarks against a fixed action, so it cannot certify optimality against adaptive opponents, and the epsilon version tolerates slack epsilon per episode.",
+   "domain": "game theory solution concepts",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine audits its own repeated decisions with hindsight regret: if a fixed alternative would have beaten the adaptive choices over a long window, the adaptation itself is treated as a defect to repair, not as sophistication.",
+    "source_operator": "no_regret_solution_concept",
+    "telemetry": "Per-episode realized rewards and the counterfactual rewards of each fixed alternative action."
+   }
+  },
+  {
+   "primitive_id": "central_learning",
+   "name": "Central learning applies single-agent RL to the joint-action space to learn one central policy that dictates every agent's action",
+   "verbatim_quote": "Central learning applies single-agent RL directly to the space of joint actions to learn a central policy that chooses actions for each agent",
+   "page": "Chapter 5 introduction and Section 5.3.1 (book pp. 89-97; text line 4641)",
+   "latex": "\\pi_c(s) = (\\pi_1(s) = a_1, \\ldots, \\pi_n(s) = a_n)",
+   "symbol_and_unit_ledger": {
+    "pi_c": "central joint policy learned over the joint-action space",
+    "pi_i(s) = a_i": "decomposition of the deterministic central policy into per-agent actions in state s"
+   },
+   "assumptions": [
+    "A central controller can observe the state and dictate actions to all agents.",
+    "In fully observable stochastic games the learned central policy can be decomposed into local policies because MDPs admit deterministic optimal policies."
+   ],
+   "breakdown_regime": "The joint-action space grows exponentially in the number of agents (six actions and three agents already give 216 joint actions), a scalar transformation of the joint reward may not exist for equilibrium targets, and under partial observability the central policy may not decompose into local ones.",
+   "domain": "multi-agent learning paradigms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps a centralized evaluation mode for small actor counts, where the joint behavior is optimized as one object; it is the reference against which decentralized approximations are measured, and its exponential cost is the explicit reason for switching modes as actor count grows.",
+    "source_operator": "central_learning",
+    "telemetry": "Joint action counts per situation and the compute cost of joint optimization as actors are added."
+   }
+  },
+  {
+   "primitive_id": "independent_learning",
+   "name": "Independent learning lets each agent learn from its local history alone, which folds the other learning agents into a non-stationary effective transition function",
+   "verbatim_quote": "In independent learning (often abbreviated as IL), each agent i learns its own policy πi using only its local history of own observations, actions, and rewards, while ignoring the existence of other agents",
+   "page": "Section 5.3.2, Equation 5.10 (book p. 97; text line 4987)",
+   "latex": "T_i(s_{t+1} \\mid s_t, a_t^i) \\propto \\sum_{a_{-i} \\in A_{-i}} T(s_{t+1} \\mid s_t, \\langle a_t^i, a_{-i} \\rangle) \\prod_{j \\ne i} \\pi_j(a_j \\mid s_t)",
+   "symbol_and_unit_ledger": {
+    "T_i": "effective transition function perceived by agent i, which changes as the other agents learn",
+    "a_{-i}": "joint action of all agents other than i",
+    "pi_j(a_j | s_t)": "current action probabilities of the other agents, the source of the non-stationarity"
+   },
+   "assumptions": [
+    "Agents neither observe nor use information about other agents; other agents' effects are treated as environment dynamics.",
+    "Each agent can run an unmodified single-agent RL algorithm, as in independent Q-learning."
+   ],
+   "breakdown_regime": "Because the perceived transition function changes as others learn, independent learning can be unstable and may converge to no solution of the game; idealized analyses show chaotic non-convergent behavior in some game classes, including Prisoner's Dilemma-like settings.",
+   "domain": "multi-agent learning paradigms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's per-actor learners are independent in this exact sense, so their shared failure mode is named in the model: each learner's environment includes the other learners, and instability is diagnosed as co-adaptation rather than as noise.",
+    "source_operator": "independent_learning",
+    "telemetry": "Per-actor learning curves and policy change rates, to detect co-adaptation cycles between learners."
+   }
+  },
+  {
+   "primitive_id": "joint_action_learning_minimax_q",
+   "name": "Joint-action learning solves the normal-form game induced by joint action values in each state; minimax Q-learning is its zero-sum instance with a convergence guarantee",
+   "verbatim_quote": "Minimax Q-learning is guaranteed to learn the unique minimax value of the stochastic game under the assumption that all combinations of states and joint actions are tried infinitely often",
+   "page": "Sections 6.2 and 6.2.1, Equation 6.11 (book p. 121; text line 5984)",
+   "latex": "\\mathrm{Value}_i(\\Gamma_{s'}) = \\sum_{a \\in A} \\Gamma_{s', i}(a) \\, \\pi_{s'}^*(a)",
+   "symbol_and_unit_ledger": {
+    "Gamma_s": "normal-form game induced in state s by the joint action-value functions of all agents",
+    "pi_s*": "equilibrium joint policy solving the game Gamma_s",
+    "Value_i(Gamma_s')": "agent i's equilibrium value of the successor-state game, used as the TD target"
+   },
+   "assumptions": [
+    "The learner observes the actions and rewards of all agents in each time step and maintains a value function for every agent.",
+    "For minimax Q-learning: two agents, zero-sum rewards, all state and joint-action combinations tried infinitely often, standard learning-rate conditions."
+   ],
+   "breakdown_regime": "Maintaining and solving a game per state scales poorly with agents and actions, and general-sum instances (Nash Q-learning) need equilibrium selection assumptions that can fail; the guarantee is specific to the two-agent zero-sum case.",
+   "domain": "multi-agent learning algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine evaluates a contested state by solving the small game its value estimates induce, then bootstraps the equilibrium value of that game as the target, instead of bootstrapping one side's greedy value as single-agent Q-learning would.",
+    "source_operator": "minimax_solution",
+    "telemetry": "Joint action-value tables per state and the equilibrium values computed from them."
+   }
+  },
+  {
+   "primitive_id": "dqn_squared_td_loss",
+   "name": "Deep Q-learning trains a neural action-value network by minimizing the squared error against a bootstrapped target value",
+   "verbatim_quote": "the squared error between the value function estimate and the target value yt at step t using the same experience of a single transition as for tabular Q-learning",
+   "page": "Section 8.1.1, Equations 8.2-8.3 (book p. 185; text line 8847)",
+   "latex": "L(\\theta) = \\left( y_t - Q(s_t, a_t; \\theta) \\right)^2",
+   "symbol_and_unit_ledger": {
+    "theta": "parameters of the value network",
+    "y_t": "target value: r_t if s_{t+1} is terminal, else r_t + gamma max Q(s_{t+1}, a'; theta)",
+    "Q(s_t, a_t; theta)": "network estimate for the experienced state-action pair"
+   },
+   "assumptions": [
+    "Gradient flow is stopped through the bootstrapped target; only the current estimate is trained toward it.",
+    "The network architecture outputs one value per discrete action, restricting this form to finite action spaces."
+   ],
+   "breakdown_regime": "The loss contains the approximate value function twice (estimate and target), which is exactly the moving-target coupling that target networks and replay buffers are then needed to tame.",
+   "domain": "deep reinforcement learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Neural value models in the engine are trained on this squared TD error with the target treated as a constant, the same stop-gradient discipline, so a value model never chases its own gradient through the target.",
+    "source_operator": "q_learning_off_policy_update",
+    "telemetry": "Transition batches with computed targets and current estimates, and the loss curve per training run."
+   }
+  },
+  {
+   "primitive_id": "deadly_triad",
+   "name": "The deadly triad: off-policy learning plus function approximation plus bootstrapped targets can produce unstable, diverging value estimates",
+   "verbatim_quote": "The presence of this so-called deadly triad of RL (Sutton and Barto 2018; van Hasselt et al. 2018) can lead to unstable and diverging value estimates.",
+   "page": "Section 8.1.2 (book p. 187; text line 8940)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "All three components must be present together; removing any one of them restores stability in the book's analysis.",
+    "The divergence mechanism runs through generalization: updating one state-action pair moves estimates for unvisited pairs, whose inflated values then enter other targets."
+   ],
+   "breakdown_regime": "This is itself the breakdown regime of naive deep Q-learning; mitigations (target networks, replay, on-policy data) reduce but do not formally eliminate the risk in the general nonlinear case.",
+   "domain": "deep reinforcement learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats the triad as a checklist veto on any proposed learner: if a design combines off-policy data, a generalizing value model, and bootstrapped targets, it ships only with the stabilizers attached and divergence monitors on its value estimates.",
+    "source_operator": "deadly_triad",
+    "telemetry": "Value estimate ranges over training, watched for the runaway growth signature of triad divergence."
+   }
+  },
+  {
+   "primitive_id": "target_network_stabilization",
+   "name": "A target network with periodically copied parameters computes bootstrapped targets, decoupling them from the rapidly changing main network",
+   "verbatim_quote": "Instead of optimizing the target network with gradient descent, the parameters of the target network are periodically updated by copying the current parameters of the main value function network to the target network",
+   "page": "Section 8.1.2, Equation 8.4 (book p. 188; text line 8993)",
+   "latex": "y_t = r_t + \\gamma \\max_{a'} Q(s_{t+1}, a'; \\bar{\\theta})",
+   "symbol_and_unit_ledger": {
+    "theta-bar": "target network parameters, a periodic copy of the main network parameters theta",
+    "y_t": "bootstrapped target for non-terminal successor states",
+    "gamma": "discount factor in [0, 1]"
+   },
+   "assumptions": [
+    "The target network shares the main network's architecture and is initialized with the same parameters.",
+    "Targets stay fixed between copy intervals, which is what stabilizes them."
+   ],
+   "breakdown_regime": "A stale target network lags real value changes, and too-frequent copying reintroduces the moving-target instability the mechanism exists to prevent; the copy interval is a stability-responsiveness trade-off.",
+   "domain": "deep reinforcement learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine value training freezes a snapshot model to generate targets and refreshes it on a schedule, so the learning target is a versioned artifact that can be audited, rather than the live model grading its own homework.",
+    "source_operator": "dqn_squared_td_loss",
+    "telemetry": "Target snapshot version used for each training batch and the drift between snapshot and live estimates."
+   }
+  },
+  {
+   "primitive_id": "experience_replay",
+   "name": "Experience replay stores transitions in a buffer and trains on uniformly sampled mini-batches, breaking temporal correlations and enabling data reuse",
+   "verbatim_quote": "Instead of using the sequential experiences as the agent receives them to update the value function, experience samples are collected in a so-called replay buffer D.",
+   "page": "Section 8.1.3, Equation 8.5 (book pp. 190-191; text line 9083)",
+   "latex": "L(\\theta) = \\frac{1}{B} \\sum_{(s^k, a^k, r^k, s^{k+1}) \\in B} \\left( y^k - Q(s^k, a^k; \\theta) \\right)^2",
+   "symbol_and_unit_ledger": {
+    "D": "replay buffer, a fixed-capacity first-in-first-out set of stored transitions",
+    "B": "mini-batch sampled uniformly at random from D, and its size",
+    "y^k": "target computed for the k-th sampled transition as in Equation 8.3 of the book"
+   },
+   "assumptions": [
+    "Buffer contents were generated by earlier versions of the policy, so replay data is off-policy and only off-policy algorithms can use it.",
+    "Uniform sampling approximates the independent, identically distributed data that gradient optimization assumes."
+   ],
+   "breakdown_regime": "Replay cannot fix a distribution that never contained the relevant experiences, stale data can anchor values to obsolete behavior, and on-policy algorithms cannot consume the buffer without correction.",
+   "domain": "deep reinforcement learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine trains value models from a shuffled store of past situations rather than from the live sequence, so a recent streak of similar cases cannot specialize the model and erase older regimes, the catastrophic forgetting pattern replay exists to break.",
+    "source_operator": "dqn_squared_td_loss",
+    "telemetry": "Buffer composition by situation type and age, and per-regime validation losses after each training round."
+   }
+  },
+  {
+   "primitive_id": "policy_gradient_theorem",
+   "name": "The policy gradient theorem gives the gradient of expected return for a parameterized policy without differentiating the unknown environment dynamics",
+   "verbatim_quote": "The policy gradient theorem (Sutton and Barto 2018) formulates a solution to these challenges and provides a theoretically founded expression for the gradient of the performance of a parameterized policy with respect to the parameters of the policy.",
+   "page": "Section 8.2.2, Equation 8.8 (book p. 197; text line 9412)",
+   "latex": "\\nabla_\\phi J(\\phi) \\propto \\sum_{s \\in S} \\Pr(s \\mid \\pi) \\sum_{a \\in A} Q^\\pi(s, a) \\nabla_\\phi \\pi(a \\mid s; \\phi)",
+   "symbol_and_unit_ledger": {
+    "phi": "parameters of the parameterized policy",
+    "J(phi)": "policy quality objective, expected return",
+    "Pr(s | pi)": "on-policy state distribution under the current policy",
+    "Q^pi(s, a)": "action values under the current policy, the assumption the theorem requires"
+   },
+   "assumptions": [
+    "The policy representation is differentiable in its parameters.",
+    "State probabilities are approximated by sampling states with the current policy, so the gradient estimate is on-policy."
+   ],
+   "breakdown_regime": "The raw gradient has high variance and needs baselines or critics to be practical; it optimizes the current policy's own state distribution, so it can converge to local optima and cannot directly reuse off-policy data.",
+   "domain": "deep reinforcement learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the engine tunes a behavior policy directly, it follows this gradient form: improve actions in proportion to their advantage under the current policy, weighted by how often the current policy actually visits the situation.",
+    "source_operator": "policy_gradient_theorem",
+    "telemetry": "On-policy trajectory samples with per-action value estimates, refreshed whenever the policy changes materially."
+   }
+  },
+  {
+   "primitive_id": "ctde_paradigm",
+   "name": "Centralized training with decentralized execution: train with shared information, deploy policies that act on local observations only",
+   "verbatim_quote": "Centralized training and decentralized execution (CTDE) represents the third paradigm of MARL. These algorithms use centralized training to train agent policies, while the policies themselves are designed to allow for decentralized execution.",
+   "page": "Section 9.1.3 (book p. 222; text line 10565)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Centralization is feasible during training, for example in simulation, even when it is impossible at execution time.",
+    "A centralized critic may condition on joint observation histories and privileged information that the executed policies never see."
+   ],
+   "breakdown_regime": "If training-time central information leaks into the executed policy's inputs, deployment breaks; and if no faithful simulator or shared training phase exists, the paradigm cannot be instantiated at all.",
+   "domain": "multi-agent learning paradigms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's build discipline copies this split: models may be fitted with full information offline, but anything deployed for live evaluation is restricted to the inputs that will genuinely be available at decision time, and the input lists are checked against that rule.",
+    "source_operator": "ctde_paradigm",
+    "telemetry": "Feature availability audits comparing training-time inputs against decision-time inputs for each deployed model."
+   }
+  },
+  {
+   "primitive_id": "coma_counterfactual_baseline",
+   "name": "COMA's counterfactual baseline marginalizes out one agent's action in a centralized critic to isolate that agent's contribution to the team outcome",
+   "verbatim_quote": "The counterfactual baseline computes the expected centralized value estimate for agent i for following its own policy",
+   "page": "Section 9.4.4, Equation 9.16 (book p. 239; text line 11421)",
+   "latex": "\\mathrm{Adv}_i(h_i, z, a) = Q(h_i, z, a; \\theta) - \\sum_{a_i' \\in A_i} \\pi(a_i' \\mid h_i; \\phi_i) Q(h_i, z, \\langle a_i', a_{-i} \\rangle; \\theta)",
+   "symbol_and_unit_ledger": {
+    "Adv_i": "counterfactual advantage of agent i's taken action, in reward units",
+    "h_i": "agent i's observation history",
+    "z": "centralized information available to the critic during training",
+    "a_{-i}": "the other agents' actions, held fixed in the counterfactual"
+   },
+   "assumptions": [
+    "A centralized action-value critic conditioned on joint information is available during training (the CTDE setting).",
+    "The baseline does not change the multi-agent policy gradient in expectation."
+   ],
+   "breakdown_regime": "The book records that COMA empirically suffers from high variance in its baseline and inconsistent value estimates, leading to unstable training; it answers credit assignment in form, not yet reliably in practice.",
+   "domain": "multi-agent deep reinforcement learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Per-actor credit in the engine is computed exactly this way when a joint critic exists: replace the actor's action by its policy average inside the critic, hold everyone else fixed, and read the difference as that actor's marginal contribution.",
+    "source_operator": "policy_gradient_theorem",
+    "telemetry": "Centralized critic values for taken and counterfactual per-actor actions on the same situations."
+   }
+  },
+  {
+   "primitive_id": "vdn_additive_value_decomposition",
+   "name": "VDN decomposes the joint action-value function into a sum of per-agent utility functions, so greedy per-agent actions compose the greedy joint action",
+   "verbatim_quote": "Using this optimization objective, all agents implicitly learn their individual utility functions.",
+   "page": "Section 9.5.2, Equations 9.43-9.45 (book p. 249; text line 11930)",
+   "latex": "Q(h_t, a_t; \\theta) = \\sum_{i \\in I} Q(h_t^i, a_t^i; \\theta_i)",
+   "symbol_and_unit_ledger": {
+    "Q(h_t^i, a_t^i; theta_i)": "individual utility of agent i for its action given its observation history",
+    "h_t": "joint observation history at time t",
+    "theta-bar (in Equation 9.45 of the book)": "target network parameters used for the bootstrapped maximum"
+   },
+   "assumptions": [
+    "The joint value is exactly additive in the per-agent utilities, with no constraints imposed on the individual utility functions.",
+    "Training uses shared rewards and a replay buffer containing all agents' experiences; this is the IGM property for the linear case."
+   ],
+   "breakdown_regime": "Additivity cannot represent joint values where one agent's contribution depends non-linearly on another's action, which is the representational gap QMIX's monotonic mixing was built to widen, and even monotonic mixing cannot represent all joint value functions.",
+   "domain": "multi-agent deep reinforcement learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Team evaluations in the engine can be decomposed into per-actor utilities whose sum is the team value, which makes each actor's greedy choice well defined and auditable, at the declared cost of assuming contributions add.",
+    "source_operator": "ctde_paradigm",
+    "telemetry": "Per-actor utility estimates and joint realized outcomes, to test whether the additive fit is adequate per situation class."
+   }
+  },
+  {
+   "primitive_id": "qmix_monotonic_value_decomposition",
+   "name": "QMIX mixes per-agent utilities through a monotonic network, guaranteeing the IGM property while representing non-linear decompositions beyond VDN's sum",
+   "verbatim_quote": "QMIX builds on the observation that the IGM property can be ensured if (strict) monotonicity of the centralized action-value function with respect to individual utilities holds",
+   "page": "Section 9.5.3, Equations 9.46-9.47 (book p. 250; text line 11945)",
+   "latex": "Q(h, z, a, \\theta) = f_{\\mathrm{mix}}\\left( Q(h_1, a_1; \\theta_1), \\ldots, Q(h_n, a_n; \\theta_n); \\theta_{\\mathrm{mix}} \\right)",
+   "symbol_and_unit_ledger": {
+    "f_mix": "mixing network combining individual utilities into the joint value; monotonic when its utility-input weights are positive",
+    "theta_mix": "mixing parameters produced by a hypernetwork conditioned on centralized information z",
+    "Equation 9.46 of the book": "the monotonicity condition, partial derivative of the joint value with respect to each utility greater than 0"
+   },
+   "assumptions": [
+    "Monotonicity of the mixing function in each utility is a sufficient condition for IGM: joint greedy actions decompose into per-agent greedy actions.",
+    "The mixing network's parameters come from a hypernetwork that receives additional centralized information."
+   ],
+   "breakdown_regime": "Monotonicity is only sufficient, not necessary: joint value functions whose dependence on one agent's utility reverses sign depending on another agent's action cannot be represented, the limitation QTRAN and later methods address.",
+   "domain": "multi-agent deep reinforcement learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When team value is not additive, the engine's decomposition layer uses a monotone mixer: raising any actor's utility can never lower the team value, which keeps per-actor greedy selection consistent with team-level selection while allowing interactions between actors.",
+    "source_operator": "vdn_additive_value_decomposition",
+    "telemetry": "Per-actor utilities, mixer weights (checked positive), and joint outcomes for fitting and auditing the decomposition."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "47cb4b82ec573e91-t1",
+   "think": "This book is the first full textbook synthesis of multi-agent reinforcement learning, and its architecture is itself the first lesson. It builds a single ladder and then climbs it twice. The ladder is a hierarchy of interaction models: the normal-form game for one simultaneous encounter, the stochastic game that adds an evolving state driven by joint actions, and the partially observable stochastic game that adds private observations, with the single-agent MDP and POMDP recovered as special cases at one agent. On top of the models it places solution concepts, because in a multi-agent system the word optimal has no meaning until a solution concept supplies one: best response as the atomic operator, minimax for the two-agent zero-sum case, Nash equilibrium as mutual best response, then refinements and alternatives in Pareto optimality, social welfare and fairness, correlated equilibrium, and no-regret. Only after model and solution are fixed does the book talk about learning, and that ordering is a discipline the engine should copy: never ask how to learn before stating what game is being played and what would count as having solved it.\nThe computational substrate shared by everything is the single-agent machinery of Chapter 2. The Markov property licenses per-state values; the discounted return defines the objective; the Bellman equation turns value into a recursion, and the Bellman optimality equation turns the recursion into a fixed point whose greedy policy is optimal. Temporal-difference learning then replaces exact dynamic programming with sampled updates toward bootstrapped targets, and the two canonical targets, Sarsa's on-policy successor action and Q-learning's off-policy maximum, mark a permanent fork: value the behavior that will actually occur, or value the best behavior regardless of who generated the data. Deep learning enters as function approximation for these same recursions, and immediately the book names the price: the deadly triad of off-policy data, generalization, and bootstrapping, answered by the target network and the replay buffer, and the policy gradient theorem as the alternative route that optimizes behavior directly.\nWhat makes the multi-agent version a different subject rather than a wider input vector is that the other agents are also learning. Non-stationarity is therefore not noise but structure: independent learners fold each other into a perceived transition function that moves as they adapt, which is why independent Q-learning can cycle chaotically, and why joint-action learners instead maintain everyone's values and solve the induced game in each state, bootstrapping equilibrium values rather than greedy ones. Credit assignment gets its own dimension too, because a shared reward does not say whose action earned it, and the book's principled answer is counterfactual: COMA replaces one agent's action with its policy average inside a centralized critic and reads the difference as that agent's advantage.\nThe engineering settlement the book converges on is centralized training with decentralized execution. Central learning is exponentially expensive and often physically impossible, independent learning is cheap and unstable, and CTDE buys training-time information without paying execution-time impossibility. Value decomposition is CTDE made concrete for value methods: VDN assumes the joint value is a sum of per-agent utilities, QMIX relaxes the sum to a monotonic mixture produced by a hypernetwork, and in both cases the individual-global-max property is what is really being purchased, the guarantee that decentralized greedy action selection reproduces the joint greedy action. The monotonicity constraint is also the honest boundary of the method, since joint values that violate it exist and cannot be represented.\nTwo further threads complete the book's account of how solutions get computed. The first is that learners may model each other explicitly: best-response operators become algorithms in fictitious play, where each agent best-responds to the empirical history of the others' play, and in joint-action learning with agent modeling, where learned models of the other agents replace direct observation of their values. The second is the setting dimension the book insists on naming: self-play, where identical learners train against copies of themselves, versus mixed-play against unlike learners, because a method that converges in self-play may exploit or collapse against a differently built opponent, and the choice of training population is part of the problem specification, not an implementation detail. The practice chapters then carry the same ideas into deep implementations at scale, including the question of when agents may be treated as interchangeable, formalized as weakly and strongly homogeneous agents, which is what licenses sharing parameters and experience across agents.\nFor a reasoning engine the transfer is direct. Situations with several adaptive participants must be modeled as games, not as single-actor forecasts: classify the payoff regime first, test candidate joint behaviors for unilateral-deviation stability before calling them projections, attribute joint outcomes by counterfactual substitution rather than by even splits, and treat co-adaptation as a named failure mode whenever learners or analysts update against each other. The book's limits transfer too. Equilibrium multiplicity means stability alone does not select an outcome, exact solution of the most general model is intractable, and every decomposition buys tractability with a representational assumption that must be checked against the situation at hand.\nThe book also models an evaluation discipline worth copying: algorithms are judged by learning curves, the performance of the extracted greedy policy measured across training time and averaged over many independent runs with different seeds, rather than by a single final number. That convention separates three questions that are often confused: whether a method is improving, what policy it would deliver if stopped now, and how variable that delivery is across runs. In the multi-agent chapters the same discipline extends to reporting which solution concept the learned behavior approximates and against which opponent population it was measured, since both qualifications change the meaning of the result.",
+   "retrocausal_genealogy": "The lineage runs through the founding results of three fields. Shapley defined stochastic games in 1953 and Bellman published dynamic programming in 1957, giving the state-based game and the recursion that values it. Nash's 1950 existence proof and the minimax theory of von Neumann supplied the solution concepts, with Pareto's optimality criterion imported from economics. Watkins and Dayan's Q-learning (1992) and Littman's minimax Q-learning (1994) carried the recursion into learning from samples, Hansen, Bernstein, and Zilberstein formalized the partially observable stochastic game in 2004, and the deep era added Mnih and colleagues' DQN (2015), after which COMA, VDN, and QMIX (all 2018) rebuilt credit assignment and value decomposition on neural critics.",
+   "theory_of_mind": "The authors write as teachers consolidating a young field: they assume a reader comfortable with probability and basic machine learning, and they believe that reader has been forced to assemble MARL from scattered papers that use conflicting notation and hide their assumptions. Their model of the domain is that games are the correct formal substrate, learning is the computation of game solutions from experience, and most confusion in the field comes from mixing up the model, the solution concept, and the algorithm. Hence the book's structure: models first, solutions second, algorithms third, with one running example, level-based foraging, revisited at every level so the reader can see exactly what each new layer adds.",
+   "cross_layer_veto": "Several results in this book veto moves that other layers of a reasoning system might otherwise make. Nash equilibrium vetoes calling a joint behavior a projection when some participant can profitably deviate from it unilaterally. Non-stationarity vetoes importing single-agent convergence guarantees into any setting where the other participants are also updating. The deadly triad vetoes shipping a learner that combines off-policy data, function approximation, and bootstrapping without stabilizers and divergence monitoring. Monotonicity vetoes representing a joint value with sign-reversing interactions inside a QMIX-style decomposition. And the credit assignment analysis vetoes reading a shared team reward as evidence about any individual participant's contribution without a counterfactual comparison."
+  }
+ ],
+ "universal_lens": "Read as a general template, this book is about any system in which several adaptive decision makers share one environment and one outcome stream. Its method is portable: first write down the interaction model honestly, including who can see what; then state what a solution means before optimizing anything; then expect the three structural difficulties, non-stationarity from mutual adaptation, credit assignment under shared outcomes, and exponential growth of the joint choice space, and choose machinery that answers each one by name. The same template organizes markets, traffic, organizations, and ecosystems: wherever participants learn from each other while affecting each other, the game model, the equilibrium test, and the counterfactual attribution are the load-bearing ideas.",
+ "gsi_mapping": "For the Galaxy Sports Institute the book supplies the formal curriculum spine for multi-agent reasoning: the model hierarchy from matrix games to partially observable stochastic games, the solution concepts that define optimality among adaptive participants, and the named failure modes that a research program must measure rather than assume away. Its results set the Institute's evaluation standards: any proposed multi-agent method should state its game model, its target solution concept, its credit assignment mechanism, and its scaling behavior in the number of agents, and should be benchmarked against the book's canonical cases, from Prisoner's Dilemma and Rock-Paper-Scissors to level-based foraging, before wider claims are made.",
+ "gse_mapping": "For the Galaxy Sports Edge engine the value is a reasoning discipline for any situation involving several adaptive participants, such as competing decision makers whose choices interact. The engine takes: payoff-regime classification before evaluation, the unilateral-deviation test before a joint projection is trusted, counterfactual attribution when a joint outcome must be divided among contributors, explicit drift handling when the other side is itself adapting, and decomposition of team values into per-participant utilities only under stated additivity or monotonicity assumptions. These are projection-quality mechanisms, internal to the reasoning layer, and they sharpen how situations are modeled without changing what the public surface shows."
+}

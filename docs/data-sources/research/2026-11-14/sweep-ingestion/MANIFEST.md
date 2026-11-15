@@ -149,3 +149,11 @@ Gaps named in the report's own gap audit, carried with this delta:
 - Delta feed: `x-for-you-feed-2026-11-14-am-delta.jsonl` (116 records, commit `54ac21147`), merged cleanly into `x-for-you-feed.jsonl` (5,609 -> 5,725 records).
 - Delta feed: `x-analytics-feed-2026-11-14-am-delta.jsonl` (66 records, commit `6b85d6b27`), merged uniquely by `item_key` into `x-analytics-feed.jsonl` (1615 -> 1681 records).
 - Merged totals on branch: `ig-for-you-feed.jsonl` (2,763) + `x-for-you-feed.jsonl` (5,725) + `x-analytics-feed.jsonl` (1681) = **10,169** unique records.
+
+## 2026-11-14 PM IG delta
+
+Delta feed: `ig-for-you-feed-2026-11-14-pm-delta.jsonl`, 42 records converted from the Instagram For You PM run of 2026-11-14 (`motif/sweep-ingestion-2026-11-14`). Running feed total with PM deltas appended: 10,211.
+
+## 2026-11-14 PM X delta
+
+Delta feed: `x-for-you-feed-2026-11-14-pm-delta.jsonl`, 113 records converted from the X For You PM run of 2026-11-14 (`motif/sweep-ingestion-2026-11-14`). Running feed total with PM deltas appended: 10,324.

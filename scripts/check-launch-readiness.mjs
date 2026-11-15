@@ -232,8 +232,8 @@ for (const [pathname, expect] of [
   const currencyScript = path.join(ROOT, "scripts", "check-nflverse-currency.ts");
   const tsxCli = path.join(ROOT, "node_modules", "tsx", "dist", "cli.mjs");
   const spawnOpts = {
-    encoding: "utf8",
-    env: { ...process.env, NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --use-system-ca`.trim() },
+    encoding: "utf8", env: { ...process.env, ...(process.allowedNodeEnvironmentFlags?.has("--use-system-ca") ? { NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --use-system-ca`.trim() } : {}) },
+    
     timeout: 120_000,
   };
   const probe = existsSync(tsxCli)
