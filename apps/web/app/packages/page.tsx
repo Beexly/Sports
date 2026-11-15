@@ -55,6 +55,7 @@ export default async function PackagesPage(): Promise<JSX.Element> {
   const gate = await getStage5GateStatus();
   const slateAvailability = singleSlateCheckoutAvailability();
   const membershipAvailability = membershipCheckoutAvailability();
+  const stripePacks = LIVE_PACKAGE_CATALOG.filter((pkg) => Boolean(pkg.forSale) && Boolean(pkg.stripePriceId));
 
   return (
     <div className="relative min-h-screen bg-obsidian text-ion-white">
@@ -80,247 +81,187 @@ export default async function PackagesPage(): Promise<JSX.Element> {
       <div className="gse-packages">
         <Nav />
         <main id="main-content" className="mx-auto w-full max-w-6xl px-4 pb-24 pt-14 sm:px-6">
-          {/* ── Hero · filed report, not a template plate ─────────────── */}
-          <header className="gse-rise border-b border-mineral pb-10">
-            <p className={`${eyebrow} text-plasma`}>Galaxy Sports Edge · Week 10 · Storefront</p>
-            <h1 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] text-ion-white sm:text-6xl">
-              Two doors. One standard.
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1 sm:text-lg">
-              Join for the season, or buy a single slate. Either way, you only ever pay for
-              plays that clear our five-stage check - and when we pass, the reasoning is
-              published free. Passing is a decision we are proud of, not a gap we hide.
-            </p>
-
-            {/* Live Stage-5 gate band */}
-            <div
-              data-testid="stage5-gate-band"
-              className={`mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border px-4 py-3.5 ${
-                gate.checkoutEnabled ? "border-mineral-hi bg-eclipse" : "border-plasma/60 bg-eclipse"
-              }`}
-            >
-              <span className="flex items-center gap-2.5">
-                <span
-                  aria-hidden
-                  className={`gse-pulse inline-block h-2 w-2 ${gate.checkoutEnabled ? "bg-ion-white" : "bg-plasma"}`}
-                />
-                <span className={`${eyebrow} ${gate.checkoutEnabled ? "text-ion-white" : "text-plasma"}`}>
-                  Stage-5 gate · {gate.checkoutEnabled ? "open" : "closed"}
-                </span>
-              </span>
-              <span className="font-numerals text-[11px] uppercase tracking-[0.18em] tabular-nums text-ion-2">
-                {gate.officialPlayCount} official {gate.officialPlayCount === 1 ? "play" : "plays"} published
-              </span>
-              <span className="w-full text-sm leading-6 text-ion-1 sm:w-auto sm:flex-1">
-                {gate.reason} <Link href="/pricing" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-plasma underline hover:text-ion-white">Open Live Week 10 Slate Packs -&gt;</Link> <Link href="/board" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-ion-white underline hover:text-plasma">View 13 Live Board Plays -&gt;</Link>
-              </span>
-            </div>
-          </header>
-
-          {/* ── Door 1 · Season Membership ────────────────────────────── */}
-          <section id="season-membership" aria-labelledby="door-1-heading" className="gse-rise gse-rise-1 mt-14">
-            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-              <div>
-                <p className={`${eyebrow} text-ion-2`}>Door 1</p>
-                <h2 id="door-1-heading" className="mt-2 font-display text-3xl text-ion-white sm:text-4xl">
-                  Season Membership
-                </h2>
-              </div>
-              <span className={`${eyebrow} border border-plasma px-3 py-1.5 text-plasma`}>
-                {FOUNDING_SEAT_COPY}
-              </span>
-            </div>
-
-            <div className="mt-6 border border-mineral bg-eclipse">
-              <div className="grid gap-0 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-                <div className="border-b border-mineral p-6 sm:p-8 lg:border-b-0 lg:border-r">
-                  <p className="text-base leading-7 text-ion-1">
-                    Every official play we publish for the rest of the season - sides,
-                    totals, props, correlated parlays and DFS builds - with the same
-                    five-stage discipline on every slate. Members see the full reasoning,
-                    including every pass, the moment it is filed.
-                  </p>
-                  <ul className="mt-6 space-y-2.5 text-sm leading-6 text-ion-1">
-                    <li className="flex gap-2.5"><span aria-hidden className="text-plasma">-</span>All single-slate packs included while your membership is active</li>
-                    <li className="flex gap-2.5"><span aria-hidden className="text-plasma">-</span>Full reasoning on every official play and every pass</li>
-                    <li className="flex gap-2.5"><span aria-hidden className="text-plasma">-</span>Playoff coverage included in the one-time option</li>
-                    <li className="flex gap-2.5"><span aria-hidden className="text-plasma">-</span>Cancel monthly anytime; the one-time option runs to the final whistle</li>
-                  </ul>
-                </div>
-                <div className="p-6 sm:p-8">
-                  <p className={`${eyebrow} text-ion-2`}>Founding rate</p>
-                  <p className="mt-2 font-numerals text-5xl font-semibold tabular-nums text-ion-white">
-                    ${(MEMBERSHIP_PRICING.foundingMonthlyCents / 100).toFixed(2)}
-                    <span className="text-lg font-normal text-ion-2">/mo</span>
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-ion-2">
-                    ${(MEMBERSHIP_PRICING.standardMonthlyCents / 100).toFixed(2)}/mo standard after the
-                    first 100 members - or ${(MEMBERSHIP_PRICING.restOfSeasonCents / 100).toFixed(0)}{" "}
-                    one-time for the rest of the season plus playoffs.
-                  </p>
-                  <p className="mt-4 border-t border-mineral pt-4 text-xs leading-5 text-ion-2">
-                    Founding seats are a pricing policy, not a countdown: we do not publish
-                    a live seat counter we cannot verify. The rate holds for the first 100
-                    members, full stop.
-                  </p>
-                </div>
-              </div>
-              <div className="border-t border-mineral p-6 sm:p-8">
-                <MembershipPlans gate={gate} availability={membershipAvailability} />
-              </div>
-            </div>
-          </section>
-
-          {/* ── Door 2 · Single-Slate Packs ───────────────────────────── */}
-          <section id="pack-cards" aria-labelledby="door-2-heading" className="gse-rise gse-rise-2 mt-16">
-            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-              <div>
-                <p className={`${eyebrow} text-ion-2`}>Door 2</p>
-                <h2 id="door-2-heading" className="mt-2 font-display text-3xl text-ion-white sm:text-4xl">
-                  Choose Your Football Pack
-                </h2>
-                <p className="mt-3 max-w-2xl text-base leading-7 text-ion-1">
-                  One-time purchase. Your official picks, player props, and parlays unlock immediately right inside the card below.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-8 grid gap-6 lg:grid-cols-2">
-              {getActiveForSalePackages().map((rawPkg, idx) => {
-                const cleanPkg = scrubOfferingCopy(rawPkg);
-                const teasers = getRedactedTeasersForWindowSlot(cleanPkg.windowSlot);
-                return (
-                  <div key={cleanPkg.slug} id={`checkout-${cleanPkg.slug}`}>
-                    <PaywallRevealCard
-                      pkg={cleanPkg}
-                      teasers={teasers}
-                      featured={idx === 0 || cleanPkg.slug === "week8-all-access"}
-                      ctaTone="solid"
-                    />
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-8 grid gap-6 lg:grid-cols-2">
-              {TWO_DOOR_PACK_OFFERS.map((offer) => {
-                const availability = slateAvailability.find((a) => a.offerSlug === offer.slug);
-                return (
-                  <SingleSlateCard
-                    key={offer.slug}
-                    offer={offer}
-                    gate={gate}
-                    standardConfigured={availability?.standardConfigured ?? false}
-                    creditBackConfigured={availability?.creditBackConfigured ?? false}
-                  />
-                );
-              })}
-            </div>
-
-            <div className="mt-10 border-t border-mineral pt-8">
-              <p className={`${eyebrow} text-ion-2`}>Slate Package Directory</p>
-              <h3 className="mt-2 font-display text-2xl text-ion-white">
-                All Active Single-Slate &amp; Derivative Packages
-              </h3>
-              <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {LIVE_PACKAGE_CATALOG.map((pkg) => {
-                  const formattedPrice = `$${(pkg.standardPriceCents / 100).toFixed(2).replace(/\.00$/, "")}`;
-                  return (
-                    <article
-                      key={pkg.slug}
-                      id={pkg.slug}
-                      className="flex flex-col justify-between border border-mineral bg-eclipse p-5"
-                    >
-                      <div>
-                        <p className="font-numerals text-[10px] uppercase tracking-[0.18em] text-plasma">
-                          {pkg.badge}
-                        </p>
-                        <h4 className="mt-2 font-display text-lg text-ion-white">
-                          {pkg.title}
-                        </h4>
-                        <p className="mt-2 text-xs leading-5 text-ion-2">
-                          {pkg.subtitle}
-                        </p>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between border-t border-mineral pt-4">
-                        <span className="font-numerals text-lg font-semibold tabular-nums text-ion-white">
-                          {formattedPrice}
-                        </span>
-                        <Link
-                          href={`/packages/${pkg.slug}`}
-                          className="border border-plasma px-3 py-1.5 font-numerals text-xs uppercase tracking-[0.14em] text-plasma transition-colors hover:bg-plasma hover:text-plasma-ink"
-                        >
-                          View Pack
-                        </Link>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-
-          {/* ── The five-stage check · why a pass is a feature ────────── */}
-          <section aria-labelledby="five-stage-heading" className="gse-rise gse-rise-3 mt-16 border border-mineral bg-eclipse">
-            <div className="border-b border-mineral p-6 sm:p-8">
-              <p className={`${eyebrow} text-plasma`}>The standard behind both doors</p>
-              <h2 id="five-stage-heading" className="mt-2 font-display text-2xl text-ion-white sm:text-3xl">
-                Five stages. No shortcuts.
-              </h2>
+          {/* - Pack Cards (above the fold, mobile-first 1-tap Buy Now) - */}
+        <section id="pack-cards" aria-labelledby="door-2-heading" className="gse-rise">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+            <div>
+              <p className={`${eyebrow} text-ion-2`}>Instant Access</p>
+              <h1 id="door-2-heading" className="mt-2 font-display text-3xl text-ion-white sm:text-5xl">
+                Choose Your Football Pack
+              </h1>
               <p className="mt-3 max-w-2xl text-base leading-7 text-ion-1">
-                Every official play clears all five stages below before it can be
-                published or sold. A game that fails any stage becomes a free, published
-                pass - you get the reasoning without paying for it.
+                One-time purchase. Your official picks, player props, and parlays unlock immediately right inside the card.
               </p>
             </div>
-            <ol className="grid gap-0 sm:grid-cols-2 lg:grid-cols-5">
-              {FIVE_STAGES.map((stage, i) => (
-                <li
-                  key={stage.title}
-                  className="border-b border-mineral p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0 lg:p-6"
+          </div>
+
+          <div className="mt-6 flex flex-col gap-4">
+            {stripePacks.map((pkg) => {
+              const priceDollars = Math.round(pkg.standardPriceCents / 100);
+              return (
+                <div
+                  key={pkg.slug}
+                  className="border border-mineral-hi bg-eclipse p-5 sm:p-6"
                 >
-                  <p className="font-numerals text-2xl tabular-nums text-plasma">
-                    {String(i + 1).padStart(2, "0")}
+                  <div className="flex flex-wrap items-baseline justify-between gap-3">
+                    <h2 className="font-display text-2xl text-ion-white">
+                      {pkg.title}
+                    </h2>
+                    <span className="font-numerals text-2xl font-semibold text-emerald-400">
+                      ${priceDollars}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-ion-1">
+                    {pkg.subtitle}
                   </p>
-                  <h3 className="mt-3 font-display text-lg text-ion-white">{stage.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-ion-2">{stage.body}</p>
-                </li>
-              ))}
-            </ol>
-          </section>
+                  <form method="POST" action="/api/packages/checkout" className="mt-4">
+                    <input type="hidden" name="packageSlug" value={pkg.slug} />
+                    <button
+                      type="submit"
+                      className="flex min-h-[52px] w-full items-center justify-center bg-emerald-500 px-5 py-3 text-base font-semibold text-obsidian transition-colors hover:bg-emerald-400"
+                    >
+                      {"Buy Pack Now - $" + priceDollars + " ->"}
+                    </button>
+                  </form>
+                </div>
+              );
+            })}
+          </div>
 
-          {/* ── Record band · link, never quote ───────────────────────── */}
-          <section className="mt-16 border border-mineral bg-eclipse p-6 sm:p-8">
-            <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
-              <div className="max-w-2xl">
-                <p className={`${eyebrow} text-ion-2`}>The verified record</p>
-                <p className="mt-2 font-display text-2xl text-ion-white">
-                  We don&apos;t quote win rates on this page.
-                </p>
-                <p className="mt-2 text-sm leading-6 text-ion-1">
-                  Every graded play, every pass and every unit is sealed in the public
-                  record - wins and losses alike. Read it before you spend a dollar.
-                </p>
-              </div>
-              <Link
-                href="/record"
-                className="border border-plasma px-6 py-3.5 font-numerals text-sm uppercase tracking-[0.18em] text-plasma transition-colors hover:bg-plasma hover:text-plasma-ink"
-              >
-                See the verified record →
-              </Link>
+          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            {getActiveForSalePackages().map((rawPkg, idx) => {
+              const cleanPkg = scrubOfferingCopy(rawPkg);
+              const teasers = getRedactedTeasersForWindowSlot(cleanPkg.windowSlot);
+              return (
+                <div key={cleanPkg.slug} id={`checkout-${cleanPkg.slug}`}>
+                  <PaywallRevealCard
+                    pkg={cleanPkg}
+                    teasers={teasers}
+                    featured={idx === 0 || cleanPkg.slug === "week8-all-access"}
+                    ctaTone="solid"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* - Five-stage check (compact horizontal band) - */}
+        <section aria-labelledby="gate-heading" className="mt-16 border-t border-mineral pt-12">
+          <div className="flex flex-wrap items-baseline justify-between gap-4">
+            <h2 id="gate-heading" className="font-display text-2xl text-ion-white sm:text-3xl">
+              Five stages. No shortcuts.
+            </h2>
+            <p className={`${eyebrow} text-ion-2`}>Every slate clears all five before listing</p>
+          </div>
+          <ol className="mt-6 grid gap-px border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-5">
+            {FIVE_STAGES.map((stage) => (
+              <li key={stage.n} className="bg-eclipse p-5">
+                <span className="font-numerals text-xs text-plasma">{stage.n}</span>
+                <h3 className="mt-2 text-sm font-semibold text-ion-white">{stage.title}</h3>
+                <p className="mt-1.5 text-xs leading-5 text-ion-1">{stage.body}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {/* - Record band - link, never quote - */}
+        <section className="mt-16 border border-mineral bg-eclipse p-6 sm:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+            <div className="max-w-2xl">
+              <p className={`${eyebrow} text-ion-2`}>The verified record</p>
+              <p className="mt-2 font-display text-2xl text-ion-white">
+                We don&apos;t quote win rates on this page.
+              </p>
+              <p className="mt-2 text-sm leading-6 text-ion-1">
+                Every graded play, every pass and every unit is sealed in the public
+                record - wins and losses alike. Read it before you spend a dollar.
+              </p>
             </div>
-          </section>
-
-          {/* ── Still browsing? Free surfaces ─────────────────────────── */}
-          <p className="mt-10 text-sm leading-6 text-ion-2">
-            Not ready to buy? The free board shows every published pass with its reasoning:{" "}
-            <Link href="/board" className="text-plasma transition-colors hover:text-plasma-glow">
-              open the board →
+            <Link
+              href="/record"
+              className="border border-plasma px-6 py-3.5 font-numerals text-sm uppercase tracking-[0.18em] text-plasma transition-colors hover:bg-plasma hover:text-obsidian"
+            >
+              See the verified record
             </Link>
-          </p>
-        </main>
-        <Footer />
-      </div>
+          </div>
+        </section>
+
+        {/* - Collapsed Whop / legacy archive - */}
+        <details className="mt-14 border border-mineral bg-eclipse p-5">
+          <summary className="cursor-pointer font-mono text-xs uppercase tracking-[0.18em] text-ion-2">
+            Season Membership &amp; Gate Archive
+          </summary>
+          <div className="mt-6 space-y-10">
+            <header className="border-b border-mineral pb-10">
+              <p className={`${eyebrow} text-plasma`}>Galaxy Sports Edge - Week 10 - Storefront</p>
+              <h2 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] text-ion-white sm:text-5xl">
+                Two doors. One standard.
+              </h2>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1 sm:text-lg">
+                Join for the season, or buy a single slate. Either way, you only ever pay for
+                plays that clear our five-stage check - and when we pass, the reasoning is
+                published free. Passing is a decision we are proud of, not a gap we hide.
+              </p>
+              <div
+                data-testid="stage5-gate-band"
+                className={`mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border px-4 py-3.5 ${
+                  gate.checkoutEnabled ? "border-mineral-hi bg-eclipse" : "border-plasma/60 bg-eclipse"
+                }`}
+              >
+                <span className="flex items-center gap-2.5">
+                  <span
+                    aria-hidden
+                    className={`gse-pulse inline-block h-2 w-2 ${gate.checkoutEnabled ? "bg-ion-white" : "bg-plasma"}`}
+                  />
+                  <span className={`${eyebrow} ${gate.checkoutEnabled ? "text-ion-white" : "text-plasma"}`}>
+                    Stage-5 gate - {gate.checkoutEnabled ? "open" : "closed"}
+                  </span>
+                </span>
+                <span className="text-sm text-ion-2">
+                  {gate.officialPlayCount} official {gate.officialPlayCount === 1 ? "play" : "plays"} published
+                </span>
+                <span className="w-full text-sm leading-6 text-ion-1 sm:w-auto sm:flex-1">
+                  {gate.reason}{" "}
+                  <Link href="/pricing" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-ion-white underline">
+                    Pricing
+                  </Link>
+                </span>
+              </div>
+            </header>
+
+            <section id="season-membership" aria-labelledby="door-1-heading">
+              <h2 id="door-1-heading" className="font-display text-2xl text-ion-white sm:text-3xl">
+                Season Membership
+              </h2>
+              <div className="mt-4 border border-mineral bg-obsidian p-6">
+                <MembershipPlans gate={gate} availability={membershipAvailability} />
+              </div>
+            </section>
+
+            <div className="grid gap-6 lg:grid-cols-2">
+              {TWO_DOOR_PACK_OFFERS.map((offer) => (
+                <SingleSlateCard
+                  key={offer.slug}
+                  offer={offer}
+                  gate={gate}
+                  availability={slateAvailability}
+                />
+              ))}
+            </div>
+          </div>
+        </details>
+
+        {/* - Still browsing? Free surfaces - */}
+        <p className="mt-10 text-sm leading-6 text-ion-2">
+          Not ready to buy? The free board shows every published pass with its reasoning:{" "}
+          <Link href="/board" className="text-plasma transition-colors hover:text-plasma-glow">
+            open the board
+          </Link>
+        </p>
+      </main>
+      <Footer />
     </div>
+  </div>
   );
-}
+}        
