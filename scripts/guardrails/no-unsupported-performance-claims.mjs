@@ -69,6 +69,32 @@ const NUMERIC_CLAIM_PATTERNS = [
   ["streak-claim", /\b(?:hit|won|cash(?:ed)?) \d+ of (?:the )?last \d+\b/i],
   ["record-claim", /\b\d+[-–]\d+\s+(?:ats|run|streak|record)\b/i],
 ];
+// RECORD + WIN PERCENTAGE (restored 2026-11-15). This is the exact shape that
+// shipped as a lie on `/llms.txt`, on the site-wide JSON-LD, in the cockpit HQ
+// and in the Jarvis prompt constants: a W-L-P record followed by a win rate.
+// The generic numeric patterns above cannot see it (`16-5-0 (76.2%)` has no
+// "win rate" noun and no "record" noun), and the deep scan targets never
+// reached `apps/web/lib`, which is where most of them lived. Two narrow
+// orderings: record-then-percent, and percent-then-record.
+const RECORD_PERCENT_PATTERNS = [
+  /\b\d{1,3}-\d{1,3}-\d{1,3}\b[^0-9]{0,12}\d{1,3}(?:\.\d+)?\s*%/,
+  /\d{1,3}(?:\.\d+)?\s*%[^0-9]{0,6}[(\s]\s*\d{1,3}-\d{1,3}-\d{1,3}\b/,
+  // Clause-bounded variant: the legacy JSON-LD shape put the units group
+  // between the record and the percentage ("36-13-1 (+20.14u) verified record
+  // (73.5%, MAIN + DERIVATIVE ...)"). Stops at sentence punctuation so a
+  // record and an unrelated percentage in the next sentence do not pair up.
+  /\b\d{1,3}-\d{1,3}-\d{1,3}\b(?:(?!\.\s).){0,60}?\d{1,3}(?:\.\d+)?\s*%/,
+];
+// Roots the record+percent rule sweeps. `apps/web/lib` is the point: it holds
+// prompt constants, newsletter issues, video scripts and copy fences that are
+// printed on rendered surfaces but never walked as rendered routes, and it is
+// where every stale `36-13-1 (73.5%)` survived the earlier sweeps.
+const RECORD_SWEEP_ROOTS = [
+  "apps/web/lib",
+  "apps/web/components",
+  "apps/web/app",
+  "workers",
+];
 const SOURCE_EXTS = new Set([".ts", ".tsx", ".js", ".jsx"]);
 const SKIP_DIRS = new Set(["__tests__", "node_modules", ".next", "dist", "coverage"]);
 const SKIP_PATH_PARTS = [
@@ -123,7 +149,11 @@ const NUMERIC_SAFE_CONTEXT =
 // snapshot / prior / legacy / retired).
 const OFFICIAL_VERIFIED_LEDGER_EXEMPTION =
   /(?:\b(?:26\.50\s*u(?:nits)?|22-8-1|12\.40\s*u(?:nits)?|46-18-1|16\.05\s*u(?:nits)?|why we render 74\/100|conflate 74% win probability)\b|72\.9%)/i;
-const SUPERSEDED_SNAPSHOT_NUMBER = /\b(?:47-19-1|38-13-1)\b/i;
+// 36-13-1 joins the superseded set (2026-11-15): it is the pre-Nov-13 snapshot
+// (`secondary_views.march_2026_nov_12`), never the record of record. It may
+// still appear in sealed artifacts and in copy that names it as superseded;
+// printed as the standing record with a win percentage next to it, it is a lie.
+const SUPERSEDED_SNAPSHOT_NUMBER = /\b(?:47-19-1|38-13-1|36-13-1)\b/i;
 const SUPERSEDED_SNAPSHOT_LABEL =
   /\b(?:all-?in|superseded|historical|anchor|audited|snapshot|prior|legacy|retired|demoted|secondary)\b/i;
 
@@ -180,6 +210,9 @@ function phraseRegex(phrase) {
 }
 
 function shouldSkipFile(filePath) {
+  // Test files are fixtures, not copy: they must be able to assert that the
+  // scrubbers actually catch a banned record+percentage string.
+  if (/\.(?:test|spec)\.[cm]?[jt]sx?$/.test(filePath)) return true;
   const normalized = `/${rel(filePath)}`;
   return SKIP_PATH_PARTS.some((part) => normalized.includes(part));
 }
@@ -295,6 +328,33 @@ export function scanNumericClaimLine(rawLines, i, relPath) {
   return hits;
 }
 
+/**
+ * Record + win-percentage rule (see RECORD_PERCENT_PATTERNS). Shares the
+ * superseded-snapshot exemption: `47-19-1`, `38-13-1` and `36-13-1` may print
+ * with a percentage only on a line that labels them superseded/historical.
+ */
+export function scanRecordPercentLine(rawLines, i, relPath) {
+  const line = rawLines[i];
+  const subjects = viewsOf(line);
+  const normalized = subjects[0];
+  if (normalized.length === 0) return [];
+  const pairSubject = pairSubjectOf(rawLines, i);
+  const allViews = pairSubject === null ? subjects : [...subjects, pairSubject];
+  const printsSnapshot = allViews.some((view) => SUPERSEDED_SNAPSHOT_NUMBER.test(view));
+  const labelsSnapshot = allViews.some((view) => SUPERSEDED_SNAPSHOT_LABEL.test(view));
+  if (printsSnapshot && labelsSnapshot) return [];
+  if (allViews.some((view) => OFFICIAL_VERIFIED_LEDGER_EXEMPTION.test(view))) return [];
+  const matches = (subject) => RECORD_PERCENT_PATTERNS.some((pattern) => pattern.test(subject));
+  const subject = subjects.find(matches) ?? (pairSubject && matches(pairSubject) ? pairSubject : null);
+  if (subject === null) return [];
+  return [{
+    claim: "hardcoded-numeric:record-with-percent",
+    file: relPath,
+    line: i + 1,
+    snippet: subject.trim().slice(0, 220),
+  }];
+}
+
 /** All rendered route files under app/, excluding non-public top dirs. */
 async function walkRenderedSurfaces(dir, isTop, files = []) {
   let entries;
@@ -377,10 +437,32 @@ async function main() {
     }
   }
 
+  // Record + win-percentage sweep. Separate pass on purpose: running the whole
+  // numeric rule set over `apps/web/lib` would flood with legitimate prose, but
+  // a W-L-P record glued to a win percentage is never legitimate.
+  for (const target of RECORD_SWEEP_ROOTS) {
+    const abs = resolve(ROOT, target);
+    let targetStat;
+    try {
+      targetStat = await stat(abs);
+    } catch {
+      continue;
+    }
+    const files = targetStat.isDirectory() ? await walk(abs) : [abs];
+    for (const file of files) {
+      if (shouldSkipFile(file)) continue;
+      if (!sweptOrDeepScanned.has(file)) scanned++;
+      const text = await readFile(file, "utf8");
+      const relPath = rel(file);
+      const rawLines = text.split(/\r?\n/);
+      rawLines.forEach((_line, index) => hits.push(...scanRecordPercentLine(rawLines, index, relPath)));
+    }
+  }
+
   assertScanFloor({
     guard: "no-unsupported-performance-claims",
     root: ROOT,
-    roots: [...SCAN_TARGETS, PUBLIC_APP_ROOT, ...NUMERIC_EXTRA_ROOTS],
+    roots: [...SCAN_TARGETS, PUBLIC_APP_ROOT, ...NUMERIC_EXTRA_ROOTS, ...RECORD_SWEEP_ROOTS],
     scanned,
     floor: MIN_SCANNED_FILES,
   });

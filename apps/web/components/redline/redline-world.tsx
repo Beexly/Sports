@@ -44,8 +44,8 @@ const DRAG_RANGE = 1800; // long, smooth drag range across the full tunnel-to-en
 
 // The standing record is READ from the one committed source (catalog metadata)
 // and the settled Sunday summary -- never re-typed as a percentage into the plate
-// copy. Typed-out ledger numbers are how this page drifted to 36-13-1 / 73.5% while
-// the record of record was re-settled elsewhere.
+// copy. Typed-out ledger numbers are how this page drifted to a hand-typed
+// record with a percentage while the record of record was re-settled elsewhere.
 const LEDGER = WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord;
 const LEDGER_LINE = `${LEDGER.verifiedRecord} (${LEDGER.verifiedWinPct} · ${LEDGER.verifiedUnits}; all-in secondary ${LEDGER.withGatedPropsRecord} (${LEDGER.withGatedPropsUnits}))`;
 const WEEK9_LINE = `W9 SUN ${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayOfficialPlayRecord} (${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayNetUnits})`;
