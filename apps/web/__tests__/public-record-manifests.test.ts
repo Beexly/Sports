@@ -10,6 +10,7 @@ import {
   SUPERSEDED_RECORD_NOTE,
 } from "@/lib/ledger/public-record";
 import { formatUnits, formatWlp, verifiedLedger } from "@/lib/ledger/verified-ledger-view";
+import { buildGlobalSearchAndAiJsonLd } from "@/lib/seo/ai-agent-and-search-seo";
 
 /**
  * Public record manifests — the surfaces a search engine, an LLM crawler or a
@@ -35,6 +36,7 @@ const MANIFESTS = [
   { name: "/.well-known/ai-plugin.json", path: "app/.well-known/ai-plugin.json/route.ts" },
   { name: "/props", path: "app/props/page.tsx" },
   { name: "/research", path: "app/research/page.tsx" },
+  { name: "site-wide JSON-LD", path: "lib/seo/ai-agent-and-search-seo.ts" },
 ] as const;
 
 describe("public record manifests derive from the verified ledger", () => {
@@ -74,6 +76,18 @@ describe("public record manifests derive from the verified ledger", () => {
     // And no surface may hand-type a win-rate percentage next to a record.
     expect(src).not.toMatch(/\d{1,3}(?:\.\d+)?%\s*win/i);
     expect(src).not.toMatch(/record[^"\n]{0,40}\d{1,3}\.\d%/i);
+  });
+
+  it("the site-wide JSON-LD Dataset node carries the derived record and its artifact date", () => {
+    const graph = buildGlobalSearchAndAiJsonLd("https://www.galaxysportsedge.com")["@graph"];
+    const dataset = graph.find((node) => (node as Record<string, unknown>)["@type"] === "Dataset") as
+      | { description: string; dateModified: string }
+      | undefined;
+    expect(dataset).toBeTruthy();
+    expect(dataset!.description).toContain(PUBLIC_RECORD_LINE);
+    expect(dataset!.dateModified).toBe(PUBLIC_RECORD_AS_OF);
+    expect(JSON.stringify(dataset)).not.toMatch(/73\.5%/);
+    expect(JSON.stringify(dataset)).not.toMatch(/36-13-1/);
   });
 
   it("the record module itself holds no literal W-L record or win percentage", () => {
