@@ -1,0 +1,156 @@
+{
+ "schema_version": "2.0",
+ "book_id": "17bcd51cdad97e78",
+ "title": "Introduction to NFL Analytics with R",
+ "author": "Bradley J. Congelio",
+ "publisher": "CRC Press (Chapman & Hall/CRC Data Science Series)",
+ "year": 2024,
+ "doi": "10.1201/9781003364320",
+ "file_path": "C:/Users/Garrett/Downloads/_OceanofPDF.com_Introduction_to_NFL_Analytics_with_R_-_Bradley_J_Congelio.pdf",
+ "pages_total": 383,
+ "pages_read": 383,
+ "source_status": "COMPLETE",
+ "worker_id": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Expected Points Added (EPA) as pre/post-play EP difference",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1"
+   ],
+   "layer1_sovereign": "EPA is the difference in expected points before and after each play, where EP is a historical-data estimate of average points scored from a down-distance-field-position situation; contextual factors (down, distance, field position) enter the EP estimate, not the difference operator.",
+   "verbatim_quote": "At its core, EPA is the difference in expected points before and after each play. Because of this, on any given play, a team has the ability to either increase or decrease the expected points, with EPA being that specific difference. Importantly, EPA includes various contextual factors into its calculation such as down, distance, position on the field, etc. Then, based on historical data, an estimation of how many points, on average, a team is expected to score on a given situation is provided.",
+   "page": 365,
+   "section": "Appendix A.9 Expected Points Added (EPA), printed p338",
+   "latex": "\\mathrm{EPA} = \\mathrm{EP}_{\\mathrm{after}} - \\mathrm{EP}_{\\mathrm{before}}",
+   "symbol_and_unit_ledger": {
+    "EP_after": "expected points of the post-play situation [points]",
+    "EP_before": "expected points of the pre-play situation [points]",
+    "EPA": "points added by the play [points per play]",
+    "note": "Formalization of the printed prose definition; the source gives the numeric example 0.8 - 0.5 = 0.3 points (p365). EP itself is a model estimate, not a printed closed form."
+   },
+   "assumptions": "EP is estimated from historical play-by-play data conditional on down, distance, field position (the source lists these and 'etc.'); the difference operator is exact arithmetic on two model estimates; the book's worked example uses 0.5 -> 0.8 for a 10-yard pass on 1st-and-10 from the own 20.",
+   "breakdown_regime": "EPA inherits the EP model's support: rare down-distance-field-position combinations, end-of-half/game states, and garbage time extrapolate beyond historical support; the difference of two poorly-supported EP estimates is not a reliable play value. The source does not quantify this regime; it is a derived boundary condition.",
+   "falsification_test": "Recompute EP_after - EP_before from the ep/epa columns of nflreadr::load_pbp for a season and verify the identity holds per play (the book states EP and EPA are provided per play); a systematic residual falsifies the stated difference definition or the column semantics.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine play-value kernel: EPA maps to the per-play expected-points delta used in drive continuation and success-rate computation; the pre/post EP states map to the engine's down-distance-field-position state vector.",
+    "source_operator": "p1",
+    "telemetry": "observed: nflverse play-by-play ep and epa columns (nflreadr::load_pbp), the exact fields the book selects on p365."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Completion Percentage Over Expected (CPOE) as context-adjusted completion",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_3"
+   ],
+   "layer1_sovereign": "Raw completion percentage is confounded by attempt depth (the Bradford 2016 record: 71.6% completions at 6.4 yards per attempt); CPOE adjusts completion against the expected completion of similar historical attempts, conditioning on field position, down, yards to go, and total air yards.",
+   "verbatim_quote": "At the conclusion fo the 2016 season, Sam Bradford, the quarterback of the Minnesota Vikings, recorded the highest completion percentage in NFL history, connecting on 71.6% of his attempts during the season. However, Bradford achieved this record by averaging just 6.4 yards per attempt. Bradford's recordbreaking completion percentage is suddenly less impressive when one realizes that he was rarely attempting downfield passes.",
+   "page": 361,
+   "section": "Appendix A.6 Completion Percentage Over Expected (CPOE), printed pp334-335",
+   "latex": null,
+   "assumptions": "The expected-completion baseline is a model over historical attempts in similar situations (the source calls CPOE 'a pre-calculated metric based on historical attempts in similar situations', p361 body); the nflverse CPOE was developed by Ben Baldwin; the conditioning set printed in Appendix A is field position, down, yards to go, total air yards, 'etc.' - the full model feature set is not printed in this book.",
+   "breakdown_regime": "CPOE is undefined or unstable where the historical attempt support is thin (unusual down-distance-air-yard combinations); a quarterback's CPOE on tiny attempt samples is noise - the book's own leaderboard filters to >=300 attempts (p362) and the ADOT example warns against Drew Lock's 10.1 ADOT on 111 attempts (p361).",
+   "falsification_test": "Rank quarterbacks by raw completion% and by mean CPOE on the same season (the book's p362 pipeline); if the rankings are identical the adjustment carries no information and the claimed confound is falsified for that season.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine QB calibration: CPOE maps to the context-adjusted completion residual used to separate QB accuracy from attempt-depth selection; the conditioning variables map to the engine's pre-snap state (down, distance, field position) plus air yards.",
+    "source_operator": "p2",
+    "telemetry": "observed: nflverse play-by-play cpoe column, aggregated per passer as in the book's p362 pipeline (complete_pass/incomplete_pass/interception filter, >=300 attempts)."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Success rate: historical yardage thresholds vs modern EPA>0 predicate",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_3"
+   ],
+   "layer1_sovereign": "Pre-EP success rate used fixed yardage fractions of the necessary yards: 40% on 1st down, 60% on 2nd down, 100% on 3rd and 4th downs. Modern success rate is the binary predicate EPA > 0 on the play.",
+   "verbatim_quote": "Prior to the formulation of EP and EPA, success rate was calculated based on the percentage of yardage gained on a play (40% of the necessary yards on 1st down, 60% on 2nd down, and 100% of the yards needed for a 1st down on both 3rd and 4th downs). However, modern success rate is determined simply by whether or not the specific play had an EPA greater than 0.",
+   "page": 370,
+   "section": "Appendix A.13 Success Rate, printed p343",
+   "latex": null,
+   "assumptions": "The printed thresholds (40/60/100 percent of necessary yards) are the historical definition as stated by the source; the modern predicate is exactly EPA > 0 (strict); the source presents success rate as a consistency baseline and a rush-vs-pass strength comparator, not a causal efficiency claim.",
+   "breakdown_regime": "The modern predicate inherits every EP-model support problem of p1; the historical thresholds are context-free by construction and ignore field position and score state, so the two definitions disagree systematically near the boundary (a 3rd-and-9 conversion of 8 yards fails the old 100% rule but can have EPA>0).",
+   "falsification_test": "On a season of play-by-play, compute both success predicates and measure disagreement rate by down; a zero disagreement rate would falsify the claim that the definitions differ, and the down-stratified disagreement profile tests the boundary-regime claim.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine drive-continuation kernel: the EPA>0 success predicate maps to the per-play success flag feeding drive stall/continuation probabilities; the historical thresholds map to a legacy yardage-based fallback the engine can use when EP support is absent.",
+    "source_operator": "p3",
+    "telemetry": "observed: nflverse play-by-play success column and epa column; the book's p77 rushing success-rate pipeline (play_type=='run', play==1, mean success) is the exact aggregation."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "xYAC Success: probability a reception yields positive EPA after catch",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_3"
+   ],
+   "layer1_sovereign": "xYAC Success is the model probability that a reception results in positive EPA once yards after catch are factored in; xYAC Mean Yardage is the expected yards after catch conditional on catch location, and receiver impact is measured against that prediction.",
+   "verbatim_quote": "Just as above XYAC Success is the probability that the reception results in a positive EPA, xYAC Mean Yardage is the expected yards after catch based on where the ball was caught.",
+   "page": 367,
+   "section": "Appendix A.10-A.11 xYAC Success / xYAC Mean Yardage, printed p340",
+   "latex": null,
+   "assumptions": "Both quantities are model outputs over historical receptions (the source attributes the family to the nflfastR EP/WP/CP/xYAC/xPass models); xYAC Success is a probability in [0,1] per reception; the book's leaderboard filters to >=100 receptions (p367); the printed 2022 leaders (Diggs/Kelce 0.872) are illustrative model outputs, not invariants.",
+   "breakdown_regime": "Conditional on catch location, xYAC drops air-yard difficulty entirely: a receiver who only catches screens has high xYAC Success without demonstrating deep-threat ability; small reception samples (<100 per the book's filter) are noise; the probability is only as good as the historical YAC support at that catch location.",
+   "falsification_test": "Split receivers by air-yards-per-reception bucket and compare xYAC Success within bucket; if xYAC Success ranks receivers identically across air-yard buckets it carries no catch-location information beyond the marginal, falsifying the conditional claim.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine air/YAC separation: xYAC Success maps to the post-catch value component of a completion, letting the engine separate QB delivery value (air yards, CPOE) from receiver run-after-catch value; catch location maps to the engine's field-position state at reception.",
+    "source_operator": "p4",
+    "telemetry": "observed: nflverse play-by-play xyac_success and xyac_mean_yardage columns (the book filters !is.na(xyac_success) on p367)."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Running back efficiency: NextGen distance traveled per yard gained",
+   "domain": "football",
+   "timescales": [
+    "tau_0",
+    "tau_3"
+   ],
+   "layer1_sovereign": "A running back's efficiency is total distance traveled (NextGen Stats tracking) per total yards gained on the run; lower values indicate north/south running, higher values indicate lateral 'dancing' relative to the line of scrimmage.",
+   "verbatim_quote": "A running back's efficiency is measured by taking the total distance traveled, according to NextGen Stats, per the total of yards gained on the run. A lower number indicates a more North/South type runner, while a higher number indicates a running back that \"dances\" and runs laterally relevant to the line of scrimmage.",
+   "page": 364,
+   "section": "Appendix A.8 Running Back Efficiency, printed p337",
+   "latex": "\\eta_{\\mathrm{RB}} = \\frac{D_{\\mathrm{traveled}}}{Y_{\\mathrm{gained}}}",
+   "symbol_and_unit_ledger": {
+    "D_traveled": "total path distance from NextGen Stats tracking [yards]",
+    "Y_gained": "total official yards gained on run plays [yards]",
+    "eta_RB": "dimensionless ratio [yards traveled per yard gained]",
+    "note": "Formalization of the printed prose 'total distance traveled ... per the total of yards gained on the run'; the source prints no symbolic equation."
+   },
+   "assumptions": "Distance is NextGen Stats tracking distance (the source's stated measurement), yards gained are official run yards; the book's leaderboard filters rush_attempts >= 300 and week == 0 (season aggregate, p364); the north/south vs lateral interpretation is the source's stated reading of low vs high values.",
+   "breakdown_regime": "The ratio diverges as Y_gained approaches zero (tackles for loss, no-gain runs) and is undefined at zero; tracking outages corrupt D_traveled; scheme and offensive-line geometry confound the lateral-vs-north-south reading, so the ratio is not a pure runner trait.",
+   "falsification_test": "Recompute D_traveled/Y_gained from load_nextgen_stats(stat_type='rushing') efficiency and the rushing yards aggregate for >=300-attempt backs and verify the printed ordering (Taylor 3.17 lowest in the book's 2022 table); a reversed ordering falsifies the stated direction of the metric.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine rush-path geometry: eta_RB maps to a path-efficiency feature separating north/south backs from lateral dancers, feeding the run-game matchup kernel alongside box-count and light-box rates.",
+    "source_operator": "p5",
+    "telemetry": "observed: nflreadr::load_nextgen_stats(stat_type='rushing') efficiency column, season aggregate with rush_attempts >= 300 as on p364."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t0",
+   "think": "The source is Bradley J. Congelio's Introduction to NFL Analytics with R (CRC Press, Chapman & Hall/CRC Data Science Series, first edition 2024, 383 PDF pages). It is a published textbook, not a derivative web summary: the front matter carries the CRC imprint, the DOI 10.1201/9781003364320 appears in the chapter footers, and the appendix is a formal quick-reference guide of metric definitions. I extracted the full text of every page with pymupdf, normalized ligatures, curly quotes, soft hyphens and cross-line hyphenation, and scanned the entire normalized core for the definitional passages before close-reading Appendix A (printed pp334-345) and the body sections that use the same metrics. No retraction marker appears in the front matter. The five primitives below are the book's own definitional invariants, not my reconstructions: EPA as a pre/post expected-points difference, CPOE as context-adjusted completion, the two success-rate definitions, xYAC Success as a post-catch positive-EPA probability, and NextGen running-back efficiency as distance per yard gained.\n\nDimensional analysis separates the exact arithmetic from the model estimates. EPA is a difference of two expected-points quantities, both in points, so EPA is in points per play; the difference operator is exact but its operands are historical-model estimates, which is where the uncertainty lives. The book's worked example (0.5 before, 0.8 after, 0.3 added for a ten-yard pass on first-and-ten from the own twenty) fixes the sign convention: positive EPA means the play improved the scoring expectation. Running-back efficiency is a ratio of two lengths, yards traveled over yards gained, hence dimensionless; it diverges as gained yards approach zero, which is the metric's singularity regime and the reason the book's leaderboard filters to three hundred or more attempts. CPOE, xYAC Success and the modern success predicate are model outputs whose units are percentage points, probability, and a binary flag respectively; none of them is a closed-form equation printed by the source, so I left their latex null rather than inventing symbolic forms the book does not contain. The two formalized equations (EPA difference, efficiency ratio) are labeled as formalizations of printed prose, with symbol-and-unit ledgers, per the dimensional gate.\n\nThe engine isomorphisms are direct because the engine already consumes the same nflverse telemetry the book teaches. EPA maps to the per-play value kernel feeding drive continuation; the modern success predicate EPA>0 maps to the engine's per-play success flag, and the historical 40/60/100 yardage thresholds map to a context-free fallback usable when EP support is absent. CPOE maps to the quarterback calibration residual that separates accuracy from attempt-depth selection, conditioned on the same pre-snap state the engine carries (down, distance, field position) plus air yards. xYAC Success maps to the post-catch component of completion value, which is exactly the air/YAC separation the engine needs to avoid crediting a quarterback for a receiver's run-after-catch work. Running-back efficiency maps to a rush-path geometry feature alongside box-count rates. Every mapping cites observed telemetry columns (ep, epa, cpoe, success, xyac_success, xyac_mean_yardage, nextgen efficiency) rather than latent states, so none of them is an unidentifiable claim.\n\nThe falsification program is concrete and cheap. The EPA identity can be checked per play against the ep/epa columns the book itself selects; a systematic residual would falsify either the stated definition or the column semantics. The CPOE claim is tested by ranking quarterbacks by raw completion percentage and by mean CPOE on the same season: identical rankings would falsify the claimed depth confound for that season. The two success-rate definitions are tested by their down-stratified disagreement rate, with the boundary case (third-and-nine converted for eight yards) predicted to disagree. xYAC's conditional claim is tested by comparing receiver rankings across air-yard buckets; identical rankings across buckets would falsify the catch-location conditioning. The efficiency direction is tested against the book's printed 2022 ordering (Jonathan Taylor 3.17 lowest among three-hundred-attempt backs). Each test uses only public nflverse data and the book's own pipelines, so the program is reproducible at zero model cost.\n\nThe sovereign boundary is the EP model's historical support. Every EPA-derived quantity in this book - the difference itself, the modern success flag, xYAC Success - inherits the support of the expected-points model over down, distance and field position. Rare combinations, end-of-half states and garbage time extrapolate beyond that support, and the book does not quantify the regime; I record it as a derived boundary condition, not a printed claim. The second boundary is sample size: the book's own filters (three hundred attempts for CPOE, one hundred receptions for xYAC, three hundred rush attempts for efficiency) are the source's implicit admission that these metrics are noise below those counts. A downstream compiler must carry both boundaries as hard gates: no EPA-derived success claim outside EP support, and no leaderboard claim below the printed sample floors. The book's pedagogical Bradford example is the cleanest statement of why context adjustment exists at all: a record completion percentage built on 6.4 yards per attempt is not evidence of quarterback quality, and any engine feature that uses raw completion percentage without depth adjustment repeats exactly the error the book was written to correct. The same discipline applies to every counting statistic the engine ingests: the raw number is never the sovereign quantity, the context-conditioned residual is, and the conditioning set must be carried alongside the residual as part of the primitive itself.",
+   "retrocausal_genealogy": "The expected-points lineage runs from the early down-distance valuation work through the modern nflfastR EP/WP/CP/xYAC/xPass model family that the book explicitly credits to Ben Baldwin (p362). The historical success-rate thresholds (40/60/100 percent of necessary yards) predate EP and EPA entirely, which is why the book presents them as the prior definition; the modern EPA>0 predicate is the successor that absorbs field-position context the yardage rule ignored. CPOE exists because raw completion percentage crowned Sam Bradford in 2016 on short attempts, and the metric's genealogy is a direct response to that leaderboard failure. The NextGen efficiency ratio descends from player-tracking data becoming available at all; before tracking, distance traveled was unobservable and the metric could not exist.",
+   "theory_of_mind": "Congelio writes for students and analysts who already know football but not R, and for R users who want football context; the preface states the book uses football terms rather than abstract built-in datasets to keep motivation high. The Bradford example is a deliberate teaching trap: it lets the reader feel the intuition that a record completion percentage is impressive, then dismantles it with yards per attempt, so the reader internalizes why context adjustment is necessary before seeing the CPOE pipeline. The author's repeated sample-size filters (300 attempts, 100 receptions, 300 rushes) signal an intent to prevent readers from over-reading small-sample leaderboards, and the compiler should treat those filters as part of the metric definition, not optional decoration.",
+   "cross_layer_veto": "Layer 3 must not promote any EPA-derived quantity to a causal coaching claim without opponent and coverage adjustment: EPA>0 success rate is a descriptive consistency flag, not evidence that a play-caller is optimal, because the EP baseline already encodes league-average behavior. xYAC Success must not be used as a receiver-separation proxy without air-yard control, since it conditions on catch location and drops air-yard difficulty by construction. The efficiency ratio must not be read as a pure runner trait, because scheme and line geometry confound lateral versus north-south running. Any downstream pick or DFS claim that crosses these vetoes without the named adjustment is rejected at the compilation gate."
+  }
+ ],
+ "universal_lens": "Context-adjusted expectation residuals: every metric in this appendix replaces a raw counting statistic (completion percentage, yards gained, receptions) with a residual against a historical expectation conditioned on the situation, and the sovereign content is the conditioning set plus the residual's units, not the leaderboard numbers.",
+ "gsi_mapping": "The GSI biomechanics lane reads the NextGen efficiency ratio as a path-geometry observable: distance traveled per yard gained is a tracking-derived kinematic quantity whose divergence at zero gained yards and whose scheme confound are exactly the kind of measurement-boundary conditions the institute's movement models must carry before any athlete-quality claim.",
+ "gse_mapping": "The GSE engine consumes these five definitions directly through nflverse telemetry: EPA and the EPA>0 success flag feed the drive-continuation kernel, CPOE feeds quarterback calibration, xYAC separates air value from receiver run-after-catch value, and efficiency feeds rush-path geometry; each carries the EP-support and sample-floor gates as hard preconditions."
+}
