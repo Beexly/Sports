@@ -108,9 +108,11 @@ jobs:
       - name: Verify L11 calibration evidence still adds up
         run: node --test docs/calibration-proposals/evidence/verify-evidence.test.mjs
 
-      # The MIND falsification suite is written with node:test, NOT vitest, so the
-      # prediction-engine vitest config's include pattern (`src/**/*.test.ts`,
-      # `test/**/*.spec.ts`) does NOT collect it. Measured before this step was
+      # The MIND falsification suite is written with node:test, NOT vitest, and the
+      # prediction-engine vitest config excludes it by name so only this step
+      # runs it. (It used to import vitest and sat inside `src/reasoning/**/*.spec.ts`,
+      # so this step died on load with "Vitest cannot be imported in a CommonJS
+      # module" while the vitest wall quietly ran the same probes.) Measured before this step was
       # added: `vitest run src/reasoning/__tests__/mind-reasoning.mutation-v2.spec.ts`
       # exits 1 with "No test files found", and `node --test` on the same file
       # reports 11 passing tests.

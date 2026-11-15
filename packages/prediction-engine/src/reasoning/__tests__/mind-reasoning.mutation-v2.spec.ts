@@ -1,4 +1,8 @@
-import { describe, it } from "vitest";
+// This suite runs under `node --test` in CI (it is a mutation sweep, too slow
+// to live in the vitest wall). It asserts through node:assert only, so the
+// runner has to be node:test as well — importing vitest here makes tsx require
+// its CJS entry and the whole file dies on load.
+import { describe, it } from "node:test";
 import * as assert from "node:assert/strict";
 import {
   evaluateMindPrinciples,

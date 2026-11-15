@@ -26,6 +26,14 @@ export default defineConfig({
       "test/**/*.spec.ts",
       "test/**/*.test.ts",
     ],
+    // The MIND falsification suite runs under `node --test` in CI (step "Run the
+    // MIND falsification suite"). It imports node:test, so vitest must not
+    // collect it: two runners on one file means one of them always dies.
+    exclude: [
+      "**/node_modules/**",
+      "**/dist/**",
+      "src/reasoning/__tests__/mind-reasoning.mutation-v2.spec.ts",
+    ],
     isolate: false,
     pool: "forks",
   },
