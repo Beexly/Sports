@@ -27,7 +27,8 @@ import {
   type AgentSeat,
   type SubagentTemplate,
 } from "@/lib/jarvis/agent-council";
-import { AGENT_OS_REGISTRY, type AgentOSDefinition } from "@/lib/agents/agent-registry";
+import { AGENT_OS_REGISTRY } from "@/lib/agents/agent-registry";
+import type { AgentOSDefinition } from "@/lib/agents/agent-os";
 import {
   evaluateAgentRun,
   type AgentRunRecord,
