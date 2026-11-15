@@ -56,7 +56,7 @@ export default async function DfsSuitePage() {
   const note = salaryIsReal
     ? `Licensed DFS salaries are live. ${measuredCopy}`
     : feedDown
-      ? `No licensed DFS salary feed is connected to this surface. ${measuredCopy}`
+      ? `No licensed salary feed is connected to this surface. ${measuredCopy}`
       : `A licensed DFS salary feed is connected, but your tier does not unlock the salary board. ${measuredCopy}`;
 
   const dfsPackage = getPackageBySlug("week8-all-access") ?? LIVE_PACKAGE_CATALOG[4]!;

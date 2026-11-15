@@ -31,7 +31,9 @@ function runScan(args: string[]) {
   const r = spawnSync("node", [resolve(REPO_ROOT, "scripts/guardrails/secret-scan.mjs"), ...args], {
     cwd: REPO_ROOT,
     encoding: "utf8",
-    timeout: 60_000,
+    // --all walks every tracked file (63k of them); the scan is correct but
+    // slow on a loaded runner, and a killed spawn reads as a failure.
+    timeout: 540_000,
   });
   return { status: typeof r.status === "number" ? r.status : 1, stdout: r.stdout ?? "", stderr: r.stderr ?? "" };
 }
@@ -110,6 +112,9 @@ describe("BS-040 — secret-scan pre-commit hook", () => {
   // Regression for the launch-backlog finding "secret-scan is a no-op in CI"
   // (it scanned `git diff --cached`, which is empty in CI → always passed on 0 files).
 
+  // 300s: the scan now walks 63k tracked files, which is a full-tree read, not
+  // a hang. The suite's 60s default exists to surface hangs, so this one test
+  // carries its own documented budget.
   it("--all scans every tracked file, not just the staged set", () => {
     const r = runScan(["--all"]);
     expect(r.status).toBe(0);
@@ -117,7 +122,7 @@ describe("BS-040 — secret-scan pre-commit hook", () => {
     expect(m).not.toBeNull();
     // The whole tree is hundreds+ of files — proving CI no longer scans 0.
     expect(Number(m![1])).toBeGreaterThan(100);
-  });
+  }, 600_000);
 
   it("CI has a dedicated secret-scan job that runs --all (gate has teeth)", () => {
     const ci = read(".github/workflows/ci.yml");

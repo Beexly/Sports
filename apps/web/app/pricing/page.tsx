@@ -183,7 +183,7 @@ export default async function PricingPage(): Promise<JSX.Element> {
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-6 text-xs text-[#8F8A82]">
             <span>
-              ✓ Verified Record: {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedRecord} (
+              ✓ Settled Record: {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedRecord} (
               {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedWinPct} ·{" "}
               {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedUnits}; all-in{" "}
               {WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.withGatedPropsRecord} (

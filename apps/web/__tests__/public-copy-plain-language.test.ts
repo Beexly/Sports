@@ -61,8 +61,12 @@ describe("FE-10: /board and /picks speak plainly (sealed-era design)", () => {
     // not a literal typed next to them. Reading the constant here means the
     // pin follows the record instead of re-typing an era of it.
     const ledger = WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord;
-    expect(picks).toContain(ledger.withGatedPropsRecord);
-    expect(picks).toContain(ledger.withGatedPropsUnits);
+    // The page reads the ledger constant instead of typing the record, so pin
+    // the read and prove the constant carries the catalog's all-in figure.
+    const ledgerSrc = read("lib/engine/engine-live-bridge.ts");
+    expect(picks).toContain("OFFICIAL_VERIFIED_LEDGER_2026");
+    expect(ledgerSrc).toContain(`allInRecord: "${ledger.withGatedPropsRecord}"`);
+    expect(ledgerSrc).toContain(`allInNetUnits: "${ledger.withGatedPropsUnits}"`);
     expect(picks).toContain('href="/packages"');
     expect(picks).toMatch(/publishAllowed/);
   });
