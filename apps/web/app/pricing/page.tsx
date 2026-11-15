@@ -146,15 +146,23 @@ export default async function PricingPage(): Promise<JSX.Element> {
                   </div>
 
                   <div className="mt-8 space-y-2">
+                    {isForSale && Boolean(pkg.stripePriceId) && (
+                    <form method="POST" action="/api/packages/checkout">
+                      <input type="hidden" name="packageSlug" value={pkg.slug} />
+                      <button type="submit" className="inline-flex min-h-[46px] w-full cursor-pointer items-center justify-center rounded bg-[#FF4D2E] text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#e03e20]">
+                          {`Buy Pack Now - ${formatPackPrice(pkg)} ->`}
+                        </button>
+                      </form>
+                        )}
                     <Link
                       href={`/packages#${pkg.slug}`}
                       className={`inline-flex min-h-[46px] w-full items-center justify-center rounded text-xs font-bold uppercase tracking-wider transition-colors ${
-                        isForSale
+                        isForSale && !pkg.stripePriceId
                           ? "bg-[#FF4D2E] text-white hover:bg-[#e03e20]"
                           : "border border-[#EDE8E0]/30 text-[#C4BFB6] hover:border-[#FF4D2E] hover:text-white"
                       }`}
                     >
-                      {isForSale ? `Open Pack · ${formatPackPrice(pkg)} →` : "View Archived Pack →"}
+                      {isForSale ? "View Pack Details ->" : "View Archived Pack ->"}
                     </Link>
                     {!isForSale && (
                       <Link
