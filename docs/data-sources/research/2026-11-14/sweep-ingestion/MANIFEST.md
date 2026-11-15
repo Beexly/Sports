@@ -147,3 +147,20 @@ Gaps named in the report's own gap audit, carried with this delta:
    Etienne activation plan live in the report's health list and in NO-ID
    inventory rows (Schefter, Pelissero); they were ingested as printed, not
    verified.
+
+## 2026-11-14 PM IG delta
+
+Delta feed: `ig-for-you-feed-2026-11-14-pm-delta.jsonl`, 42 records converted
+from the Instagram For You PM run of 2026-11-14 (source report:
+~/workspace/ig-for-you-sweep/reports/2026-11-14-PM.md). 20 dossier records
+(PM-01 to PM-20) and 22 inventoried-only records; 2 duplicates against the
+base feed and the AM delta were skipped at conversion. All 42 records use
+the same 16-key schema; 0 key collisions with the base feed or the AM delta.
+Running feed total: 10,211 records (9,944 base + 43 IG AM + 116 X For You AM
++ 66 X analytics AM + 42 IG PM). Gap carried from the run's own audit: the
+PM-01 dossier (the five-repo video-clipping stack: WhisperX, PySceneDetect,
+Auto-Editor, Remotion, FFmpeg) is missing verified license and star/commit
+detail for its repos because the run's GitHub API check did not return
+before filing; the fallback recorded in the report is a direct LICENSE read
+per repo before any Remotion test. Poster numbers in the delta are claims
+as printed, not verified facts.
