@@ -108,4 +108,4 @@ async function main(): Promise<void> {
   console.log(`\nAll required nflverse datasets reach season ${SEASON}. ✅\n`);
 }
 
-main().catch((err) => { console.error("FAILURES (1): unhandled probe error"); console.error(err); process.exit(2); });
+main().catch((err) => { console.error("Unhandled nflverse probe error"); console.error(err); process.exit(2); });
