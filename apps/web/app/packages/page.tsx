@@ -32,24 +32,24 @@ export default function PackagesPage(): JSX.Element {
   const cardIsStale = cardFreshness(sealedCard.generated_at).stale;
 
   return (
-    <div className="relative min-h-screen w-full bg-slate-950 text-white">
+    <div className="relative min-h-screen w-full bg-obsidian text-white">
       <Nav />
       <main id="main-content" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         {cardIsStale ? (
           <div
             data-testid="packages-card-pending-notice"
-            className="mb-6 rounded-2xl border border-amber-400/50 bg-amber-500/10 p-5 text-sm leading-relaxed text-amber-100"
+            className="mb-6 rounded-2xl border border-caution/30/50 bg-caution/10 p-5 text-sm leading-relaxed text-caution"
           >
-            <strong className="text-amber-300">Before you buy:</strong> the next card is not sealed
+            <strong className="text-caution">Before you buy:</strong> the next card is not sealed
             yet, so no graded plays are published right now. Your unlock covers the next sealed card
             and every pack in the slate it names. If that is not what you want, do not buy today.
           </div>
         ) : null}
         {/* Clean Human Football Hero */}
-        <div className="rounded-2xl border-2 border-slate-800 bg-slate-900 p-6 sm:p-10 shadow-xl">
+        <div className="rounded-2xl border-2 border-mineral bg-obsidian p-6 sm:p-10 shadow-xl">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-3xl">
-              <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
+              <span className="inline-block rounded-md bg-caution/20 border border-caution/30/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-caution">
                 GALAXY PICKS · WEEK 10 SUNDAY MAIN SLATE (NE @ DET, KC @ ATL, HOU @ CLE) &amp; MNF (LAC @ BAL)
               </span>
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
@@ -58,7 +58,7 @@ export default function PackagesPage(): JSX.Element {
               <p className="mt-4 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
                 We break down every game the way coaches and real bettors watch football: offensive line protection, defensive blitz and coverage tendencies, active injuries, and how the game script actually plays out across all four quarters.
               </p>
-              <p className="mt-3 text-sm sm:text-base leading-relaxed text-slate-300">
+              <p className="mt-3 text-sm sm:text-base leading-relaxed text-ion-2">
                 When a spread or total is already steamed past its fair number, we pass and tell you why. Every pack below gives you our highest-conviction sides, totals, player props, Same-Game Parlays, and DraftKings/FanDuel lineups in plain English.
               </p>
             </div>
@@ -66,14 +66,14 @@ export default function PackagesPage(): JSX.Element {
               <a
                 href="#pack-cards"
                 aria-label="View this week's Week 10 Sunday Main Slate and Monday Night Football packs"
-                className="inline-flex items-center justify-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-5 py-3 text-sm font-extrabold text-slate-950 transition-colors shadow-md"
+                className="inline-flex items-center justify-center rounded-lg bg-verify hover:bg-verify px-5 py-3 text-sm font-extrabold text-obsidian transition-colors shadow-md"
               >
                 View This Week&apos;s Packs ↓
               </a>
               <Link
                 href="/fantasy/dfs"
                 aria-label="Open Daily Fantasy Sports optimal lineups and player pool"
-                className="inline-flex items-center justify-center rounded-lg border-2 border-slate-700 bg-slate-800 px-5 py-3 text-sm font-bold text-white hover:border-amber-400 transition-colors"
+                className="inline-flex items-center justify-center rounded-lg border-2 border-mineral-hi bg-titanium px-5 py-3 text-sm font-bold text-white hover:border-caution transition-colors"
               >
                 Open DFS Lineups →
               </Link>
@@ -81,48 +81,48 @@ export default function PackagesPage(): JSX.Element {
           </div>
 
           {/* Clean 4-Card Football & Record Strip */}
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 border-t border-slate-800 pt-6">
-            <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 border-t border-mineral pt-6">
+            <div className="rounded-xl border border-verify/40/40 bg-obsidian/90 p-4">
+              <div className="text-xs font-bold uppercase tracking-wider text-verify">
                 VERIFIED SEASON RECORD
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
                 36-13-1 · +20.14u
               </div>
-              <div className="mt-1 text-xs text-slate-400">
+              <div className="mt-1 text-xs text-ion-1">
                 All-in secondary 47-19-1 · +24.92u · Entering Week 10 Sunday Main Slate &amp; Monday Night Football.
               </div>
             </div>
-            <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+            <div className="rounded-xl border border-verify/40/40 bg-obsidian/90 p-4">
+              <div className="text-xs font-bold uppercase tracking-wider text-verify">
                 PASS DISCIPLINE
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
                 Never Force a Side
               </div>
-              <div className="mt-1 text-xs text-slate-400">
+              <div className="mt-1 text-xs text-ion-1">
                 If a line moves past our number, we pass and attack the props.
               </div>
             </div>
-            <div className="rounded-xl border border-amber-500/40 bg-slate-950/90 p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-amber-300">
+            <div className="rounded-xl border border-caution/30/40 bg-obsidian/90 p-4">
+              <div className="text-xs font-bold uppercase tracking-wider text-caution">
                 EVERY MARKET COVERED
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
                 Sides, Props &amp; SGPs
               </div>
-              <div className="mt-1 text-xs text-slate-400">
+              <div className="mt-1 text-xs text-ion-1">
                 1Q/1H derivatives, rushing &amp; receiving props, defensive tackles/sacks &amp; TDs.
               </div>
             </div>
-            <div className="rounded-xl border border-amber-500/40 bg-slate-950/90 p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-amber-300">
+            <div className="rounded-xl border border-caution/30/40 bg-obsidian/90 p-4">
+              <div className="text-xs font-bold uppercase tracking-wider text-caution">
                 DAILY FANTASY (DFS)
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
                 DK &amp; FanDuel Optimals
               </div>
-              <div className="mt-1 text-xs text-slate-400">
+              <div className="mt-1 text-xs text-ion-1">
                 Cash cores, Sunday main-slate builds &amp; tournament stacks with injury pivots.
               </div>
             </div>
@@ -132,21 +132,21 @@ export default function PackagesPage(): JSX.Element {
         {/* Free Matchup & Game-Environment Analytics Strip / Table (Week 10 Sunday Main Slate & MNF) */}
         <section
           data-testid="packages-free-game-environment-analytics"
-          className="mt-8 rounded-2xl border-2 border-amber-500/40 bg-slate-900/95 p-6 shadow-xl"
+          className="mt-8 rounded-2xl border-2 border-caution/30/40 bg-obsidian/95 p-6 shadow-xl"
         >
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-mineral pb-4">
             <div>
-              <span className="inline-block rounded bg-amber-500/20 border border-amber-400/50 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-amber-300">
+              <span className="inline-block rounded bg-caution/20 border border-caution/30/50 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-caution">
                 FREE GAME-SCRIPT INTELLIGENCE · WEEK 10 SUNDAY MAIN SLATE &amp; MNF
               </span>
               <h2 className="mt-2 text-xl sm:text-2xl font-extrabold text-white">
                 Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) &amp; Primetime (SF @ DAL, LAC @ BAL) Free Game-Environment Preview
               </h2>
-              <p className="mt-1 text-sm text-slate-300">
+              <p className="mt-1 text-sm text-ion-2">
                 Film-room neutral pace, trench pressure rates, coverage shell tendencies, and red-zone play-calling splits across our featured Week 10 Sunday and Monday matchups. Official sides, totals, player props, and Same-Game Parlay legs stay locked inside the packs below.
               </p>
             </div>
-            <span className="rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1.5 text-xs font-extrabold text-emerald-300">
+            <span className="rounded-md bg-verify/20 border border-verify/40/50 px-3 py-1.5 text-xs font-extrabold text-verify">
               Official Sides, Totals, Props &amp; SGPs Locked Below · Verified 36-13-1 (+20.14u) (all-in secondary 47-19-1, +24.92u)
             </span>
           </div>
@@ -157,14 +157,14 @@ export default function PackagesPage(): JSX.Element {
                 Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) and Primetime (SF @ DAL, LAC @ BAL) Free Game-Environment Preview covering neutral pace, trench pressure rates, and red-zone tendencies.
               </caption>
               <thead>
-                <tr className="border-b border-slate-800 text-xs font-bold uppercase tracking-wider text-amber-300">
+                <tr className="border-b border-mineral text-xs font-bold uppercase tracking-wider text-caution">
                   <th scope="col" className="py-2.5 pr-4">Week 10 Matchup &amp; Window</th>
                   <th scope="col" className="py-2.5 pr-4">Projected Neutral Pace &amp; Play Volume</th>
                   <th scope="col" className="py-2.5 pr-4">Trench Pressure &amp; Pass-Protection Split</th>
                   <th scope="col" className="py-2.5">Coverage Shell &amp; Red-Zone Environment</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/80 text-slate-200">
+              <tbody className="divide-y divide-mineral/80 text-ion">
                 <tr>
                   <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
                     NE @ DET · Sun 12:00 PM CT (Hard Rock)
@@ -255,7 +255,7 @@ export default function PackagesPage(): JSX.Element {
         <section id="specialty-pack-cards" className="mt-12">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
             <div>
-              <span className="inline-block rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300">
+              <span className="inline-block rounded-md bg-verify/20 border border-verify/40/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-verify">
                 WEEK 10 SUNDAY MAIN SLATE (NE @ DET, KC @ ATL, HOU @ CLE) &amp; MONDAY NIGHT FOOTBALL (LAC @ BAL)
               </span>
               <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold text-white">
@@ -280,8 +280,8 @@ export default function PackagesPage(): JSX.Element {
         </section>
 
         {/* Free Football Matchup Storylines (Teaser Only — Zero Free Picks or Confidence Numbers) */}
-        <section id="slate-dossiers" className="mt-12 rounded-2xl border-2 border-slate-800 bg-slate-900/90 p-6 sm:p-8">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
+        <section id="slate-dossiers" className="mt-12 rounded-2xl border-2 border-mineral bg-obsidian/90 p-6 sm:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-mineral pb-4">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-white">
                 Free Football Matchup Previews &amp; Storylines
@@ -290,7 +290,7 @@ export default function PackagesPage(): JSX.Element {
                 Read how each matchup sets up in the trenches and secondary, then unlock a pack above to reveal our official spread call, over/under call, and player prop bets.
               </p>
             </div>
-            <span className="rounded-md bg-amber-500/20 border border-amber-400/40 px-3 py-1 text-xs font-bold text-amber-300">
+            <span className="rounded-md bg-caution/20 border border-caution/30/40 px-3 py-1 text-xs font-bold text-caution">
               Official Picks Locked in Packs Above
             </span>
           </div>
@@ -302,14 +302,14 @@ export default function PackagesPage(): JSX.Element {
               return (
                 <div
                   key={writeup.id}
-                  className="flex flex-col justify-between rounded-xl border-2 border-slate-700/80 bg-slate-950 p-6 shadow-md"
+                  className="flex flex-col justify-between rounded-xl border-2 border-mineral-hi/80 bg-obsidian p-6 shadow-md"
                 >
                   <div>
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="rounded bg-amber-500/20 px-2.5 py-0.5 text-xs font-bold uppercase text-amber-300">
+                      <span className="rounded bg-caution/20 px-2.5 py-0.5 text-xs font-bold uppercase text-caution">
                         {slotLabel}
                       </span>
-                      <span className="text-xs font-semibold text-slate-300">
+                      <span className="text-xs font-semibold text-ion-2">
                         {writeup.topProps.length} Player Prop Reads Locked
                       </span>
                     </div>
@@ -321,61 +321,61 @@ export default function PackagesPage(): JSX.Element {
                       <p className="text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
                         {sanitizePlainFootballText(writeup.schemeMatchup.coverageShell)}
                       </p>
-                      <p className="text-sm sm:text-base leading-relaxed text-slate-300">
+                      <p className="text-sm sm:text-base leading-relaxed text-ion-2">
                         {sanitizePlainFootballText(writeup.paceOfPlay.notes)}
                       </p>
                     </div>
 
                     {/* Locked Official Pick Badges — Teases That Picks Exist Without Revealing Side, Total, or Confidence */}
-                    <div className="mt-5 grid gap-3 sm:grid-cols-2 border-t border-slate-800 pt-4">
-                      <div className="rounded-lg bg-slate-900 p-3.5 border border-slate-800">
+                    <div className="mt-5 grid gap-3 sm:grid-cols-2 border-t border-mineral pt-4">
+                      <div className="rounded-lg bg-obsidian p-3.5 border border-mineral">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                          <span className="text-xs font-bold uppercase tracking-wider text-ion-2">
                             OFFICIAL SPREAD CALL
                           </span>
-                          <span className="bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold tracking-wide px-2.5 py-0.5 rounded text-xs">
+                          <span className="bg-caution/20 text-caution border border-caution/30/50 font-bold tracking-wide px-2.5 py-0.5 rounded text-xs">
                             🔒 LOCKED
                           </span>
                         </div>
                         <div className="mt-2 text-sm font-semibold text-white">
                           Side Verdict &amp; Rating Inside Pack
                         </div>
-                        <div className="mt-1 text-xs text-slate-400">
+                        <div className="mt-1 text-xs text-ion-1">
                           Unlock above to reveal exact side or pass call
                         </div>
                       </div>
 
-                      <div className="rounded-lg bg-slate-900 p-3.5 border border-slate-800">
+                      <div className="rounded-lg bg-obsidian p-3.5 border border-mineral">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                          <span className="text-xs font-bold uppercase tracking-wider text-ion-2">
                             OFFICIAL TOTAL CALL
                           </span>
-                          <span className="bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold tracking-wide px-2.5 py-0.5 rounded text-xs">
+                          <span className="bg-caution/20 text-caution border border-caution/30/50 font-bold tracking-wide px-2.5 py-0.5 rounded text-xs">
                             🔒 LOCKED
                           </span>
                         </div>
                         <div className="mt-2 text-sm font-semibold text-white">
                           Over/Under Verdict Inside Pack
                         </div>
-                        <div className="mt-1 text-xs text-slate-400">
+                        <div className="mt-1 text-xs text-ion-1">
                           Includes {writeup.topProps.length} player props &amp; parlay ticket
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-5 border-t border-slate-800 pt-3 flex items-center justify-between">
+                  <div className="mt-5 border-t border-mineral pt-3 flex items-center justify-between">
                     <Link
                       href={`/room/${writeup.gameId}`}
                       aria-label={`Read matchup preview for ${writeup.matchup}`}
-                      className="text-sm font-bold text-amber-300 hover:text-amber-200"
+                      className="text-sm font-bold text-caution hover:text-caution"
                     >
                       Read Matchup Preview →
                     </Link>
                     <a
                       href="#pack-cards"
                       aria-label={`Unlock official picks for ${writeup.matchup}`}
-                      className="text-xs font-bold text-emerald-400 hover:text-emerald-300"
+                      className="text-xs font-bold text-verify hover:text-verify"
                     >
                       Unlock Official Picks ↑
                     </a>

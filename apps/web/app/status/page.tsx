@@ -20,7 +20,7 @@ export default function StatusPage(): JSX.Element {
       <Nav />
       <main id="main-content" className="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
         <header className="rounded-3xl border border-[#252833] bg-[#0E1015] p-8">
-          <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-emerald-400">
+          <span className="rounded-full border border-verify/40/40 bg-verify/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-verify">
             All Systems Operational · Zero Data Retention Active
           </span>
           <h1 className="mt-4 font-display text-3xl uppercase tracking-tight text-white sm:text-4xl">
@@ -37,14 +37,14 @@ export default function StatusPage(): JSX.Element {
             <p className="font-mono text-[10px] uppercase tracking-widest text-[#8F8A82]">
               Models Feed (/v1/models)
             </p>
-            <p className="mt-1 font-mono text-xl font-bold text-emerald-400">OPERATIONAL</p>
+            <p className="mt-1 font-mono text-xl font-bold text-verify">OPERATIONAL</p>
             <p className="mt-1 text-xs text-[#C4BFB6]">Schema v2.4 (9 models registered)</p>
           </div>
           <div className="rounded-2xl border border-[#252833] bg-[#0E1015] p-5">
             <p className="font-mono text-[10px] uppercase tracking-widest text-[#8F8A82]">
               Chat Completions (/v1/chat/completions)
             </p>
-            <p className="mt-1 font-mono text-xl font-bold text-emerald-400">OPERATIONAL</p>
+            <p className="mt-1 font-mono text-xl font-bold text-verify">OPERATIONAL</p>
             <p className="mt-1 text-xs text-[#C4BFB6]">FP8 · SSE Streaming · ZDR Enforced</p>
           </div>
           <div className="rounded-2xl border border-[#252833] bg-[#0E1015] p-5">
@@ -62,19 +62,19 @@ export default function StatusPage(): JSX.Element {
 
         <div className="mt-8 rounded-2xl border border-[#252833] bg-[#0E1015] p-6 text-xs text-[#8F8A82]">
           Provider compliance links:{" "}
-          <Link href="/benchmarks" className="text-emerald-400 underline">
+          <Link href="/benchmarks" className="text-verify underline">
             Benchmarks
           </Link>{" "}
           ·{" "}
-          <Link href="/data-policy" className="text-emerald-400 underline">
+          <Link href="/data-policy" className="text-verify underline">
             Data Policy (ZDR)
           </Link>{" "}
           ·{" "}
-          <Link href="/privacy" className="text-emerald-400 underline">
+          <Link href="/privacy" className="text-verify underline">
             Privacy Policy
           </Link>{" "}
           ·{" "}
-          <Link href="/terms" className="text-emerald-400 underline">
+          <Link href="/terms" className="text-verify underline">
             Terms of Service
           </Link>
         </div>

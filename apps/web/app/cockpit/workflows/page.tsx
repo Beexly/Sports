@@ -208,17 +208,17 @@ export default function CockpitWorkflowsHubPage() {
   const snap = buildIntelligenceGrowthSnapshot();
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10">
+    <main className="min-h-screen bg-obsidian text-ion p-6 md:p-10">
       <div className="max-w-7xl mx-auto space-y-8">
-        <header className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <header className="rounded-2xl border border-mineral bg-obsidian/80 p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <div className="text-xs font-mono uppercase tracking-widest text-sky-400">
+            <div className="text-xs font-mono uppercase tracking-widest text-ion-1">
               GSE Autonomous Operating System &bull; Coach, CV Kinematics &amp; Reasoning Mind First &bull; Book Last
             </div>
             <h1 className="text-2xl md:text-3xl font-bold mt-1">
               Master Visual Architecture &amp; Telemetry Graph: All Apps, CV/Kinematics, Datasets &amp; Workflows
             </h1>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="text-sm text-ion-1 mt-1">
               {snap.quadEngineCounts.totalCanonicalNodes.toLocaleString()} Canonical Quad-Engine Nodes &bull; 10Hz Physical State-Estimator (SkeleTrack v2 + ByteTrack + Hartley-DLT) &bull; 55 W7 X-Intel CSVs &bull; 10,000-Sim Pipeline
             </p>
           </div>
@@ -227,37 +227,37 @@ export default function CockpitWorkflowsHubPage() {
               href="http://127.0.0.1:5173/?token=gse-telemetry-2026"
               target="_blank"
               rel="noreferrer"
-              className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-bold"
+              className="px-4 py-2 rounded-lg bg-caution hover:bg-caution text-obsidian text-sm font-bold"
             >
               Interactive 1,315-Node Graph (:5173)
             </a>
-            <Link href="/packages" className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold">
+            <Link href="/packages" className="px-4 py-2 rounded-lg bg-verify hover:bg-verify text-white text-sm font-semibold">
               Open Paywall Storefront (/packages)
             </Link>
-            <Link href="/cockpit/film-room" className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold">
+            <Link href="/cockpit/film-room" className="px-4 py-2 rounded-lg bg-eclipse hover:bg-eclipse text-white text-sm font-semibold">
               CV Film Room (/cockpit/film-room)
             </Link>
-            <Link href="/fantasy/dfs" className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold">
+            <Link href="/fantasy/dfs" className="px-4 py-2 rounded-lg bg-eclipse hover:bg-eclipse text-white text-sm font-semibold">
               DFS 10,000-Sim Writeup (/fantasy/dfs)
             </Link>
-            <Link href="/intelligence/observatory" className="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-sm font-semibold">
+            <Link href="/intelligence/observatory" className="px-4 py-2 rounded-lg bg-eclipse hover:bg-eclipse text-white text-sm font-semibold">
               Intelligence Observatory
             </Link>
           </div>
         </header>
 
         {/* INTERACTIVE SVG VISUAL ARCHITECTURE GRAPH */}
-        <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
+        <section className="rounded-2xl border border-mineral bg-obsidian/70 p-6">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
             <div>
               <h2 className="text-lg font-bold text-white">
                 1. End-to-End Visual System, 10Hz Computer Vision &amp; Dataflow Graph (Coach &amp; Vision Mind First &rarr; Book Last)
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-ion-1">
                 Complete topology showing how the 10Hz Physical State-Estimator (`intelligence/vision/`), Broadcast CV Tracking (`tracking/`), Visual Perception (`perception/`), Film Features (`film-features/`), `nfl-farm`, and the 3,742-node Quad-Engine feed all 5 gated commercial surfaces.
               </p>
             </div>
-            <span className="text-xs font-mono px-2.5 py-1 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40">
+            <span className="text-xs font-mono px-2.5 py-1 rounded bg-eclipse/20 text-ion-1 border border-mineral/40">
               LIVE SYSTEM + CV TELEMETRY TOPOLOGY
             </span>
           </div>
@@ -265,7 +265,7 @@ export default function CockpitWorkflowsHubPage() {
           <div className="overflow-x-auto">
             <svg
               viewBox="0 0 1200 620"
-              className="w-full min-w-[960px] h-auto rounded-xl border border-slate-800 bg-slate-950 p-3"
+              className="w-full min-w-[960px] h-auto rounded-xl border border-mineral bg-obsidian p-3"
               role="img"
               aria-label="GSE End-to-End Visual Architecture Graph"
             >
@@ -460,17 +460,17 @@ export default function CockpitWorkflowsHubPage() {
         </section>
 
         {/* SECTION 2A: COMPLETE REPO SUBSYSTEM & CODEBASE INVENTORY MATRIX */}
-        <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
+        <section className="rounded-2xl border border-mineral bg-obsidian/70 p-6">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
             <div>
               <h2 className="text-lg font-bold text-white">
                 2A. Complete Repo Subsystem, Computer Vision &amp; 10Hz Kinematic Inventory (Nothing Ever Lost)
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-ion-1">
                 Canonical registry of every physical state-estimator, broadcast homography, perception, film-feature, data-farm, and simulation module in the codebase (`docs/engine/SYSTEM-TELEMETRY-MASTER-MAP.md`).
               </p>
             </div>
-            <span className="text-xs font-mono px-2.5 py-1 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">
+            <span className="text-xs font-mono px-2.5 py-1 rounded bg-eclipse/20 text-ion-1 border border-mineral/40">
               6 CORE SUBSYSTEM LAYERS VERIFIED
             </span>
           </div>
@@ -478,22 +478,22 @@ export default function CockpitWorkflowsHubPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[960px] text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/80 font-mono text-[11px] uppercase text-slate-300">
+                <tr className="border-b border-mineral bg-obsidian/80 font-mono text-[11px] uppercase text-ion-2">
                   <th className="p-3">Subsystem Layer</th>
-                  <th className="p-3 text-sky-300">Repo Path</th>
-                  <th className="p-3 text-purple-300">Key Modules &amp; Equations</th>
-                  <th className="p-3 text-amber-300">Signals &amp; Covariates Produced</th>
-                  <th className="p-3 text-emerald-300">Horizon &amp; Wiring Status</th>
+                  <th className="p-3 text-ion-1">Repo Path</th>
+                  <th className="p-3 text-ion-1">Key Modules &amp; Equations</th>
+                  <th className="p-3 text-caution">Signals &amp; Covariates Produced</th>
+                  <th className="p-3 text-verify">Horizon &amp; Wiring Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/80 text-slate-300">
+              <tbody className="divide-y divide-mineral/80 text-ion-2">
                 {SUBSYSTEM_INVENTORY.map((sub) => (
-                  <tr key={sub.layer} className="align-top hover:bg-slate-900/90">
+                  <tr key={sub.layer} className="align-top hover:bg-obsidian/90">
                     <td className="p-3 font-semibold text-white">{sub.layer}</td>
-                    <td className="p-3 font-mono text-[11px] text-sky-400">{sub.repoPath}</td>
+                    <td className="p-3 font-mono text-[11px] text-ion-1">{sub.repoPath}</td>
                     <td className="p-3 leading-5">{sub.modulesAndEquations}</td>
                     <td className="p-3 leading-5">{sub.signalsProduced}</td>
-                    <td className="p-3 leading-5 font-medium text-emerald-300">{sub.horizonAndStatus}</td>
+                    <td className="p-3 leading-5 font-medium text-verify">{sub.horizonAndStatus}</td>
                   </tr>
                 ))}
               </tbody>
@@ -502,17 +502,17 @@ export default function CockpitWorkflowsHubPage() {
         </section>
 
         {/* SECTION 2B: LIVE DATASET & WEEK-HORIZON TELEMETRY TABLE */}
-        <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
+        <section className="rounded-2xl border border-mineral bg-obsidian/70 p-6">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
             <div>
               <h2 className="text-lg font-bold text-white">
                 2B. Live Dataset &amp; Week-Horizon Telemetry (Weeks 1–7 &amp; Week 8 Status)
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-ion-1">
                 Tracks the exact week horizon (`W1–W5` vs `W1–W6` vs `W1–W7` vs `Week 8 Live`) across every dataset on disk so stale data gaps are immediately visible.
               </p>
             </div>
-            <span className="text-xs font-mono px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+            <span className="text-xs font-mono px-2.5 py-1 rounded bg-caution/20 text-caution border border-caution/30/40">
               LIVE DATA HORIZON MONITOR
             </span>
           </div>
@@ -520,22 +520,22 @@ export default function CockpitWorkflowsHubPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[920px] text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/80 font-mono text-[11px] uppercase text-slate-300">
+                <tr className="border-b border-mineral bg-obsidian/80 font-mono text-[11px] uppercase text-ion-2">
                   <th className="p-3">Dataset</th>
-                  <th className="p-3 text-sky-300">Disk / API Location</th>
-                  <th className="p-3 text-amber-300">Current Horizon</th>
-                  <th className="p-3 text-purple-300">Engine Consumer</th>
-                  <th className="p-3 text-emerald-300">Live Status</th>
+                  <th className="p-3 text-ion-1">Disk / API Location</th>
+                  <th className="p-3 text-caution">Current Horizon</th>
+                  <th className="p-3 text-ion-1">Engine Consumer</th>
+                  <th className="p-3 text-verify">Live Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/80 text-slate-300">
+              <tbody className="divide-y divide-mineral/80 text-ion-2">
                 {DATASET_HORIZONS.map((ds) => (
-                  <tr key={ds.dataset} className="align-top hover:bg-slate-900/90">
+                  <tr key={ds.dataset} className="align-top hover:bg-obsidian/90">
                     <td className="p-3 font-semibold text-white">{ds.dataset}</td>
-                    <td className="p-3 font-mono text-[11px] text-slate-300">{ds.location}</td>
-                    <td className="p-3 font-mono text-[11px] text-amber-300">{ds.horizon}</td>
-                    <td className="p-3 font-mono text-[11px] text-purple-300">{ds.consumer}</td>
-                    <td className="p-3 font-semibold text-emerald-300">{ds.status}</td>
+                    <td className="p-3 font-mono text-[11px] text-ion-2">{ds.location}</td>
+                    <td className="p-3 font-mono text-[11px] text-caution">{ds.horizon}</td>
+                    <td className="p-3 font-mono text-[11px] text-ion-1">{ds.consumer}</td>
+                    <td className="p-3 font-semibold text-verify">{ds.status}</td>
                   </tr>
                 ))}
               </tbody>
@@ -544,31 +544,31 @@ export default function CockpitWorkflowsHubPage() {
         </section>
 
         {/* PER-ITEM ENGINE PROCESSING MATRIX */}
-        <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
+        <section className="rounded-2xl border border-mineral bg-obsidian/70 p-6">
           <h2 className="text-lg font-bold text-white mb-1">
             2C. What the Engine Processes for Each Product Item (Coach &amp; Vision Mind First &rarr; Book Last)
           </h2>
-          <p className="text-xs text-slate-400 mb-4">
+          <p className="text-xs text-ion-1 mb-4">
             Exact data inputs, 10Hz CV/kinematic signals, equations, simulation mechanics, and final market/salary gates across all 5 commercial surfaces.
           </p>
 
           <div className="overflow-x-auto">
             <table className="w-full min-w-[920px] text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/80 font-mono text-[11px] uppercase text-slate-300">
+                <tr className="border-b border-mineral bg-obsidian/80 font-mono text-[11px] uppercase text-ion-2">
                   <th className="p-3">Product Surface</th>
-                  <th className="p-3 text-purple-300">Stage 1: Coach, CV &amp; Reasoning Mind First</th>
-                  <th className="p-3 text-sky-300">Stage 2: Data, Hermes Intel &amp; N_eff Math</th>
-                  <th className="p-3 text-amber-300">Stage 3: 10,000 Play-by-Play Sims</th>
-                  <th className="p-3 text-emerald-300">Stage 4: Book / Salary Gate Last</th>
+                  <th className="p-3 text-ion-1">Stage 1: Coach, CV &amp; Reasoning Mind First</th>
+                  <th className="p-3 text-ion-1">Stage 2: Data, Hermes Intel &amp; N_eff Math</th>
+                  <th className="p-3 text-caution">Stage 3: 10,000 Play-by-Play Sims</th>
+                  <th className="p-3 text-verify">Stage 4: Book / Salary Gate Last</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/80 text-slate-300">
+              <tbody className="divide-y divide-mineral/80 text-ion-2">
                 {ENGINE_PROCESSING_BY_ITEM.map((row) => (
-                  <tr key={row.item} className="align-top hover:bg-slate-900/90">
+                  <tr key={row.item} className="align-top hover:bg-obsidian/90">
                     <td className="p-3 font-semibold text-white">
                       <div>{row.item}</div>
-                      <Link href={row.route} className="mt-1 inline-block font-mono text-[11px] text-sky-400 hover:underline">
+                      <Link href={row.route} className="mt-1 inline-block font-mono text-[11px] text-ion-1 hover:underline">
                         {row.route} &rarr;
                       </Link>
                     </td>
@@ -585,22 +585,22 @@ export default function CockpitWorkflowsHubPage() {
 
         {/* APPS & WORKFLOWS LISTS */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
+          <div className="rounded-xl border border-mineral bg-obsidian/60 p-5">
             <h2 className="text-lg font-bold mb-4 flex items-center justify-between">
               <span>3. All Live Working Apps &amp; Surfaces</span>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-verify/20 text-verify border border-verify/40/40">
                 11 / 11 ONLINE
               </span>
             </h2>
-            <ul className="divide-y divide-slate-800 text-sm">
+            <ul className="divide-y divide-mineral text-sm">
               {LIVE_APPS.map((app) => (
                 <li key={app.name} className="py-2.5 flex items-center justify-between gap-2">
-                  <span className="font-medium text-slate-200">{app.name}</span>
+                  <span className="font-medium text-ion">{app.name}</span>
                   <a
                     href={app.path}
                     target={app.path.startsWith("http") ? "_blank" : undefined}
                     rel="noreferrer"
-                    className="text-sky-400 hover:underline font-mono text-xs"
+                    className="text-ion-1 hover:underline font-mono text-xs"
                   >
                     {app.url} &rarr;
                   </a>
@@ -609,21 +609,21 @@ export default function CockpitWorkflowsHubPage() {
             </ul>
           </div>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
+          <div className="rounded-xl border border-mineral bg-obsidian/60 p-5">
             <h2 className="text-lg font-bold mb-4 flex items-center justify-between">
               <span>4. Autonomous Weekly Coaching, CV, Hermes &amp; Sim Workflows</span>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-eclipse/20 text-ion-1 border border-mineral/40">
                 24/7 + 10Hz CV + T-48h + SUN 4PM
               </span>
             </h2>
-            <ul className="divide-y divide-slate-800 text-sm">
+            <ul className="divide-y divide-mineral text-sm">
               {AUTONOMOUS_WORKFLOWS.map((wf) => (
                 <li key={wf.name} className="py-2.5 space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-slate-200">{wf.name}</span>
-                    <span className="text-xs font-mono text-emerald-400">{wf.window}</span>
+                    <span className="font-semibold text-ion">{wf.name}</span>
+                    <span className="text-xs font-mono text-verify">{wf.window}</span>
                   </div>
-                  <div className="text-xs font-mono text-slate-400 truncate">{wf.script}</div>
+                  <div className="text-xs font-mono text-ion-1 truncate">{wf.script}</div>
                 </li>
               ))}
             </ul>

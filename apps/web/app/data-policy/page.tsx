@@ -16,7 +16,7 @@ export default function DataPolicyPage(): JSX.Element {
       <Nav />
       <main id="main-content" className="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
         <header className="rounded-3xl border border-[#252833] bg-[#0E1015] p-8">
-          <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-emerald-400">
+          <span className="rounded-full border border-verify/40/40 bg-verify/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-verify">
             Zero Data Retention (ZDR) Enforced · OpenRouter Provider Compliance
           </span>
           <h1 className="mt-4 font-display text-3xl uppercase tracking-tight text-white sm:text-4xl">
@@ -24,7 +24,7 @@ export default function DataPolicyPage(): JSX.Element {
           </h1>
           <p className="mt-2 text-xs text-[#8F8A82]">
             Effective Date: November 6, 2026 · Applies to all{" "}
-            <code className="text-emerald-400">gse/skeleton-*</code> models served via OpenRouter
+            <code className="text-verify">gse/skeleton-*</code> models served via OpenRouter
             and direct enterprise APIs.
           </p>
         </header>
@@ -36,7 +36,7 @@ export default function DataPolicyPage(): JSX.Element {
             </h2>
             <p className="mt-2">
               Galaxy Sports Edge &amp; Galaxy Sports Institute operate all{" "}
-              <code className="text-emerald-400">gse/skeleton-*</code> inference endpoints under a
+              <code className="text-verify">gse/skeleton-*</code> inference endpoints under a
               strict <strong>Zero Data Retention (ZDR)</strong> policy. Customer prompts, system
               instructions, tool-call payloads, and model completions are processed exclusively in
               volatile memory for the duration of the HTTP/SSE request and are{" "}
@@ -52,9 +52,9 @@ export default function DataPolicyPage(): JSX.Element {
             <p className="mt-2">
               We <strong>never</strong> train, fine-tune, distill, or evaluate our models on
               OpenRouter user prompts or completions. Every request automatically enforces{" "}
-              <code className="text-emerald-400">provider.data_collection: &quot;deny&quot;</code>{" "}
+              <code className="text-verify">provider.data_collection: &quot;deny&quot;</code>{" "}
               semantics and emits the response header{" "}
-              <code className="text-emerald-400">X-GSE-Zero-Data-Retention: enforced</code>.
+              <code className="text-verify">X-GSE-Zero-Data-Retention: enforced</code>.
             </p>
           </section>
 
@@ -95,15 +95,15 @@ export default function DataPolicyPage(): JSX.Element {
 
           <div className="pt-4 text-xs text-[#8F8A82]">
             Related documents:{" "}
-            <Link href="/benchmarks" className="text-emerald-400 underline">
+            <Link href="/benchmarks" className="text-verify underline">
               Benchmark Dossier
             </Link>{" "}
             ·{" "}
-            <Link href="/privacy" className="text-emerald-400 underline">
+            <Link href="/privacy" className="text-verify underline">
               Privacy Policy
             </Link>{" "}
             ·{" "}
-            <Link href="/terms" className="text-emerald-400 underline">
+            <Link href="/terms" className="text-verify underline">
               Terms of Service
             </Link>
           </div>

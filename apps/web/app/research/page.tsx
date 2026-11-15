@@ -117,99 +117,99 @@ export default function ResearchPortalPage(): JSX.Element {
       <Nav />
       <main id="main-content" className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
         {/* Hero Section */}
-        <div className="border-b border-slate-800 pb-10">
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-cyan-400">
+        <div className="border-b border-mineral pb-10">
+          <div className="inline-flex items-center gap-2 rounded-full border border-mineral/30 bg-eclipse/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-ion-1">
             Football Film &amp; Matchup Desk
           </div>
           <h1 className="mt-4 font-display text-4xl uppercase sm:text-6xl text-white">
             How We Break Down the Slate
           </h1>
-          <p className="mt-4 max-w-3xl text-base sm:text-lg leading-relaxed text-slate-300">
+          <p className="mt-4 max-w-3xl text-base sm:text-lg leading-relaxed text-ion-2">
             Our football desk grades every NFL game from the inside out: <strong className="text-white">offensive and defensive line matchups, coaching play-calling tendencies, verified mid-week injury reports, and de-vigged sportsbook prices</strong>.
           </p>
-          <div className="mt-6 flex flex-wrap gap-4 text-xs font-mono text-slate-400">
-            <span className="rounded bg-slate-900 border border-slate-800 px-3 py-1.5">Focus: Trench &amp; Coverage Matchups</span>
-            <span className="rounded bg-slate-900 border border-slate-800 px-3 py-1.5">32-Team Active Depth Chart Tracking</span>
-            <span className="rounded bg-slate-900 border border-slate-800 px-3 py-1.5">Timestamped Public Ledger</span>
+          <div className="mt-6 flex flex-wrap gap-4 text-xs font-mono text-ion-1">
+            <span className="rounded bg-obsidian border border-mineral px-3 py-1.5">Focus: Trench &amp; Coverage Matchups</span>
+            <span className="rounded bg-obsidian border border-mineral px-3 py-1.5">32-Team Active Depth Chart Tracking</span>
+            <span className="rounded bg-obsidian border border-mineral px-3 py-1.5">Timestamped Public Ledger</span>
           </div>
         </div>
 
         {/* Verified On-Field Process Summary */}
-        <div className="mt-14 rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-950/30 via-slate-900 to-slate-950 p-6 sm:p-10 shadow-2xl">
+        <div className="mt-14 rounded-2xl border border-mineral/30 bg-gradient-to-br from-ion-2/30 via-ion-2 to-ion-2 p-6 sm:p-10 shadow-2xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-cyan-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-mineral/40 bg-eclipse/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-ion-1">
               Public Settlement Ledger · 2026 NFL Season
             </span>
-            <span className="text-xs font-mono text-slate-400">Updated Through Week 8</span>
+            <span className="text-xs font-mono text-ion-1">Updated Through Week 8</span>
           </div>
 
           <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-white">
             Discipline First: Why Passing Beats Forcing Action
           </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-300">
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ion-2">
             The fastest way to lose money in sports betting is betting every game on TV. We review over 1,800 main lines, quarter/half derivatives, and player props every week, and we abstain or pass anything without clear value so our members only play spots where the film and the number line up:
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {processMetrics.map((m) => (
-              <div key={m.label} className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
-                <div className="font-mono text-3xl font-extrabold text-cyan-400">{m.value}</div>
-                <div className="mt-1 text-xs font-bold text-slate-200">{m.label}</div>
-                <div className="mt-1 text-[11px] text-slate-400">{m.sub}</div>
+              <div key={m.label} className="rounded-xl border border-mineral bg-obsidian/70 p-4">
+                <div className="font-mono text-3xl font-extrabold text-ion-1">{m.value}</div>
+                <div className="mt-1 text-xs font-bold text-ion">{m.label}</div>
+                <div className="mt-1 text-[11px] text-ion-1">{m.sub}</div>
               </div>
             ))}
           </div>
 
-          <div className="mt-6 rounded-xl border border-slate-800 bg-slate-950/50 p-4 text-xs leading-relaxed text-slate-300">
-            <strong className="text-cyan-300">Bottom Line:</strong> When a line moves past our fair trigger price, we mark the ticket <code className="text-amber-400">PASS · NO BET</code> and wait for the next mispriced matchup.
+          <div className="mt-6 rounded-xl border border-mineral bg-obsidian/50 p-4 text-xs leading-relaxed text-ion-2">
+            <strong className="text-ion-1">Bottom Line:</strong> When a line moves past our fair trigger price, we mark the ticket <code className="text-caution">PASS · NO BET</code> and wait for the next mispriced matchup.
           </div>
         </div>
 
         {/* Football Breakdown Pillars */}
         <div className="mt-16">
-          <div className="flex items-baseline justify-between border-b border-slate-800 pb-4">
+          <div className="flex items-baseline justify-between border-b border-mineral pb-4">
             <div>
               <h2 className="text-2xl font-bold uppercase tracking-tight text-white sm:text-3xl">
                 Core Football Breakdown Pillars
               </h2>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-ion-1">
                 What our analysts check before any spread, total, prop, or parlay makes the official card.
               </p>
             </div>
-            <span className="text-xs font-mono text-cyan-400">NOTE-01 through NOTE-04</span>
+            <span className="text-xs font-mono text-ion-1">NOTE-01 through NOTE-04</span>
           </div>
 
           <div className="mt-8 space-y-6">
             {researchNotes.map((note) => (
               <div
                 key={note.id}
-                className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 sm:p-8 hover:border-slate-700 transition-colors"
+                className="rounded-2xl border border-mineral bg-obsidian/40 p-6 sm:p-8 hover:border-ion-2 transition-colors"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-sm font-extrabold text-cyan-400">{note.id}</span>
-                    <span className="rounded bg-slate-800 px-2.5 py-0.5 text-xs font-semibold text-slate-300">
+                    <span className="font-mono text-sm font-extrabold text-ion-1">{note.id}</span>
+                    <span className="rounded bg-titanium px-2.5 py-0.5 text-xs font-semibold text-ion-2">
                       {note.category}
                     </span>
                   </div>
-                  <span className="text-xs font-mono text-emerald-400">{note.status}</span>
+                  <span className="text-xs font-mono text-verify">{note.status}</span>
                 </div>
 
                 <h3 className="mt-3 text-xl font-bold text-white">{note.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-300">{note.abstract}</p>
+                <p className="mt-3 text-sm leading-relaxed text-ion-2">{note.abstract}</p>
 
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-800/60">
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-mineral/60">
                   <div className="flex flex-wrap gap-2">
                     {note.keywords.map((kw) => (
                       <span
                         key={kw}
-                        className="rounded-md border border-slate-800 bg-slate-950 px-2.5 py-1 text-[11px] font-mono text-slate-400"
+                        className="rounded-md border border-mineral bg-obsidian px-2.5 py-1 text-[11px] font-mono text-ion-1"
                       >
                         #{kw}
                       </span>
                     ))}
                   </div>
-                  <span className="text-xs font-mono text-slate-400">
+                  <span className="text-xs font-mono text-ion-1">
                     Galaxy Sports Edge Film &amp; Matchup Desk
                   </span>
                 </div>
@@ -219,16 +219,16 @@ export default function ResearchPortalPage(): JSX.Element {
         </div>
 
         {/* Contact & Syndicate Inquiries */}
-        <div className="mt-16 rounded-2xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-[#0c0e14] p-8 sm:p-10">
+        <div className="mt-16 rounded-2xl border border-verify/40/30 bg-gradient-to-r from-verify/40 via-ion-2 to-[#0c0e14] p-8 sm:p-10">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-verify">
                 Research Desk &amp; Syndicate Inquiries
               </span>
               <h3 className="mt-2 text-2xl sm:text-3xl font-bold text-white">
                 Questions About Our Matchup Grading or Syndicate Feed?
               </h3>
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-300">
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ion-2">
                 Reach out directly to our football research desk for custom data feed inquiries, historical closing-line audits, or weekly slate access.
               </p>
             </div>
@@ -236,13 +236,13 @@ export default function ResearchPortalPage(): JSX.Element {
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col shrink-0">
               <a
                 href="mailto:research@galaxysportsedge.com?subject=Football%20Research%20Desk%20Inquiry"
-                className="inline-flex items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3.5 text-sm font-bold text-black shadow-lg transition-colors whitespace-nowrap"
+                className="inline-flex items-center justify-center rounded-xl bg-verify hover:bg-verify px-6 py-3.5 text-sm font-bold text-black shadow-lg transition-colors whitespace-nowrap"
               >
                 Contact Research Desk →
               </a>
               <Link
                 href="/calibration"
-                className="inline-flex items-center justify-center rounded-xl border border-slate-700 bg-slate-800 hover:border-slate-500 px-6 py-3.5 text-sm font-bold text-slate-200 transition-colors whitespace-nowrap"
+                className="inline-flex items-center justify-center rounded-xl border border-mineral-hi bg-titanium hover:border-ion-2 px-6 py-3.5 text-sm font-bold text-ion transition-colors whitespace-nowrap"
               >
                 View Calibration Proof Room →
               </Link>

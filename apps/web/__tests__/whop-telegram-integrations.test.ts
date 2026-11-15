@@ -9,7 +9,17 @@ import {
   sendTelegramMessage,
 } from "@/lib/integrations/telegram";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
-import { buildCoachGameWriteup } from "@/lib/writeups/coach-writeup-engine";
+import {
+  buildCoachGameWriteup,
+  LIVE_SLATE_COACH_WRITEUPS,
+  LIVE_WEEK8_2026_BOARD,
+} from "@/lib/writeups/coach-writeup-engine";
+
+// The bot serves whatever slate is live; pin the card it actually ships rather
+// than a matchup it once shipped.
+const LOCKED_MATCHUP = LIVE_WEEK8_2026_BOARD[0]!.matchup;
+const UNLOCKED_MATCHUP = LIVE_SLATE_COACH_WRITEUPS[0]!.matchup;
+const UNLOCKED_SIDE = LIVE_SLATE_COACH_WRITEUPS[0]!.sideTotalCall.sideSelection;
 import { POST as whopWebhookRoute } from "@/app/api/webhooks/whop/route";
 import { POST as telegramWebhookRoute } from "@/app/api/webhooks/telegram/route";
 
@@ -250,8 +260,8 @@ describe("Whop & Telegram Integrations Suite", () => {
       expect(dataPicksLocked.vipUnlocked).toBe(false);
       expect(dataPicksLocked.previewReply).toContain("LOCKED");
       expect(dataPicksLocked.previewReply).toContain("https://www.galaxysportsedge.com/packages");
-      expect(dataPicksLocked.previewReply).toContain("Carolina Panthers @ Green Bay Packers");
-      expect(dataPicksLocked.previewReply).not.toContain("Carolina Panthers +3.5");
+      expect(dataPicksLocked.previewReply).toContain(LOCKED_MATCHUP);
+      expect(dataPicksLocked.previewReply).not.toContain(UNLOCKED_SIDE);
 
       // /props BEFORE unlock -> MUST BE LOCKED (no playerName leaked)
       const resPropsLocked = await telegramWebhookRoute(
@@ -327,8 +337,8 @@ describe("Whop & Telegram Integrations Suite", () => {
       const dataPicksUnlocked = await resPicksUnlocked.json();
       expect(dataPicksUnlocked.vipUnlocked).toBe(true);
       expect(dataPicksUnlocked.previewReply).toContain("VIP UNLOCKED");
-      expect(dataPicksUnlocked.previewReply).toContain("Carolina Panthers @ Green Bay Packers");
-      expect(dataPicksUnlocked.previewReply).toContain("Carolina Panthers +3.5");
+      expect(dataPicksUnlocked.previewReply).toContain(UNLOCKED_MATCHUP);
+      expect(dataPicksUnlocked.previewReply).toContain(UNLOCKED_SIDE);
     });
   });
 });

@@ -43,64 +43,64 @@ export default function CalibrationProofRoomPage(): JSX.Element {
       <Nav />
       <main id="main-content" className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
         {/* Header */}
-        <div className="border-b border-slate-800 pb-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.22em] text-emerald-400">
+        <div className="border-b border-mineral pb-8">
+          <div className="inline-flex items-center gap-2 rounded-full border border-verify/40/30 bg-verify/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.22em] text-verify">
             Public Settlement Ledger &amp; Honest Grading
           </div>
           <h1 className="mt-4 font-display text-4xl uppercase sm:text-6xl text-white">
             Calibration Proof Room
           </h1>
-          <p className="mt-3 max-w-3xl text-base sm:text-lg leading-relaxed text-slate-300">
+          <p className="mt-3 max-w-3xl text-base sm:text-lg leading-relaxed text-ion-2">
             We publish every settled ticket, every closing line comparison, and our exact settlement record by conviction band. In sports betting, <strong className="text-white">a tout service that claims 85/100 confidence and hits half the time destroys bankrolls</strong>. Our signal-path grades run conservative: a ticket shown in the 60s wins about 57 times in 100, not 65.
           </p>
         </div>
 
         {/* Primary Metrics Grid */}
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-emerald-500/30 bg-slate-900/60 p-6 shadow-xl">
-            <div className="text-xs uppercase tracking-wider text-slate-400">Official Verified Record</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-emerald-400">47-19-1</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">71.2% · +24.92 Units</div>
-            <div className="mt-2 text-xs text-slate-400">MAIN + DERIVATIVE + TNF SINGLE-STAKE · all-in 47-19-1 secondary</div>
+          <div className="rounded-2xl border border-verify/40/30 bg-obsidian/60 p-6 shadow-xl">
+            <div className="text-xs uppercase tracking-wider text-ion-1">Official Verified Record</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-verify">47-19-1</div>
+            <div className="mt-1 text-sm font-semibold text-ion">71.2% · +24.92 Units</div>
+            <div className="mt-2 text-xs text-ion-1">MAIN + DERIVATIVE + TNF SINGLE-STAKE · all-in 47-19-1 secondary</div>
           </div>
 
-          <div className="rounded-2xl border border-cyan-500/30 bg-slate-900/60 p-6 shadow-xl">
-            <div className="text-xs uppercase tracking-wider text-slate-400">Brier Calibration Score</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-cyan-400">0.2484</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">vs Coin-Flip 0.25</div>
-            <div className="mt-2 text-xs text-slate-400">Score only · ranking monotone · settled Sep 2026</div>
+          <div className="rounded-2xl border border-mineral/30 bg-obsidian/60 p-6 shadow-xl">
+            <div className="text-xs uppercase tracking-wider text-ion-1">Brier Calibration Score</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-ion-1">0.2484</div>
+            <div className="mt-1 text-sm font-semibold text-ion">vs Coin-Flip 0.25</div>
+            <div className="mt-2 text-xs text-ion-1">Score only · ranking monotone · settled Sep 2026</div>
           </div>
 
-          <div className="rounded-2xl border border-amber-500/30 bg-slate-900/60 p-6 shadow-xl">
-            <div className="text-xs uppercase tracking-wider text-slate-400">Graded Plays</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-amber-400">50</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">21 ledger-tracked plays carry stake</div>
-            <div className="mt-2 text-xs text-slate-400">Reconciled to the official ledger</div>
+          <div className="rounded-2xl border border-caution/30/30 bg-obsidian/60 p-6 shadow-xl">
+            <div className="text-xs uppercase tracking-wider text-ion-1">Graded Plays</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-caution">50</div>
+            <div className="mt-1 text-sm font-semibold text-ion">21 ledger-tracked plays carry stake</div>
+            <div className="mt-2 text-xs text-ion-1">Reconciled to the official ledger</div>
           </div>
 
-          <div className="rounded-2xl border border-purple-500/30 bg-slate-900/60 p-6 shadow-xl">
-            <div className="text-xs uppercase tracking-wider text-slate-400">Sealed Board</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-purple-400">573</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">Markets evaluated · 295 published</div>
-            <div className="mt-2 text-xs text-slate-400">278 abstained/passed · zero forced action</div>
+          <div className="rounded-2xl border border-mineral/30 bg-obsidian/60 p-6 shadow-xl">
+            <div className="text-xs uppercase tracking-wider text-ion-1">Sealed Board</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-ion-1">573</div>
+            <div className="mt-1 text-sm font-semibold text-ion">Markets evaluated · 295 published</div>
+            <div className="mt-2 text-xs text-ion-1">278 abstained/passed · zero forced action</div>
           </div>
         </div>
 
         {/* Probability Calibration Ladder */}
-        <div className="mt-14 rounded-2xl border border-slate-800 bg-slate-900/40 p-6 sm:p-8">
-          <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-800 pb-4">
+        <div className="mt-14 rounded-2xl border border-mineral bg-obsidian/40 p-6 sm:p-8">
+          <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-mineral pb-4">
             <div>
               <h2 className="text-2xl font-bold text-white">Empirical Probability Calibration Ladder</h2>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-ion-1">
                 Predicted conviction band vs actual realized win rate across settled plays.
               </p>
             </div>
-            <div className="text-xs font-mono text-emerald-400">Signal-path buckets · Sep 13, 2026</div>
+            <div className="text-xs font-mono text-verify">Signal-path buckets · Sep 13, 2026</div>
           </div>
 
           <div className="mt-6 overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-800 text-xs uppercase text-slate-400">
+              <thead className="border-b border-mineral text-xs uppercase text-ion-1">
                 <tr>
                   <th className="py-3 px-4">Conviction Band</th>
                   <th className="py-3 px-4">Expected Prob</th>
@@ -109,42 +109,42 @@ export default function CalibrationProofRoomPage(): JSX.Element {
                   <th className="py-3 px-4">Calibration Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-mono text-slate-200">
+              <tbody className="divide-y divide-mineral/60 font-mono text-ion">
                 {calibrationBands.map((row) => (
-                  <tr key={row.band} className="hover:bg-slate-800/30">
+                  <tr key={row.band} className="hover:bg-titanium/30">
                     <td className="py-3 px-4 font-bold text-white">{row.band}</td>
-                    <td className="py-3 px-4 text-slate-400">{row.expected}</td>
-                    <td className="py-3 px-4 font-bold text-emerald-400">{row.realized}</td>
+                    <td className="py-3 px-4 text-ion-1">{row.expected}</td>
+                    <td className="py-3 px-4 font-bold text-verify">{row.realized}</td>
                     <td className="py-3 px-4">{row.sample}</td>
-                    <td className="py-3 px-4 text-xs font-sans text-cyan-300">{row.status}</td>
+                    <td className="py-3 px-4 text-xs font-sans text-ion-1">{row.status}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <div className="mt-6 rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs leading-relaxed text-slate-400">
-            <strong className="text-slate-200">Why we render 74/100, never 74%:</strong> Industry research proves sports bettors conflate 74% win probability with a 100% certainty, triggering irrational Kelly over-betting. Our bounded index displays honest conviction without misleading decimal claims.
+          <div className="mt-6 rounded-xl border border-mineral bg-obsidian p-4 text-xs leading-relaxed text-ion-1">
+            <strong className="text-ion">Why we render 74/100, never 74%:</strong> Industry research proves sports bettors conflate 74% win probability with a 100% certainty, triggering irrational Kelly over-betting. Our bounded index displays honest conviction without misleading decimal claims.
           </div>
         </div>
 
         {/* Recent Settled Ledger Specimen */}
-        <div className="mt-14 rounded-2xl border border-slate-800 bg-slate-900/40 p-6 sm:p-8">
-          <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-800 pb-4">
+        <div className="mt-14 rounded-2xl border border-mineral bg-obsidian/40 p-6 sm:p-8">
+          <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-mineral pb-4">
             <div>
               <h2 className="text-2xl font-bold text-white">Verified Ledger Components</h2>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-ion-1">
                 How the verified 47-19-1 total reconciles to the official ledger.
               </p>
             </div>
-            <Link href="/board" className="text-xs font-bold text-emerald-400 hover:text-emerald-300">
+            <Link href="/board" className="text-xs font-bold text-verify hover:text-verify">
               View Full Board →
             </Link>
           </div>
 
           <div className="mt-6 overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-800 text-xs uppercase text-slate-400">
+              <thead className="border-b border-mineral text-xs uppercase text-ion-1">
                 <tr>
                   <th className="py-3 px-4">Ledger Leg</th>
                   <th className="py-3 px-4">Record</th>
@@ -152,13 +152,13 @@ export default function CalibrationProofRoomPage(): JSX.Element {
                   <th className="py-3 px-4">Reconciliation Note</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-mono text-slate-200">
+              <tbody className="divide-y divide-mineral/60 font-mono text-ion">
                 {ledgerComponents.map((c, idx) => (
-                  <tr key={idx} className="hover:bg-slate-800/30">
+                  <tr key={idx} className="hover:bg-titanium/30">
                     <td className="py-3 px-4 font-bold text-white">{c.leg}</td>
                     <td className="py-3 px-4">{c.record}</td>
-                    <td className="py-3 px-4 font-bold text-emerald-400">{c.units}</td>
-                    <td className="py-3 px-4 text-xs text-slate-400">{c.note}</td>
+                    <td className="py-3 px-4 font-bold text-verify">{c.units}</td>
+                    <td className="py-3 px-4 text-xs text-ion-1">{c.note}</td>
                   </tr>
                 ))}
               </tbody>
@@ -167,20 +167,20 @@ export default function CalibrationProofRoomPage(): JSX.Element {
         </div>
 
         {/* Football Film & Matchup Research Link */}
-        <div className="mt-14 rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/40 via-slate-900 to-slate-950 p-8">
+        <div className="mt-14 rounded-2xl border border-mineral/30 bg-gradient-to-r from-ion-2/40 via-ion-2 to-ion-2 p-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-ion-1">
                 Film Room &amp; Matchup Methodology
               </span>
               <h3 className="mt-1 text-2xl font-bold text-white">How We Grade Every NFL Matchup</h3>
-              <p className="mt-2 max-w-xl text-sm text-slate-300">
+              <p className="mt-2 max-w-xl text-sm text-ion-2">
                 Explore our breakdown notes on offensive and defensive line pass protection, injury target redistribution, short-week fatigue, and two-sided sportsbook line value.
               </p>
             </div>
             <Link
               href="/research"
-              className="inline-flex items-center justify-center rounded-xl bg-indigo-600 hover:bg-indigo-500 px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-colors whitespace-nowrap"
+              className="inline-flex items-center justify-center rounded-xl bg-eclipse hover:bg-eclipse px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-colors whitespace-nowrap"
             >
               Read Football Research Notes →
             </Link>

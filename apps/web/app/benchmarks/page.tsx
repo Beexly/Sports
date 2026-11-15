@@ -154,7 +154,7 @@ export default function BenchmarksPage(): JSX.Element {
       <main id="main-content" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <header className="rounded-3xl border border-[#252833] bg-[#0E1015] p-8 shadow-2xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-emerald-400">
+            <span className="rounded-full border border-verify/40/40 bg-verify/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-verify">
               Benchmark &amp; Verification Dossier
             </span>
             <span className="font-mono text-xs text-[#8F8A82]">
@@ -168,7 +168,7 @@ export default function BenchmarksPage(): JSX.Element {
             What is actually verified: {" "}
             <strong className="text-white">14 recorded prompt/completion items</strong> (8 OpenRouter
             suites + 6 LiveBench categories, all passing) backed by raw JSONL records, and the{" "}
-            <strong className="text-emerald-400">21,419-equation registry across 26 reasoning
+            <strong className="text-verify">21,419-equation registry across 26 reasoning
             layers (L01..L26)</strong>: independently re-counted, executed end-to-end (0 NaN/Inf/errors),
             and resealed 114/114. The earlier <strong className="text-white">35,119-item draft
             (95.93 composite) is withdrawn</strong>: it has zero item-level records and cannot stand
@@ -180,7 +180,7 @@ export default function BenchmarksPage(): JSX.Element {
               <p className="font-mono text-[10px] uppercase tracking-widest text-[#8F8A82]">
                 Recorded Items (raw JSONL)
               </p>
-              <p className="mt-1 font-mono text-2xl font-bold text-emerald-400">14 Items</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-verify">14 Items</p>
               <p className="mt-0.5 text-xs text-[#8F8A82]">8 suites + 6 categories · all passing · N=1 each</p>
             </div>
             <div className="rounded-2xl border border-[#252833] bg-[#08090C] p-4">
@@ -194,14 +194,14 @@ export default function BenchmarksPage(): JSX.Element {
               <p className="font-mono text-[10px] uppercase tracking-widest text-[#8F8A82]">
                 Canonical Entities
               </p>
-              <p className="mt-1 font-mono text-2xl font-bold text-emerald-400">6,558</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-verify">6,558</p>
               <p className="mt-0.5 text-xs text-[#8F8A82]">Exact match · 19/19 dossiers summarized</p>
             </div>
             <div className="rounded-2xl border border-[#252833] bg-[#08090C] p-4">
               <p className="font-mono text-[10px] uppercase tracking-widest text-[#8F8A82]">
                 35,119 Draft (95.93)
               </p>
-              <p className="mt-1 font-mono text-2xl font-bold text-amber-400">Withdrawn</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-caution">Withdrawn</p>
               <p className="mt-0.5 text-xs text-[#8F8A82]">Zero item-level records · receipt hash mismatch</p>
             </div>
           </div>
@@ -213,7 +213,7 @@ export default function BenchmarksPage(): JSX.Element {
             <h2 className="font-display text-2xl uppercase tracking-wide text-white">
               1. Quad-Frontier Sovereign Spine Architecture (4 Frontier Pillars)
             </h2>
-            <span className="font-mono text-xs text-emerald-400">
+            <span className="font-mono text-xs text-verify">
               Theorem 7 Cellular Sheaf Consensus · Snell Compute-Optimal Rollouts (N = 4 → 16 → 64)
             </span>
           </div>
@@ -232,7 +232,7 @@ export default function BenchmarksPage(): JSX.Element {
                 className="rounded-2xl border border-[#252833] bg-[#08090C] p-5"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[11px] font-bold uppercase text-emerald-400">
+                  <span className="font-mono text-[11px] font-bold uppercase text-verify">
                     {pillar.pillarId}
                   </span>
                   <span className="rounded bg-[#141720] px-2 py-0.5 font-mono text-[10px] text-[#C4BFB6]">
@@ -240,7 +240,7 @@ export default function BenchmarksPage(): JSX.Element {
                   </span>
                 </div>
                 <h3 className="mt-2 font-display text-lg text-white">{pillar.displayName}</h3>
-                <p className="mt-1 font-mono text-xs text-amber-400">
+                <p className="mt-1 font-mono text-xs text-caution">
                   Context Window: {(pillar.contextWindow / 1000).toLocaleString()}K Tokens
                 </p>
                 <p className="mt-2 text-xs leading-relaxed text-[#C4BFB6]">{pillar.role}</p>
@@ -255,18 +255,18 @@ export default function BenchmarksPage(): JSX.Element {
             <h2 className="font-display text-2xl uppercase tracking-wide text-white">
               2. Recorded Items: OpenRouter 8-Suite + LiveBench (100.00 / 100, N=1 per suite)
             </h2>
-            <span className="font-mono text-xs text-emerald-400">
+            <span className="font-mono text-xs text-verify">
               14 Recorded Prompt/Completion Items · LiveBench ICLR 2025 (arXiv:2406.19314v2)
             </span>
           </div>
           <p className="mt-1 text-xs text-[#8F8A82]">
             Item-by-item deterministic evaluation backed by raw prompt/completion JSONL records (
-            <code className="text-emerald-400">
+            <code className="text-verify">
               data/audits/stealth_skeleton_openrouter_8suite_livebench_raw_completions_2026_11_07.jsonl
             </code>
             ): 14 rows (8 OpenRouter suites + 6 LiveBench categories), programmatic_score 1.0 on every
             row: smoke coverage (N=1 per suite), not a sized benchmark. Composite{" "}
-            <strong className="text-emerald-400">100.00 / 100</strong>.
+            <strong className="text-verify">100.00 / 100</strong>.
           </p>
 
           <div className="mt-5 overflow-x-auto">
@@ -276,7 +276,7 @@ export default function BenchmarksPage(): JSX.Element {
                   <th className="py-3 pr-4">Suite Name</th>
                   <th className="py-3 pr-4">Benchmark Family</th>
                   <th className="py-3 pr-4">Recorded Prompts</th>
-                  <th className="py-3 pr-4 text-emerald-400">Verified Score</th>
+                  <th className="py-3 pr-4 text-verify">Verified Score</th>
                   <th className="py-3">Deterministic Ground-Truth Grader Mechanism</th>
                 </tr>
               </thead>
@@ -285,21 +285,21 @@ export default function BenchmarksPage(): JSX.Element {
                   <tr key={row.suite} className="hover:bg-[#141720]">
                     <td className="py-3 pr-4 font-semibold text-white">{row.suite}</td>
                     <td className="py-3 pr-4 font-mono text-[#C4BFB6]">{row.category}</td>
-                    <td className="py-3 pr-4 font-mono text-emerald-300">{row.items}</td>
-                    <td className="py-3 pr-4 font-mono font-bold text-emerald-400">{row.score}</td>
+                    <td className="py-3 pr-4 font-mono text-verify">{row.items}</td>
+                    <td className="py-3 pr-4 font-mono font-bold text-verify">{row.score}</td>
                     <td className="py-3 text-[#C4BFB6]">{row.mechanism}</td>
                   </tr>
                 ))}
-                <tr className="border-t-2 border-emerald-500/40 bg-emerald-500/5 font-mono">
+                <tr className="border-t-2 border-verify/40/40 bg-verify/5 font-mono">
                   <td className="py-4 pr-4 font-bold text-white">
                     Combined 14-Item Recorded Composite
                   </td>
                   <td className="py-4 pr-4 text-[#C4BFB6]">
                     OpenRouter 8-Suite (8/8) + LiveBench 6-Cat (6/6)
                   </td>
-                  <td className="py-4 pr-4 font-bold text-emerald-400">14 JSONL Rows</td>
-                  <td className="py-4 pr-4 text-base font-bold text-emerald-400">100.00 / 100</td>
-                  <td className="py-4 text-emerald-300">
+                  <td className="py-4 pr-4 font-bold text-verify">14 JSONL Rows</td>
+                  <td className="py-4 pr-4 text-base font-bold text-verify">100.00 / 100</td>
+                  <td className="py-4 text-verify">
                     stealth-skeleton/skeleton-alpha (HF &amp; OpenRouter Ready)
                   </td>
                 </tr>
@@ -333,7 +333,7 @@ export default function BenchmarksPage(): JSX.Element {
                   <tr key={row.component} className="hover:bg-[#141720]">
                     <td className="py-3.5 pr-4 font-semibold text-white">{row.component}</td>
                     <td className="py-3.5 pr-4 font-mono text-[#C4BFB6]">{row.verified}</td>
-                    <td className="py-3.5 font-mono font-bold text-emerald-400">{row.status}</td>
+                    <td className="py-3.5 font-mono font-bold text-verify">{row.status}</td>
                   </tr>
                 ))}
               </tbody>
@@ -398,7 +398,7 @@ export default function BenchmarksPage(): JSX.Element {
                 <p className="text-[10px] uppercase text-[#8F8A82]">
                   Cloudflare Global Edge Worker (Primary OpenRouter Gateway)
                 </p>
-                <p className="mt-1 text-emerald-400">
+                <p className="mt-1 text-verify">
                   https://gse-stealth-skeleton-provider.baxley-garrett.workers.dev/v1
                 </p>
               </div>
@@ -406,7 +406,7 @@ export default function BenchmarksPage(): JSX.Element {
                 <p className="text-[10px] uppercase text-[#8F8A82]">
                   Vercel Production Edge OpenAI-Compatible Base URL
                 </p>
-                <p className="mt-1 text-emerald-400">
+                <p className="mt-1 text-verify">
                   https://www.galaxysportsedge.com/api/openrouter/v1
                 </p>
               </div>
@@ -414,7 +414,7 @@ export default function BenchmarksPage(): JSX.Element {
                 <p className="text-[10px] uppercase text-[#8F8A82]">Models API URL (/models)</p>
                 <Link
                   href="/api/openrouter/v1/models"
-                  className="mt-1 block text-emerald-400 underline"
+                  className="mt-1 block text-verify underline"
                 >
                   https://www.galaxysportsedge.com/api/openrouter/v1/models
                 </Link>
@@ -423,7 +423,7 @@ export default function BenchmarksPage(): JSX.Element {
                 <p className="text-[10px] uppercase text-[#8F8A82]">
                   Interactive Ask-the-Edge Quad-Frontier Analyst API
                 </p>
-                <Link href="/api/ask-edge" className="mt-1 block text-emerald-400 underline">
+                <Link href="/api/ask-edge" className="mt-1 block text-verify underline">
                   https://www.galaxysportsedge.com/api/ask-edge
                 </Link>
               </div>
@@ -432,13 +432,13 @@ export default function BenchmarksPage(): JSX.Element {
                   Zero Data Retention, Privacy Policy &amp; Terms of Service
                 </p>
                 <div className="mt-1 flex flex-wrap gap-4">
-                  <Link href="/data-policy" className="text-emerald-400 underline">
+                  <Link href="/data-policy" className="text-verify underline">
                     /data-policy
                   </Link>
-                  <Link href="/privacy" className="text-emerald-400 underline">
+                  <Link href="/privacy" className="text-verify underline">
                     /privacy
                   </Link>
-                  <Link href="/terms" className="text-emerald-400 underline">
+                  <Link href="/terms" className="text-verify underline">
                     /terms
                   </Link>
                 </div>

@@ -22,14 +22,14 @@ export default function DfsPage(): JSX.Element {
     LIVE_PACKAGE_CATALOG[0];
 
   return (
-    <div className="relative min-h-screen w-full bg-slate-950 text-white">
+    <div className="relative min-h-screen w-full bg-obsidian text-white">
       <Nav />
       <main id="main-content" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Hero Header */}
-        <div className="rounded-2xl border-2 border-slate-800 bg-slate-900 p-6 sm:p-10 shadow-xl">
+        <div className="rounded-2xl border-2 border-mineral bg-obsidian p-6 sm:p-10 shadow-xl">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-3xl">
-              <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
+              <span className="inline-block rounded-md bg-caution/20 border border-caution/30/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-caution">
                 DAILY FANTASY FOOTBALL · WEEK 8 BLUEPRINT
               </span>
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
@@ -42,7 +42,7 @@ export default function DfsPage(): JSX.Element {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <Link
                 href="/packages/redzone-dfs-pro-pack"
-                className="inline-flex items-center justify-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-6 py-3.5 text-base font-bold text-slate-950 shadow-lg transition-colors"
+                className="inline-flex items-center justify-center rounded-lg bg-verify hover:bg-verify px-6 py-3.5 text-base font-bold text-obsidian shadow-lg transition-colors"
               >
                 Unlock RedZone Standalone DFS Pack ($39.99) →
               </Link>
@@ -51,19 +51,19 @@ export default function DfsPage(): JSX.Element {
         </div>
 
         {/* Methodology & Football Breakdown */}
-        <section className="mt-10 rounded-2xl border-2 border-slate-800 bg-slate-900/90 p-6 sm:p-8">
-          <div className="border-b border-slate-800 pb-4">
+        <section className="mt-10 rounded-2xl border-2 border-mineral bg-obsidian/90 p-6 sm:p-8">
+          <div className="border-b border-mineral pb-4">
             <h2 className="text-xl sm:text-2xl font-bold text-white">
               How We Build Winning DFS Rosters
             </h2>
-            <p className="mt-1 text-sm sm:text-base text-slate-200">
+            <p className="mt-1 text-sm sm:text-base text-ion">
               Coaching schemes first, volume concentration second, salary leverage last.
             </p>
           </div>
 
           <div className="mt-6 grid gap-6 md:grid-cols-3">
-            <div className="rounded-xl border border-slate-800 bg-slate-950 p-5">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
+            <div className="rounded-xl border border-mineral bg-obsidian p-5">
+              <span className="text-xs font-bold uppercase tracking-wider text-caution">
                 01 · SCHEME &amp; TRENCH LEVERAGE
               </span>
               <h3 className="mt-2 text-lg font-bold text-white">
@@ -74,8 +74,8 @@ export default function DfsPage(): JSX.Element {
               </p>
             </div>
 
-            <div className="rounded-xl border border-slate-800 bg-slate-950 p-5">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
+            <div className="rounded-xl border border-mineral bg-obsidian p-5">
+              <span className="text-xs font-bold uppercase tracking-wider text-caution">
                 02 · TEMPO &amp; INJURY CONCENTRATION
               </span>
               <h3 className="mt-2 text-lg font-bold text-white">
@@ -86,8 +86,8 @@ export default function DfsPage(): JSX.Element {
               </p>
             </div>
 
-            <div className="rounded-xl border border-slate-800 bg-slate-950 p-5">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
+            <div className="rounded-xl border border-mineral bg-obsidian p-5">
+              <span className="text-xs font-bold uppercase tracking-wider text-caution">
                 03 · CORRELATED TOURNAMENT STACKS
               </span>
               <h3 className="mt-2 text-lg font-bold text-white">
@@ -113,7 +113,7 @@ export default function DfsPage(): JSX.Element {
             </div>
             <Link
               href="/packages"
-              className="inline-flex items-center rounded-lg border-2 border-slate-700 bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:border-amber-400 transition-colors"
+              className="inline-flex items-center rounded-lg border-2 border-mineral-hi bg-obsidian px-4 py-2 text-sm font-bold text-white hover:border-caution transition-colors"
             >
               Unlock All DFS Lineups in Packages →
             </Link>
@@ -123,17 +123,17 @@ export default function DfsPage(): JSX.Element {
             {LIVE_SLATE_COACH_WRITEUPS.slice(0, 4).map((writeup) => (
               <div
                 key={writeup.id}
-                className="rounded-2xl border-2 border-slate-800 bg-slate-900/90 p-6 sm:p-8 shadow-xl"
+                className="rounded-2xl border-2 border-mineral bg-obsidian/90 p-6 sm:p-8 shadow-xl"
               >
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-mineral pb-4">
                   <div>
-                    <span className="rounded bg-amber-500/20 px-2.5 py-0.5 text-xs font-bold uppercase text-amber-300">
+                    <span className="rounded bg-caution/20 px-2.5 py-0.5 text-xs font-bold uppercase text-caution">
                       {formatWindowSlotLabel(writeup.windowSlot, writeup.matchup)}
                     </span>
                     <h3 className="mt-2 text-2xl font-bold text-white">{writeup.matchup}</h3>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 font-bold tracking-wide shadow-sm px-3 py-1 rounded-md text-xs sm:text-sm">
+                    <span className="bg-verify/20 text-verify border border-verify/40/50 font-bold tracking-wide shadow-sm px-3 py-1 rounded-md text-xs sm:text-sm">
                       PLAY: DFS CORE READY
                     </span>
                   </div>
@@ -141,7 +141,7 @@ export default function DfsPage(): JSX.Element {
 
                 <div className="mt-4 grid gap-6 md:grid-cols-2">
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-caution">
                       Game Environment &amp; Pace
                     </h4>
                     <p className="mt-2 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
@@ -155,8 +155,8 @@ export default function DfsPage(): JSX.Element {
                   {writeup.dfsStacks && (
                     <div className="space-y-4">
                       {/* Captain & Leverage */}
-                      <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
-                        <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                      <div className="rounded-xl border border-mineral bg-obsidian p-4">
+                        <span className="text-xs font-bold uppercase tracking-wider text-caution">
                           Showdown Captain / Top Target
                         </span>
                         {writeup.dfsStacks.captainPicks.slice(0, 2).map((c, i) => (
@@ -177,8 +177,8 @@ export default function DfsPage(): JSX.Element {
                       </div>
 
                       {/* Cash Core */}
-                      <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
-                        <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                      <div className="rounded-xl border border-mineral bg-obsidian p-4">
+                        <span className="text-xs font-bold uppercase tracking-wider text-verify">
                           High-Floor Cash Core
                         </span>
                         {writeup.dfsStacks.cashCore.slice(0, 2).map((c, i) => (
@@ -201,16 +201,16 @@ export default function DfsPage(): JSX.Element {
                   )}
                 </div>
 
-                <div className="mt-5 border-t border-slate-800 pt-4 flex flex-wrap items-center justify-between gap-3">
+                <div className="mt-5 border-t border-mineral pt-4 flex flex-wrap items-center justify-between gap-3">
                   <Link
                     href={`/room/${writeup.gameId}`}
-                    className="text-sm font-bold text-amber-300 hover:text-amber-200"
+                    className="text-sm font-bold text-caution hover:text-caution"
                   >
                     Read Matchup Storyline &amp; Preview →
                   </Link>
                   <Link
                     href="/packages"
-                    className="text-xs font-bold text-emerald-400 hover:text-emerald-300"
+                    className="text-xs font-bold text-verify hover:text-verify"
                   >
                     🔒 Official Spread, Total &amp; Prop Picks Locked in Pack →
                   </Link>
@@ -222,8 +222,8 @@ export default function DfsPage(): JSX.Element {
 
         {/* Access CTA */}
         {dfsPackage && (
-          <div className="mt-12 rounded-2xl border-2 border-emerald-500/60 bg-slate-900 p-6 sm:p-10 text-center shadow-2xl">
-            <span className="inline-block rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1 text-xs font-bold uppercase text-emerald-300">
+          <div className="mt-12 rounded-2xl border-2 border-verify/40/60 bg-obsidian p-6 sm:p-10 text-center shadow-2xl">
+            <span className="inline-block rounded-md bg-verify/20 border border-verify/40/50 px-3 py-1 text-xs font-bold uppercase text-verify">
               WEEK 8 DFS ALL-ACCESS
             </span>
             <h3 className="mt-3 text-3xl font-extrabold text-white sm:text-4xl">
@@ -235,7 +235,7 @@ export default function DfsPage(): JSX.Element {
             <div className="mt-6 flex flex-wrap justify-center gap-4">
               <Link
                 href="/packages"
-                className="inline-flex items-center justify-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-8 py-3.5 text-base font-bold text-slate-950 shadow-lg transition-colors"
+                className="inline-flex items-center justify-center rounded-lg bg-verify hover:bg-verify px-8 py-3.5 text-base font-bold text-obsidian shadow-lg transition-colors"
               >
                 Get Week 8 DFS Lineups Now →
               </Link>

@@ -7,14 +7,21 @@ import { SealedTable } from "@/components/week8/sealed-table";
 import { CardStaleNotice } from "@/components/week8/card-stale-notice";
 import { cardFreshness } from "@/lib/week8/card-freshness";
 import type { SealedBoard } from "@/lib/week8/types";
+import { OFFICIAL_VERIFIED_LEDGER_2026 as LEDGER } from "@/lib/engine/engine-live-bridge";
 
 const card = board as unknown as SealedBoard;
+
+// The record banner is derived from the ledger constant, never re-typed here:
+// the verified record is the itemized, staked plays only; the all-in view is a
+// labelled secondary (route-gated props + MNF slip), not the headline.
+const VERIFIED_RECORD_LINE = `${LEDGER.overallRecord} (${LEDGER.overallWinPct}% · ${LEDGER.overallNetUnits})`;
+const ALL_IN_LINE = `All-in with route-gated props: ${LEDGER.allInRecord} (${LEDGER.allInWinPct}% · ${LEDGER.allInNetUnits})`;
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: { absolute: "Locked NFL Board | Galaxy Sports Edge" },
-  description: "Official verified NFL record 47-19-1 (71.2% · +24.92u (with gated props)). Locked plays from the sealed card only.",
+  description: `Official verified NFL record ${VERIFIED_RECORD_LINE}. Locked plays from the sealed card only.`,
   alternates: { canonical: "/picks" },
 };
 
@@ -22,11 +29,12 @@ export default function PicksPage(): JSX.Element {
   const locked = card.main.filter((row) => row.publishAllowed && row.decision === "PUBLISH");
   const fresh = cardFreshness(card.generated_at);
   return (
-    <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Nav />
-      <main id="main-content" className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
+      <main id="main-content" className="mx-auto max-w-6xl px-5 py-14 text-ion-white sm:px-8">
         <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">Official verified NFL record</p>
-        <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">47-19-1 (71.2% · +24.92u)</h1>
+        <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">{VERIFIED_RECORD_LINE}</h1>
+        <p className="mt-2 text-xs uppercase tracking-[0.16em] text-[#8F8A82]">{ALL_IN_LINE}</p>
         {fresh.stale ? (
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#C4BFB6]">
             No live rows are published today. The card below is withheld while the next slate is

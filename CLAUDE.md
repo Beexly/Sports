@@ -129,6 +129,7 @@ The full required-variable list (with the Stripe price-ID fallbacks and the
 `docs/ops/OPERATOR.md` § 5. Two invariants every agent keeps:
 
 - **No secrets in code** (rule 4): every key is read from the environment; `.env*` files are Read-denied for agent sessions.
+- **Cron auth fails closed**: every `/api/cron/*` route authorizes through `apps/web/lib/cron/authorize.ts`, which returns HTTP 500 when `CRON_SECRET` is unset (rotation accepts `CRON_SECRET_PREVIOUS`). An unset secret does not disable a route; it fails the job.
 - **One canonical host**: `apps/web/lib/seo/site-url.ts` (`SITE_URL`) resolves to `NEXT_PUBLIC_APP_URL` when set, else `https://www.galaxysportsedge.com` (the **www** host, never the apex). Every absolute URL (`metadataBase`, sitemap, robots, canonical tags, JSON-LD, RSS, bot posts) derives from it, and `NEXTAUTH_URL` must be the identical host. The apex redirects to www at the DNS/platform layer, not in app code.
 
 ## Development Commands

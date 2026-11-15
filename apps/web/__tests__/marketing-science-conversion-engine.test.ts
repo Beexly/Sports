@@ -8,6 +8,8 @@ import {
   computeBassViralCascadeProjection,
 } from "../lib/marketing/marketing-science-conversion-engine";
 import { GET as getThursdayConversionPack } from "../app/api/storefront/thursday-conversion-pack/route";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 describe("24-Paper Marketing Science Conversion Engine & Thursday Live Storefront Route", () => {
   it("computes Thaler (1985) hedonic bundle framing with segregated gains > integrated gain", () => {
@@ -112,8 +114,19 @@ describe("24-Paper Marketing Science Conversion Engine & Thursday Live Storefron
   it("serves the live Thursday conversion pack API with Stage-0-clean players and XX/100 confidence", async () => {
     const response = await getThursdayConversionPack();
     const payload = await response.json();
-    expect(payload.officialRecord.recordDisplay).toBe("47-19-1 (71.2%) · +24.92u Verified (with gated props)");
-    expect(payload.tnfMatchup).toBe("JAX @ BAL");
+    // Verified record of record, with the all-in view labelled as such — the
+    // storefront may not promote the all-in number to the headline.
+    expect(payload.officialRecord.recordDisplay).toMatch(/^36-13-1 \(73\.5%\) · \+20\.14u Verified/);
+    expect(payload.officialRecord.recordDisplay).toContain("All-in 47-19-1");
+    // Derive the window the route declares rather than pinning a primetime
+    // matchup that has since been retired.
+    const routeSrc = readFileSync(
+      join(__dirname, "..", "app", "api", "storefront", "thursday-conversion-pack", "route.ts"),
+      "utf8",
+    );
+    const declaredTnf = /tnfMatchup:\s*"([^"]+)"/.exec(routeSrc)?.[1];
+    expect(declaredTnf, "route declares a TNF matchup").toBeTruthy();
+    expect(payload.tnfMatchup).toBe(declaredTnf);
     for (const play of payload.decisivePlays) {
       expect(play.confidenceScore).toMatch(/^\d+\/100$/);
       expect(play.selection).not.toContain("Lamar Jackson");

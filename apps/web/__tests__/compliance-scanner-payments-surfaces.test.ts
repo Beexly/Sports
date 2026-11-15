@@ -22,6 +22,7 @@ const webRoot = resolve(__dirname, "..");
 
 const PAYMENTS_PAGES = [
   "app/pricing/page.tsx",
+  "app/packages/page.tsx",
   "app/clv/page.tsx",
   "app/methodology/page.tsx",
   "app/dashboard/page.tsx",
@@ -145,8 +146,10 @@ describe("payments surfaces — live page source", () => {
     });
   }
 
-  it("pricing copy still contains underwriting tokens the layer is meant to see", () => {
-    const source = readPage("app/pricing/page.tsx");
+  it("the paid storefront still carries the underwriting tokens the layer is meant to see", () => {
+    // The one-time storefront moved to /packages; /pricing is a catalog
+    // mirror. The scanner must still see the real paid surface's vocabulary.
+    const source = readPage("app/packages/page.tsx");
     const flags = scanPaymentsSurfaceCopy(extractDetectableCopy(source));
     const ids = flags.map((flag) => flag.id);
     // L4-WAGERING was originally asserted here too, but the pricing page has

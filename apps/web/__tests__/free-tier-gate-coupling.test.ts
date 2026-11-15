@@ -20,6 +20,8 @@ import { join } from "node:path";
 
 const PRICING_PAGE = join(__dirname, "..", "app", "pricing", "page.tsx");
 const HOME_PAGE = join(__dirname, "..", "app", "page.tsx");
+const TOOLS_PAGE = join(__dirname, "..", "app", "tools", "page.tsx");
+const FAQ_PAGE = join(__dirname, "..", "app", "faq", "page.tsx");
 
 /** Strip comments: an engineer documenting a removal is not selling the surface. */
 function codeOnly(source: string): string {
@@ -58,13 +60,17 @@ describe("pricing never advertises a surface the app does not serve", () => {
   });
 
   it("the free tier still describes what a free visitor actually gets", () => {
-    const src = readFileSync(PRICING_PAGE, "utf8");
-    const haystack = viewerStrings(src).join("\n");
-    expect(haystack).toContain("Free calculators");
-    expect(haystack).toContain("Academy");
-    // Free's honesty depends on showing what it does NOT get, not only what
-    // it does.
-    expect(haystack).toContain("The full daily board, every signal (Pro)");
-    expect(haystack).toContain("Graded-pick alerts (Elite)");
+    // The monthly plan matrix retired with the one-time storefront, so the
+    // free-tier description now has to be true on the surfaces a free visitor
+    // is actually served: /tools and /faq.
+    const tools = viewerStrings(readFileSync(TOOLS_PAGE, "utf8")).join("\n");
+    expect(tools).toContain("Free calculators");
+    expect(tools).toContain("No account, no paywall");
+    expect(tools).toContain("every result shows its formula");
+
+    // And the withheld-number promise survives where it now lives.
+    const faq = viewerStrings(readFileSync(FAQ_PAGE, "utf8")).join("\n");
+    expect(faq).toContain("holds back a public win-rate until enough canonical settled signals exist");
+    expect(faq).toContain("The Calibration Report stays gated");
   });
 });

@@ -154,7 +154,7 @@ export const WORKSTATION_PODS: readonly WorkstationPod[] = [
       "12,304 equations wired · 25 graduate textbooks (BK-01..BK-25) · James-Stein cap 0.35",
     gridPos: { col: 2, row: 0, x: 820, y: 120 },
     accentHex: "#34d399",
-    accentClass: "border-emerald-500/60 bg-emerald-950/30 text-emerald-400",
+    accentClass: "border-verify/40/60 bg-verify/10/30 text-verify",
     toolCalls: [
       {
         id: "tc-301",
@@ -230,7 +230,7 @@ export const WORKSTATION_PODS: readonly WorkstationPod[] = [
       "Official Season Ledger 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u) · 14-player DFS Core",
     gridPos: { col: 1, row: 1, x: 500, y: 300 },
     accentHex: "#22d3ee",
-    accentClass: "border-cyan-400/60 bg-cyan-950/30 text-cyan-300",
+    accentClass: "border-mineral/60 bg-eclipse/30 text-ion-1",
     toolCalls: [
       {
         id: "tc-501",
@@ -268,7 +268,7 @@ export const WORKSTATION_PODS: readonly WorkstationPod[] = [
       "Human-copy brand filter active · zero internal math jargon on public cards",
     gridPos: { col: 2, row: 1, x: 820, y: 300 },
     accentHex: "#f472b6",
-    accentClass: "border-pink-400/60 bg-pink-950/30 text-pink-300",
+    accentClass: "border-mineral/60 bg-eclipse/30 text-ion-1",
     toolCalls: [
       {
         id: "tc-601",
@@ -794,7 +794,7 @@ export function CockpitOffice3dBotHq({
             </div>
             <p className="mt-0.5 font-mono text-[10px] text-ion-3">
               Season Ledger{" "}
-              <span className="font-semibold text-emerald-400">
+              <span className="font-semibold text-verify">
                 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)
               </span>{" "}
               · Roster Ruling:{" "}
@@ -873,7 +873,7 @@ export function CockpitOffice3dBotHq({
           className={[
             "rounded-xl border px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider transition-colors",
             activeTab === "hermes-bot-hq"
-              ? "border-emerald-500/70 bg-emerald-950/40 text-emerald-400"
+              ? "border-verify/40/70 bg-verify/10/40 text-verify"
               : "border-titanium/40 bg-obsidian/60 text-ion-2 hover:text-ion-white",
           ].join(" ")}
         >
@@ -1023,7 +1023,7 @@ export function CockpitOffice3dBotHq({
                       className={[
                         "group relative flex flex-col justify-between rounded-2xl border p-4 text-left transition-all",
                         isSelected
-                          ? "border-accent-400 bg-carbon/95 shadow-lg shadow-sky-500/10 ring-1 ring-accent-400/50"
+                          ? "border-accent-400 bg-carbon/95 shadow-lg shadow-black/20 ring-1 ring-accent-400/50"
                           : "border-titanium/50 bg-carbon/80 hover:border-titanium",
                       ].join(" ")}
                       style={{
@@ -1215,7 +1215,7 @@ export function CockpitOffice3dBotHq({
                 {dispatchStatus.message && (
                   <div
                     data-testid="workstation-dispatch-receipt"
-                    className="mt-2 rounded-xl border border-emerald-500/40 bg-emerald-950/20 px-3 py-2 font-mono text-[10px] text-emerald-300"
+                    className="mt-2 rounded-xl border border-verify/40/40 bg-verify/10/20 px-3 py-2 font-mono text-[10px] text-verify"
                   >
                     [{dispatchStatus.timestamp}] {dispatchStatus.message}
                   </div>
@@ -1254,7 +1254,7 @@ export function CockpitOffice3dBotHq({
               <span className="rounded border border-plasma/40 bg-plasma/15 px-2.5 py-1 text-plasma">
                 Models: 5 Native (86.12/100)
               </span>
-              <span className="rounded border border-emerald-500/40 bg-emerald-950/30 px-2.5 py-1 text-emerald-400">
+              <span className="rounded border border-verify/40/40 bg-verify/10/30 px-2.5 py-1 text-verify">
                 Plugins: 6 RAG/Math Nodes
               </span>
               <span className="rounded border border-caution/40 bg-caution/15 px-2.5 py-1 text-caution">
@@ -1441,10 +1441,10 @@ export function CockpitOffice3dBotHq({
           }
         >
           {/* 1-Click Broadcast Command Bar */}
-          <div className="rounded-2xl border border-emerald-500/40 bg-obsidian/70 p-4">
+          <div className="rounded-2xl border border-verify/40/40 bg-obsidian/70 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <h3 className="font-mono text-xs font-bold uppercase tracking-widest text-emerald-400">
+                <h3 className="font-mono text-xs font-bold uppercase tracking-widest text-verify">
                   Hermes Bot HQ Command Deck (hermes-bot-hq) · Inter-Agent Bus
                 </h3>
                 <p className="mt-0.5 text-xs text-ion-2">
@@ -1452,7 +1452,7 @@ export function CockpitOffice3dBotHq({
                   completion receipts, and 1-click fleet broadcast.
                 </p>
               </div>
-              <span className="font-mono text-[10px] text-emerald-400">
+              <span className="font-mono text-[10px] text-verify">
                 Ledger Pin: 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)
               </span>
             </div>
@@ -1464,13 +1464,13 @@ export function CockpitOffice3dBotHq({
                 aria-label="Hermes Bot HQ fleet broadcast command"
                 value={broadcastInput}
                 onChange={(e) => setBroadcastInput(e.target.value)}
-                className="min-w-[240px] flex-1 rounded-xl border border-titanium/50 bg-carbon/90 px-3 py-2 font-mono text-xs text-ion-white focus:border-emerald-400 focus:outline-none"
+                className="min-w-[240px] flex-1 rounded-xl border border-titanium/50 bg-carbon/90 px-3 py-2 font-mono text-xs text-ion-white focus:border-verify focus:outline-none"
               />
               <button
                 type="button"
                 data-testid="hermes-broadcast-btn"
                 onClick={handleBroadcastCommand}
-                className="rounded-xl border border-emerald-500/60 bg-emerald-950/60 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-emerald-300 hover:bg-emerald-900/60"
+                className="rounded-xl border border-verify/40/60 bg-verify/10/60 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-verify hover:bg-verify/10/60"
               >
                 Broadcast to All 6 Agents
               </button>
@@ -1511,7 +1511,7 @@ export function CockpitOffice3dBotHq({
                       <span className="rounded bg-obsidian/80 px-1.5 py-0.5 text-plasma">
                         {msg.channel}
                       </span>
-                      <span className="rounded bg-emerald-950/40 px-1.5 py-0.5 text-emerald-400">
+                      <span className="rounded bg-verify/10/40 px-1.5 py-0.5 text-verify">
                         {msg.topic}
                       </span>
                     </div>
@@ -1539,7 +1539,7 @@ export function CockpitOffice3dBotHq({
                       <span className="text-xs font-bold text-ion-white">
                         {pod.agentName}
                       </span>
-                      <span className="font-mono text-[9px] text-emerald-400">
+                      <span className="font-mono text-[9px] text-verify">
                         {pod.status}
                       </span>
                     </div>

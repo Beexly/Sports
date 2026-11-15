@@ -5,17 +5,26 @@
  * 1. Stage 0 Live Roster / Transaction / Starter Gate (Week 9: Lamar Jackson OUT, Tyler Huntley OUT,
  *    Joe Fagnano / Jacoby Brissett BAL QB, Travis Etienne Jr. OUT / Chris Rodriguez Jr. JAX RB1, Kyler Murray IR on ARI,
  *    Sam Darnold SEA QB1, Geno Smith NYJ QB1, Mike Evans SF WR1, Carson Wentz MIN QB1, J.J. McCarthy NYG QB1, Joe Milton PHI QB1).
- * 2. Official Verified Ledger: 47-19-1 (71.2%, +24.92u with gated props) through Week 8 (base 38-13-1, +22.85u).
+ * 2. Official Verified Ledger: 36-13-1 (73.5%, +20.14u) through Week 9, itemized in
+ *    data/engine/new_engine_official_ledger_2026.json (16-5 pre-TNF + 14-6-1 TNF + 6-2
+ *    Sunday). The all-in 47-19-1 (+24.92u, route-gated props + MNF 6-play slip) is a
+ *    secondary view and must be labelled as one wherever it is printed.
  * 3. Thaler (1985) Segregated Gains & Bundle Valuation ($52 standalone -> $29 All-Access, $23 surplus).
  * 4. Server-Side Entitlement Redaction: Never ship unredacted locked SGP legs or locked DFS lineups
  *    into the DOM behind a CSS blur when `isUnlocked === false`.
  */
 
 export const OFFICIAL_VERIFIED_LEDGER_2026 = {
-  asOfDate: "2026-11-02",
-  overallRecord: "47-19-1",
-  overallWinPct: "71.2",
-  overallNetUnits: "+24.92u",
+  asOfDate: "2026-11-08",
+  // Verified record of record: the ledger's itemized, staked plays only.
+  // 47-19-1 (+24.92u) is the all-in secondary view (route-gated props + MNF
+  // 6-play slip) — never the headline.
+  overallRecord: "36-13-1",
+  overallWinPct: "73.5",
+  overallNetUnits: "+20.14u",
+  allInRecord: "47-19-1",
+  allInWinPct: "71.2",
+  allInNetUnits: "+24.92u",
   preWeek8Record: "16-5-0",
   preWeek8NetUnits: "+10.45u",
   week8Record: "20-8-1",

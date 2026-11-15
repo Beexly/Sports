@@ -92,6 +92,9 @@ describe("/picks - the sealed locked board is the deliberate, published model", 
     // committed record without failing the build.
     const ledger = JSON.parse(ledgerSrc) as {
       verified_record?: {
+        record?: string;
+        win_pct?: number;
+        net_units?: string;
         component_legs?: Array<{
           id?: string;
           wins?: number;
@@ -100,14 +103,20 @@ describe("/picks - the sealed locked board is the deliberate, published model", 
         }>;
       };
     };
-    const leg = ledger.verified_record?.component_legs?.find((l) => l.id === "pre_tnf_prior");
-    expect(leg, "the ledger still carries the pre_tnf_prior leg").toBeDefined();
-    const wins = leg?.wins ?? 0;
-    const losses = leg?.losses ?? 0;
-    const record = `${wins}-${losses}`;
-    const pct = ((wins / (wins + losses)) * 100).toFixed(1);
-    expect(picksSrc).toContain(`${record} (${pct}%)`);
-    expect(picksSrc).toContain(leg?.net_units ?? "+0u");
+    const verified = ledger.verified_record;
+    expect(verified, "the ledger still carries a verified_record").toBeDefined();
+    // The ledger must be arithmetically self-consistent: the published win%
+    // is wins / (wins + losses), recomputed here rather than trusted.
+    const wins = verified?.wins ?? 0;
+    const losses = verified?.losses ?? 0;
+    const recomputedPct = ((wins / (wins + losses)) * 100).toFixed(1);
+    expect(recomputedPct).toBe((verified?.win_pct ?? -1).toFixed(1));
+    // ...and the banner may not re-type it. The page reads the ledger constant,
+    // so any hand-typed record in the source is a drift the build must catch.
+    expect(picksSrc).toContain("OFFICIAL_VERIFIED_LEDGER_2026");
+    expect(picksSrc).not.toMatch(/\b\d{2}-\d{1,2}-\d\b/);
+    // The all-in view is a labelled secondary, never the headline.
+    expect(picksSrc.toLowerCase()).toContain("all-in");
   });
 
   it("routes customers to the paid product and the props watchlist", () => {
