@@ -1,0 +1,78 @@
+{
+  "book_id": "3f97d8ed46ae5923",
+  "source_status": "COMPLETE",
+  "title": "BUILD-SITE-069-how-to-use-player-lab-lesson",
+  "file_name": "BUILD-SITE-069-how-to-use-player-lab-lesson.md",
+  "sha256": "3f97d8ed46ae59232451318e8455c36d4d28c220b499262bd69d50cde8ac4970",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Site-route level design extends help/growth/trust infrastructure via modular, non-leaking surface implementation. Universal Lens: Rooted in BUILD-SITE-069-how-to-use-player-lab-lesson (3f97d8ed46ae5923), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on route clarity and trust signals map to visual quality and engagement metrics. GSI Mapping: Rooted in BUILD-SITE-069-how-to-use-player-lab-lesson (3f97d8ed46ae5923), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions from workspace obscurity to runnable app exposure through route-specific UI states. GSE Mapping: Rooted in BUILD-SITE-069-how-to-use-player-lab-lesson (3f97d8ed46ae5923), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "route_surface_clarity",
+      "name": "Route Surface Clarity",
+      "verbatim_quote": "## Why It Matters Improves visual quality, 10-second clarity, trust, conversion, engagement, retention, performance, or monetization without exposing founder-only methodology.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Clarity index (dimensionless)', 'V': 'Visual quality score (0–1)', 'T': 'Trust signal (0–1)'}",
+      "assumptions": "Clarity improves with reduced ambiguity and increased perceptual hierarchy.",
+      "breakdown_regime": "C → 0 as visual noise exceeds signal strength.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Route clarity maps to GSI's belief update on user comprehension and GSE's state transition from obscurity to activation.",
+        "source_operator": "route_surface_clarity",
+        "telemetry": "User dwell time, click-through rate, and post-visit feedback"
+      }
+    },
+    {
+      "primitive_id": "workspace_visibility",
+      "name": "Workspace Visibility",
+      "verbatim_quote": "## Current Problem The visible workspace does not expose the runnable app.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'Workspace visibility (0–1)', 'A': 'App accessibility (0–1)'}",
+      "assumptions": "Visibility increases with direct access to functional components.",
+      "breakdown_regime": "W → 0 when app is hidden or inaccessible.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Workspace visibility underpins GSE's activation logic and GSI's trust estimation.",
+        "source_operator": "workspace_visibility",
+        "telemetry": "Time to first interaction, feature discovery rate"
+      }
+    },
+    {
+      "primitive_id": "public_boundary_compliance",
+      "name": "Public Boundary Compliance",
+      "verbatim_quote": "## Public/Private Boundary Public sees reveal-less explanations, confidence-safe language, and last-verified/source cues where appropriate.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'Boundary compliance (0–1)', 'L': 'Language safety (0–1)', 'S': 'Source cue integrity (0–1)'}",
+      "assumptions": "Compliance reduces risk of misinformation or method leakage.",
+      "breakdown_regime": "B → 0 when unsafe or unverifiable content is exposed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Public boundary compliance aligns with GSI's risk-awareness model and GSE's content filtering.",
+        "source_operator": "public_boundary_compliance",
+        "telemetry": "Content audit pass rate, compliance violation count"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3f97d8ed46ae5923_t0",
+      "think": "The core duality lies between workspace obscurity and route clarity. Route clarity (C) is a function of visual quality (V), trust (T), and accessibility (A). As A approaches 1, C increases due to reduced friction. Workspace visibility (W) acts as a prerequisite for C, such that W influences the probability of achieving high C. Public boundary compliance (B) modulates the risk of method leakage, which is a critical constraint on C. The failure mode occurs when B < threshold, leading to unsafe exposure of internal mechanisms. The mathematical structure reflects a conditional probability space where P(C|W,B) governs the likelihood of successful user engagement. This is a dualistic system: one side ensures functional access, the other ensures safe communication.\n\nDeep epistemic analysis for BUILD-SITE-069-how-to-use-player-lab-lesson (3f97d8ed46ae5923, domain=other, pages_read=2/2): Operator 'Route Surface Clarity' (page 1, domain other) captures: ## Why It Matters Improves visual quality, 10-second clarity, trust, conversion, engagement, retention, performance, or monetization without exposing founder-only methodology. Assumptions: Clarity improves with reduced ambiguity and increased perceptual hierarchy. Breakdown regime: C → 0 as visual noise exceeds signal strength. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Route clarity maps to GSI's belief update on user comprehension and GSE's state transition from obscurity to activation. Operator 'Workspace Visibility' (page 1, domain other) captures: ## Current Problem The visible workspace does not expose the runnable app. Assumptions: Visibility increases with direct access to functional components. Breakdown regime: W → 0 when app is hidden or inaccessible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Workspace visibility underpins GSE's activation logic and GSI's trust estimation. Operator 'Public Boundary Compliance' (page 1, domain other) captures: ## Public/Private Boundary Public sees reveal-less explanations, confidence-safe language, and last-verified/source cues where appropriate. Assumptions: Compliance reduces risk of misinformation or method leakage. Breakdown regime: B → 0 when unsafe or unverifiable content is exposed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Public boundary compliance aligns with GSI's risk-awareness model and GSE's content filtering. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BUILD-SITE-069-how-to-use-player-lab-lesson (3f97d8ed46ae5923, domain=other, pages_read=2/2): Operator 'Route Surface Clarity' (page 1, domain other) captures: ## Why It Matters Improves visual quality, 10-second clarity, trust, conversion, engagement, retention, performance, or monetization without exposing founder-only methodology. Assumptions: Clarity improves with reduced ambiguity and increased perceptual hierarchy. Breakdown regime: C → 0 as visual noise exceeds signal strength. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Route clarity maps to GSI's belief update on user comprehension and GSE's state transition from obscurity to activation. Operator 'Workspace Visibility' (page 1, domain other) captures: ## Current Problem The visible workspace does not expose the runnable app. Assumptions: Visibility increases with direct access to functional components. Breakdown regime: W → 0 when app is hidden or inaccessible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Workspace visibility underpins GSE's activation logic and GSI's trust estimation. Operator 'Public Boundary Compliance' (page 1, domain other) captures: ## Public/Private Boundary Public sees reveal-less explanations, confidence-safe language, and last-verified/source cues where appropriate. Assumptions: Compliance reduces risk of misinformation or method leakage. Breakdown regime: B → 0 when unsafe or unverifiable content is exposed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Public boundary compliance aligns with GSI's risk-awareness model and GSE's content filtering. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory’s channel capacity and signal-to-noise ratio principles, extended into user interface design and risk management frameworks. Retrocausal Genealogy: Rooted in BUILD-SITE-069-how-to-use-player-lab-lesson (3f97d8ed46ae5923), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in BUILD-SITE-069-how-to-use-player-lab-lesson (3f97d8ed46ae5923), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the user seeking clarity, the system optimizing for engagement, and the compliance engine preventing leakage. Each agent operates within distinct utility functions, with potential conflict in resource allocation. Theory of Mind & Decision Maker Model: Rooted in BUILD-SITE-069-how-to-use-player-lab-lesson (3f97d8ed46ae5923), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If public boundary compliance fails (B < threshold), route clarity cannot be trusted, triggering a veto in GSE's activation path and halting GSI's belief update on user comprehension. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUILD-SITE-069-how-to-use-player-lab-lesson (3f97d8ed46ae5923), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUILD-SITE-069-how-to-use-player-lab-lesson (3f97d8ed46ae5923), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

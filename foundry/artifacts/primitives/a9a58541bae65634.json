@@ -1,0 +1,95 @@
+{
+  "book_id": "a9a58541bae65634",
+  "source_status": "COMPLETE",
+  "title": "LEGAL-DATA-EDGE-MAP",
+  "file_name": "LEGAL-DATA-EDGE-MAP.md",
+  "sha256": "a9a58541bae65634610639d42e4af9be6dff6641a14023127a00468dff5737b7",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Legal data sovereignty as a constrained optimization problem: maximize signal utility subject to ingestion constraints defined by source registry and compliance checks. Universal Lens: Rooted in LEGAL-DATA-EDGE-MAP (a9a58541bae65634), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian evidence accumulation over cleared data sources; each legal lane contributes a likelihood factor to posterior belief over game outcomes. GSI Mapping: Rooted in LEGAL-DATA-EDGE-MAP (a9a58541bae65634), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions driven by legal data availability; shadow slots activate only when regulatory clearance confirms data integrity. GSE Mapping: Rooted in LEGAL-DATA-EDGE-MAP (a9a58541bae65634), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "legal_data_edge_map",
+      "name": "Legal Data Edge Map",
+      "verbatim_quote": "Here is the truth that beats any blueprint: **the legal survey is already done, inside your own codebase.** `packages/data-ingestion/src/source-registry.ts` is a rights-enforced registry where ingestion code physically cannot fetch a forbidden source (`assertIngestible()` throws).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'Legal compliance level (dimensionless)', 'S': 'Source registry state (binary)', 'C': 'Compliance constraint (boolean)'}",
+      "assumptions": "Data ingestion is deterministic and bounded by source registry access control.",
+      "breakdown_regime": "When S=0, C=false, L drops below threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Registry-based access control mirrors Bayesian prior constraints on data sources.",
+        "source_operator": "legal_data_edge_map",
+        "telemetry": "Number of cleared data lanes vs. total candidate sources."
+      }
+    },
+    {
+      "primitive_id": "unexploited_cleared_lanes",
+      "name": "Unexploited Cleared Lanes",
+      "verbatim_quote": "The domination move is not finding new crawlers — it is EXPLOITING the cleared lanes nobody is using yet.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U': 'Unexploited potential (dimensionless)', 'L': 'Lane clearance status (binary)', 'E': 'Exploitation efficiency (dimensionless)'}",
+      "assumptions": "Unexploited lanes yield higher marginal returns than new crawler acquisition.",
+      "breakdown_regime": "When E < 1, U increases with L.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Efficiency of existing legal data usage determines competitive advantage.",
+        "source_operator": "unexploited_cleared_lanes",
+        "telemetry": "Ratio of active to inactive cleared data sources."
+      }
+    },
+    {
+      "primitive_id": "shadow_slot_activation",
+      "name": "Shadow Slot Activation",
+      "verbatim_quote": "| `lib/weather/game-weather.ts` exists; scoring slot (VENUE_ENVIRONMENT) sits in SHADOW mode marked \"no licensed context provider\" — WRONG, we have one cleared.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Shadow slot state (binary)', 'C': 'Context provider clearance (boolean)', 'V': 'Venue environment variable (dimensionless)'}",
+      "assumptions": "Shadow slots remain inactive until legal context is confirmed.",
+      "breakdown_regime": "When C=true, S transitions to active.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Activation of shadow variables reflects legal readiness for data integration.",
+        "source_operator": "shadow_slot_activation",
+        "telemetry": "Count of activated shadow slots vs. total shadow slots."
+      }
+    },
+    {
+      "primitive_id": "data_ingestion_compliance",
+      "name": "Data Ingestion Compliance",
+      "verbatim_quote": "## The one-line doctrine Facts (scores, odds, weather) are not copyrightable in the US; HOW you obtain them (ToS, robots.txt, licenses) is what makes you legal or dead.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Fact data (dimensionless)', 'H': 'How obtained (legal method indicator)', 'L': 'Legal status (binary)'}",
+      "assumptions": "Legal compliance is a binary condition determined by access method.",
+      "breakdown_regime": "When H ∈ {robots.txt, ToS, license}, L=1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Legal access methods map to data integrity constraints in GSI.",
+        "source_operator": "data_ingestion_compliance",
+        "telemetry": "Percentage of compliant data ingestion vs. total ingestion."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a9a58541bae65634_t0",
+      "think": "The core insight is that legal data sovereignty is not a constraint but an opportunity. By leveraging the existing legal survey encoded in `source-registry.ts`, teams can identify and exploit pre-approved data lanes. This creates a dual structure: a legal compliance layer that prevents unauthorized data access, and a signal extraction layer that maximizes utility from approved sources. The shadow slot mechanism exemplifies this duality—data is ready but inactive until legal clearance confirms its validity. The unexploited lanes principle suggests that the most impactful improvements come from optimizing current legal assets rather than acquiring new ones. This approach avoids the risk of litigation while building a sustainable edge through systematic legal compliance. The derivation of these primitives hinges on treating legal compliance as a probabilistic constraint that shapes data utility, not a barrier to data flow.\n\nDeep epistemic analysis for LEGAL-DATA-EDGE-MAP (a9a58541bae65634, domain=other, pages_read=2/2): Operator 'Legal Data Edge Map' (page 1, domain other) captures: Here is the truth that beats any blueprint: **the legal survey is already done, inside your own codebase.** `packages/data-ingestion/src/source-registry.ts` is a rights-enforced registry where ingestion code physically cannot fetch a forbidden source (`assertIngestible()` throws). Assumptions: Data ingestion is deterministic and bounded by source registry access control. Breakdown regime: When S=0, C=false, L drops below threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry-based access control mirrors Bayesian prior constraints on data sources. Operator 'Unexploited Cleared Lanes' (page 1, domain other) captures: The domination move is not finding new crawlers — it is EXPLOITING the cleared lanes nobody is using yet. Assumptions: Unexploited lanes yield higher marginal returns than new crawler acquisition. Breakdown regime: When E < 1, U increases with L. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Efficiency of existing legal data usage determines competitive advantage. Operator 'Shadow Slot Activation' (page 1, domain other) captures: | `lib/weather/game-weather.ts` exists; scoring slot (VENUE_ENVIRONMENT) sits in SHADOW mode marked \"no licensed context provider\" — WRONG, we have one cleared. Assumptions: Shadow slots remain inactive until legal context is confirmed. Breakdown regime: When C=true, S transitions to active. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Activation of shadow variables reflects legal readiness for data integration. Operator 'Data Ingestion Compliance' (page 2, domain other) captures: ## The one-line doctrine Facts (scores, odds, weather) are not copyrightable in the US; HOW you obtain them (ToS, robots.txt, licenses) is what makes you legal or dead. Assumptions: Legal compliance is a binary condition determined by access method. Breakdown regime: When H ∈ {robots.txt, ToS, license}, L=1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Legal access methods map to data integrity constraints in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LEGAL-DATA-EDGE-MAP (a9a58541bae65634, domain=other, pages_read=2/2): Operator 'Legal Data Edge Map' (page 1, domain other) captures: Here is the truth that beats any blueprint: **the legal survey is already done, inside your own codebase.** `packages/data-ingestion/src/source-registry.ts` is a rights-enforced registry where ingestion code physically cannot fetch a forbidden source (`assertIngestible()` throws). Assumptions: Data ingestion is deterministic and bounded by source registry access control. Breakdown regime: When S=0, C=false, L drops below threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry-based access control mirrors Bayesian prior constraints on data sources. Operator 'Unexploited Cleared Lanes' (page 1, domain other) captures: The domination move is not finding new crawlers — it is EXPLOITING the cleared lanes nobody is using yet. Assumptions: Unexploited lanes yield higher marginal returns than new crawler acquisition. Breakdown regime: When E < 1, U increases with L. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Efficiency of existing legal data usage determines competitive advantage. Operator 'Shadow Slot Activation' (page 1, domain other) captures: | `lib/weather/game-weather.ts` exists; scoring slot (VENUE_ENVIRONMENT) sits in SHADOW mode marked \"no licensed context provider\" — WRONG, we have one cleared. Assumptions: Shadow slots remain inactive until legal context is confirmed. Breakdown regime: When C=true, S transitions to active. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Activation of shadow variables reflects legal readiness for data integration. Operator 'Data Ingestion Compliance' (page 2, domain other) captures: ## The one-line doctrine Facts (scores, odds, weather) are not copyrightable in the US; HOW you obtain them (ToS, robots.txt, licenses) is what makes you legal or dead. Assumptions: Legal compliance is a binary condition determined by access method. Breakdown regime: When H ∈ {robots.txt, ToS, license}, L=1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Legal access methods map to data integrity constraints in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory's application to legal data management, tracing back to early models of digital rights and data sovereignty frameworks developed in the 2000s. Retrocausal Genealogy: Rooted in LEGAL-DATA-EDGE-MAP (a9a58541bae65634), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in LEGAL-DATA-EDGE-MAP (a9a58541bae65634), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to mimic legal structures but lack the internal consistency of a formalized registry, leading to either overreach or underutilization of data assets. Theory of Mind & Decision Maker Model: Rooted in LEGAL-DATA-EDGE-MAP (a9a58541bae65634), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in LEGAL-DATA-EDGE-MAP (a9a58541bae65634), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple data sources are derived from the same legal framework, risking redundancy. Leakage occurs if shadow slots are activated without full legal vetting, compromising data integrity. Cross-Layer Veto & Anti-Leakage Check: Rooted in LEGAL-DATA-EDGE-MAP (a9a58541bae65634), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

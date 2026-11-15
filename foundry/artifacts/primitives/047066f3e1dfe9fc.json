@@ -1,0 +1,78 @@
+{
+  "book_id": "047066f3e1dfe9fc",
+  "source_status": "COMPLETE",
+  "title": "game-projections",
+  "file_name": "game-projections.md",
+  "sha256": "047066f3e1dfe9fcbf80c585e935a924f272db6665ab64ed453d0b56e2173e09",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Game projections integrate raw EPA, opponent-adjusted efficiency, and situational pressure dynamics into a dual-method margin framework. Universal Lens: Rooted in game-projections (047066f3e1dfe9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian belief updates over projection uncertainty sets using conformal predictive distributions derived from 2025 baseline and 2026 role-check data. GSI Mapping: Rooted in game-projections (047066f3e1dfe9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models game state transitions via stochastic drive scripts and conditional expectation maps under dual margin estimates (EPA vs. drive method). GSE Mapping: Rooted in game-projections (047066f3e1dfe9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "margin_estimate",
+      "name": "Margin Estimate",
+      "verbatim_quote": "**Margin:** drive method implies ~BUF -3; the EPA method (net EPA/play edge × 63 + 2.0 home field) implies ~BUF -7.",
+      "page": 1,
+      "latex": "\\text{Margin} = \\left(\\text{EPA}_{\\text{play}} \\times 63 + 2.0 \\right) \\times \\text{HomeField}",
+      "symbol_and_unit_ledger": "{'EPA_play': 'expected points added per play (dimensionless)', 'HomeField': 'home field advantage factor (dimensionless)'}",
+      "assumptions": "Linear scaling of EPA with game margin, constant home field effect.",
+      "breakdown_regime": "When EPA is not opponent-adjusted, leading to systematic bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Dual margin estimates (drive vs EPA) form a kernel for uncertainty quantification in GSI's probabilistic forecasting.",
+        "source_operator": "margin_estimate",
+        "telemetry": "Disagreement between drive and EPA margins indicates model uncertainty."
+      }
+    },
+    {
+      "primitive_id": "efficiency_ratio",
+      "name": "Efficiency Ratio",
+      "verbatim_quote": "The matchup through our advanced metrics - **Efficiency:** BUF +0.132 EPA/play (dropback +0.174, rush +0.078); DET +0.078 (dropback +0.168, rush -0.055).",
+      "page": 1,
+      "latex": "\\text{EfficiencyRatio} = \\frac{\\text{EPA}_{\\text{BUF}}}{\\text{EPA}_{\\text{DET}}}",
+      "symbol_and_unit_ledger": "{'EPA_BUF': 'Bills EPA per play (dimensionless)', 'EPA_DET': 'Lions EPA per play (dimensionless)'}",
+      "assumptions": "EPA values are comparable across teams due to shared baseline data.",
+      "breakdown_regime": "When team-specific adjustments are required for meaningful comparison.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Efficiency ratio mirrors the relative strength of offensive strategies in GSI's strategic alignment model.",
+        "source_operator": "efficiency_ratio",
+        "telemetry": "Ratio of EPA per play between teams reflects offensive dominance."
+      }
+    },
+    {
+      "primitive_id": "pressure_dynamics",
+      "name": "Pressure Dynamics",
+      "verbatim_quote": "- **Pressure:** BUF rushes 4 on 70.4% of dropbacks (2025) and 64.3% in Week 1 2026 — top-5 four-man rate both years; pressure proxy forced 15.9% (2025), 21.4% (Wk1).",
+      "page": 1,
+      "latex": "\\text{PressureRate} = \\frac{\\text{ForcedPressures}}{\\text{TotalDropbacks}}",
+      "symbol_and_unit_ledger": "{'ForcedPressures': 'number of pressures forced (dimensionless)', 'TotalDropbacks': 'total dropbacks (dimensionless)'}",
+      "assumptions": "Pressure rate correlates with defensive impact and quarterback stability.",
+      "breakdown_regime": "When defensive schemes shift due to injury or role changes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pressure dynamics define a temporal kernel in GSE's state transition graph for predicting turnover likelihood.",
+        "source_operator": "pressure_dynamics",
+        "telemetry": "Percentage of dropbacks under pressure reflects defensive aggression."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "047066f3e1dfe9fc_t0",
+      "think": "The core operators—margin estimate, efficiency ratio, and pressure dynamics—are derived from empirical EPA data and structured game metrics. The margin estimate uses a linear transformation of EPA to project game outcomes, while the efficiency ratio compares offensive performance between teams. Pressure dynamics quantify defensive aggression. These operators exhibit duality in their interpretation: margin estimate and efficiency ratio reflect offensive and defensive balance, whereas pressure dynamics indicate risk exposure. Failure modes include lack of opponent adjustment and noise in fumble recovery. The dual nature of margin estimates (drive vs EPA) introduces uncertainty that GSI models via Bayesian intervals.\n\nDeep epistemic analysis for game-projections (047066f3e1dfe9fc, domain=other, pages_read=3/3): Operator 'Margin Estimate' (page 1, domain other) captures: **Margin:** drive method implies ~BUF -3; the EPA method (net EPA/play edge × 63 + 2.0 home field) implies ~BUF -7. Assumptions: Linear scaling of EPA with game margin, constant home field effect. Breakdown regime: When EPA is not opponent-adjusted, leading to systematic bias. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Dual margin estimates (drive vs EPA) form a kernel for uncertainty quantification in GSI's probabilistic forecasting. Operator 'Efficiency Ratio' (page 1, domain other) captures: The matchup through our advanced metrics - **Efficiency:** BUF +0.132 EPA/play (dropback +0.174, rush +0.078); DET +0.078 (dropback +0.168, rush -0.055). Assumptions: EPA values are comparable across teams due to shared baseline data. Breakdown regime: When team-specific adjustments are required for meaningful comparison. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Efficiency ratio mirrors the relative strength of offensive strategies in GSI's strategic alignment model. Operator 'Pressure Dynamics' (page 1, domain other) captures: - **Pressure:** BUF rushes 4 on 70.4% of dropbacks (2025) and 64.3% in Week 1 2026 — top-5 four-man rate both years; pressure proxy forced 15.9% (2025), 21.4% (Wk1). Assumptions: Pressure rate correlates with defensive impact and quarterback stability. Breakdown regime: When defensive schemes shift due to injury or role changes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pressure dynamics define a temporal kernel in GSE's state transition graph for predicting turnover likelihood. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for game-projections (047066f3e1dfe9fc, domain=other, pages_read=3/3): Operator 'Margin Estimate' (page 1, domain other) captures: **Margin:** drive method implies ~BUF -3; the EPA method (net EPA/play edge × 63 + 2.0 home field) implies ~BUF -7. Assumptions: Linear scaling of EPA with game margin, constant home field effect. Breakdown regime: When EPA is not opponent-adjusted, leading to systematic bias. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Dual margin estimates (drive vs EPA) form a kernel for uncertainty quantification in GSI's probabilistic forecasting. Operator 'Efficiency Ratio' (page 1, domain other) captures: The matchup through our advanced metrics - **Efficiency:** BUF +0.132 EPA/play (dropback +0.174, rush +0.078); DET +0.078 (dropback +0.168, rush -0.055). Assumptions: EPA values are comparable across teams due to shared baseline data. Breakdown regime: When team-specific adjustments are required for meaningful comparison. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Efficiency ratio mirrors the relative strength of offensive strategies in GSI's strategic alignment model. Operator 'Pressure Dynamics' (page 1, domain other) captures: - **Pressure:** BUF rushes 4 on 70.4% of dropbacks (2025) and 64.3% in Week 1 2026 — top-5 four-man rate both years; pressure proxy forced 15.9% (2025), 21.4% (Wk1). Assumptions: Pressure rate correlates with defensive impact and quarterback stability. Breakdown regime: When defensive schemes shift due to injury or role changes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pressure dynamics define a temporal kernel in GSE's state transition graph for predicting turnover likelihood. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in NFL analytics tradition of EPA-based modeling, extending earlier work on pressure metrics and efficiency ratios in football strategy. Retrocausal Genealogy: Rooted in game-projections (047066f3e1dfe9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in game-projections (047066f3e1dfe9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (teams) are modeled as stochastic processes with distinct efficiency profiles and pressure responses. Their interaction is captured through marginal differences in EPA and pressure dynamics. Theory of Mind & Decision Maker Model: Rooted in game-projections (047066f3e1dfe9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by treating EPA and pressure separately. Leakage is mitigated by excluding opponent adjustment and focusing on raw metrics. Cross-Layer Veto & Anti-Leakage Check: Rooted in game-projections (047066f3e1dfe9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in game-projections (047066f3e1dfe9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

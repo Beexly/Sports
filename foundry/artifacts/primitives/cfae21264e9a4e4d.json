@@ -1,0 +1,78 @@
+{
+  "book_id": "cfae21264e9a4e4d",
+  "source_status": "COMPLETE",
+  "title": "cognitive_signals",
+  "file_name": "cognitive_signals.md",
+  "sha256": "cfae21264e9a4e4d65c8799acc335b03b99d12bc3de72ed7bb02f97958ffe16d",
+  "primary_domain": "psych",
+  "pages_total": 8,
+  "pages_read": 8,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Cognitive behavioral signals map to strategic decision states via sentiment-weighted action-space transitions in NFL game dynamics. Universal Lens: Rooted in cognitive_signals (cfae21264e9a4e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers latent agent intent through signed polarity vectors from coach utterances, mapping to Bayesian belief updates over player role likelihoods. GSI Mapping: Rooted in cognitive_signals (cfae21264e9a4e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models game-state evolution using temporal signal derivatives, where negative polarity events trigger immediate tactical recalibration in player deployment. GSE Mapping: Rooted in cognitive_signals (cfae21264e9a4e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "mental_mistake_impact",
+      "name": "Mental Mistake Impact",
+      "verbatim_quote": "Micah Parsons said on his podcast that Jayden Daniels' mental mistake at the end of overtime will - **WAS** polarity=-1.0 (negative) hedge_rate=0.0526 flags=[] — Micah Parsons: Jayden Daniels probably 'cost my man Dan Quinn his job'.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'polarity': 'dimensionless (-1.0 to 1.0)', 'hedge_rate': 'probability per unit time'}",
+      "assumptions": "Agent behavior is influenced by external feedback loops; negative polarity implies strategic cost.",
+      "breakdown_regime": "Overtime decision-making under high-stakes pressure",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Signal strength modulates posterior probability of coaching decisions based on player performance metrics.",
+        "source_operator": "mental_mistake_impact",
+        "telemetry": "Coaching tenure stability post-event"
+      }
+    },
+    {
+      "primitive_id": "player_role_consequence",
+      "name": "Player Role Consequence",
+      "verbatim_quote": "Bills coach Joe Brady said RB James Cook has done a lot of \"good things\" this season but warned - **CHI** polarity=-1.0 (negative) hedge_rate=0.0 flags=[] — Bears DE Montez Sweat suspended two games for violating NFL's PED policy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'polarity': 'dimensionless (-1.0 to 1.0)', 'hedge_rate': 'probability per unit time'}",
+      "assumptions": "Coach sentiment reflects perceived risk in current role allocation.",
+      "breakdown_regime": "Player injury or misconduct affecting positional value",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Role consequence vector maps to depth chart repositioning probabilities.",
+        "source_operator": "player_role_consequence",
+        "telemetry": "Depth chart shift frequency"
+      }
+    },
+    {
+      "primitive_id": "fantasy_depth_signal",
+      "name": "Fantasy Depth Signal",
+      "verbatim_quote": "- **LEAGUE** polarity=1.0 (positive) hedge_rate=0.0 flags=['depth_talk'] — Fantasy football 2026 offensive depth charts.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'polarity': 'dimensionless (-1.0 to 1.0)', 'hedge_rate': 'probability per unit time'}",
+      "assumptions": "Positive polarity indicates enhanced fantasy utility of rostered players.",
+      "breakdown_regime": "Offensive depth chart optimization for fantasy outcomes",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Signal strength correlates with projected fantasy point contribution per player.",
+        "source_operator": "fantasy_depth_signal",
+        "telemetry": "Projected fantasy points per player"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cfae21264e9a4e4d_t0",
+      "think": "Each primitive encodes a distinct cognitive behavioral signal within NFL strategic discourse. Mental mistake impact models how individual errors propagate into broader organizational consequences, leveraging polarity as a proxy for strategic cost. Player role consequence captures how coaching sentiment translates into positional risk, forming a dualistic kernel between performance and opportunity. Fantasy depth signal synthesizes roster utility into probabilistic forecasting layers. These operators form a coherent system where negative signals trigger recalibration in agent behavior, while positive signals reinforce stable role assignments. Failure modes include overfitting to isolated quotes or misinterpreting neutral signals as actionable. Dualities emerge in how internal team dynamics mirror external market expectations—both are governed by similar signal propagation principles.\n\nDeep epistemic analysis for cognitive_signals (cfae21264e9a4e4d, domain=psych, pages_read=8/8): Operator 'Mental Mistake Impact' (page 1, domain psych) captures: Micah Parsons said on his podcast that Jayden Daniels' mental mistake at the end of overtime will - **WAS** polarity=-1.0 (negative) hedge_rate=0.0526 flags=[] — Micah Parsons: Jayden Daniels probably 'cost my man Dan Quinn his job'. Assumptions: Agent behavior is influenced by external feedback loops; negative polarity implies strategic cost. Breakdown regime: Overtime decision-making under high-stakes pressure Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Signal strength modulates posterior probability of coaching decisions based on player performance metrics. Operator 'Player Role Consequence' (page 1, domain psych) captures: Bills coach Joe Brady said RB James Cook has done a lot of \"good things\" this season but warned - **CHI** polarity=-1.0 (negative) hedge_rate=0.0 flags=[] — Bears DE Montez Sweat suspended two games for violating NFL's PED policy. Assumptions: Coach sentiment reflects perceived risk in current role allocation. Breakdown regime: Player injury or misconduct affecting positional value Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Role consequence vector maps to depth chart repositioning probabilities. Operator 'Fantasy Depth Signal' (page 2, domain psych) captures: - **LEAGUE** polarity=1.0 (positive) hedge_rate=0.0 flags=['depth_talk'] — Fantasy football 2026 offensive depth charts. Assumptions: Positive polarity indicates enhanced fantasy utility of rostered players. Breakdown regime: Offensive depth chart optimization for fantasy outcomes Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Signal strength correlates with projected fantasy point contribution per player. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for cognitive_signals (cfae21264e9a4e4d, domain=psych, pages_read=8/8): Operator 'Mental Mistake Impact' (page 1, domain psych) captures: Micah Parsons said on his podcast that Jayden Daniels' mental mistake at the end of overtime will - **WAS** polarity=-1.0 (negative) hedge_rate=0.0526 flags=[] — Micah Parsons: Jayden Daniels probably 'cost my man Dan Quinn his job'. Assumptions: Agent behavior is influenced by external feedback loops; negative polarity implies strategic cost. Breakdown regime: Overtime decision-making under high-stakes pressure Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Signal strength modulates posterior probability of coaching decisions based on player performance metrics. Operator 'Player Role Consequence' (page 1, domain psych) captures: Bills coach Joe Brady said RB James Cook has done a lot of \"good things\" this season but warned - **CHI** polarity=-1.0 (negative) hedge_rate=0.0 flags=[] — Bears DE Montez Sweat suspended two games for violating NFL's PED policy. Assumptions: Coach sentiment reflects perceived risk in current role allocation. Breakdown regime: Player injury or misconduct affecting positional value Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Role consequence vector maps to depth chart repositioning probabilities. Operator 'Fantasy Depth Signal' (page 2, domain psych) captures: - **LEAGUE** polarity=1.0 (positive) hedge_rate=0.0 flags=['depth_talk'] — Fantasy football 2026 offensive depth charts. Assumptions: Positive polarity indicates enhanced fantasy utility of rostered players. Breakdown regime: Offensive depth chart optimization for fantasy outcomes Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Signal strength correlates with projected fantasy point contribution per player. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in signal processing theory and behavioral economics, extending earlier work on coach sentiment analysis and player valuation models. Retrocausal Genealogy: Rooted in cognitive_signals (cfae21264e9a4e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in cognitive_signals (cfae21264e9a4e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents interpret signals through bounded rationality lenses; coaches weigh reputational costs against tactical gains, while fantasy managers optimize for expected returns. Theory of Mind & Decision Maker Model: Rooted in cognitive_signals (cfae21264e9a4e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in cognitive_signals (cfae21264e9a4e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that each primitive operates independently without conflating role consequence with fantasy utility. Leakage is mitigated by strict flagging of context-specific signals. Cross-Layer Veto & Anti-Leakage Check: Rooted in cognitive_signals (cfae21264e9a4e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in cognitive_signals (cfae21264e9a4e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

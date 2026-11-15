@@ -1,0 +1,78 @@
+{
+  "book_id": "306ab45512e53d8f",
+  "source_status": "COMPLETE",
+  "title": "CONTENT-STACK-AUDIT-2026-10-28 - Copy",
+  "file_name": "CONTENT-STACK-AUDIT-2026-10-28 - Copy.md",
+  "sha256": "306ab45512e53d8faa8f87451f361e6400de41b1dce4ffa97eeccac70871a12c",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Content stack audit reveals extraction-rich, execution-poor regime with 100 creators, 163 repos, 88 tools; 5 live, 3 running, 0 YouTube/TikTok dossiers. Universal Lens: Rooted in CONTENT-STACK-AUDIT-2026-10-28 - Copy (306ab45512e53d8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over creator and tool catalogs maps to operational readiness via entropy-weighted extraction fidelity. GSI Mapping: Rooted in CONTENT-STACK-AUDIT-2026-10-28 - Copy (306ab45512e53d8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions states based on live wiring ratios and execution gaps in content pipelines. GSE Mapping: Rooted in CONTENT-STACK-AUDIT-2026-10-28 - Copy (306ab45512e53d8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "content_extraction_fidelity",
+      "name": "Content Extraction Fidelity",
+      "verbatim_quote": "## THE VERDICT **Extraction-rich, execution-poor.** The corpus knows far more than the operation uses: - **~100 creators** cataloged; **5** wired into anything live; **~40** techniques cataloged-only.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{ext}': 'dimensionless extraction ratio (cataloged creators/tools/repos)', 'F_{exec}': 'dimensionless execution ratio (live/wired components)'}",
+      "assumptions": "Corpus completeness is assumed; live usage is binary.",
+      "breakdown_regime": "F_{ext} >> F_{exec} indicates operational inefficiency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "F_{ext} = 100 creators, 163 repos, 88 tools; F_{exec} = 5 live, 3 running",
+        "source_operator": "content_extraction_fidelity",
+        "telemetry": "Ratio of catalogued to operational assets"
+      }
+    },
+    {
+      "primitive_id": "creator_wiring_ratio",
+      "name": "Creator Wiring Ratio",
+      "verbatim_quote": "Wiring: WIRED-LIVE 5 (Nova's reference trio @itslilypod 203K / @yung.planet 774K / @godnotthisgirlagain 65K into Nova's build; @marc.kaz + @carterperez.dev into the shipped Intel bot) · WIRED-DESIGN ~18 (complete chains in the OS document only) · PARTIAL ~12 · NOT USED ~40.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{wire}': 'dimensionless wiring ratio (wired/live creators)', 'R_{design}': 'dimensionless design ratio (design-only creators)', 'R_{partial}': 'dimensionless partial wiring ratio', 'R_{unused}': 'dimensionless unused ratio'}",
+      "assumptions": "Creators are categorized into discrete wiring states.",
+      "breakdown_regime": "R_{wire} < R_{design} + R_{partial} + R_{unused} implies underutilization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "R_{wire} = 5/100, R_{design} = 18/100, R_{partial} = 12/100, R_{unused} = 40/100",
+        "source_operator": "creator_wiring_ratio",
+        "telemetry": "Proportion of creators actively wired into live systems"
+      }
+    },
+    {
+      "primitive_id": "platform_dossier_gap",
+      "name": "Platform Dossier Gap",
+      "verbatim_quote": "## CREATORS (Lane A) Census: ~100 distinct creators (Instagram ~78, X ~20, **YouTube 0, TikTok 0 dossiered**).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G_{plat}': 'dimensionless platform gap (missing dossiers)', 'N_{plat}': 'number of platforms', 'N_{dossier}': 'number of dossiers'}",
+      "assumptions": "Platforms are equally weighted; missing dossiers imply operational blind spots.",
+      "breakdown_regime": "G_{plat} = N_{plat} - N_{dossier} > 0 indicates incomplete platform coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "G_{plat} = 2 (YouTube, TikTok) due to zero dossiers",
+        "source_operator": "platform_dossier_gap",
+        "telemetry": "Number of platforms without documented creators"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "306ab45512e53d8f_t0",
+      "think": "The audit reveals a systemic disconnect between content extraction and operational execution. The content stack is rich with 100 creators, 163 repos, and 88 tools, yet only 5 creators are live, 3 repos are running, and 0 YouTube/TikTok dossiers exist. This suggests a high-fidelity extraction regime (F_{ext}) with poor execution fidelity (F_{exec}), indicating a failure mode of information overload without operational translation. The creator wiring ratio shows that while 18 creators are designed for integration, only 5 are live, implying a bottleneck in the transition from design to deployment. The platform dossier gap highlights a strategic blind spot—missing YouTube and TikTok dossiers despite Nova’s TikTok-first orientation—indicating a misalignment between platform strategy and content capture. These primitives form a dualistic system where extraction capacity exceeds execution capability, creating a feedback loop of underutilized assets and missed opportunities.\n\nDeep epistemic analysis for CONTENT-STACK-AUDIT-2026-10-28 - Copy (306ab45512e53d8f, domain=other, pages_read=4/4): Operator 'Content Extraction Fidelity' (page 1, domain other) captures: ## THE VERDICT **Extraction-rich, execution-poor.** The corpus knows far more than the operation uses: - **~100 creators** cataloged; **5** wired into anything live; **~40** techniques cataloged-only. Assumptions: Corpus completeness is assumed; live usage is binary. Breakdown regime: F_{ext} >> F_{exec} indicates operational inefficiency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): F_{ext} = 100 creators, 163 repos, 88 tools; F_{exec} = 5 live, 3 running Operator 'Creator Wiring Ratio' (page 1, domain other) captures: Wiring: WIRED-LIVE 5 (Nova's reference trio @itslilypod 203K / @yung.planet 774K / @godnotthisgirlagain 65K into Nova's build; @marc.kaz + @carterperez.dev into the shipped Intel bot) · WIRED-DESIGN ~18 (complete chains in the OS document only) · PARTIAL ~12 · NOT USED ~40. Assumptions: Creators are categorized into discrete wiring states. Breakdown regime: R_{wire} < R_{design} + R_{partial} + R_{unused} implies underutilization. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): R_{wire} = 5/100, R_{design} = 18/100, R_{partial} = 12/100, R_{unused} = 40/100 Operator 'Platform Dossier Gap' (page 1, domain other) captures: ## CREATORS (Lane A) Census: ~100 distinct creators (Instagram ~78, X ~20, **YouTube 0, TikTok 0 dossiered**). Assumptions: Platforms are equally weighted; missing dossiers imply operational blind spots. Breakdown regime: G_{plat} = N_{plat} - N_{dossier} > 0 indicates incomplete platform coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): G_{plat} = 2 (YouTube, TikTok) due to zero dossiers Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CONTENT-STACK-AUDIT-2026-10-28 - Copy (306ab45512e53d8f, domain=other, pages_read=4/4): Operator 'Content Extraction Fidelity' (page 1, domain other) captures: ## THE VERDICT **Extraction-rich, execution-poor.** The corpus knows far more than the operation uses: - **~100 creators** cataloged; **5** wired into anything live; **~40** techniques cataloged-only. Assumptions: Corpus completeness is assumed; live usage is binary. Breakdown regime: F_{ext} >> F_{exec} indicates operational inefficiency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): F_{ext} = 100 creators, 163 repos, 88 tools; F_{exec} = 5 live, 3 running Operator 'Creator Wiring Ratio' (page 1, domain other) captures: Wiring: WIRED-LIVE 5 (Nova's reference trio @itslilypod 203K / @yung.planet 774K / @godnotthisgirlagain 65K into Nova's build; @marc.kaz + @carterperez.dev into the shipped Intel bot) · WIRED-DESIGN ~18 (complete chains in the OS document only) · PARTIAL ~12 · NOT USED ~40. Assumptions: Creators are categorized into discrete wiring states. Breakdown regime: R_{wire} < R_{design} + R_{partial} + R_{unused} implies underutilization. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): R_{wire} = 5/100, R_{design} = 18/100, R_{partial} = 12/100, R_{unused} = 40/100 Operator 'Platform Dossier Gap' (page 1, domain other) captures: ## CREATORS (Lane A) Census: ~100 distinct creators (Instagram ~78, X ~20, **YouTube 0, TikTok 0 dossiered**). Assumptions: Platforms are equally weighted; missing dossiers imply operational blind spots. Breakdown regime: G_{plat} = N_{plat} - N_{dossier} > 0 indicates incomplete platform coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): G_{plat} = 2 (YouTube, TikTok) due to zero dossiers Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and systems engineering, this structure mirrors the Shannon-Hartley theorem applied to content ecosystems, where bandwidth (extraction) outpaces channel capacity (execution). Retrocausal Genealogy: Rooted in CONTENT-STACK-AUDIT-2026-10-28 - Copy (306ab45512e53d8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CONTENT-STACK-AUDIT-2026-10-28 - Copy (306ab45512e53d8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the content creator (extraction) and the operational system (execution). The system's failure lies in misaligned incentives: creators produce high-quality content, but the infrastructure fails to operationalize it effectively. Theory of Mind & Decision Maker Model: Rooted in CONTENT-STACK-AUDIT-2026-10-28 - Copy (306ab45512e53d8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between extraction richness and execution depth. Leakage occurs when high-fidelity data is not translated into actionable workflows. Veto conditions arise when platform-specific dossiers are absent, undermining strategic coherence. Cross-Layer Veto & Anti-Leakage Check: Rooted in CONTENT-STACK-AUDIT-2026-10-28 - Copy (306ab45512e53d8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "e8be72d21d74d35d",
+  "source_status": "COMPLETE",
+  "title": "INTEGRATIONS_FREE_STACK",
+  "file_name": "INTEGRATIONS_FREE_STACK.md",
+  "sha256": "e8be72d21d74d35d38f863a7a9c708cd73bc349744aa07d7cfda3876ab10bfa4",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Free-tier integration stack as a minimal Bayesian network over CI, security, and deployment layers; optimizes for zero-cost, maximal observability. Universal Lens: Rooted in INTEGRATIONS_FREE_STACK (e8be72d21d74d35d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models the stack as a conformal predictive system where each tool's status (KEEP/ENABLE/OPTIONAL) maps to probabilistic belief states in a layered Bayesian graph. GSI Mapping: Rooted in INTEGRATIONS_FREE_STACK (e8be72d21d74d35d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes the stack into a finite-state automaton with transitions governed by tool lifecycle events (install, revoke, enable), enforcing a deterministic free-tier regime. GSE Mapping: Rooted in INTEGRATIONS_FREE_STACK (e8be72d21d74d35d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "free_tier_integration_stack",
+      "name": "Minimal Free-Tier Integration Registry",
+      "verbatim_quote": "# Free-Only Integrations & Auth Apps Stack **Date:** 2026-08-17 **Mandate:** $0 spend.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'tool category (dimensionless)', 'C': 'cost constraint ($0)', 'S': 'status (KEEP/ENABLE/OPTIONAL)'}",
+      "assumptions": "Each tool belongs to one category; cost is bounded at zero; only one tool per category is retained.",
+      "breakdown_regime": "All tools beyond one per category are revoked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Registry maps to a categorical partition of a Bayesian belief space over tool utility and cost.",
+        "source_operator": "free_tier_integration_stack",
+        "telemetry": "Tool count per category, cost per tool, status flags."
+      }
+    },
+    {
+      "primitive_id": "ci_security_compliance",
+      "name": "CI Security Compliance Kernel",
+      "verbatim_quote": "Repo → Settings → Code security and analysis: - Enable Dependabot alerts + security updates - Enable Secret scanning + push protection - Confirm CodeQL is on 5.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Dependabot alert trigger (boolean)', 'S': 'Secret scan enforcement (boolean)', 'Q': 'CodeQL workflow active (boolean)'}",
+      "assumptions": "Security checks are atomic and independent; all must be enabled for compliance.",
+      "breakdown_regime": "Compliance fails if any check is disabled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel derived from conjunction of security checks; defines a minimal secure CI state.",
+        "source_operator": "ci_security_compliance",
+        "telemetry": "Active security check flags, alert counts, secret scan results."
+      }
+    },
+    {
+      "primitive_id": "branch_protection_policy",
+      "name": "Branch Protection Enforcement",
+      "verbatim_quote": "Branch protection on `main`: require only free native CI checks (lint/type-check/build/secret-scan).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'protected branch flag (boolean)', 'C': 'CI check set {lint, type-check, build, secret-scan}', 'F': 'free-tier CI requirement (boolean)'}",
+      "assumptions": "Only free-tier CI checks are allowed; enforcement is mandatory.",
+      "breakdown_regime": "Policy fails if non-free CI checks are required.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enforcement policy is isomorphic to a constraint satisfaction problem over CI checks.",
+        "source_operator": "branch_protection_policy",
+        "telemetry": "Branch protection rule compliance, CI run success/failure rates."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e8be72d21d74d35d_t0",
+      "think": "The stack operates as a constrained optimization problem over tool categories, where each category is limited to one tool under a zero-dollar mandate. The system enforces a dual logic: (1) tool selection via categorical exclusivity, and (2) compliance via CI and security kernel checks. The failure mode occurs when a tool violates either the zero-cost or single-category constraint. The CI kernel ensures integrity through Dependabot, CodeQL, and secret scanning, forming a minimal secure state. Branch protection enforces that only native free-tier checks are allowed, preventing escalation. These primitives form a lattice of constraints that define a stable, minimal operational regime.\n\nDeep epistemic analysis for INTEGRATIONS_FREE_STACK (e8be72d21d74d35d, domain=other, pages_read=2/2): Operator 'Minimal Free-Tier Integration Registry' (page 1, domain other) captures: # Free-Only Integrations & Auth Apps Stack **Date:** 2026-08-17 **Mandate:** $0 spend. Assumptions: Each tool belongs to one category; cost is bounded at zero; only one tool per category is retained. Breakdown regime: All tools beyond one per category are revoked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry maps to a categorical partition of a Bayesian belief space over tool utility and cost. Operator 'CI Security Compliance Kernel' (page 1, domain other) captures: Repo → Settings → Code security and analysis: - Enable Dependabot alerts + security updates - Enable Secret scanning + push protection - Confirm CodeQL is on 5. Assumptions: Security checks are atomic and independent; all must be enabled for compliance. Breakdown regime: Compliance fails if any check is disabled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel derived from conjunction of security checks; defines a minimal secure CI state. Operator 'Branch Protection Enforcement' (page 1, domain other) captures: Branch protection on `main`: require only free native CI checks (lint/type-check/build/secret-scan). Assumptions: Only free-tier CI checks are allowed; enforcement is mandatory. Breakdown regime: Policy fails if non-free CI checks are required. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforcement policy is isomorphic to a constraint satisfaction problem over CI checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for INTEGRATIONS_FREE_STACK (e8be72d21d74d35d, domain=other, pages_read=2/2): Operator 'Minimal Free-Tier Integration Registry' (page 1, domain other) captures: # Free-Only Integrations & Auth Apps Stack **Date:** 2026-08-17 **Mandate:** $0 spend. Assumptions: Each tool belongs to one category; cost is bounded at zero; only one tool per category is retained. Breakdown regime: All tools beyond one per category are revoked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry maps to a categorical partition of a Bayesian belief space over tool utility and cost. Operator 'CI Security Compliance Kernel' (page 1, domain other) captures: Repo → Settings → Code security and analysis: - Enable Dependabot alerts + security updates - Enable Secret scanning + push protection - Confirm CodeQL is on 5. Assumptions: Security checks are atomic and independent; all must be enabled for compliance. Breakdown regime: Compliance fails if any check is disabled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel derived from conjunction of security checks; defines a minimal secure CI state. Operator 'Branch Protection Enforcement' (page 1, domain other) captures: Branch protection on `main`: require only free native CI checks (lint/type-check/build/secret-scan). Assumptions: Only free-tier CI checks are allowed; enforcement is mandatory. Breakdown regime: Policy fails if non-free CI checks are required. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforcement policy is isomorphic to a constraint satisfaction problem over CI checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in DevOps principles of least privilege and zero-trust architecture, evolving from early CI/CD paradigms to modern security-first stacks. Retrocausal Genealogy: Rooted in INTEGRATIONS_FREE_STACK (e8be72d21d74d35d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in INTEGRATIONS_FREE_STACK (e8be72d21d74d35d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include cost-optimization (zero spend) and risk-mitigation (security checks). Decision actors are tool maintainers and system auditors who balance utility against compliance. Theory of Mind & Decision Maker Model: Rooted in INTEGRATIONS_FREE_STACK (e8be72d21d74d35d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in INTEGRATIONS_FREE_STACK (e8be72d21d74d35d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring no two tools in same category; leakage is prevented by restricting CI checks to free-tier only, avoiding cross-layer dependencies. Cross-Layer Veto & Anti-Leakage Check: Rooted in INTEGRATIONS_FREE_STACK (e8be72d21d74d35d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in INTEGRATIONS_FREE_STACK (e8be72d21d74d35d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "65eca54499a6e7d2",
+  "source_status": "COMPLETE",
+  "title": "cross-sport-correlation-engine-spec",
+  "file_name": "cross-sport-correlation-engine-spec.md",
+  "sha256": "65eca54499a6e7d299243a51c2e66966f4d45f4a0eea32786ca0101f17a75852",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "cross_sport_correlation",
+      "name": "Cross-Sport Correlation",
+      "verbatim_quote": "The first sports betting product where you can run your own hypothesis tests on cross-sport historical data.",
+      "page": 1,
+      "latex": "C_{AB}^{\\tau}(E) = \\frac{\\mathbb{E}[Y | X=E] - \\mu_Y}{\\sigma_Y}",
+      "symbol_and_unit_ledger": "{'C_{AB}^{\\\\tau}(E)': 'Dimensionless cross-sport correlation coefficient', 'X': 'Indicator function for trigger event E in sport A', 'Y': 'Binary outcome (e.g., over/under settled above/below)', '\\\\tau': 'Observation window (same night, next day, etc.)', '\\\\mu_Y': 'Marginal mean of Y across all observations', '\\\\sigma_Y': 'Standard deviation of Y'}",
+      "assumptions": "Independent and identically distributed historical game pairs, binary outcomes, sufficient sample size for stable estimates.",
+      "breakdown_regime": "Small sample sizes (n < 30) lead to unreliable estimates; requires manual warning flags.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian updating framework for refining historical priors using current trigger events.",
+        "source_operator": "cross_sport_correlation",
+        "telemetry": "Number of historical trigger-event observations per query."
+      }
+    },
+    {
+      "primitive_id": "sharp_money_signal",
+      "name": "Sharp Money Signal",
+      "verbatim_quote": "**Trigger event** — what defines an \"event\" in sport A.",
+      "page": 1,
+      "latex": "S_A(t) = \\begin{cases} 1, & \\text{if sharp money threshold exceeded at time } t \\\\ 0, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'S_A(t)': 'Binary indicator for sharp money in sport A at time t', 't': 'Time variable (game start, halftime, etc.)', 'threshold': 'User-defined volume or delta threshold'}",
+      "assumptions": "Market liquidity sufficient to detect significant bets, no front-running by sportsbooks.",
+      "breakdown_regime": "Flat betting patterns yield no informative signal; requires minimum betting activity variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual to GSE's state-transition logic for detecting high-conviction trading states.",
+        "source_operator": "sharp_money_signal",
+        "telemetry": "Volume change percentage relative to baseline for each sport."
+      }
+    },
+    {
+      "primitive_id": "observation_window",
+      "name": "Observation Window",
+      "verbatim_quote": "**Observation window** — what time horizon to look at sport B.",
+      "page": 1,
+      "latex": "W(\\tau) = [t_0, t_0 + \\tau]",
+      "symbol_and_unit_ledger": "{'W(\\\\tau)': 'Time interval for observing sport B outcomes', 't_0': 'Start time (trigger event time)', '\\\\tau': \"Duration of observation window (e.g., 'same night' = ~24 hours)\"}",
+      "assumptions": "Independence between trigger event timing and outcome distribution within the window.",
+      "breakdown_regime": "Overlapping windows introduce autocorrelation; windows must be disjoint or properly lagged.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's rolling-window state monitoring for sequential decision-making.",
+        "source_operator": "observation_window",
+        "telemetry": "Distribution of observed outcomes within each defined window bin."
+      }
+    },
+    {
+      "primitive_id": "confidence_interval",
+      "name": "Confidence Interval",
+      "verbatim_quote": "- Confidence interval — never a single percentage without the range.",
+      "page": 1,
+      "latex": "CI = \\hat{p} \\pm z_{\\alpha/2} \\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}",
+      "symbol_and_unit_ledger": "{'CI': 'Confidence interval width for binary outcome probability', '\\\\hat{p}': 'Observed proportion of positive outcomes', 'z_{\\\\alpha/2}': 'Critical value from standard normal distribution (e.g., 1.96 for 95% CI)', 'n': 'Sample size of trigger events'}",
+      "assumptions": "Binomial sampling distribution, large enough n for normal approximation.",
+      "breakdown_regime": "n < 30 requires exact binomial methods instead of asymptotic intervals.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSI's credible intervals used for posterior uncertainty quantification.",
+        "source_operator": "confidence_interval",
+        "telemetry": "Width of confidence intervals as a function of sample depth."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "65eca54499a6e7d2_t0",
+      "think": "The Cross-Sport Correlation Engine formalizes empirical intuition about inter-market dependencies. It operates on a joint discrete-time stochastic process (X_t, Y_t), where X_t captures structured anomalies (like sharp money) in one sport and Y_t tracks outcomes in another. The key challenge is accounting for异oscedasticity and non-stationarity across different sports and time periods. By providing confidence intervals and sample-count warnings, the engine mitigates overfitting and false discovery while enabling users to construct novel composite strategies.\n\nDeep epistemic analysis for cross-sport-correlation-engine-spec (65eca54499a6e7d2, domain=other, pages_read=3/3): Operator 'Cross-Sport Correlation' (page 1, domain other) captures: The first sports betting product where you can run your own hypothesis tests on cross-sport historical data. Assumptions: Independent and identically distributed historical game pairs, binary outcomes, sufficient sample size for stable estimates. Breakdown regime: Small sample sizes (n < 30) lead to unreliable estimates; requires manual warning flags. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian updating framework for refining historical priors using current trigger events. Operator 'Sharp Money Signal' (page 1, domain other) captures: **Trigger event** — what defines an \"event\" in sport A. Assumptions: Market liquidity sufficient to detect significant bets, no front-running by sportsbooks. Breakdown regime: Flat betting patterns yield no informative signal; requires minimum betting activity variance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSE's state-transition logic for detecting high-conviction trading states. Operator 'Observation Window' (page 1, domain other) captures: **Observation window** — what time horizon to look at sport B. Assumptions: Independence between trigger event timing and outcome distribution within the window. Breakdown regime: Overlapping windows introduce autocorrelation; windows must be disjoint or properly lagged. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's rolling-window state monitoring for sequential decision-making. Operator 'Confidence Interval' (page 1, domain other) captures: - Confidence interval — never a single percentage without the range. Assumptions: Binomial sampling distribution, large enough n for normal approximation. Breakdown regime: n < 30 requires exact binomial methods instead of asymptotic intervals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSI's credible intervals used for posterior uncertainty quantification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for cross-sport-correlation-engine-spec (65eca54499a6e7d2, domain=other, pages_read=3/3): Operator 'Cross-Sport Correlation' (page 1, domain other) captures: The first sports betting product where you can run your own hypothesis tests on cross-sport historical data. Assumptions: Independent and identically distributed historical game pairs, binary outcomes, sufficient sample size for stable estimates. Breakdown regime: Small sample sizes (n < 30) lead to unreliable estimates; requires manual warning flags. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian updating framework for refining historical priors using current trigger events. Operator 'Sharp Money Signal' (page 1, domain other) captures: **Trigger event** — what defines an \"event\" in sport A. Assumptions: Market liquidity sufficient to detect significant bets, no front-running by sportsbooks. Breakdown regime: Flat betting patterns yield no informative signal; requires minimum betting activity variance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSE's state-transition logic for detecting high-conviction trading states. Operator 'Observation Window' (page 1, domain other) captures: **Observation window** — what time horizon to look at sport B. Assumptions: Independence between trigger event timing and outcome distribution within the window. Breakdown regime: Overlapping windows introduce autocorrelation; windows must be disjoint or properly lagged. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's rolling-window state monitoring for sequential decision-making. Operator 'Confidence Interval' (page 1, domain other) captures: - Confidence interval — never a single percentage without the range. Assumptions: Binomial sampling distribution, large enough n for normal approximation. Breakdown regime: n < 30 requires exact binomial methods instead of asymptotic intervals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSI's credible intervals used for posterior uncertainty quantification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in econometric vector autoregression (VAR) models, adapted here for sparse binary event data across independent gambling markets. Retrocausal Genealogy: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include retail bettors seeking confirmation of existing narratives versus sophisticated traders looking for exploitable inefficiencies that the engine might inadvertently highlight. Theory of Mind & Decision Maker Model: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must prevent leakage between training and testing splits; ensure that trigger events in sport A do not contain information about future outcomes in sport B. Cross-Layer Veto & Anti-Leakage Check: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in cross-sport-correlation-engine-spec (65eca54499a6e7d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

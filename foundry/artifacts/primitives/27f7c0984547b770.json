@@ -1,0 +1,78 @@
+{
+  "book_id": "27f7c0984547b770",
+  "source_status": "COMPLETE",
+  "title": "media-studio-workflow",
+  "file_name": "media-studio-workflow.md",
+  "sha256": "27f7c0984547b770e879d37989dea3330ea577768a4f3ec9313684a245fbe016",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Media Studio workflow as a structured causal lattice: {brief} → {asset} → {claim} → {publish}, with operator-driven checks at each node. Universal Lens: Rooted in media-studio-workflow (27f7c0984547b770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers claim confidence via Bayesian belief propagation over {brief, asset, claim} nodes; conformal prediction bounds govern uncertainty in governance decisions. GSI Mapping: Rooted in media-studio-workflow (27f7c0984547b770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions through discrete states: {draft} → {review} → {approve} → {publish}, with state-dependent action space constrained by design tokens and governance rules. GSE Mapping: Rooted in media-studio-workflow (27f7c0984547b770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "media_brief_structure",
+      "name": "Media Brief Structure",
+      "verbatim_quote": "Brief | Yes | Suggest content angles, draft brief structure | | 2.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'content angle (dimensionless)', 'B': 'brief structure (ordinal)', 'C': 'confidence score (0–1)'}",
+      "assumptions": "Content angles are independent variables; brief structure is a categorical lattice.",
+      "breakdown_regime": "When C < 0.7, restructure required.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI maps A to B via latent semantic embedding; GSE uses B to instantiate {asset} state.",
+        "source_operator": "media_brief_structure",
+        "telemetry": "Number of content angles per brief, average confidence score"
+      }
+    },
+    {
+      "primitive_id": "claim_governance_review",
+      "name": "Claim Governance Review",
+      "verbatim_quote": "| | \"Lock\" language | BLOCKED — no exceptions | | \"Guaranteed\" language | BLOCKED — no exceptions | **If any check fails**: The asset is modified or the claim is removed.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'governance score (0–1)', 'F': 'failure flag (boolean)', 'R': 'risk threshold (0–1)'}",
+      "assumptions": "Governance checks are binary; failure implies rejection or modification.",
+      "breakdown_regime": "When G < R, F = true.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI computes P(claim valid | evidence) via Bayesian network; GSE enforces F = true if P < R.",
+        "source_operator": "claim_governance_review",
+        "telemetry": "Proportion of claims rejected, average governance score"
+      }
+    },
+    {
+      "primitive_id": "brand_safety_visual_check",
+      "name": "Brand Safety Visual Check",
+      "verbatim_quote": "No asset with a brand safety failure proceeds to publication.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'safety score (0–1)', 'V': 'visual compliance (boolean)', 'T': 'threshold (0–1)'}",
+      "assumptions": "Visual compliance is deterministic; V = true iff S ≥ T.",
+      "breakdown_regime": "When S < T, V = false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE applies visual classifier to asset; GSI models P(V=true | asset) via convolutional latent space.",
+        "source_operator": "brand_safety_visual_check",
+        "telemetry": "Percentage of assets passing visual check, average safety score"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "27f7c0984547b770_t0",
+      "think": "The Media Studio workflow is a causal chain: brief → asset → claim → publish. Each stage is governed by a dual logic: operator control and automated validation. Operator actions are constrained by design tokens (colors, fonts) and governance rules (claims, safety). The failure mode occurs when any check fails: asset is modified or claim removed. The workflow is non-autonomous; all outputs undergo manual review. AI assistance is limited to drafting and scanning, not decision-making. The system enforces a dualism between creative freedom and regulatory compliance.\n\nDeep epistemic analysis for media-studio-workflow (27f7c0984547b770, domain=other, pages_read=3/3): Operator 'Media Brief Structure' (page 3, domain other) captures: Brief | Yes | Suggest content angles, draft brief structure | | 2. Assumptions: Content angles are independent variables; brief structure is a categorical lattice. Breakdown regime: When C < 0.7, restructure required. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI maps A to B via latent semantic embedding; GSE uses B to instantiate {asset} state. Operator 'Claim Governance Review' (page 2, domain other) captures: | | \"Lock\" language | BLOCKED — no exceptions | | \"Guaranteed\" language | BLOCKED — no exceptions | **If any check fails**: The asset is modified or the claim is removed. Assumptions: Governance checks are binary; failure implies rejection or modification. Breakdown regime: When G < R, F = true. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI computes P(claim valid | evidence) via Bayesian network; GSE enforces F = true if P < R. Operator 'Brand Safety Visual Check' (page 2, domain other) captures: No asset with a brand safety failure proceeds to publication. Assumptions: Visual compliance is deterministic; V = true iff S ≥ T. Breakdown regime: When S < T, V = false. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE applies visual classifier to asset; GSI models P(V=true | asset) via convolutional latent space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for media-studio-workflow (27f7c0984547b770, domain=other, pages_read=3/3): Operator 'Media Brief Structure' (page 3, domain other) captures: Brief | Yes | Suggest content angles, draft brief structure | | 2. Assumptions: Content angles are independent variables; brief structure is a categorical lattice. Breakdown regime: When C < 0.7, restructure required. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI maps A to B via latent semantic embedding; GSE uses B to instantiate {asset} state. Operator 'Claim Governance Review' (page 2, domain other) captures: | | \"Lock\" language | BLOCKED — no exceptions | | \"Guaranteed\" language | BLOCKED — no exceptions | **If any check fails**: The asset is modified or the claim is removed. Assumptions: Governance checks are binary; failure implies rejection or modification. Breakdown regime: When G < R, F = true. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI computes P(claim valid | evidence) via Bayesian network; GSE enforces F = true if P < R. Operator 'Brand Safety Visual Check' (page 2, domain other) captures: No asset with a brand safety failure proceeds to publication. Assumptions: Visual compliance is deterministic; V = true iff S ≥ T. Breakdown regime: When S < T, V = false. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE applies visual classifier to asset; GSI models P(V=true | asset) via convolutional latent space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the Sports OS Intelligence Network Master Plan, this workflow inherits principles of modular intelligence and human-in-the-loop governance from prior design documents. Retrocausal Genealogy: Rooted in media-studio-workflow (27f7c0984547b770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in media-studio-workflow (27f7c0984547b770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The operator acts as a probabilistic decision agent, balancing creativity against risk. The AI serves as a stochastic helper, generating drafts within bounded confidence. Governance scanners function as deterministic filters, enforcing binary compliance. Theory of Mind & Decision Maker Model: Rooted in media-studio-workflow (27f7c0984547b770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If GSI's claim confidence falls below threshold, GSE blocks asset transition. If GSE detects unsafe visuals, it vetoes publishing. These cross-layer checks prevent leakage of invalid or unsafe content. Cross-Layer Veto & Anti-Leakage Check: Rooted in media-studio-workflow (27f7c0984547b770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

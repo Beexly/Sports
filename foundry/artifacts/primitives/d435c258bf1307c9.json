@@ -1,0 +1,78 @@
+{
+  "book_id": "d435c258bf1307c9",
+  "source_status": "COMPLETE",
+  "title": "FLEET_ONE_JOB_ANTI_JOB_LINT",
+  "file_name": "FLEET_ONE_JOB_ANTI_JOB_LINT.md",
+  "sha256": "d435c258bf1307c9620f0b918c91f4e20c80a23fe4458bb4ac9d87bbe072d97d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The fleet lint formalizes a strict partition of the operational Hilbert space. Each seat defines an orthogonal projection operator $P_i$ onto a singular outcome subspace, while anti-jobs and never-lists define the null-space constraints, ensuring the global state evolution remains unitary and free from entangled, fuzzy-vibe cross-talk.",
+  "gsi_mapping": "In GSI, the one-job rule acts as a hard prior over feature spaces, preventing covariate shift leakage between distinct statistical edges. The never-list functions as a conformal prediction exclusion zone, guaranteeing that out-of-distribution signals do not contaminate the isolated inference manifolds of specific betting markets.",
+  "gse_mapping": "For GSE, this lint enforces a deterministic finite automaton (DFA) for situational reasoning. State transitions are only permitted within the explicitly defined 'one job' boundary. Escalation to GSE Main represents a meta-stable transition triggered exclusively by unresolvable blocking conditions, maintaining system-wide coherence.",
+  "primitives": [
+    {
+      "primitive_id": "single_outcome_projection",
+      "name": "Single Outcome Projection Operator",
+      "verbatim_quote": "| Pass when | |---|--------|-----------| | 1 | One job | Single sentence: owns X outcome",
+      "page": 1,
+      "latex": "P_{\\text{seat}} \\Psi = \\Psi_{\\text{outcome}}, \\quad P_{\\text{seat}}^2 = P_{\\text{seat}}",
+      "symbol_and_unit_ledger": "$P_{\\text{seat}}$: Dimensionless projection operator; $\\Psi$: Global state vector; $\\Psi_{\\text{outcome}}$: Target outcome subspace.",
+      "assumptions": "The operational space is separable; each seat maps to a unique, non-overlapping functional domain.",
+      "breakdown_regime": "Fails when the projection is ill-defined or attempts to span multiple disjoint subspaces ('and also...').",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE DFA state isolation and GSI feature-space orthogonality.",
+        "source_operator": "single_outcome_projection",
+        "telemetry": "Pass/Fail binary lint status on seat definition."
+      }
+    },
+    {
+      "primitive_id": "anti_job_null_space",
+      "name": "Anti-Job Null Space Definition",
+      "verbatim_quote": "surface. No \"and also...\" | | 2 | Anti-jobs | Named sibling roles that own the",
+      "page": 1,
+      "latex": "\\forall j \\in \\mathcal{A}_i, \\quad \\langle \\Psi_i | \\Psi_j \\rangle = 0",
+      "symbol_and_unit_ledger": "$\\mathcal{A}_i$: Set of named sibling roles (dimensionless); $\\langle \\cdot | \\cdot \\rangle$: Inner product measuring scope overlap.",
+      "assumptions": "Sibling roles form a complete basis for the broader operational context.",
+      "breakdown_regime": "Singularity occurs if anti-jobs are undefined, leading to ambiguous boundary conditions and role collision.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the exact boundaries of the GSE decision tree, preventing unauthorized state branching.",
+        "source_operator": "anti_job_null_space",
+        "telemetry": "Explicit enumeration of excluded sibling roles in the seating card."
+      }
+    },
+    {
+      "primitive_id": "hard_prohibition_constraint",
+      "name": "Hard Prohibition Constraint",
+      "verbatim_quote": "(by role name) | | 3 | Never-list | Hard prohibitions (gates, secrets, Garrett-facing, tip-sheet copy,",
+      "page": 1,
+      "latex": "H_{\\text{seat}} = \\{ x \\in \\mathcal{X} \\mid C(x) < 0 \\} \\implies \\text{Reject}",
+      "symbol_and_unit_ledger": "$H_{\\text{seat}}$: Forbidden action set; $C(x)$: Constraint function (dimensionless); $\\mathcal{X}$: Action space.",
+      "assumptions": "Prohibitions are absolute and time-invariant within the current lock cycle.",
+      "breakdown_regime": "Systemic failure if a high-priority signal violates a hard prohibition without triggering an immediate halt.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI conformal exclusion zones and GSE security gates.",
+        "source_operator": "hard_prohibition_constraint",
+        "telemetry": "Zero-tolerance audit logs for prohibited actions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d435c258bf1307c9_t0",
+      "think": "The FLEET_ONE_JOB_LINT establishes a rigorous mathematical framework for organizational topology, treating each 'seat' as an isolated dynamical system. By enforcing a 'single outcome' projection, we eliminate superposition states where an agent's responsibility is ambiguous. This is mathematically equivalent to defining a strict basis in a Hilbert space, where the 'one job' is the primary eigenvector of the seat's responsibility matrix. The 'anti-jobs' explicitly define the orthogonal complement, ensuring that the inner product between any two distinct seats approaches zero, thereby minimizing cross-talk and entropic decay in decision-making. Furthermore, the 'never-list' introduces hard boundary conditions—akin to Dirichlet boundary conditions in partial differential equations—that strictly forbid certain trajectories in the action space. When combined with the 'quiet default' principle, the system operates as a sparse communication network, transmitting information only upon significant state deviations (blockers) or explicit tasking. This sparsity prevents signal-to-noise degradation. The escalation protocol to GSE Main acts as a centralized error-correction mechanism, resolving local singularities without involving higher-order noise (Garrett). Ultimately, this lint transforms a potentially chaotic multi-agent environment into a well-posed, deterministic finite automaton, where every transition is governed by explicit, verifiable rules, ensuring robust scalability and epistemic clarity across the Galaxy Sports Engine.\n\nDeep epistemic analysis for FLEET_ONE_JOB_ANTI_JOB_LINT (d435c258bf1307c9, domain=other, pages_read=1/1): Operator 'Single Outcome Projection Operator' (page 1, domain other) captures: | Pass when | |---|--------|-----------| | 1 | One job | Single sentence: owns X outcome Assumptions: The operational space is separable; each seat maps to a unique, non-overlapping functional domain. Breakdown regime: Fails when the projection is ill-defined or attempts to span multiple disjoint subspaces ('and also...'). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE DFA state isolation and GSI feature-space orthogonality. Operator 'Anti-Job Null Space Definition' (page 1, domain other) captures: surface. No \"and also...\" | | 2 | Anti-jobs | Named sibling roles that own the Assumptions: Sibling roles form a complete basis for the broader operational context. Breakdown regime: Singularity occurs if anti-jobs are undefined, leading to ambiguous boundary conditions and role collision. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives the exact boundaries of the GSE decision tree, preventing unauthorized state branching. Operator 'Hard Prohibition Constraint' (page 1, domain other) captures: (by role name) | | 3 | Never-list | Hard prohibitions (gates, secrets, Garrett-facing, tip-sheet copy, Assumptions: Prohibitions are absolute and time-invariant within the current lock cycle. Breakdown regime: Systemic failure if a high-priority signal violates a hard prohibition without triggering an immediate halt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI conformal exclusion zones and GSE security gates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FLEET_ONE_JOB_ANTI_JOB_LINT (d435c258bf1307c9, domain=other, pages_read=1/1): Operator 'Single Outcome Projection Operator' (page 1, domain other) captures: | Pass when | |---|--------|-----------| | 1 | One job | Single sentence: owns X outcome Assumptions: The operational space is separable; each seat maps to a unique, non-overlapping functional domain. Breakdown regime: Fails when the projection is ill-defined or attempts to span multiple disjoint subspaces ('and also...'). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE DFA state isolation and GSI feature-space orthogonality. Operator 'Anti-Job Null Space Definition' (page 1, domain other) captures: surface. No \"and also...\" | | 2 | Anti-jobs | Named sibling roles that own the Assumptions: Sibling roles form a complete basis for the broader operational context. Breakdown regime: Singularity occurs if anti-jobs are undefined, leading to ambiguous boundary conditions and role collision. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives the exact boundaries of the GSE decision tree, preventing unauthorized state branching. Operator 'Hard Prohibition Constraint' (page 1, domain other) captures: (by role name) | | 3 | Never-list | Hard prohibitions (gates, secrets, Garrett-facing, tip-sheet copy, Assumptions: Prohibitions are absolute and time-invariant within the current lock cycle. Breakdown regime: Systemic failure if a high-priority signal violates a hard prohibition without triggering an immediate halt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI conformal exclusion zones and GSE security gates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces its lineage to mid-20th century cybernetics and the principles of bounded rationality introduced by Herbert Simon. It echoes the strict modularity found in von Neumann architectures, where distinct processing units operate on isolated memory addresses. In modern quantitative finance, it mirrors the separation of alpha generation from risk management, ensuring that no single desk can inadvertently expose the firm to correlated, unmodeled risks. The 'never-list' specifically recalls the fail-safe mechanisms in nuclear control theory, where certain actions are hard-wired to be impossible regardless of the system's internal state.",
+      "theory_of_mind": "From a game-theoretic perspective, this lint models the opposing agents (or internal stakeholders) as rational actors who might otherwise exploit ambiguity to expand their influence or shirk responsibility. By explicitly defining 'anti-jobs', the system pre-empts strategic maneuvering where an agent might claim jurisdiction over a profitable but high-risk area. It assumes that without these hard constraints, agents will naturally drift toward maximizing their own utility at the expense of global coherence. The 'quiet default' further models the cognitive load of the orchestrator, recognizing that constant noise leads to paralysis. Thus, the lint is a defensive architecture against both malicious exploitation and benign cognitive overload, forcing all actors to adhere to a shared, minimal communication protocol.",
+      "cross_layer_veto": "The cross-layer veto condition is triggered when a proposed seat definition exhibits collinearity with existing roles or leaks information across designated security boundaries. Specifically, if the 'one job' statement contains conjunctive operators ('and also'), it fails the orthogonality check, indicating a potential for conflicting gradients during optimization. Similarly, if the 'never-list' does not explicitly gate sensitive data flows (e.g., 'Garrett-facing' or 'tip-sheet copy'), the system vetoes the configuration to prevent epistemic contamination. This veto ensures that the GSI inference layers remain statistically independent, preserving the validity of conformal predictions, while simultaneously guaranteeing that the GSE state machine does not enter undefined or insecure configurations due to overlapping authority matrices."
+    }
+  ]
+}

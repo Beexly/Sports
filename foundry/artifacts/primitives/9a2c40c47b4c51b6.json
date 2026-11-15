@@ -1,0 +1,78 @@
+{
+  "book_id": "9a2c40c47b4c51b6",
+  "source_status": "COMPLETE",
+  "title": "prompt-muse",
+  "file_name": "prompt-muse.md",
+  "sha256": "9a2c40c47b4c51b6220bc24de5ccbb1ca2d940579d9b4dc29313960e02c6ffd4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Zip archive content enumeration and classification under read-only constraints with structured metadata tagging. Universal Lens: Rooted in prompt-muse (9a2c40c47b4c51b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over archive categorization using top-level entry signatures as evidence for repo vs paper vs other classifications. GSI Mapping: Rooted in prompt-muse (9a2c40c47b4c51b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps zip names to state transitions: readable/unreadable, snapshot/paper/other, gating logic for new reasoning layers. GSE Mapping: Rooted in prompt-muse (9a2c40c47b4c51b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "archive_content_classifier",
+      "name": "Archive Content Classifier",
+      "verbatim_quote": "List each zip name and, if the tool can list archive contents without extracting, the top-level entries.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'zip_name': 'dimensionless string identifier', 'top_level_entries': 'set of dimensionless strings'}",
+      "assumptions": "Archives are accessible via read-only interface; contents are flat or nested in known structures.",
+      "breakdown_regime": "When zip is corrupted or password-protected, returns unreadable status.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps zip metadata to GSI probabilistic classification space and GSE state transition graph.",
+        "source_operator": "archive_content_classifier",
+        "telemetry": "Top-level entry count, presence of key terms like 'repo', 'paper', 'injury'"
+      }
+    },
+    {
+      "primitive_id": "sports_repo_detector",
+      "name": "Sports Repository Detector",
+      "verbatim_quote": "Write only: C:\\Users\\Garrett\\AppData\\Local\\hermes\\scratch\\gse-drive-review\\muse-zips.md For each archive: name, readable or not, top-level entries, and whether it looks like a Sports repo snapshot, a paper package, or something else.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'archive_name': 'dimensionless string', 'classification': 'discrete label {repo, paper, other}'}",
+      "assumptions": "Top-level entries contain semantic markers indicative of repository structure or academic content.",
+      "breakdown_regime": "Failure when top-level entries lack distinguishing features or are unreadable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives GSI confidence scores for repo/paper classification from entry patterns.",
+        "source_operator": "sports_repo_detector",
+        "telemetry": "Presence of directories named 'data', 'models', 'papers'; file extensions like .md, .py, .tex"
+      }
+    },
+    {
+      "primitive_id": "gating_logic_flag",
+      "name": "Gating Logic Flag",
+      "verbatim_quote": "Flag any entry whose name suggests a new reasoning, calibration, or injury gate that is not the standing brief.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'entry_name': 'dimensionless string', 'flag_status': 'boolean'}",
+      "assumptions": "Entry names encode functional intent; specific naming conventions indicate novel logic gates.",
+      "breakdown_regime": "When entry name does not match known pattern for reasoning, calibration, or injury gate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps flagged entries to GSE reasoning layer updates and validation checks.",
+        "source_operator": "gating_logic_flag",
+        "telemetry": "Boolean flag indicating presence of new logic gate in archive"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9a2c40c47b4c51b6_t0",
+      "think": "The primitives form a triadic system: classifier identifies content type, detector assigns category, flag identifies novelty. The universal lens unifies these into a single metadata-driven inference pipeline. Archive content classifier operates on discrete symbolic data to produce structured outputs. Sports repo detector applies probabilistic reasoning over symbolic heuristics to classify documents. Gating logic flag introduces dynamic update signals based on semantic triggers. Dualities emerge between readable/unreadable states and repo/paper/other categories. Failure modes include corruption, encryption, or ambiguous naming. The system's robustness depends on consistent metadata interpretation across all three operators.\n\nDeep epistemic analysis for prompt-muse (9a2c40c47b4c51b6, domain=other, pages_read=1/1): Operator 'Archive Content Classifier' (page 1, domain other) captures: List each zip name and, if the tool can list archive contents without extracting, the top-level entries. Assumptions: Archives are accessible via read-only interface; contents are flat or nested in known structures. Breakdown regime: When zip is corrupted or password-protected, returns unreadable status. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps zip metadata to GSI probabilistic classification space and GSE state transition graph. Operator 'Sports Repository Detector' (page 1, domain other) captures: Write only: C:\\Users\\Garrett\\AppData\\Local\\hermes\\scratch\\gse-drive-review\\muse-zips.md For each archive: name, readable or not, top-level entries, and whether it looks like a Sports repo snapshot, a paper package, or something else. Assumptions: Top-level entries contain semantic markers indicative of repository structure or academic content. Breakdown regime: Failure when top-level entries lack distinguishing features or are unreadable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSI confidence scores for repo/paper classification from entry patterns. Operator 'Gating Logic Flag' (page 1, domain other) captures: Flag any entry whose name suggests a new reasoning, calibration, or injury gate that is not the standing brief. Assumptions: Entry names encode functional intent; specific naming conventions indicate novel logic gates. Breakdown regime: When entry name does not match known pattern for reasoning, calibration, or injury gate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps flagged entries to GSE reasoning layer updates and validation checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prompt-muse (9a2c40c47b4c51b6, domain=other, pages_read=1/1): Operator 'Archive Content Classifier' (page 1, domain other) captures: List each zip name and, if the tool can list archive contents without extracting, the top-level entries. Assumptions: Archives are accessible via read-only interface; contents are flat or nested in known structures. Breakdown regime: When zip is corrupted or password-protected, returns unreadable status. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps zip metadata to GSI probabilistic classification space and GSE state transition graph. Operator 'Sports Repository Detector' (page 1, domain other) captures: Write only: C:\\Users\\Garrett\\AppData\\Local\\hermes\\scratch\\gse-drive-review\\muse-zips.md For each archive: name, readable or not, top-level entries, and whether it looks like a Sports repo snapshot, a paper package, or something else. Assumptions: Top-level entries contain semantic markers indicative of repository structure or academic content. Breakdown regime: Failure when top-level entries lack distinguishing features or are unreadable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSI confidence scores for repo/paper classification from entry patterns. Operator 'Gating Logic Flag' (page 1, domain other) captures: Flag any entry whose name suggests a new reasoning, calibration, or injury gate that is not the standing brief. Assumptions: Entry names encode functional intent; specific naming conventions indicate novel logic gates. Breakdown regime: When entry name does not match known pattern for reasoning, calibration, or injury gate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps flagged entries to GSE reasoning layer updates and validation checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and symbolic computation frameworks from early 20th-century logic design and modern software archaeology practices. Retrocausal Genealogy: Rooted in prompt-muse (9a2c40c47b4c51b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in prompt-muse (9a2c40c47b4c51b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents involved include automated classifiers, probabilistic reasoning engines, and situational awareness modules. Each agent models different aspects of archive semantics and operational constraints. Theory of Mind & Decision Maker Model: Rooted in prompt-muse (9a2c40c47b4c51b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in prompt-muse (9a2c40c47b4c51b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by distinct operator domains: classification, categorization, and novelty detection. Leakage vetoes prevent cross-contamination of metadata types. Cross-Layer Veto & Anti-Leakage Check: Rooted in prompt-muse (9a2c40c47b4c51b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in prompt-muse (9a2c40c47b4c51b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

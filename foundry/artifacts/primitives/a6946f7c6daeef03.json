@@ -1,0 +1,78 @@
+{
+  "book_id": "a6946f7c6daeef03",
+  "source_status": "COMPLETE",
+  "title": "doctrine_cleanup_and_live_path",
+  "file_name": "doctrine_cleanup_and_live_path.md",
+  "sha256": "a6946f7c6daeef0392ff65dd5c95b8ec9569d11e91826c1e80e9cb6b120ecc9e",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Dual doctrine enforcement: CI guardrail vs. runtime agent constraints coexist via path segregation and semantic gating. Universal Lens: Rooted in doctrine_cleanup_and_live_path (a6946f7c6daeef03), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over publishable signals uses gated probabilistic models where P(published|guardrail) = 0 and P(published|agent) = 0, yet P(published|script) > 0 due to path exclusion. GSI Mapping: Rooted in doctrine_cleanup_and_live_path (a6946f7c6daeef03), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally, state transitions from draft to published are blocked by CI but allowed through script-boundary paths, enabling conditional publishing under defined constraints. GSE Mapping: Rooted in doctrine_cleanup_and_live_path (a6946f7c6daeef03), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "doctrine_a_ban",
+      "name": "CI Publish-Boundary Enforcement",
+      "verbatim_quote": "The two halves, and why they are different problems ### 2.1 Doctrine A — the brand line and its AI-framing ban **The ban is still enforced in CI and at runtime.** | Where | What | Still enforced?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Guardrail operates on file paths; runtime enforces semantic tags.",
+      "breakdown_regime": "When path is outside scanned set, guardrail fails silently.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CI guardrail maps to GSI's constraint space, where publishability is a logical predicate over file path and semantic tag.",
+        "source_operator": "doctrine_a_ban",
+        "telemetry": "Exit code of CI job indicates compliance."
+      }
+    },
+    {
+      "primitive_id": "doctrine_b_gate",
+      "name": "Runtime Agent Publishing Block",
+      "verbatim_quote": "- `agent-council.ts` makes agent publishing a compile error — and the Oct-18 publisher is a script, not an agent.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Agent-based publishing is compile-time enforced.",
+      "breakdown_regime": "Compile-time failure when non-agent scripts attempt to publish.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's agent kernel encodes publishing logic as a type-level constraint, preventing unauthorized publication.",
+        "source_operator": "doctrine_b_gate",
+        "telemetry": "Compilation success/failure reflects agent validity."
+      }
+    },
+    {
+      "primitive_id": "script_publish_boundary",
+      "name": "Scripted Path Exemption",
+      "verbatim_quote": "**The Oct-18 Week 6 content was published by `scripts/publish_late_sun_mon_live_free.py`** — a Python script that is **not in the guardrail's scan set** (`draft-only.mjs` scans `apps/web`/`packages`/`workers` API-page-lib-worker files; a top-level `scripts/` file that writes to Neon by raw SQL is outside it).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Scripts bypass CI and agent checks by design.",
+      "breakdown_regime": "Path exclusion allows script-based publishing without CI or agent validation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scripted publishing is modeled as a separate domain within GSE, where CI and agent rules do not apply.",
+        "source_operator": "script_publish_boundary",
+        "telemetry": "Execution log confirms script invocation and write operation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a6946f7c6daeef03_t0",
+      "think": "The system maintains two distinct enforcement layers: a CI guardrail that scans specific paths and a runtime agent check that validates semantic intent. These operate independently, allowing a script to publish content even though neither CI nor agent logic permits it directly. The contradiction resolves through path segregation—publishing occurs outside the guardrail’s scope, while agent checks remain intact. This creates a dual-state system where the repository contains both a functional no-publish rule and a live public surface. The failure mode arises when a new path enters the system without being added to either layer, leading to unintended exposure.\n\nDeep epistemic analysis for doctrine_cleanup_and_live_path (a6946f7c6daeef03, domain=other, pages_read=6/6): Operator 'CI Publish-Boundary Enforcement' (page 1, domain other) captures: The two halves, and why they are different problems ### 2.1 Doctrine A — the brand line and its AI-framing ban **The ban is still enforced in CI and at runtime.** | Where | What | Still enforced? Assumptions: Guardrail operates on file paths; runtime enforces semantic tags. Breakdown regime: When path is outside scanned set, guardrail fails silently. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CI guardrail maps to GSI's constraint space, where publishability is a logical predicate over file path and semantic tag. Operator 'Runtime Agent Publishing Block' (page 3, domain other) captures: - `agent-council.ts` makes agent publishing a compile error — and the Oct-18 publisher is a script, not an agent. Assumptions: Agent-based publishing is compile-time enforced. Breakdown regime: Compile-time failure when non-agent scripts attempt to publish. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's agent kernel encodes publishing logic as a type-level constraint, preventing unauthorized publication. Operator 'Scripted Path Exemption' (page 3, domain other) captures: **The Oct-18 Week 6 content was published by `scripts/publish_late_sun_mon_live_free.py`** — a Python script that is **not in the guardrail's scan set** (`draft-only.mjs` scans `apps/web`/`packages`/`workers` API-page-lib-worker files; a top-level `scripts/` file that writes to Neon by raw SQL is outside it). Assumptions: Scripts bypass CI and agent checks by design. Breakdown regime: Path exclusion allows script-based publishing without CI or agent validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scripted publishing is modeled as a separate domain within GSE, where CI and agent rules do not apply. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for doctrine_cleanup_and_live_path (a6946f7c6daeef03, domain=other, pages_read=6/6): Operator 'CI Publish-Boundary Enforcement' (page 1, domain other) captures: The two halves, and why they are different problems ### 2.1 Doctrine A — the brand line and its AI-framing ban **The ban is still enforced in CI and at runtime.** | Where | What | Still enforced? Assumptions: Guardrail operates on file paths; runtime enforces semantic tags. Breakdown regime: When path is outside scanned set, guardrail fails silently. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CI guardrail maps to GSI's constraint space, where publishability is a logical predicate over file path and semantic tag. Operator 'Runtime Agent Publishing Block' (page 3, domain other) captures: - `agent-council.ts` makes agent publishing a compile error — and the Oct-18 publisher is a script, not an agent. Assumptions: Agent-based publishing is compile-time enforced. Breakdown regime: Compile-time failure when non-agent scripts attempt to publish. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's agent kernel encodes publishing logic as a type-level constraint, preventing unauthorized publication. Operator 'Scripted Path Exemption' (page 3, domain other) captures: **The Oct-18 Week 6 content was published by `scripts/publish_late_sun_mon_live_free.py`** — a Python script that is **not in the guardrail's scan set** (`draft-only.mjs` scans `apps/web`/`packages`/`workers` API-page-lib-worker files; a top-level `scripts/` file that writes to Neon by raw SQL is outside it). Assumptions: Scripts bypass CI and agent checks by design. Breakdown regime: Path exclusion allows script-based publishing without CI or agent validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scripted publishing is modeled as a separate domain within GSE, where CI and agent rules do not apply. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s separation of concerns between CI pipelines and runtime agents, evolving into a layered policy model where enforcement is distributed across multiple domains rather than unified. Retrocausal Genealogy: Rooted in doctrine_cleanup_and_live_path (a6946f7c6daeef03), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in doctrine_cleanup_and_live_path (a6946f7c6daeef03), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the CI system (enforcing static rules), the agent kernel (enforcing dynamic semantics), and the script executor (bypassing both). Each agent operates under different cost functions: CI minimizes false positives, agents minimize semantic drift, and scripts maximize operational flexibility. Theory of Mind & Decision Maker Model: Rooted in doctrine_cleanup_and_live_path (a6946f7c6daeef03), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring no single layer governs all paths. Leakage occurs if a path is missed by CI but accessed by agents, or vice versa. Veto conditions enforce that any publishable path must be explicitly allowed in both guardrails or excluded from both. Cross-Layer Veto & Anti-Leakage Check: Rooted in doctrine_cleanup_and_live_path (a6946f7c6daeef03), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

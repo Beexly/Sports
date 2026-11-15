@@ -1,0 +1,78 @@
+{
+  "book_id": "e55138080ce08d66",
+  "source_status": "COMPLETE",
+  "title": "component-inventory",
+  "file_name": "component-inventory.md",
+  "sha256": "e55138080ce08d66a42a474a9ee5d970c353a55976d41088eb2e11468e7ccf0d",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Component variance space maps design brief items to implementation fidelity via reuse, restyle, or missing verdicts. Universal Lens: Rooted in component-inventory (e55138080ce08d66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers component readiness through Bayesian belief updates on design-sync coverage and prop consistency. GSI Mapping: Rooted in component-inventory (e55138080ce08d66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models state transitions between UI variants using component reuse logic and failure mode detection. GSE Mapping: Rooted in component-inventory (e55138080ce08d66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "component_fidelity_map",
+      "name": "Component Fidelity Map",
+      "verbatim_quote": "what exists today Maps the brief's component library list (`8970241d-claudedesignprompt.md` §9: \"buttons, inputs, tabs, tables, pick row, chart frame, badge set (win, loss, void, push, stale, locked, verified), drawer, sheet, toast, empty state, skeleton\") to what is actually in `apps/web/components` today.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Fidelity score ∈ [0, 1]', 'C': 'Component type ∈ {buttons, inputs, tabs, etc.}', 'I': 'Implementation status ∈ {reuse, restyle, missing}'}",
+      "assumptions": "Each component has a defined implementation axis and can be classified into one of three states.",
+      "breakdown_regime": "When F < 0.5, component is considered non-functional or misaligned.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps design intent to actual codebase structure via component classification.",
+        "source_operator": "component_fidelity_map",
+        "telemetry": "Component count per status (reuse, restyle, missing)"
+      }
+    },
+    {
+      "primitive_id": "button_variant_axis",
+      "name": "Button Variant Axis",
+      "verbatim_quote": "| Verdict | |---|---|---|---|---|---| | **Buttons** | `apps/web/app/globals.css:64-96` (`.btn-primary`, `.btn-secondary`, `.btn-ghost` CSS classes, applied by hand on native `<button>`/`<Link>` everywhere).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'Variant ∈ {primary, secondary, ghost}', 'S': 'Size ∈ {sm, md, lg}', 'B': 'Button instance ∈ {generic, one-off}'}",
+      "assumptions": "Visual variants are defined by CSS classes and not enforced via props.",
+      "breakdown_regime": "When B = one-off, no shared prop interface exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives button behavior from CSS class inheritance and hardcoded markup.",
+        "source_operator": "button_variant_axis",
+        "telemetry": "Number of distinct button styles and usage frequency"
+      }
+    },
+    {
+      "primitive_id": "badge_composability",
+      "name": "Badge Composability",
+      "verbatim_quote": "| **Missing.** The three CSS variants already give a redesign something to start from, but there is no `<Button variant size>` React component anywhere to reuse or restyle.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'Badge type ∈ {win, loss, void, push, stale, locked, verified}', 'C': 'Composability ∈ {exported, private, missing}', 'R': 'Reusability score ∈ [0, 1]'}",
+      "assumptions": "Badge components must be exported to be reused in other contexts.",
+      "breakdown_regime": "When C = private or missing, R = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps badge visibility and export status to composability in UI stacks.",
+        "source_operator": "badge_composability",
+        "telemetry": "Exported badge count and internal-only badge count"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e55138080ce08d66_t0",
+      "think": "The component inventory task reveals a mismatch between design intent and implementation fidelity. The 'buttons' and 'inputs' sections show that while CSS classes exist for styling, no reusable React components are present. This implies a failure in abstraction layer enforcement—visual variants are hardcoded rather than parameterized. The 'badge set' section shows that although individual badges exist, they are not exported, making them non-composable. These failures suggest a lack of structured component architecture, leading to redundancy and inconsistency. The 'pick row' component demonstrates partial reuse but lacks modularization of internal parts like ResultBadge. The core issue lies in the absence of a unified prop interface across components, causing divergence in behavior despite shared visual language. This leads to a fragmented UI system where each team member must reimplement similar patterns, increasing maintenance cost and reducing scalability.\n\nDeep epistemic analysis for component-inventory (e55138080ce08d66, domain=other, pages_read=6/6): Operator 'Component Fidelity Map' (page 1, domain other) captures: what exists today Maps the brief's component library list (`8970241d-claudedesignprompt.md` §9: \"buttons, inputs, tabs, tables, pick row, chart frame, badge set (win, loss, void, push, stale, locked, verified), drawer, sheet, toast, empty state, skeleton\") to what is actually in `apps/web/components` today. Assumptions: Each component has a defined implementation axis and can be classified into one of three states. Breakdown regime: When F < 0.5, component is considered non-functional or misaligned. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps design intent to actual codebase structure via component classification. Operator 'Button Variant Axis' (page 1, domain other) captures: | Verdict | |---|---|---|---|---|---| | **Buttons** | `apps/web/app/globals.css:64-96` (`.btn-primary`, `.btn-secondary`, `.btn-ghost` CSS classes, applied by hand on native `<button>`/`<Link>` everywhere). Assumptions: Visual variants are defined by CSS classes and not enforced via props. Breakdown regime: When B = one-off, no shared prop interface exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives button behavior from CSS class inheritance and hardcoded markup. Operator 'Badge Composability' (page 2, domain other) captures: | **Missing.** The three CSS variants already give a redesign something to start from, but there is no `<Button variant size>` React component anywhere to reuse or restyle. Assumptions: Badge components must be exported to be reused in other contexts. Breakdown regime: When C = private or missing, R = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps badge visibility and export status to composability in UI stacks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for component-inventory (e55138080ce08d66, domain=other, pages_read=6/6): Operator 'Component Fidelity Map' (page 1, domain other) captures: what exists today Maps the brief's component library list (`8970241d-claudedesignprompt.md` §9: \"buttons, inputs, tabs, tables, pick row, chart frame, badge set (win, loss, void, push, stale, locked, verified), drawer, sheet, toast, empty state, skeleton\") to what is actually in `apps/web/components` today. Assumptions: Each component has a defined implementation axis and can be classified into one of three states. Breakdown regime: When F < 0.5, component is considered non-functional or misaligned. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps design intent to actual codebase structure via component classification. Operator 'Button Variant Axis' (page 1, domain other) captures: | Verdict | |---|---|---|---|---|---| | **Buttons** | `apps/web/app/globals.css:64-96` (`.btn-primary`, `.btn-secondary`, `.btn-ghost` CSS classes, applied by hand on native `<button>`/`<Link>` everywhere). Assumptions: Visual variants are defined by CSS classes and not enforced via props. Breakdown regime: When B = one-off, no shared prop interface exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives button behavior from CSS class inheritance and hardcoded markup. Operator 'Badge Composability' (page 2, domain other) captures: | **Missing.** The three CSS variants already give a redesign something to start from, but there is no `<Button variant size>` React component anywhere to reuse or restyle. Assumptions: Badge components must be exported to be reused in other contexts. Breakdown regime: When C = private or missing, R = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps badge visibility and export status to composability in UI stacks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This pattern mirrors early-stage frontend development where utility classes dominate over component-based architecture. It reflects a historical shift from monolithic styling to atomic design principles without proper tooling support for abstraction. Retrocausal Genealogy: Rooted in component-inventory (e55138080ce08d66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in component-inventory (e55138080ce08d66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the design team seeking consistency and developers optimizing for speed. The design team wants reusable components; developers prefer quick fixes using existing CSS. This conflict results in inconsistent UI systems and poor long-term maintainability. Theory of Mind & Decision Maker Model: Rooted in component-inventory (e55138080ce08d66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions arise when visual variants are not enforced via props, leading to divergent implementations. Leakage occurs when internal components like ResultBadge are not exported, forcing duplication. Veto applies when fidelity scores drop below threshold due to missing or non-reusable elements. Cross-Layer Veto & Anti-Leakage Check: Rooted in component-inventory (e55138080ce08d66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

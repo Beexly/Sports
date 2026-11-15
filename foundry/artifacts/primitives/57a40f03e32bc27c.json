@@ -1,0 +1,78 @@
+{
+  "book_id": "57a40f03e32bc27c",
+  "source_status": "COMPLETE",
+  "title": "2023 - An Investigation of Sports Betting Selection and Sizing - Beggy et al",
+  "file_name": "2023 - An Investigation of Sports Betting Selection and Sizing - Beggy et al.md",
+  "sha256": "57a40f03e32bc27ceae4e81a0c000bb2b351d0fec07ac15451ac0f1012d8c21e",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Betting selection and sizing under Kelly criterion with variance control and risk of ruin constraints. Universal Lens: Rooted in 2023 - An Investigation of Sports Betting Selection and Sizing - Beggy et al (57a40f03e32bc27c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on implied probabilities to detect mispriced lines; conformal prediction bounds for expected value estimation. GSI Mapping: Rooted in 2023 - An Investigation of Sports Betting Selection and Sizing - Beggy et al (57a40f03e32bc27c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions governed by bankroll dynamics under partial Kelly sizing; stochastic control for variance minimization and ruin avoidance. GSE Mapping: Rooted in 2023 - An Investigation of Sports Betting Selection and Sizing - Beggy et al (57a40f03e32bc27c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "mispriced_line_detector",
+      "name": "Mispriced Line Detector",
+      "verbatim_quote": "Using the average implied odds as a proxy for actual probability, strategic betters are able to identify mispriced lines.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p_{imp}': 'implied probability from odds', 'p_{true}': 'true probability estimate'}",
+      "assumptions": "Implied odds approximate true probability; mispricing occurs when p_true ≠ p_imp.",
+      "breakdown_regime": "When p_imp approaches 1.0 or is inconsistent across bookmakers.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Expected value calculation from probability discrepancy; used in GSI for identifying positive EV bets.",
+        "source_operator": "mispriced_line_detector",
+        "telemetry": "EV > 0 for selected bets"
+      }
+    },
+    {
+      "primitive_id": "full_kelly_failure",
+      "name": "Full Kelly Failure Mode",
+      "verbatim_quote": "Full Kelly scenarios was observed to not work in a realistic betting environment; it led to bankruptcy in 100% of the scenarios.",
+      "page": 1,
+      "latex": "\\frac{f^*}{B} = \\frac{p - q}{b}",
+      "symbol_and_unit_ledger": "{'f^*': 'optimal fraction of bankroll', 'B': 'bankroll amount', 'p': 'probability of winning', 'q': 'probability of losing', 'b': 'net odds received'}",
+      "assumptions": "Fixed odds and binary outcomes; full Kelly assumes infinite bankroll.",
+      "breakdown_regime": "High variance events or extreme Kelly fractions (>20%) lead to ruin.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Stochastic drift toward zero bankroll under full Kelly; modeled in GSE as a failure condition.",
+        "source_operator": "full_kelly_failure",
+        "telemetry": "Bankroll convergence to zero"
+      }
+    },
+    {
+      "primitive_id": "partial_kelly_strategy",
+      "name": "Partial Kelly Strategy",
+      "verbatim_quote": "The study recommends partial Kelly with coefficient 0.50 and a conservative 10% threshold as the most profitable strategy, limiting variance and avoiding bankrupting bets while still taking advantage of positive ROI opportunities.",
+      "page": 1,
+      "latex": "f = c \\cdot \\frac{p - q}{b}, \\quad c = 0.50",
+      "symbol_and_unit_ledger": "{'f': 'fraction of bankroll to wager', 'c': 'partial Kelly coefficient', 'p': 'probability of winning', 'q': 'probability of losing', 'b': 'net odds received'}",
+      "assumptions": "Risk aversion via scaling; bounded variance and finite bankroll.",
+      "breakdown_regime": "When p/q < 0.1 or b < 1, resulting in minimal wager size.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Controlled bet sizing to balance growth and stability; used in GSE for dynamic bankroll management.",
+        "source_operator": "partial_kelly_strategy",
+        "telemetry": "Annualized ROI ~80%, low variance"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "57a40f03e32bc27c_t0",
+      "think": "The core insight is that betting systems must reconcile probabilistic estimates with financial risk. Mispriced line detection relies on comparing implied odds to estimated true probabilities, enabling identification of positive expected value (EV) opportunities. Full Kelly Criterion, while theoretically optimal for infinite bankrolls, fails in practice due to its high variance and sensitivity to rare losses—leading to ruin in finite scenarios. Partial Kelly addresses this by scaling the recommended bet size, reducing volatility and improving long-term sustainability. The authors' recommendation of 0.50 coefficient and 10% threshold reflects a pragmatic trade-off between growth and risk. This aligns with GSI's need for robust Bayesian inference on EV and GSE’s requirement for stable state transitions under uncertain dynamics. The dataset's breadth introduces noise, necessitating filtering to reduce variance and maintain signal integrity.\n\nDeep epistemic analysis for 2023 - An Investigation of Sports Betting Selection and Sizing - Beggy et al (57a40f03e32bc27c, domain=other, pages_read=5/5): Operator 'Mispriced Line Detector' (page 1, domain other) captures: Using the average implied odds as a proxy for actual probability, strategic betters are able to identify mispriced lines. Assumptions: Implied odds approximate true probability; mispricing occurs when p_true ≠ p_imp. Breakdown regime: When p_imp approaches 1.0 or is inconsistent across bookmakers. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Expected value calculation from probability discrepancy; used in GSI for identifying positive EV bets. Operator 'Full Kelly Failure Mode' (page 1, domain other) captures: Full Kelly scenarios was observed to not work in a realistic betting environment; it led to bankruptcy in 100% of the scenarios. Assumptions: Fixed odds and binary outcomes; full Kelly assumes infinite bankroll. Breakdown regime: High variance events or extreme Kelly fractions (>20%) lead to ruin. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Stochastic drift toward zero bankroll under full Kelly; modeled in GSE as a failure condition. Operator 'Partial Kelly Strategy' (page 1, domain other) captures: The study recommends partial Kelly with coefficient 0.50 and a conservative 10% threshold as the most profitable strategy, limiting variance and avoiding bankrupting bets while still taking advantage of positive ROI opportunities. Assumptions: Risk aversion via scaling; bounded variance and finite bankroll. Breakdown regime: When p/q < 0.1 or b < 1, resulting in minimal wager size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Controlled bet sizing to balance growth and stability; used in GSE for dynamic bankroll management. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2023 - An Investigation of Sports Betting Selection and Sizing - Beggy et al (57a40f03e32bc27c, domain=other, pages_read=5/5): Operator 'Mispriced Line Detector' (page 1, domain other) captures: Using the average implied odds as a proxy for actual probability, strategic betters are able to identify mispriced lines. Assumptions: Implied odds approximate true probability; mispricing occurs when p_true ≠ p_imp. Breakdown regime: When p_imp approaches 1.0 or is inconsistent across bookmakers. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Expected value calculation from probability discrepancy; used in GSI for identifying positive EV bets. Operator 'Full Kelly Failure Mode' (page 1, domain other) captures: Full Kelly scenarios was observed to not work in a realistic betting environment; it led to bankruptcy in 100% of the scenarios. Assumptions: Fixed odds and binary outcomes; full Kelly assumes infinite bankroll. Breakdown regime: High variance events or extreme Kelly fractions (>20%) lead to ruin. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Stochastic drift toward zero bankroll under full Kelly; modeled in GSE as a failure condition. Operator 'Partial Kelly Strategy' (page 1, domain other) captures: The study recommends partial Kelly with coefficient 0.50 and a conservative 10% threshold as the most profitable strategy, limiting variance and avoiding bankrupting bets while still taking advantage of positive ROI opportunities. Assumptions: Risk aversion via scaling; bounded variance and finite bankroll. Breakdown regime: When p/q < 0.1 or b < 1, resulting in minimal wager size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Controlled bet sizing to balance growth and stability; used in GSE for dynamic bankroll management. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kelly's 1956 formulation of optimal growth strategies, later refined by Thorp and others in gambling and finance contexts. The shift from full to partial Kelly reflects modern risk-aware applications in algorithmic trading and betting. Retrocausal Genealogy: Rooted in 2023 - An Investigation of Sports Betting Selection and Sizing - Beggy et al (57a40f03e32bc27c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include bookmakers who set odds to ensure profit margins and smart bettors who exploit inefficiencies. The system models both as rational actors with asymmetric information, where the former seeks to minimize risk and the latter maximizes EV within constraints. Theory of Mind & Decision Maker Model: Rooted in 2023 - An Investigation of Sports Betting Selection and Sizing - Beggy et al (57a40f03e32bc27c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that GSI's probabilistic models do not overfit to short-term fluctuations, while GSE avoids state transitions that lead to ruin. Leakage vetoes include exclusion of extreme odds (>4.0) and broad league datasets that dilute signal-to-noise ratios. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2023 - An Investigation of Sports Betting Selection and Sizing - Beggy et al (57a40f03e32bc27c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

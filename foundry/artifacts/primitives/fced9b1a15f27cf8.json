@@ -1,0 +1,78 @@
+{
+  "book_id": "fced9b1a15f27cf8",
+  "source_status": "COMPLETE",
+  "title": "presentation-deck",
+  "file_name": "presentation-deck.md",
+  "sha256": "fced9b1a15f27cf83818d3dfb42dc09e3e704ee693c1602954fe1d6fab6efbd7",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Presentation deck construction as a structured information encoding pipeline with fixed input constraints and output fidelity requirements. Universal Lens: Rooted in presentation-deck (fced9b1a15f27cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over slide content validity and brand compliance using prior distributions on design elements and observed data from intake parameters. GSI Mapping: Rooted in presentation-deck (fced9b1a15f27cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in slide generation governed by template availability and content alignment with brandkit specifications. GSE Mapping: Rooted in presentation-deck (fced9b1a15f27cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "intake_constraint",
+      "name": "Intake Constraint Operator",
+      "verbatim_quote": "## Intake Require: - deck purpose - audience - source content - desired slide count - exact claims/data - requested aspect ratio - existing PPTX template, if any Do not invent mission, values, market statistics, pricing, claims, contacts, or product variants to fill slides.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'purpose': 'dimensionless', 'audience': 'dimensionless', 'content': 'dimensionless', 'slide_count': 'dimensionless', 'claims_data': 'dimensionless', 'aspect_ratio': 'dimensionless', 'template': 'dimensionless'}",
+      "assumptions": "All inputs are deterministic and fully specified; no synthetic data generation occurs.",
+      "breakdown_regime": "When any required parameter is unspecified or ambiguous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps intake parameters to a constrained configuration space in GSI's probabilistic model of slide content validity.",
+        "source_operator": "intake_constraint",
+        "telemetry": "Verification of completeness and correctness of intake metadata."
+      }
+    },
+    {
+      "primitive_id": "build_template",
+      "name": "Template Construction Kernel",
+      "verbatim_quote": "## Build - Existing PPTX → edit its masters/layouts or unpack/repack OOXML locally.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'pptx_template': 'dimensionless', 'masters': 'dimensionless', 'layouts': 'dimensionless', 'ooxml': 'dimensionless'}",
+      "assumptions": "Template exists and is compatible with local tooling.",
+      "breakdown_regime": "When no template is provided or incompatible with toolchain.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates layout families from existing templates via OOXML manipulation in GSE's rendering engine.",
+        "source_operator": "build_template",
+        "telemetry": "Successful application of master layouts and shape preservation."
+      }
+    },
+    {
+      "primitive_id": "qa_validation",
+      "name": "Quality Assurance Validator",
+      "verbatim_quote": "## QA and approval Render slides for inspection with headless LibreOffice (`soffice --headless --convert-to pdf`, then `pdftoppm`), fix, and re-render.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'rendered_slides': 'dimensionless', 'pdf_output': 'dimensionless', 'fixes_applied': 'dimensionless', 're_render': 'dimensionless'}",
+      "assumptions": "Rendering tools are available and functional.",
+      "breakdown_regime": "On rendering failures or validation errors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps QA checks to a binary pass/fail condition in GSI's verification framework.",
+        "source_operator": "qa_validation",
+        "telemetry": "Pass/fail status of rendered slide quality metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fced9b1a15f27cf8_t0",
+      "think": "The presentation deck workflow embodies a structured information processing system where each stage—intake, build, QA—is modeled as a deterministic transformation with bounded inputs and outputs. The intake constraint operator enforces a closed-loop feedback mechanism against synthetic data injection, ensuring fidelity to source content. The template construction kernel operates within a defined space of layout families, leveraging either pre-existing structures or generating new ones through algorithmic composition. Quality assurance validates this chain through visual inspection protocols that map to empirical observables. Each primitive forms a node in a causal graph of document production, with failure modes tied to missing dependencies or misalignment with brand standards. This architecture supports scalable, reproducible slide creation while maintaining strict adherence to brand guidelines.\n\nDeep epistemic analysis for presentation-deck (fced9b1a15f27cf8, domain=other, pages_read=1/1): Operator 'Intake Constraint Operator' (page 1, domain other) captures: ## Intake Require: - deck purpose - audience - source content - desired slide count - exact claims/data - requested aspect ratio - existing PPTX template, if any Do not invent mission, values, market statistics, pricing, claims, contacts, or product variants to fill slides. Assumptions: All inputs are deterministic and fully specified; no synthetic data generation occurs. Breakdown regime: When any required parameter is unspecified or ambiguous. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps intake parameters to a constrained configuration space in GSI's probabilistic model of slide content validity. Operator 'Template Construction Kernel' (page 1, domain other) captures: ## Build - Existing PPTX → edit its masters/layouts or unpack/repack OOXML locally. Assumptions: Template exists and is compatible with local tooling. Breakdown regime: When no template is provided or incompatible with toolchain. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates layout families from existing templates via OOXML manipulation in GSE's rendering engine. Operator 'Quality Assurance Validator' (page 1, domain other) captures: ## QA and approval Render slides for inspection with headless LibreOffice (`soffice --headless --convert-to pdf`, then `pdftoppm`), fix, and re-render. Assumptions: Rendering tools are available and functional. Breakdown regime: On rendering failures or validation errors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps QA checks to a binary pass/fail condition in GSI's verification framework. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for presentation-deck (fced9b1a15f27cf8, domain=other, pages_read=1/1): Operator 'Intake Constraint Operator' (page 1, domain other) captures: ## Intake Require: - deck purpose - audience - source content - desired slide count - exact claims/data - requested aspect ratio - existing PPTX template, if any Do not invent mission, values, market statistics, pricing, claims, contacts, or product variants to fill slides. Assumptions: All inputs are deterministic and fully specified; no synthetic data generation occurs. Breakdown regime: When any required parameter is unspecified or ambiguous. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps intake parameters to a constrained configuration space in GSI's probabilistic model of slide content validity. Operator 'Template Construction Kernel' (page 1, domain other) captures: ## Build - Existing PPTX → edit its masters/layouts or unpack/repack OOXML locally. Assumptions: Template exists and is compatible with local tooling. Breakdown regime: When no template is provided or incompatible with toolchain. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates layout families from existing templates via OOXML manipulation in GSE's rendering engine. Operator 'Quality Assurance Validator' (page 1, domain other) captures: ## QA and approval Render slides for inspection with headless LibreOffice (`soffice --headless --convert-to pdf`, then `pdftoppm`), fix, and re-render. Assumptions: Rendering tools are available and functional. Breakdown regime: On rendering failures or validation errors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps QA checks to a binary pass/fail condition in GSI's verification framework. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in formal document engineering practices from early 20th-century technical publishing, evolving into modern digital asset management systems with strong emphasis on version control and compliance. Retrocausal Genealogy: Rooted in presentation-deck (fced9b1a15f27cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in presentation-deck (fced9b1a15f27cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include potential misalignment between content creators and brand managers, and the risk of introducing non-compliant elements during iterative editing phases. Decision actors must balance creative flexibility with regulatory constraints. Theory of Mind & Decision Maker Model: Rooted in presentation-deck (fced9b1a15f27cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple primitives attempt to modify shared layout properties without coordination. Leakage occurs if synthetic data enters the pipeline despite explicit prohibitions, violating the integrity of the intake constraint. Cross-Layer Veto & Anti-Leakage Check: Rooted in presentation-deck (fced9b1a15f27cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

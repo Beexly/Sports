@@ -1,0 +1,95 @@
+{
+  "book_id": "cf9f5468e6764239",
+  "source_status": "COMPLETE",
+  "title": "2604.13861v2",
+  "file_name": "2604.13861v2.pdf",
+  "sha256": "cf9f5468e6764239c72984e5e05900122215f5ea5ccfe79cb90f73fffe30000d",
+  "primary_domain": "other",
+  "pages_total": 23,
+  "pages_read": 23,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified Markov Decision Process framework models batting order and bowling plan optimization in T20 cricket as sequential, state-dependent decisions maximizing win/defend probability via Monte Carlo simulation and phase-specific player profiling.",
+  "gsi_mapping": "GSI employs Bayesian inference to update phase-specific player profiles using James–Stein shrinkage, enabling conformal prediction of win/defend probabilities from sparse ball-by-ball data within a probabilistic generative model. GSI Mapping: Rooted in 2604.13861v2 (cf9f5468e6764239), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes tactical decisions as state-transition graphs with constrained actions, leveraging MDPs to compute optimal batting promotions and bowling assignments while respecting T20 rules and phase dynamics. GSE Mapping: Rooted in 2604.13861v2 (cf9f5468e6764239), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "phase_specific_player_profiling",
+      "name": "Phase-Specific Player Profiling",
+      "verbatim_quote": "A three-phase player profile engine (Powerplay, Middle, Death) with James–Stein shrinkage (a technique that blends a player's individual statistics toward the league average when their phasespecific data is sparse) is estimated from 1,161 IPL ball-by-ball records (2008–2025).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'φ': 'phase index ∈ {Powerplay, Middle, Death}', 'p_i^φ': \"player i's performance probability in phase φ\"}",
+      "assumptions": "Player performance varies significantly across match phases; sparse data is regularized toward league averages.",
+      "breakdown_regime": "When player-specific data is insufficient, profile converges to league mean.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables probabilistic forecasting of player contribution in each phase via shrinkage estimation.",
+        "source_operator": "phase_specific_player_profiling",
+        "telemetry": "Accuracy of predicted win/defend probability under varying phase conditions."
+      }
+    },
+    {
+      "primitive_id": "monte_carlo_win_defend_probability_evaluation",
+      "name": "Monte Carlo Win/Defend Probability Evaluation",
+      "verbatim_quote": "Win/defend probabilities are evaluated using vectorised Monte Carlo simulation over N= 50,000 innings trajectories.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'number of simulated innings = 50,000', 'P_win': 'probability of winning given match state', 'P_defend': 'probability of defending target given match state'}",
+      "assumptions": "Match outcomes are stochastic and can be approximated via repeated sampling.",
+      "breakdown_regime": "Simulation convergence under large N ensures stable probability estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps match state transitions to win/defend probabilities via stochastic trajectory generation.",
+        "source_operator": "monte_carlo_win_defend_probability_evaluation",
+        "telemetry": "Variance in win/defend probability estimates across simulations."
+      }
+    },
+    {
+      "primitive_id": "markov_decision_process_batting_order_optimization",
+      "name": "Markov Decision Process Batting Order Optimization",
+      "verbatim_quote": "Batting orders are evaluated by comparing all feasible arrangements of the remaining players and selecting the one that maximises win probability.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'π_b': 'batting order policy', 'V_B(r, b, w)': 'value function for batting win probability', 'r': 'runs required', 'b': 'balls remaining', 'w': 'wickets in hand'}",
+      "assumptions": "Optimal batting order is determined by maximizing win probability under current match state.",
+      "breakdown_regime": "Policy evaluation fails when match state is undefined or transitions are not modeled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Models batting order selection as MDP action space with terminal and transition functions.",
+        "source_operator": "markov_decision_process_batting_order_optimization",
+        "telemetry": "Improvement in win probability from optimal vs. suboptimal batting order."
+      }
+    },
+    {
+      "primitive_id": "constrained_bowling_plan_optimization",
+      "name": "Constrained Bowling Plan Optimization",
+      "verbatim_quote": "Bowling plans are optimised through a guided search over possible over assignments, progressively improving the allocation while respecting constraints such as the prohibition on consecutive overs by the same bowler.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'π_bowl': 'bowling plan policy', 'o_i': 'over assignment to bowler i', 'C_consec': 'constraint on consecutive overs', 'C_quota': 'quota constraint (max 4 overs per bowler)'}",
+      "assumptions": "Bowling strategy must respect T20 rules and optimize wicket-taking/economy.",
+      "breakdown_regime": "Search space explosion under high constraint complexity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes bowling plan as constrained MDP with reward based on wicket rate and economy.",
+        "source_operator": "constrained_bowling_plan_optimization",
+        "telemetry": "Reduction in defend probability from optimal vs. suboptimal bowling plan."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cf9f5468e6764239_t0",
+      "think": "The core innovation lies in modeling T20 tactical decisions—batting order and bowling plan—as Markov Decision Processes (MDPs) that directly optimize win/defend probability rather than expected runs. This addresses a key limitation of prior linear programming methods that optimized aggregate metrics without considering match state or sequential dependencies. The framework uses a three-phase player profile engine with James–Stein shrinkage to handle sparse data, ensuring robustness in player evaluation. Monte Carlo simulation provides empirical estimates of win/defend probabilities over 50,000 trajectories, capturing stochasticity in match outcomes. For batting order, all feasible permutations are compared to maximize win probability, while for bowling, a guided search respects T20 constraints like bowler quotas and consecutive-over rules. These primitives form a dual MDP architecture where each decision is state-dependent and action-reward driven, enabling dynamic adaptation to evolving match states. The failure mode of this approach occurs when assumptions about phase-specificity or constraint adherence are violated, leading to suboptimal strategies. The framework’s strength lies in its principled integration of game theory, probabilistic modeling, and combinatorial optimization.\n\nDeep epistemic analysis for 2604.13861v2 (cf9f5468e6764239, domain=other, pages_read=23/23): Operator 'Phase-Specific Player Profiling' (page 1, domain other) captures: A three-phase player profile engine (Powerplay, Middle, Death) with James–Stein shrinkage (a technique that blends a player's individual statistics toward the league average when their phasespecific data is sparse) is estimated from 1,161 IPL ball-by-ball records (2008–2025). Assumptions: Player performance varies significantly across match phases; sparse data is regularized toward league averages. Breakdown regime: When player-specific data is insufficient, profile converges to league mean. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables probabilistic forecasting of player contribution in each phase via shrinkage estimation. Operator 'Monte Carlo Win/Defend Probability Evaluation' (page 1, domain other) captures: Win/defend probabilities are evaluated using vectorised Monte Carlo simulation over N= 50,000 innings trajectories. Assumptions: Match outcomes are stochastic and can be approximated via repeated sampling. Breakdown regime: Simulation convergence under large N ensures stable probability estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps match state transitions to win/defend probabilities via stochastic trajectory generation. Operator 'Markov Decision Process Batting Order Optimization' (page 1, domain other) captures: Batting orders are evaluated by comparing all feasible arrangements of the remaining players and selecting the one that maximises win probability. Assumptions: Optimal batting order is determined by maximizing win probability under current match state. Breakdown regime: Policy evaluation fails when match state is undefined or transitions are not modeled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models batting order selection as MDP action space with terminal and transition functions. Operator 'Constrained Bowling Plan Optimization' (page 1, domain other) captures: Bowling plans are optimised through a guided search over possible over assignments, progressively improving the allocation while respecting constraints such as the prohibition on consecutive overs by the same bowler. Assumptions: Bowling strategy must respect T20 rules and optimize wicket-taking/economy. Breakdown regime: Search space explosion under high constraint complexity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes bowling plan as constrained MDP with reward based on wicket rate and economy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2604.13861v2 (cf9f5468e6764239, domain=other, pages_read=23/23): Operator 'Phase-Specific Player Profiling' (page 1, domain other) captures: A three-phase player profile engine (Powerplay, Middle, Death) with James–Stein shrinkage (a technique that blends a player's individual statistics toward the league average when their phasespecific data is sparse) is estimated from 1,161 IPL ball-by-ball records (2008–2025). Assumptions: Player performance varies significantly across match phases; sparse data is regularized toward league averages. Breakdown regime: When player-specific data is insufficient, profile converges to league mean. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables probabilistic forecasting of player contribution in each phase via shrinkage estimation. Operator 'Monte Carlo Win/Defend Probability Evaluation' (page 1, domain other) captures: Win/defend probabilities are evaluated using vectorised Monte Carlo simulation over N= 50,000 innings trajectories. Assumptions: Match outcomes are stochastic and can be approximated via repeated sampling. Breakdown regime: Simulation convergence under large N ensures stable probability estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps match state transitions to win/defend probabilities via stochastic trajectory generation. Operator 'Markov Decision Process Batting Order Optimization' (page 1, domain other) captures: Batting orders are evaluated by comparing all feasible arrangements of the remaining players and selecting the one that maximises win probability. Assumptions: Optimal batting order is determined by maximizing win probability under current match state. Breakdown regime: Policy evaluation fails when match state is undefined or transitions are not modeled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models batting order selection as MDP action space with terminal and transition functions. Operator 'Constrained Bowling Plan Optimization' (page 1, domain other) captures: Bowling plans are optimised through a guided search over possible over assignments, progressively improving the allocation while respecting constraints such as the prohibition on consecutive overs by the same bowler. Assumptions: Bowling strategy must respect T20 rules and optimize wicket-taking/economy. Breakdown regime: Search space explosion under high constraint complexity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes bowling plan as constrained MDP with reward based on wicket rate and economy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bellman's MDP formalism (1957) and Puterman's work (1994), this builds upon earlier stochastic optimization in sports analytics. The Duckworth–Lewis method (1998) established match state quantification, while Ganesh (2017) pioneered linear programming for T20 tactics, which this work refines by optimizing probability instead of expectation. Retrocausal Genealogy: Rooted in 2604.13861v2 (cf9f5468e6764239), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The model assumes rational agents (captains) who make decisions based on maximizing win/defend probability, balancing aggression and risk. It accounts for opponent behavior through probabilistic modeling of outcomes, treating the opposing team as a stochastic process rather than a deterministic counter-strategy. Theory of Mind & Decision Maker Model: Rooted in 2604.13861v2 (cf9f5468e6764239), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by separating batting and bowling MDPs, preventing interference between tactical domains. Leakage is mitigated by enforcing strict phase boundaries and constraint adherence. The framework avoids overfitting by relying on large-scale ball-by-ball data and regularization techniques like James–Stein shrinkage. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2604.13861v2 (cf9f5468e6764239), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

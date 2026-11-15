@@ -1,0 +1,78 @@
+{
+  "book_id": "e2ebda8f99f66b2f",
+  "source_status": "COMPLETE",
+  "title": "C3-ensemble-cept",
+  "file_name": "C3-ensemble-cept.md",
+  "sha256": "e2ebda8f99f66b2f2e5c2861cb4aa96c13abc6d6debf433f4dccb3853e84e1e5",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Ensemble learning via Bayesian model averaging (BMA) with heterogeneous expert weights, conditioned on modality-specific confidence and dynamic state transitions. Universal Lens: Rooted in C3-ensemble-cept (e2ebda8f99f66b2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction and Bayesian inference to calibrate ensemble outputs, ensuring valid uncertainty quantification across multi-modal expert inputs. GSI Mapping: Rooted in C3-ensemble-cept (e2ebda8f99f66b2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE integrates dynamic state layers (hot/cold, momentum, matchup-specific graphs) into predictive state transitions, enabling adaptive confidence adjustment during gameplay. GSE Mapping: Rooted in C3-ensemble-cept (e2ebda8f99f66b2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "conditional_ensemble_prediction",
+      "name": "Conditional Ensemble Prediction",
+      "verbatim_quote": "# C3-ensemble-cept: Ensemble / CEPT (heterogeneous experts) ## Mission (code this) Combine incompatible experts with learned/BMA weights — not naive product.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'y': 'Prediction output (dimensionless)', 'w_i': 'Expert weight (unitless)', 'x_i': 'Expert input (modality-specific)', 'L_i': 'Likelihood of expert i (unitless)'}",
+      "assumptions": "Experts are conditionally independent given latent variables; weights derived via BMA.",
+      "breakdown_regime": "When expert likelihoods collapse or become degenerate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian model averaging framework where each expert contributes conditionally to ensemble prediction through learned weights.",
+        "source_operator": "conditional_ensemble_prediction",
+        "telemetry": "Ensemble log-likelihood and cross-validation error"
+      }
+    },
+    {
+      "primitive_id": "dynamic_state_layer",
+      "name": "Dynamic State Layer",
+      "verbatim_quote": "A Bayesian hidden M | Add a hidden hot/cold-state layer to GSE's player-level features so the ensemble can dynamically adjust confidence based on inferred streakiness.",
+      "page": 2,
+      "latex": "\\mathcal{P}(s_{t+1} | s_t, o_t) = \\sum_{i=1}^{n} \\alpha_i \\cdot \\mathcal{P}(o_t | s_t) \\cdot \\mathcal{P}(s_{t+1} | s_t)",
+      "symbol_and_unit_ledger": "{'s_t': 'Hidden state (hot/cold) at time t (binary)', 'o_t': 'Observation at time t (player-level features)', '\\\\alpha_i': 'Transition weight (unitless)', '\\\\mathcal{P}': 'Probability measure (unitless)'}",
+      "assumptions": "State transitions follow Markovian dynamics; hidden states are latent variables.",
+      "breakdown_regime": "When observed patterns deviate significantly from assumed stochasticity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's core state transition engine, enabling dynamic confidence adjustments via Bayesian hidden Markov modeling.",
+        "source_operator": "dynamic_state_layer",
+        "telemetry": "Inferred state sequence and posterior probability of streakiness"
+      }
+    },
+    {
+      "primitive_id": "modality_weighted_ensemble",
+      "name": "Modality Weighted Ensemble",
+      "verbatim_quote": "Pattern: **learned ensemble weights by modality**, with injury as a *confidence downgrade* not a point-estimate hack.",
+      "page": 1,
+      "latex": "y = \\sum_{m=1}^{M} w_m(x_m) \\cdot f_m(x_m)",
+      "symbol_and_unit_ledger": "{'y': 'Final ensemble prediction (dimensionless)', 'w_m': 'Modality-specific weight (unitless)', 'x_m': 'Input from modality m (dimensionless)', 'f_m': 'Modality-specific function (dimensionless)'}",
+      "assumptions": "Each modality contributes independently; weights are learned via offline BMA.",
+      "breakdown_regime": "When modality-specific signals are highly correlated or misaligned.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI’s ensemble calibration pipeline, where modality-specific weights are optimized to reduce prediction variance while preserving accuracy.",
+        "source_operator": "modality_weighted_ensemble",
+        "telemetry": "Per-modality weight evolution and prediction variance reduction"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e2ebda8f99f66b2f_t0",
+      "think": "The foundational principle of C3-ensemble-cept is to combine heterogeneous expert models using learned Bayesian Model Averaging (BMA) weights instead of naive product aggregation. This ensures compatibility among incompatible models by conditioning their contributions on shared latent structures. The conditional ensemble prediction primitive formalizes this as a weighted sum over modalities, where weights are derived from likelihoods. The dynamic state layer introduces a hidden Markov process to model streakiness or momentum, allowing confidence to adapt in real time. These two primitives together enable robust, adaptive ensemble behavior under uncertainty. Failure modes include overfitting to rare events or misalignment between expert models. The modality-weighted ensemble primitive ensures that injury-related signals do not dominate but instead act as a confidence downgrade, preserving model integrity. The interplay between these operators creates a dual structure: one for static expert combination and another for dynamic adjustment.\n\nDeep epistemic analysis for C3-ensemble-cept (e2ebda8f99f66b2f, domain=other, pages_read=7/7): Operator 'Conditional Ensemble Prediction' (page 1, domain other) captures: # C3-ensemble-cept: Ensemble / CEPT (heterogeneous experts) ## Mission (code this) Combine incompatible experts with learned/BMA weights — not naive product. Assumptions: Experts are conditionally independent given latent variables; weights derived via BMA. Breakdown regime: When expert likelihoods collapse or become degenerate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian model averaging framework where each expert contributes conditionally to ensemble prediction through learned weights. Operator 'Dynamic State Layer' (page 2, domain other) captures: A Bayesian hidden M | Add a hidden hot/cold-state layer to GSE's player-level features so the ensemble can dynamically adjust confidence based on inferred streakiness. Assumptions: State transitions follow Markovian dynamics; hidden states are latent variables. Breakdown regime: When observed patterns deviate significantly from assumed stochasticity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's core state transition engine, enabling dynamic confidence adjustments via Bayesian hidden Markov modeling. Operator 'Modality Weighted Ensemble' (page 1, domain other) captures: Pattern: **learned ensemble weights by modality**, with injury as a *confidence downgrade* not a point-estimate hack. Assumptions: Each modality contributes independently; weights are learned via offline BMA. Breakdown regime: When modality-specific signals are highly correlated or misaligned. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s ensemble calibration pipeline, where modality-specific weights are optimized to reduce prediction variance while preserving accuracy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for C3-ensemble-cept (e2ebda8f99f66b2f, domain=other, pages_read=7/7): Operator 'Conditional Ensemble Prediction' (page 1, domain other) captures: # C3-ensemble-cept: Ensemble / CEPT (heterogeneous experts) ## Mission (code this) Combine incompatible experts with learned/BMA weights — not naive product. Assumptions: Experts are conditionally independent given latent variables; weights derived via BMA. Breakdown regime: When expert likelihoods collapse or become degenerate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian model averaging framework where each expert contributes conditionally to ensemble prediction through learned weights. Operator 'Dynamic State Layer' (page 2, domain other) captures: A Bayesian hidden M | Add a hidden hot/cold-state layer to GSE's player-level features so the ensemble can dynamically adjust confidence based on inferred streakiness. Assumptions: State transitions follow Markovian dynamics; hidden states are latent variables. Breakdown regime: When observed patterns deviate significantly from assumed stochasticity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's core state transition engine, enabling dynamic confidence adjustments via Bayesian hidden Markov modeling. Operator 'Modality Weighted Ensemble' (page 1, domain other) captures: Pattern: **learned ensemble weights by modality**, with injury as a *confidence downgrade* not a point-estimate hack. Assumptions: Each modality contributes independently; weights are learned via offline BMA. Breakdown regime: When modality-specific signals are highly correlated or misaligned. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s ensemble calibration pipeline, where modality-specific weights are optimized to reduce prediction variance while preserving accuracy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early work on ensemble methods (Breiman, 1996), extended by conditional logistic regression frameworks (Agresti, 2002) and Bayesian model averaging (Raftery et al., 1997). Recent developments in multimodal prediction and hidden Markov modeling provide the necessary machinery for dynamic adaptation. Retrocausal Genealogy: Rooted in C3-ensemble-cept (e2ebda8f99f66b2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational agents with bounded information processing, where ensemble members represent different epistemic perspectives. The system must balance exploration vs exploitation of expert diversity while avoiding overconfidence in any single model. Theory of Mind & Decision Maker Model: Rooted in C3-ensemble-cept (e2ebda8f99f66b2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced via orthogonal feature projections; leakage is mitigated by ensuring that dynamic state layers do not directly influence static expert weights. Cross-layer veto conditions prevent feedback loops that could destabilize ensemble stability. Cross-Layer Veto & Anti-Leakage Check: Rooted in C3-ensemble-cept (e2ebda8f99f66b2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

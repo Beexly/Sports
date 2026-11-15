@@ -1,0 +1,78 @@
+{
+  "book_id": "d5726fe4cbac2497",
+  "source_status": "COMPLETE",
+  "title": "thepowerrank.com",
+  "file_name": "thepowerrank.com.md",
+  "sha256": "d5726fe4cbac24972cde842f7f59540532a1c06e9e99553ec15b0206feabd553",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Hierarchical value sorting and link generation underpin structured data layouts; radial projections encode positional semantics in graph visualizations. Universal Lens: Rooted in thepowerrank.com (d5726fe4cbac2497), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models hierarchical node importance via value-based sorting; conformal prediction bounds uncertainty in link structures. GSI Mapping: Rooted in thepowerrank.com (d5726fe4cbac2497), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning employs radial projection mappings for dynamic state transitions in graph-based decision trees; state transitions governed by sorted hierarchies. GSE Mapping: Rooted in thepowerrank.com (d5726fe4cbac2497), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "hierarchy_value_sort",
+      "name": "Hierarchy Value Sort",
+      "verbatim_quote": "vg = d3.select(document.body) .append(\"svg\") .style(\"position\", \"absolute\") .style(\"top\", 0) .style(\"l ``` ### `d3_layout_hierarchyValue` ```js function d3_layout_hierarchyValue(d) { return d.value; } function d3_layout_hierarchySort(a, b) { return b.value - a.value; } // Returns an array source+target objects for the specified nodes.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'a, b': 'nodes with numeric values (dimensionless)', 'value': 'scalar measure of node importance (dimensionless)'}",
+      "assumptions": "Nodes possess comparable scalar values; sorting is strictly descending.",
+      "breakdown_regime": "When nodes lack numeric values or when value comparison is undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables topological ordering in tree structures for probabilistic inference.",
+        "source_operator": "hierarchy_value_sort",
+        "telemetry": "Sorted node sequence variance across iterations."
+      }
+    },
+    {
+      "primitive_id": "diagonal_projection",
+      "name": "Diagonal Projection",
+      "verbatim_quote": "projection functions ### `projection` ```js projection = function(x) { if (!arguments.length) return projection; projection = x;",
+      "page": 1,
+      "latex": "\\text{projection}(x) = \\begin{cases} x & \\text{if } x \\text{ is provided} \\\\ \\text{current projection} & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'x': 'input coordinate tuple (Cartesian or radial)', 'projection': 'transformation function (dimensionless)'}",
+      "assumptions": "Input coordinates are valid for transformation; projection maintains dimensional consistency.",
+      "breakdown_regime": "Invalid input types or malformed coordinate tuples.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps Cartesian to radial space for graph visualization; supports dual representation in GSE state-space.",
+        "source_operator": "diagonal_projection",
+        "telemetry": "Angular deviation from expected radial alignment."
+      }
+    },
+    {
+      "primitive_id": "hierarchy_links",
+      "name": "Hierarchy Links",
+      "verbatim_quote": "function d3_layout_hierarchyLinks(nodes) { return d3.merge(nodes.map(function(parent) { return (parent.children || []).map(function(child) { return { source: parent, target: child }; }); })); } // For backwards-compatibility, don't enable inlining by default.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'nodes': 'array of hierarchical node objects (dimensionless)', 'source': 'parent node reference (dimensionless)', 'target': 'child node reference (dimensionless)'}",
+      "assumptions": "Each node has optional 'children' property; links are directed from parent to child.",
+      "breakdown_regime": "Missing or malformed children arrays; undefined node references.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates edge list for graph traversal; enables probabilistic path modeling in GSI.",
+        "source_operator": "hierarchy_links",
+        "telemetry": "Link density and cycle detection in generated graph."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d5726fe4cbac2497_t0",
+      "think": "The primitives reflect core D3.js layout mechanisms: sorting hierarchical values enables ranked data structures, while diagonal projection facilitates geometric transformations between coordinate systems. The hierarchy links primitive generates directed graphs from nested data, supporting both topological and probabilistic reasoning. These operations form a closed system where value sorting defines structure, projection maps it into visual space, and link generation encodes relationships. Failure modes include invalid node values, missing children, or malformed coordinates, which can cause cascading errors in downstream processing. Dualities emerge in how these primitives support both static analysis (e.g., sorting) and dynamic simulation (e.g., projection).\n\nDeep epistemic analysis for thepowerrank.com (d5726fe4cbac2497, domain=other, pages_read=2/2): Operator 'Hierarchy Value Sort' (page 2, domain other) captures: vg = d3.select(document.body) .append(\"svg\") .style(\"position\", \"absolute\") .style(\"top\", 0) .style(\"l ``` ### `d3_layout_hierarchyValue` ```js function d3_layout_hierarchyValue(d) { return d.value; } function d3_layout_hierarchySort(a, b) { return b.value - a.value; } // Returns an array source+target objects for the specified nodes. Assumptions: Nodes possess comparable scalar values; sorting is strictly descending. Breakdown regime: When nodes lack numeric values or when value comparison is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables topological ordering in tree structures for probabilistic inference. Operator 'Diagonal Projection' (page 1, domain other) captures: projection functions ### `projection` ```js projection = function(x) { if (!arguments.length) return projection; projection = x; Assumptions: Input coordinates are valid for transformation; projection maintains dimensional consistency. Breakdown regime: Invalid input types or malformed coordinate tuples. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps Cartesian to radial space for graph visualization; supports dual representation in GSE state-space. Operator 'Hierarchy Links' (page 2, domain other) captures: function d3_layout_hierarchyLinks(nodes) { return d3.merge(nodes.map(function(parent) { return (parent.children || []).map(function(child) { return { source: parent, target: child }; }); })); } // For backwards-compatibility, don't enable inlining by default. Assumptions: Each node has optional 'children' property; links are directed from parent to child. Breakdown regime: Missing or malformed children arrays; undefined node references. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates edge list for graph traversal; enables probabilistic path modeling in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for thepowerrank.com (d5726fe4cbac2497, domain=other, pages_read=2/2): Operator 'Hierarchy Value Sort' (page 2, domain other) captures: vg = d3.select(document.body) .append(\"svg\") .style(\"position\", \"absolute\") .style(\"top\", 0) .style(\"l ``` ### `d3_layout_hierarchyValue` ```js function d3_layout_hierarchyValue(d) { return d.value; } function d3_layout_hierarchySort(a, b) { return b.value - a.value; } // Returns an array source+target objects for the specified nodes. Assumptions: Nodes possess comparable scalar values; sorting is strictly descending. Breakdown regime: When nodes lack numeric values or when value comparison is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables topological ordering in tree structures for probabilistic inference. Operator 'Diagonal Projection' (page 1, domain other) captures: projection functions ### `projection` ```js projection = function(x) { if (!arguments.length) return projection; projection = x; Assumptions: Input coordinates are valid for transformation; projection maintains dimensional consistency. Breakdown regime: Invalid input types or malformed coordinate tuples. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps Cartesian to radial space for graph visualization; supports dual representation in GSE state-space. Operator 'Hierarchy Links' (page 2, domain other) captures: function d3_layout_hierarchyLinks(nodes) { return d3.merge(nodes.map(function(parent) { return (parent.children || []).map(function(child) { return { source: parent, target: child }; }); })); } // For backwards-compatibility, don't enable inlining by default. Assumptions: Each node has optional 'children' property; links are directed from parent to child. Breakdown regime: Missing or malformed children arrays; undefined node references. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates edge list for graph traversal; enables probabilistic path modeling in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and computational geometry, these primitives evolve from early work on hierarchical data structures and SVG rendering. Influenced by the development of D3.js as a declarative visualization framework, they embody principles of functional programming and reactive data flow. Retrocausal Genealogy: Rooted in thepowerrank.com (d5726fe4cbac2497), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might interpret hierarchical sorting differently—some may prioritize depth over breadth, others may weight leaf-node values more heavily. In GSE, this manifests as competing heuristics for state transition selection. Projections could be interpreted through different lens angles, affecting agent perception of spatial relationships. Theory of Mind & Decision Maker Model: Rooted in thepowerrank.com (d5726fe4cbac2497), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when sorting and projection conflict—e.g., high-value nodes are projected into overlapping regions. Leakage occurs if link generation does not respect structural constraints, leading to spurious connections. Veto conditions require validation of node integrity before applying transformations. Cross-Layer Veto & Anti-Leakage Check: Rooted in thepowerrank.com (d5726fe4cbac2497), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

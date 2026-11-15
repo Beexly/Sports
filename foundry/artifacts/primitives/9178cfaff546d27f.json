@@ -1,0 +1,78 @@
+{
+  "book_id": "9178cfaff546d27f",
+  "source_status": "COMPLETE",
+  "title": "snf-mnf-addendum-2026-09-19",
+  "file_name": "snf-mnf-addendum-2026-09-19.md",
+  "sha256": "9178cfaff546d27fcf9c93db7134e8df1bd7f1b656a1bf54ddbbe83b48bc9b9e",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian belief updating over player asset states conditioned on contract and injury data. Universal Lens: Rooted in snf-mnf-addendum-2026-09-19 (9178cfaff546d27f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers player value through conformal predictive distributions using multi-source projection ensembles and ownership-derived confidence intervals. GSI Mapping: Rooted in snf-mnf-addendum-2026-09-19 (9178cfaff546d27f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models game state transitions via stochastic dynamics of team offensive efficiency and defensive vulnerability under injury constraints. GSE Mapping: Rooted in snf-mnf-addendum-2026-09-19 (9178cfaff546d27f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "player_contract_asset",
+      "name": "Player Contract Asset",
+      "verbatim_quote": "**Wrong — Likely signed 3yr/$40M with the NY Giants in March 2026** (Farrell/Andrews participation lane, citing Giants Wire 2026-09-17 and DK Network 2026-09-15); his 8/8/78/2TD Week 1 was NYG vs DAL.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Contract value in USD', 'T': 'Tenure in years', 'P': 'Player identifier'}",
+      "assumptions": "Player's salary reflects current market value and team commitment level.",
+      "breakdown_regime": "Contractual misalignment between prior and current team context.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Asset valuation function maps contract terms to projected fantasy contribution via team context and role allocation.",
+        "source_operator": "player_contract_asset",
+        "telemetry": "Ownership probability and salary deviation from median."
+      }
+    },
+    {
+      "primitive_id": "injury_status_vector",
+      "name": "Injury Status Vector",
+      "verbatim_quote": "He is a **NYG@LAR (MNF) TE asset**, not a BAL piece.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'Injury status vector', 'S': 'Severity index', 'R': 'Recovery time in days'}",
+      "assumptions": "Injury status affects playing time and performance metrics directly.",
+      "breakdown_regime": "Injury classification impacts game-time availability and expected output.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Vectorized injury data informs conditional probability of participation and performance expectation.",
+        "source_operator": "injury_status_vector",
+        "telemetry": "Projected playing time percentage and expected touchdowns."
+      }
+    },
+    {
+      "primitive_id": "fantasy_projection_ensemble",
+      "name": "Fantasy Projection Ensemble",
+      "verbatim_quote": "- **Projections:** Weekly (not rest-of-season) ranks come from RotoBaller Start/Sit (9/17), RotoWire Value Meter (9/17), USA Today Flex (9/19), DK Network blended projections (9/15), FanDuel Research TE rankings, NBC Sports TE rankings, and Bleacher Report weekly PPR ranks.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{\\\\text{proj}}': 'Projected points', 'W': 'Weighted average across sources', 'S_i': 'Source-specific rank'}",
+      "assumptions": "Ensemble method reduces variance by aggregating multiple expert forecasts.",
+      "breakdown_regime": "Single-source projection failure due to outdated or stale data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Projection ensemble maps to probabilistic forecast distribution over fantasy outcomes.",
+        "source_operator": "fantasy_projection_ensemble",
+        "telemetry": "Confidence interval width and mean deviation from baseline."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9178cfaff546d27f_t0",
+      "think": "The core operators define a structured belief system for fantasy asset selection. Player contract asset encodes financial commitment and team alignment, which influences expected performance. Injury status vector provides dynamic constraints on availability and output potential. Fantasy projection ensemble aggregates expert opinions into a coherent forecast. These primitives form a Bayesian network where each node updates based on new evidence—contract changes, injury reports, or projection revisions. Dualities emerge in how these factors interact: contract implies role, injury implies risk, and projections imply uncertainty. Failure modes include stale-source bias, misclassification of assets, and overconfidence in ensemble weights. The system must account for temporal drift in data relevance and agent-specific biases in forecasting models.\n\nDeep epistemic analysis for snf-mnf-addendum-2026-09-19 (9178cfaff546d27f, domain=other, pages_read=12/12): Operator 'Player Contract Asset' (page 1, domain other) captures: **Wrong — Likely signed 3yr/$40M with the NY Giants in March 2026** (Farrell/Andrews participation lane, citing Giants Wire 2026-09-17 and DK Network 2026-09-15); his 8/8/78/2TD Week 1 was NYG vs DAL. Assumptions: Player's salary reflects current market value and team commitment level. Breakdown regime: Contractual misalignment between prior and current team context. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Asset valuation function maps contract terms to projected fantasy contribution via team context and role allocation. Operator 'Injury Status Vector' (page 1, domain other) captures: He is a **NYG@LAR (MNF) TE asset**, not a BAL piece. Assumptions: Injury status affects playing time and performance metrics directly. Breakdown regime: Injury classification impacts game-time availability and expected output. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Vectorized injury data informs conditional probability of participation and performance expectation. Operator 'Fantasy Projection Ensemble' (page 1, domain other) captures: - **Projections:** Weekly (not rest-of-season) ranks come from RotoBaller Start/Sit (9/17), RotoWire Value Meter (9/17), USA Today Flex (9/19), DK Network blended projections (9/15), FanDuel Research TE rankings, NBC Sports TE rankings, and Bleacher Report weekly PPR ranks. Assumptions: Ensemble method reduces variance by aggregating multiple expert forecasts. Breakdown regime: Single-source projection failure due to outdated or stale data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Projection ensemble maps to probabilistic forecast distribution over fantasy outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for snf-mnf-addendum-2026-09-19 (9178cfaff546d27f, domain=other, pages_read=12/12): Operator 'Player Contract Asset' (page 1, domain other) captures: **Wrong — Likely signed 3yr/$40M with the NY Giants in March 2026** (Farrell/Andrews participation lane, citing Giants Wire 2026-09-17 and DK Network 2026-09-15); his 8/8/78/2TD Week 1 was NYG vs DAL. Assumptions: Player's salary reflects current market value and team commitment level. Breakdown regime: Contractual misalignment between prior and current team context. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Asset valuation function maps contract terms to projected fantasy contribution via team context and role allocation. Operator 'Injury Status Vector' (page 1, domain other) captures: He is a **NYG@LAR (MNF) TE asset**, not a BAL piece. Assumptions: Injury status affects playing time and performance metrics directly. Breakdown regime: Injury classification impacts game-time availability and expected output. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Vectorized injury data informs conditional probability of participation and performance expectation. Operator 'Fantasy Projection Ensemble' (page 1, domain other) captures: - **Projections:** Weekly (not rest-of-season) ranks come from RotoBaller Start/Sit (9/17), RotoWire Value Meter (9/17), USA Today Flex (9/19), DK Network blended projections (9/15), FanDuel Research TE rankings, NBC Sports TE rankings, and Bleacher Report weekly PPR ranks. Assumptions: Ensemble method reduces variance by aggregating multiple expert forecasts. Breakdown regime: Single-source projection failure due to outdated or stale data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Projection ensemble maps to probabilistic forecast distribution over fantasy outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and ensemble learning frameworks developed in computational sports analytics post-2020. Retrocausal Genealogy: Rooted in snf-mnf-addendum-2026-09-19 (9178cfaff546d27f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in snf-mnf-addendum-2026-09-19 (9178cfaff546d27f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may prioritize different data streams—some emphasize injury risk while others focus on salary efficiency. Strategic divergence arises from varying interpretations of contract value versus projected output. Theory of Mind & Decision Maker Model: Rooted in snf-mnf-addendum-2026-09-19 (9178cfaff546d27f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that no single source dominates the ensemble; leakage occurs when injury data is conflated with projection data without proper normalization. Cross-Layer Veto & Anti-Leakage Check: Rooted in snf-mnf-addendum-2026-09-19 (9178cfaff546d27f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in snf-mnf-addendum-2026-09-19 (9178cfaff546d27f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

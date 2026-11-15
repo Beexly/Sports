@@ -1,0 +1,78 @@
+{
+  "book_id": "06fddd8828456991",
+  "source_status": "COMPLETE",
+  "title": "engine-reasoning-audit-2026-10-28",
+  "file_name": "engine-reasoning-audit-2026-10-28.md",
+  "sha256": "06fddd882845699126c5c05caa276ec72fa154340d5154d7c151356f25311074",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Coherent reasoning architecture enforces coach-first logic via type-system gated projections, with simulation layers executing before market alignment. Universal Lens: Rooted in engine-reasoning-audit-2026-10-28 (06fddd8828456991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps coach projections to marginal likelihoods using sealed tau-guards; conformal prediction ensures valid uncertainty bounds over team-agnostic outcomes. GSI Mapping: Rooted in engine-reasoning-audit-2026-10-28 (06fddd8828456991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning transitions through locked coach states; state updates depend on deterministic simulation paths, bypassing real-time team-specific inputs. GSE Mapping: Rooted in engine-reasoning-audit-2026-10-28 (06fddd8828456991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "coach_lock_order",
+      "name": "Coach Lock Order",
+      "verbatim_quote": "--## What is genuinely wired **The doctrine is enforced by the type system, not by convention.** `CoachLockPacket` (`engine/coach-projection.ts:32-42`) has no odds field at all.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'CoachLockPacket': 'dimensionless', 'odds': 'dimensionless'}",
+      "assumptions": "Type system prevents odds leakage into lock mechanism.",
+      "breakdown_regime": "When odds field is present in packet structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Type-safe locking mirrors GSI's probabilistic sealing protocol.",
+        "source_operator": "coach_lock_order",
+        "telemetry": "Verification of absence of odds in CoachLockPacket"
+      }
+    },
+    {
+      "primitive_id": "simulation_execution_path",
+      "name": "Simulation Execution Path",
+      "verbatim_quote": "**The simulation runs.** `scoring.ts` → `engine/coach-projection.ts` → `coach-sim/index.ts` → `coach-sim/locked-projection.ts:185` → `simulateCoachGame`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'scoring.ts': 'function', 'simulateCoachGame': 'function'}",
+      "assumptions": "Execution path is linear and deterministic.",
+      "breakdown_regime": "When function call chain completes successfully.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel execution trace aligns with GSE's state transition model.",
+        "source_operator": "simulation_execution_path",
+        "telemetry": "Traceability of function calls from scoring to simulation"
+      }
+    },
+    {
+      "primitive_id": "team_agnostic_location",
+      "name": "Team-Agnostic Location",
+      "verbatim_quote": "The location is a league-average constant `coach-sim/markov-simulator.ts:265-272`: ``` total = 46.5 + coachSupport * 0.15 - injury margin = 3 + coachSupport * 0.15 + KNEEL_HAIRCUT * 0.1 - injury * 0.5 ``` `pointLocation` takes **only** `coachSupport` and `injuryDropOff`.",
+      "page": 1,
+      "latex": "\\text{total} = 46.5 + \\text{coachSupport} \\cdot 0.15 - \\text{injuryMargin} \\quad \\text{margin} = 3 + \\text{coachSupport} \\cdot 0.15 + \\text{KNEEL_HAIRCUT} \\cdot 0.1 - \\text{injury} \\cdot 0.5",
+      "symbol_and_unit_ledger": "{'total': 'points', 'margin': 'points', 'coachSupport': 'unitless', 'injuryMargin': 'points', 'KNEEL_HAIRCUT': 'dimensionless', 'injury': 'points'}",
+      "assumptions": "Location computation depends solely on coach support and injury drop-off.",
+      "breakdown_regime": "When team-specific variables are absent from computation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived location formula reflects GSE's fixed starting point logic.",
+        "source_operator": "team_agnostic_location",
+        "telemetry": "Consistency check of pointLocation against team inputs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "06fddd8828456991_t0",
+      "think": "The engine exhibits correct logical ordering with coach-first reasoning, where `readCoachLock` precedes bookmaker filters. However, the core failure lies in the lack of team-specificity in location computation. The simulation path executes correctly but uses only league-average constants, indicating a wiring gap rather than a capability gap. The absence of opponent quality, pace, or personnel in the model implies that even though reasoning layers are invoked, they do not influence the final outcome due to fixed inputs. This creates a dualism between the structured reasoning framework and the static output, which can be modeled as a conditional probability distribution over team-agnostic outcomes. The sealing mechanism ensures integrity but does not address the root cause of non-differentiation across teams.\n\nDeep epistemic analysis for engine-reasoning-audit-2026-10-28 (06fddd8828456991, domain=other, pages_read=3/3): Operator 'Coach Lock Order' (page 1, domain other) captures: --## What is genuinely wired **The doctrine is enforced by the type system, not by convention.** `CoachLockPacket` (`engine/coach-projection.ts:32-42`) has no odds field at all. Assumptions: Type system prevents odds leakage into lock mechanism. Breakdown regime: When odds field is present in packet structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Type-safe locking mirrors GSI's probabilistic sealing protocol. Operator 'Simulation Execution Path' (page 1, domain other) captures: **The simulation runs.** `scoring.ts` → `engine/coach-projection.ts` → `coach-sim/index.ts` → `coach-sim/locked-projection.ts:185` → `simulateCoachGame`. Assumptions: Execution path is linear and deterministic. Breakdown regime: When function call chain completes successfully. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel execution trace aligns with GSE's state transition model. Operator 'Team-Agnostic Location' (page 1, domain other) captures: The location is a league-average constant `coach-sim/markov-simulator.ts:265-272`: ``` total = 46.5 + coachSupport * 0.15 - injury margin = 3 + coachSupport * 0.15 + KNEEL_HAIRCUT * 0.1 - injury * 0.5 ``` `pointLocation` takes **only** `coachSupport` and `injuryDropOff`. Assumptions: Location computation depends solely on coach support and injury drop-off. Breakdown regime: When team-specific variables are absent from computation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived location formula reflects GSE's fixed starting point logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for engine-reasoning-audit-2026-10-28 (06fddd8828456991, domain=other, pages_read=3/3): Operator 'Coach Lock Order' (page 1, domain other) captures: --## What is genuinely wired **The doctrine is enforced by the type system, not by convention.** `CoachLockPacket` (`engine/coach-projection.ts:32-42`) has no odds field at all. Assumptions: Type system prevents odds leakage into lock mechanism. Breakdown regime: When odds field is present in packet structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Type-safe locking mirrors GSI's probabilistic sealing protocol. Operator 'Simulation Execution Path' (page 1, domain other) captures: **The simulation runs.** `scoring.ts` → `engine/coach-projection.ts` → `coach-sim/index.ts` → `coach-sim/locked-projection.ts:185` → `simulateCoachGame`. Assumptions: Execution path is linear and deterministic. Breakdown regime: When function call chain completes successfully. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel execution trace aligns with GSE's state transition model. Operator 'Team-Agnostic Location' (page 1, domain other) captures: The location is a league-average constant `coach-sim/markov-simulator.ts:265-272`: ``` total = 46.5 + coachSupport * 0.15 - injury margin = 3 + coachSupport * 0.15 + KNEEL_HAIRCUT * 0.1 - injury * 0.5 ``` `pointLocation` takes **only** `coachSupport` and `injuryDropOff`. Assumptions: Location computation depends solely on coach support and injury drop-off. Breakdown regime: When team-specific variables are absent from computation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived location formula reflects GSE's fixed starting point logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s probabilistic reasoning frameworks, particularly those emphasizing type safety and layered inference. Influenced by formal verification techniques in AI systems and Bayesian decision theory. Retrocausal Genealogy: Rooted in engine-reasoning-audit-2026-10-28 (06fddd8828456991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in engine-reasoning-audit-2026-10-28 (06fddd8828456991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include the market, which selects sides based on perceived team strength, and the coach simulator, which operates under fixed parameters. These agents interact through a shared but incomplete information channel, leading to misalignment between internal logic and external behavior. Theory of Mind & Decision Maker Model: Rooted in engine-reasoning-audit-2026-10-28 (06fddd8828456991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained through strict separation of concerns: type system enforces no odds in lock, simulation runs independently, and location remains invariant to team data. Leakage vetoes occur when team-specific factors attempt to enter the lock phase. Cross-Layer Veto & Anti-Leakage Check: Rooted in engine-reasoning-audit-2026-10-28 (06fddd8828456991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

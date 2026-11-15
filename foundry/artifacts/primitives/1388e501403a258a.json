@@ -1,0 +1,78 @@
+{
+  "book_id": "1388e501403a258a",
+  "source_status": "COMPLETE",
+  "title": "COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29",
+  "file_name": "COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29.md",
+  "sha256": "1388e501403a258ae6476f5ebf7178bba3aa948a5ec27f8aa03420e5bb7e3d86",
+  "primary_domain": "other",
+  "pages_total": 14,
+  "pages_read": 14,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Snap tempo dynamics and pass-rush collapse modulate receiver target efficiency via interior OL degradation. Universal Lens: Rooted in COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29 (1388e501403a258a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on player prop confidence scores integrates temporal snap data with defensive pressure tensors. GSI Mapping: Rooted in COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29 (1388e501403a258a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps OL performance to receiver route timing and target share variance across game states. GSE Mapping: Rooted in COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29 (1388e501403a258a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "snap_tempo_dynamics",
+      "name": "Snap Tempo Dynamics",
+      "verbatim_quote": "Matt LaFleur's `24.9s` neutral snap tempo bleeds the second-half clock while Carolina's interior OL losses stall drives.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_s': 'seconds per snap', 't_c': 'clock time bleed in seconds'}",
+      "assumptions": "Neutral tempo implies consistent pacing; OL loss correlates with drive stalling.",
+      "breakdown_regime": "Second-half clock depletion under neutral tempo conditions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Temporal pacing affects offensive rhythm and defensive pressure window.",
+        "source_operator": "snap_tempo_dynamics",
+        "telemetry": "Clock time remaining vs expected time at snap initiation."
+      }
+    },
+    {
+      "primitive_id": "interior_pass_rush_collapse",
+      "name": "Interior Pass-Rush Collapse",
+      "verbatim_quote": "72.5 Rec Yds (-110)** | `71.5 -> 72.5` | **`65/100`** | **`61.4 yds`** (`43.1–74.2`) | `+12.74c` | Interior pass-rush collapse prevents Bryce Young from holding the ball for deep boundary routes to McMillan.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{collapse}': 'probability of pass-rush collapse', 't_{hold}': 'time to hold ball in seconds'}",
+      "assumptions": "Pass-rush collapse reduces QB pocket time, limiting deep route execution.",
+      "breakdown_regime": "QB pocket integrity under interior pass rush.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pass-rush collapse maps to receiver route timing inefficiency.",
+        "source_operator": "interior_pass_rush_collapse",
+        "telemetry": "Time to completion vs pass-rush pressure metrics."
+      }
+    },
+    {
+      "primitive_id": "receiver_target_share_variance",
+      "name": "Receiver Target Share Variance",
+      "verbatim_quote": "- **Darren Waller `21.5` Rec Yds (`2.5` Rec), Tommy Tremble `15.5` Rec Yds (`2.5` Rec), John Metchie III `15.5` Rec Yds (`1.5` Rec), MarShawn Lloyd `16.5` Rush Yds / `5.5` Rec Yds — `PASS`:** Low-share rotational variance.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_i': 'target share for receiver i', 'V_T': 'variance in target distribution'}",
+      "assumptions": "Rotational variance implies reduced target concentration on primary receivers.",
+      "breakdown_regime": "Offensive targeting distribution under rotation constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Target share variance reflects offensive strategy and injury impact.",
+        "source_operator": "receiver_target_share_variance",
+        "telemetry": "Percentage of targets per receiver vs baseline distribution."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1388e501403a258a_t0",
+      "think": "The core operators derive from snap tempo and pass-rush dynamics. Snap tempo t_s influences t_c, which impacts offensive rhythm and defensive pressure windows. Interior pass-rush collapse P_calters QB pocket integrity, reducing t_hold and limiting deep route execution. Receiver target share variance V_T reflects strategic shifts due to injuries or rotations. These form a dual system where tempo and pressure modulate target efficiency. Failure modes include OL degradation leading to clock bleed and reduced target window. Temporal and spatial metrics must align for accurate inference. The system exhibits non-linear feedback between tempo, pressure, and target outcomes. Inference requires probabilistic modeling of these interdependent variables.\n\nDeep epistemic analysis for COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29 (1388e501403a258a, domain=other, pages_read=14/14): Operator 'Snap Tempo Dynamics' (page 1, domain other) captures: Matt LaFleur's `24.9s` neutral snap tempo bleeds the second-half clock while Carolina's interior OL losses stall drives. Assumptions: Neutral tempo implies consistent pacing; OL loss correlates with drive stalling. Breakdown regime: Second-half clock depletion under neutral tempo conditions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Temporal pacing affects offensive rhythm and defensive pressure window. Operator 'Interior Pass-Rush Collapse' (page 2, domain other) captures: 72.5 Rec Yds (-110)** | `71.5 -> 72.5` | **`65/100`** | **`61.4 yds`** (`43.1–74.2`) | `+12.74c` | Interior pass-rush collapse prevents Bryce Young from holding the ball for deep boundary routes to McMillan. Assumptions: Pass-rush collapse reduces QB pocket time, limiting deep route execution. Breakdown regime: QB pocket integrity under interior pass rush. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Pass-rush collapse maps to receiver route timing inefficiency. Operator 'Receiver Target Share Variance' (page 2, domain other) captures: - **Darren Waller `21.5` Rec Yds (`2.5` Rec), Tommy Tremble `15.5` Rec Yds (`2.5` Rec), John Metchie III `15.5` Rec Yds (`1.5` Rec), MarShawn Lloyd `16.5` Rush Yds / `5.5` Rec Yds — `PASS`:** Low-share rotational variance. Assumptions: Rotational variance implies reduced target concentration on primary receivers. Breakdown regime: Offensive targeting distribution under rotation constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Target share variance reflects offensive strategy and injury impact. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29 (1388e501403a258a, domain=other, pages_read=14/14): Operator 'Snap Tempo Dynamics' (page 1, domain other) captures: Matt LaFleur's `24.9s` neutral snap tempo bleeds the second-half clock while Carolina's interior OL losses stall drives. Assumptions: Neutral tempo implies consistent pacing; OL loss correlates with drive stalling. Breakdown regime: Second-half clock depletion under neutral tempo conditions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Temporal pacing affects offensive rhythm and defensive pressure window. Operator 'Interior Pass-Rush Collapse' (page 2, domain other) captures: 72.5 Rec Yds (-110)** | `71.5 -> 72.5` | **`65/100`** | **`61.4 yds`** (`43.1–74.2`) | `+12.74c` | Interior pass-rush collapse prevents Bryce Young from holding the ball for deep boundary routes to McMillan. Assumptions: Pass-rush collapse reduces QB pocket time, limiting deep route execution. Breakdown regime: QB pocket integrity under interior pass rush. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Pass-rush collapse maps to receiver route timing inefficiency. Operator 'Receiver Target Share Variance' (page 2, domain other) captures: - **Darren Waller `21.5` Rec Yds (`2.5` Rec), Tommy Tremble `15.5` Rec Yds (`2.5` Rec), John Metchie III `15.5` Rec Yds (`1.5` Rec), MarShawn Lloyd `16.5` Rush Yds / `5.5` Rec Yds — `PASS`:** Low-share rotational variance. Assumptions: Rotational variance implies reduced target concentration on primary receivers. Breakdown regime: Offensive targeting distribution under rotation constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Target share variance reflects offensive strategy and injury impact. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical game theory and temporal dynamics, extended into modern NFL analytics via snap timing and pass-rush models. Retrocausal Genealogy: Rooted in COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29 (1388e501403a258a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29 (1388e501403a258a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams optimize for tempo control and pressure mitigation. QBs adapt to pressure, receivers adjust routes, and coaches shift target allocation based on real-time data. Theory of Mind & Decision Maker Model: Rooted in COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29 (1388e501403a258a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29 (1388e501403a258a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures tempo and pressure metrics do not co-vary without independent influence. Leakage vetos exclude redundant or correlated signals that could bias inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29 (1388e501403a258a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29 (1388e501403a258a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

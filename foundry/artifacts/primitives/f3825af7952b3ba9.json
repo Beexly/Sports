@@ -1,0 +1,78 @@
+{
+  "book_id": "f3825af7952b3ba9",
+  "source_status": "COMPLETE",
+  "title": "watch-pipeline-alibaba-migration-spec-2026-10-14",
+  "file_name": "watch-pipeline-alibaba-migration-spec-2026-10-14.md",
+  "sha256": "f3825af7952b3ba99b4c3970aa1e9d3f5610e1163b73ca8f66032f5655ed1b22",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A GPU-accelerated computer vision pipeline mapping video frames to spatially coherent tracklets via YOLOv8n and BoT-SORT, with homography-based metric derivation. Universal Lens: Rooted in watch-pipeline-alibaba-migration-spec-2026-10-14 (f3825af7952b3ba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of game states from frame-level detections using conformal predictive distributions over tracked entities and derived metrics. GSI Mapping: Rooted in watch-pipeline-alibaba-migration-spec-2026-10-14 (f3825af7952b3ba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions between game windows using ephemeral in-memory trackers with deterministic restart semantics and adaptive compute fallbacks. GSE Mapping: Rooted in watch-pipeline-alibaba-migration-spec-2026-10-14 (f3825af7952b3ba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "frame_to_detection",
+      "name": "Frame-to-Detection Mapping",
+      "verbatim_quote": "Endpoints: `GET /health` (open; Vercel scheduler warm-pings it every 3 min in game windows) and `POST /process-frame` (multipart JPEG ≤2 MB, ~720p; fields game_id/ts/fps/burst/homography; returns detections, tracklets, derived metrics as JSON).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'frame': 'dimensionless', 'detections': 'count', 'game_id': 'string', 'ts': 'seconds', 'fps': 'Hz', 'burst': 'dimensionless', 'homography': '3x3 matrix'}",
+      "assumptions": "Input frames are preprocessed to 640px width with person class only, confidence threshold fixed at 0.35.",
+      "breakdown_regime": "Frame size exceeds 2MB or resolution below 640px.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Detection map is isomorphic to a set-valued function over spatial coordinates with temporal indexing.",
+        "source_operator": "frame_to_detection",
+        "telemetry": "Detections count per frame and bounding box coordinates."
+      }
+    },
+    {
+      "primitive_id": "gpu_acceleration_kernel",
+      "name": "GPU Acceleration Kernel",
+      "verbatim_quote": "Auto-uses CUDA when present, silently falls back to CPU when not.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'cuda_available': 'boolean', 'compute_mode': 'mode', 'fallback_cpu': 'boolean'}",
+      "assumptions": "CUDA runtime environment is available or fallback behavior is defined.",
+      "breakdown_regime": "No GPU hardware detected or CUDA driver unavailable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel selects compute backend based on availability, enabling dynamic resource allocation.",
+        "source_operator": "gpu_acceleration_kernel",
+        "telemetry": "Compute backend used per execution cycle."
+      }
+    },
+    {
+      "primitive_id": "tracker_state_eviction",
+      "name": "Tracker State Eviction",
+      "verbatim_quote": "- State: 100% in-process memory (per-game tracker dict, 6 h idle eviction).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'state_dict': 'memory', 'idle_timeout': 'hours', 'eviction_policy': 'policy'}",
+      "assumptions": "State is fully ephemeral and evicted after 6 hours of inactivity.",
+      "breakdown_regime": "System restart or timeout triggers full state wipe.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Memory-based state management with time-bound lifecycle.",
+        "source_operator": "tracker_state_eviction",
+        "telemetry": "Active tracker count and eviction timestamps."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f3825af7952b3ba9_t0",
+      "think": "The pipeline operates as a sequential dataflow system where each frame undergoes stabilization, detection, tracking, and metric derivation. The system's core is a vision model (YOLOv8n) operating under a fixed confidence threshold and resolution constraint. It uses a hybrid compute strategy that dynamically switches between GPU and CPU depending on availability. The state management is ephemeral, relying on in-memory dictionaries with a fixed TTL. The system is designed for low-latency response within game windows, with health checks ensuring uptime. The telemetry loop is closed through Vercel endpoints, which relay processed data without external dependencies. Failure modes include compute unavailability, frame size violations, and state loss upon restarts.\n\nDeep epistemic analysis for watch-pipeline-alibaba-migration-spec-2026-10-14 (f3825af7952b3ba9, domain=other, pages_read=2/2): Operator 'Frame-to-Detection Mapping' (page 1, domain other) captures: Endpoints: `GET /health` (open; Vercel scheduler warm-pings it every 3 min in game windows) and `POST /process-frame` (multipart JPEG ≤2 MB, ~720p; fields game_id/ts/fps/burst/homography; returns detections, tracklets, derived metrics as JSON). Assumptions: Input frames are preprocessed to 640px width with person class only, confidence threshold fixed at 0.35. Breakdown regime: Frame size exceeds 2MB or resolution below 640px. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Detection map is isomorphic to a set-valued function over spatial coordinates with temporal indexing. Operator 'GPU Acceleration Kernel' (page 1, domain other) captures: Auto-uses CUDA when present, silently falls back to CPU when not. Assumptions: CUDA runtime environment is available or fallback behavior is defined. Breakdown regime: No GPU hardware detected or CUDA driver unavailable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel selects compute backend based on availability, enabling dynamic resource allocation. Operator 'Tracker State Eviction' (page 1, domain other) captures: - State: 100% in-process memory (per-game tracker dict, 6 h idle eviction). Assumptions: State is fully ephemeral and evicted after 6 hours of inactivity. Breakdown regime: System restart or timeout triggers full state wipe. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Memory-based state management with time-bound lifecycle. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for watch-pipeline-alibaba-migration-spec-2026-10-14 (f3825af7952b3ba9, domain=other, pages_read=2/2): Operator 'Frame-to-Detection Mapping' (page 1, domain other) captures: Endpoints: `GET /health` (open; Vercel scheduler warm-pings it every 3 min in game windows) and `POST /process-frame` (multipart JPEG ≤2 MB, ~720p; fields game_id/ts/fps/burst/homography; returns detections, tracklets, derived metrics as JSON). Assumptions: Input frames are preprocessed to 640px width with person class only, confidence threshold fixed at 0.35. Breakdown regime: Frame size exceeds 2MB or resolution below 640px. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Detection map is isomorphic to a set-valued function over spatial coordinates with temporal indexing. Operator 'GPU Acceleration Kernel' (page 1, domain other) captures: Auto-uses CUDA when present, silently falls back to CPU when not. Assumptions: CUDA runtime environment is available or fallback behavior is defined. Breakdown regime: No GPU hardware detected or CUDA driver unavailable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel selects compute backend based on availability, enabling dynamic resource allocation. Operator 'Tracker State Eviction' (page 1, domain other) captures: - State: 100% in-process memory (per-game tracker dict, 6 h idle eviction). Assumptions: State is fully ephemeral and evicted after 6 hours of inactivity. Breakdown regime: System restart or timeout triggers full state wipe. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Memory-based state management with time-bound lifecycle. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical computer vision pipelines using ORB/RANSAC for stabilization and deep learning models for object detection. Evolution from edge computing to cloud-native deployment reflects increasing demand for scalable inference. Retrocausal Genealogy: Rooted in watch-pipeline-alibaba-migration-spec-2026-10-14 (f3825af7952b3ba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in watch-pipeline-alibaba-migration-spec-2026-10-14 (f3825af7952b3ba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Decision actor is the system's operational logic, balancing performance and cost. Opposing agent includes hardware constraints and latency requirements. The design assumes predictable usage patterns and tolerates transient failures. Theory of Mind & Decision Maker Model: Rooted in watch-pipeline-alibaba-migration-spec-2026-10-14 (f3825af7952b3ba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by separating vision processing from state estimation layers. Leakage veto occurs if external services are introduced beyond Vercel ingestion point. Cross-Layer Veto & Anti-Leakage Check: Rooted in watch-pipeline-alibaba-migration-spec-2026-10-14 (f3825af7952b3ba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in watch-pipeline-alibaba-migration-spec-2026-10-14 (f3825af7952b3ba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

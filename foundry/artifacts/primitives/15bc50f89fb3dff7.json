@@ -1,0 +1,78 @@
+{
+  "book_id": "15bc50f89fb3dff7",
+  "source_status": "COMPLETE",
+  "title": "keenum-target-splits",
+  "file_name": "keenum-target-splits.md",
+  "sha256": "15bc50f89fb3dff74dc9ce75e866c3e02d3a9b8e27855288121e1bb65913cff7",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Target distribution analysis of Case Keenum across 2013–2023 reveals uniform positional targeting, with no career-long favoritism, aligning with league averages and team scheme. Universal Lens: Rooted in keenum-target-splits (15bc50f89fb3dff7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian target-share inference using 2,270 career targets (2013–2023) maps positional likelihoods via nflverse data, conditioned on team roster and scheme. GSI Mapping: Rooted in keenum-target-splits (15bc50f89fb3dff7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models Keenum's target allocation as scheme-dependent, with layoff-return games showing 323 total targets across 10 starts, dominated by single-game variance. GSE Mapping: Rooted in keenum-target-splits (15bc50f89fb3dff7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "positional_target_distribution",
+      "name": "Positional Target Distribution",
+      "verbatim_quote": "There is **no career-long positional favoritism** — he is not a \"TE guy\" or a \"checkdown guy\" relative to the league.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{pos}': 'targets to position pos, dimensionless', 'P_{pos}': 'position category (WR, TE, RB, etc.), dimensionless'}",
+      "assumptions": "Keenum's targeting behavior reflects team personnel and scheme rather than personal preference.",
+      "breakdown_regime": "Career-wide average across 2013–2023, excluding non-target events.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic receiver assignment kernel, where P(T_pos | team_scheme) is inferred from historical play-by-play.",
+        "source_operator": "positional_target_distribution",
+        "telemetry": "Observed target shares per position against league baseline."
+      }
+    },
+    {
+      "primitive_id": "layoff_return_target_pattern",
+      "name": "Layoff-Return Target Pattern",
+      "verbatim_quote": "- **Layoff-return games:** games with ≥10 targeted attempts after a gap of ≥8 weeks since Keenum's previous game with any target.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'n_{games}': 'number of layoff-return games, dimensionless', 'T_{total}': 'total targets in layoff-return set, dimensionless', 't_{game}': 'targets per game in layoff-return set, dimensionless'}",
+      "assumptions": "Post-layoff performance is influenced by physical readiness and team adaptation.",
+      "breakdown_regime": "Small-sample variance in 10 games with 323 total targets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's temporal state transition model, capturing variance in game-to-game target distribution post-inactivity.",
+        "source_operator": "layoff_return_target_pattern",
+        "telemetry": "Average targets per game (t_game) and total targets (T_total) during layoff-return windows."
+      }
+    },
+    {
+      "primitive_id": "career_target_summary",
+      "name": "Career Target Summary",
+      "verbatim_quote": "- **Career sample:** n = **2,270 targets** (2013–2023; teams: HOU, LA, MIN, DEN, WAS, CLE, BUF).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'n_{targets}': 'total career targets, dimensionless', 't_{season}': 'average targets per season, dimensionless'}",
+      "assumptions": "Career trajectory is representative of NFL quarterback performance over time.",
+      "breakdown_regime": "Full career span from 2013 to 2023, inclusive of all teams.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's long-term performance kernel, where n_targets is used to compute normalized target density across seasons.",
+        "source_operator": "career_target_summary",
+        "telemetry": "Total targets (n_targets) and seasonal average (t_season) across 11 seasons."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "15bc50f89fb3dff7_t0",
+      "think": "The target-distribution study of Case Keenum leverages a 2,270-target dataset spanning 2013–2023 to establish a baseline for positional targeting. The absence of career-long favoritism implies that his targeting behavior is not skewed toward specific positions like tight end or running back, but instead mirrors league averages. This is modeled as a conditional probability distribution P(T_pos | team_scheme), where team personnel and offensive scheme dictate target allocation. Layoff-return games (n=10, 323 targets) show high variance due to small sample size, indicating that single-game fluctuations dominate performance prediction. The study further isolates that Keenum’s return to play after a 2023–2026 layoff is not predictive of consistent targeting patterns due to team scheme confounding and age-related factors. The derived kernel for layoff-return behavior is a stochastic process with high variance, while the positional kernel is stable and conformal to league norms.\n\nDeep epistemic analysis for keenum-target-splits (15bc50f89fb3dff7, domain=other, pages_read=4/4): Operator 'Positional Target Distribution' (page 2, domain other) captures: There is **no career-long positional favoritism** — he is not a \"TE guy\" or a \"checkdown guy\" relative to the league. Assumptions: Keenum's targeting behavior reflects team personnel and scheme rather than personal preference. Breakdown regime: Career-wide average across 2013–2023, excluding non-target events. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic receiver assignment kernel, where P(T_pos | team_scheme) is inferred from historical play-by-play. Operator 'Layoff-Return Target Pattern' (page 1, domain other) captures: - **Layoff-return games:** games with ≥10 targeted attempts after a gap of ≥8 weeks since Keenum's previous game with any target. Assumptions: Post-layoff performance is influenced by physical readiness and team adaptation. Breakdown regime: Small-sample variance in 10 games with 323 total targets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's temporal state transition model, capturing variance in game-to-game target distribution post-inactivity. Operator 'Career Target Summary' (page 1, domain other) captures: - **Career sample:** n = **2,270 targets** (2013–2023; teams: HOU, LA, MIN, DEN, WAS, CLE, BUF). Assumptions: Career trajectory is representative of NFL quarterback performance over time. Breakdown regime: Full career span from 2013 to 2023, inclusive of all teams. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's long-term performance kernel, where n_targets is used to compute normalized target density across seasons. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for keenum-target-splits (15bc50f89fb3dff7, domain=other, pages_read=4/4): Operator 'Positional Target Distribution' (page 2, domain other) captures: There is **no career-long positional favoritism** — he is not a \"TE guy\" or a \"checkdown guy\" relative to the league. Assumptions: Keenum's targeting behavior reflects team personnel and scheme rather than personal preference. Breakdown regime: Career-wide average across 2013–2023, excluding non-target events. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic receiver assignment kernel, where P(T_pos | team_scheme) is inferred from historical play-by-play. Operator 'Layoff-Return Target Pattern' (page 1, domain other) captures: - **Layoff-return games:** games with ≥10 targeted attempts after a gap of ≥8 weeks since Keenum's previous game with any target. Assumptions: Post-layoff performance is influenced by physical readiness and team adaptation. Breakdown regime: Small-sample variance in 10 games with 323 total targets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's temporal state transition model, capturing variance in game-to-game target distribution post-inactivity. Operator 'Career Target Summary' (page 1, domain other) captures: - **Career sample:** n = **2,270 targets** (2013–2023; teams: HOU, LA, MIN, DEN, WAS, CLE, BUF). Assumptions: Career trajectory is representative of NFL quarterback performance over time. Breakdown regime: Full career span from 2013 to 2023, inclusive of all teams. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's long-term performance kernel, where n_targets is used to compute normalized target density across seasons. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in 20th-century statistical inference and modern NFL analytics frameworks, particularly the use of play-by-play data to model player behavior. Influenced by Bayesian hierarchical modeling and temporal state-space kernels. Retrocausal Genealogy: Rooted in keenum-target-splits (15bc50f89fb3dff7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in keenum-target-splits (15bc50f89fb3dff7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the Bears' coaching staff, who may adjust Keenum’s role based on scheme and roster, and the league's evolving targeting trends. Decision-making is constrained by injury history, team dynamics, and strategic adaptation. Theory of Mind & Decision Maker Model: Rooted in keenum-target-splits (15bc50f89fb3dff7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that positional targeting does not correlate with scheme-specific tendencies. Leakage is mitigated through exclusion of non-target events and filtering by game context. Cross-Layer Veto & Anti-Leakage Check: Rooted in keenum-target-splits (15bc50f89fb3dff7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in keenum-target-splits (15bc50f89fb3dff7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

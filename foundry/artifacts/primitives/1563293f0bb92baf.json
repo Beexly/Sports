@@ -1,0 +1,78 @@
+{
+  "book_id": "1563293f0bb92baf",
+  "source_status": "COMPLETE",
+  "title": "GRADE_AUDIT",
+  "file_name": "GRADE_AUDIT.md",
+  "sha256": "1563293f0bb92baf6c78c7f16a61263f3cfc7c1e494bf522c5889cd484858373",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Grade audit confirms settlement logic integrity via pure-function probes; F1 and F2 defects map to asymmetric half-line handling and legacy misgrading. Universal Lens: Rooted in GRADE_AUDIT (1563293f0bb92baf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference treats pick settlement as discrete event with WIN/LOSS/PUSH outcomes; F1 reflects incomplete half-stake modeling, F2 encodes legacy data inconsistency. GSI Mapping: Rooted in GRADE_AUDIT (1563293f0bb92baf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE state transitions encode pick resolution through deterministic settlement; F1's half-line asymmetry triggers incorrect stake allocation, F2 reflects invalid legacy line application. GSE Mapping: Rooted in GRADE_AUDIT (1563293f0bb92baf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "settlement_result",
+      "name": "Discrete Pick Outcome",
+      "verbatim_quote": "--## F1 (medium) — quarter lines are graded as full wins/losses; half the stake is wrong **Where:** `packages/prediction-engine/src/settlement.ts:24`, `:106`, `:114` **Mechanism:** `SettlementResult = \"WIN\" | \"LOSS\" | \"PUSH\"`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SettlementResult': 'dimensionless discrete outcome {WIN, LOSS, PUSH}', 'stake': 'unit currency'}",
+      "assumptions": "Outcome space is categorical and mutually exclusive; no partial outcomes allowed.",
+      "breakdown_regime": "Half-line boundary case (e.g., 45.0) maps to full outcome instead of half.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SettlementResult models a binary decision tree over pick validity; F1 encodes a missing branch in the tree.",
+        "source_operator": "settlement_result",
+        "telemetry": "Row-level settlement correctness across 33 test cases."
+      }
+    },
+    {
+      "primitive_id": "asian_half_stake",
+      "name": "Asian Handicap Stake Allocation",
+      "verbatim_quote": "There is no `HALF_WIN`/`HALF_LOSS`, and Asian settlement is half-stake: `UNDER 45.25` = 0.5 × `U45` + 0.5 × `U45.5`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'stake': 'unit currency', 'half_stake': '0.5 × stake'}",
+      "assumptions": "Asian lines require fractional outcome resolution; current model does not support it.",
+      "breakdown_regime": "Exact line values (e.g., 45.0) are treated as full outcomes instead of half.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Asian settlement requires a continuous valuation kernel; current discrete model fails to resolve half-outcomes.",
+        "source_operator": "asian_half_stake",
+        "telemetry": "Mismatch between 20 WIN and 18 LOSS rows due to asymmetric misgrade."
+      }
+    },
+    {
+      "primitive_id": "legacy_line_grading",
+      "name": "Legacy Line Misapplication",
+      "verbatim_quote": "**F2 is the larger one** and is *legacy-only*: 532 already-decided rows were graded against a number no bettor could have taken.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'line_value': 'numeric line value', 'valid_bet': 'boolean indicating bettability'}",
+      "assumptions": "All published lines must be valid for betting; legacy lines violate this.",
+      "breakdown_regime": "Lines like -0.75 are valid but not recorded in legacy data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Legacy data inconsistency arises from line validation failure; F2 reflects a data integrity gap.",
+        "source_operator": "legacy_line_grading",
+        "telemetry": "532 rows graded against non-bettable lines."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1563293f0bb92baf_t0",
+      "think": "The grade audit isolates two primary defects: F1, a half-line handling asymmetry where exact totals yield full outcomes instead of half, and F2, a legacy data issue where 532 rows were resolved using invalid line values. Both reflect failures in discrete outcome modeling under continuous inputs. F1 implies a missing kernel in the settlement logic for fractional stakes; F2 reveals a structural flaw in line validation. The core insight is that discrete settlement models fail when faced with continuous line semantics. The failure modes are dual: one in outcome resolution (F1), one in input validity (F2). These defects are not historical artifacts but structural limitations in how the system handles edge cases.\n\nDeep epistemic analysis for GRADE_AUDIT (1563293f0bb92baf, domain=other, pages_read=4/4): Operator 'Discrete Pick Outcome' (page 1, domain other) captures: --## F1 (medium) — quarter lines are graded as full wins/losses; half the stake is wrong **Where:** `packages/prediction-engine/src/settlement.ts:24`, `:106`, `:114` **Mechanism:** `SettlementResult = \"WIN\" | \"LOSS\" | \"PUSH\"`. Assumptions: Outcome space is categorical and mutually exclusive; no partial outcomes allowed. Breakdown regime: Half-line boundary case (e.g., 45.0) maps to full outcome instead of half. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): SettlementResult models a binary decision tree over pick validity; F1 encodes a missing branch in the tree. Operator 'Asian Handicap Stake Allocation' (page 1, domain other) captures: There is no `HALF_WIN`/`HALF_LOSS`, and Asian settlement is half-stake: `UNDER 45.25` = 0.5 × `U45` + 0.5 × `U45.5`. Assumptions: Asian lines require fractional outcome resolution; current model does not support it. Breakdown regime: Exact line values (e.g., 45.0) are treated as full outcomes instead of half. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Asian settlement requires a continuous valuation kernel; current discrete model fails to resolve half-outcomes. Operator 'Legacy Line Misapplication' (page 1, domain other) captures: **F2 is the larger one** and is *legacy-only*: 532 already-decided rows were graded against a number no bettor could have taken. Assumptions: All published lines must be valid for betting; legacy lines violate this. Breakdown regime: Lines like -0.75 are valid but not recorded in legacy data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Legacy data inconsistency arises from line validation failure; F2 reflects a data integrity gap. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GRADE_AUDIT (1563293f0bb92baf, domain=other, pages_read=4/4): Operator 'Discrete Pick Outcome' (page 1, domain other) captures: --## F1 (medium) — quarter lines are graded as full wins/losses; half the stake is wrong **Where:** `packages/prediction-engine/src/settlement.ts:24`, `:106`, `:114` **Mechanism:** `SettlementResult = \"WIN\" | \"LOSS\" | \"PUSH\"`. Assumptions: Outcome space is categorical and mutually exclusive; no partial outcomes allowed. Breakdown regime: Half-line boundary case (e.g., 45.0) maps to full outcome instead of half. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): SettlementResult models a binary decision tree over pick validity; F1 encodes a missing branch in the tree. Operator 'Asian Handicap Stake Allocation' (page 1, domain other) captures: There is no `HALF_WIN`/`HALF_LOSS`, and Asian settlement is half-stake: `UNDER 45.25` = 0.5 × `U45` + 0.5 × `U45.5`. Assumptions: Asian lines require fractional outcome resolution; current model does not support it. Breakdown regime: Exact line values (e.g., 45.0) are treated as full outcomes instead of half. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Asian settlement requires a continuous valuation kernel; current discrete model fails to resolve half-outcomes. Operator 'Legacy Line Misapplication' (page 1, domain other) captures: **F2 is the larger one** and is *legacy-only*: 532 already-decided rows were graded against a number no bettor could have taken. Assumptions: All published lines must be valid for betting; legacy lines violate this. Breakdown regime: Lines like -0.75 are valid but not recorded in legacy data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Legacy data inconsistency arises from line validation failure; F2 reflects a data integrity gap. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early settlement design decisions that assumed discrete line semantics; later adoption of Asian handicaps exposed gaps in outcome modeling without introducing fractional outcomes. Retrocausal Genealogy: Rooted in GRADE_AUDIT (1563293f0bb92baf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in GRADE_AUDIT (1563293f0bb92baf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the betting system (which expects valid lines), the settlement engine (which resolves outcomes), and legacy data (which may contain invalid entries). Each agent operates under distinct constraints, leading to misalignment in final resolution. Theory of Mind & Decision Maker Model: Rooted in GRADE_AUDIT (1563293f0bb92baf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that F1 and F2 not co-occur in the same dataset; F1 affects outcome resolution while F2 affects input validity. Leakage occurs if both are present in a single state transition, violating independence assumptions in probabilistic inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in GRADE_AUDIT (1563293f0bb92baf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

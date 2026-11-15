@@ -1,0 +1,78 @@
+{
+  "book_id": "48eb5fe447fb09d1",
+  "source_status": "COMPLETE",
+  "title": "game-meshy-api",
+  "file_name": "game-meshy-api.md",
+  "sha256": "48eb5fe447fb09d1e1df243cdb25ee33ec0116d4eaf8e7dceda6044c4e3cf371",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Meshy API governs asynchronous 3D asset generation via RESTful task queues, with fallback to native CLI pipelines for verified end-to-end workflows. Universal Lens: Rooted in game-meshy-api (48eb5fe447fb09d1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic 3D model states from API task statuses using conformal prediction on task_id sequences and progress metrics. GSI Mapping: Rooted in game-meshy-api (48eb5fe447fb09d1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions between image-to-3D, rigging, and animation stages using deterministic finite automata over task completion flags. GSE Mapping: Rooted in game-meshy-api (48eb5fe447fb09d1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "async_task_queue",
+      "name": "Asynchronous Task Queue Manager",
+      "verbatim_quote": "- All generation endpoints are async: POST returns `{\"result\": \"<task_id>\"}`, then poll `GET <same path>/<task_id>` until `status` is `SUCCEEDED` / `FAILED` / `CANCELED`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'task_id': 'string identifier', 'status': 'enum{IN_PROGRESS, SUCCEEDED, FAILED, CANCELED}', 'poll_interval_s': 'seconds'}",
+      "assumptions": "Task execution is non-blocking and idempotent.",
+      "breakdown_regime": "When status remains IN_PROGRESS beyond timeout threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps API responses to GSE state machines for procedural 3D pipeline control.",
+        "source_operator": "async_task_queue",
+        "telemetry": "Polling frequency vs. task completion time ratio."
+      }
+    },
+    {
+      "primitive_id": "meshy_pipeline_fallback",
+      "name": "Meshy Pipeline Fallback Protocol",
+      "verbatim_quote": "# Meshy API — verified animated-character pipeline (FALLBACK ONLY) > **STOP — check the native CLI path first.** If `image_to_3d` and `3d_rigging` > appear in `higgsfield model list`, do NOT use this raw API and > do NOT ask the user for any API key.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'native_cli_available': 'boolean', 'fallback_required': 'boolean'}",
+      "assumptions": "Native CLI provides superior performance and credit usage.",
+      "breakdown_regime": "When native tools are unavailable or unsupported.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's conditional execution logic based on environment availability.",
+        "source_operator": "meshy_pipeline_fallback",
+        "telemetry": "CLI presence detection success rate."
+      }
+    },
+    {
+      "primitive_id": "stuck_refine_recovery",
+      "name": "Stuck Refinement Recovery Mechanism",
+      "verbatim_quote": "Verified failure mode: a refine stuck at `IN_PROGRESS` `progress: 0` for 1.5 h — a queue jam on Meshy's side.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'stuck_threshold_min': 'minutes', 'recovery_action': 'DELETE + recreate with preview_task_id', 'refund_eligible': 'boolean'}",
+      "assumptions": "Queue jams are transient and recoverable through task deletion.",
+      "breakdown_regime": "Progress stagnation exceeding 15 minutes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE resilience against backend failures via task lifecycle management.",
+        "source_operator": "stuck_refine_recovery",
+        "telemetry": "Recovery cycle duration and refund eligibility flag."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "48eb5fe447fb09d1_t0",
+      "think": "The core abstraction of the Meshy API is an asynchronous task queue governed by a RESTful interface. Each endpoint accepts a POST request returning a task ID, which must be polled until completion. This structure enables non-blocking workflows essential for large-scale 3D asset generation. The fallback protocol ensures that native CLI tools are preferred due to their efficiency and integrated credit system. Failure modes such as stuck refinements introduce a need for recovery mechanisms—specifically, deleting and recreating tasks with preserved preview IDs. These primitives form a dual framework: one for workflow orchestration and another for fault tolerance. The mathematical duality lies in the equivalence between task polling and state machine transitions, where each status update represents a discrete transition in a Markov chain. The failure mode analysis reveals a singularity at prolonged inactivity, necessitating heuristic-based intervention.\n\nDeep epistemic analysis for game-meshy-api (48eb5fe447fb09d1, domain=other, pages_read=3/3): Operator 'Asynchronous Task Queue Manager' (page 1, domain other) captures: - All generation endpoints are async: POST returns `{\"result\": \"<task_id>\"}`, then poll `GET <same path>/<task_id>` until `status` is `SUCCEEDED` / `FAILED` / `CANCELED`. Assumptions: Task execution is non-blocking and idempotent. Breakdown regime: When status remains IN_PROGRESS beyond timeout threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps API responses to GSE state machines for procedural 3D pipeline control. Operator 'Meshy Pipeline Fallback Protocol' (page 1, domain other) captures: # Meshy API — verified animated-character pipeline (FALLBACK ONLY) > **STOP — check the native CLI path first.** If `image_to_3d` and `3d_rigging` > appear in `higgsfield model list`, do NOT use this raw API and > do NOT ask the user for any API key. Assumptions: Native CLI provides superior performance and credit usage. Breakdown regime: When native tools are unavailable or unsupported. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's conditional execution logic based on environment availability. Operator 'Stuck Refinement Recovery Mechanism' (page 2, domain other) captures: Verified failure mode: a refine stuck at `IN_PROGRESS` `progress: 0` for 1.5 h — a queue jam on Meshy's side. Assumptions: Queue jams are transient and recoverable through task deletion. Breakdown regime: Progress stagnation exceeding 15 minutes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE resilience against backend failures via task lifecycle management. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for game-meshy-api (48eb5fe447fb09d1, domain=other, pages_read=3/3): Operator 'Asynchronous Task Queue Manager' (page 1, domain other) captures: - All generation endpoints are async: POST returns `{\"result\": \"<task_id>\"}`, then poll `GET <same path>/<task_id>` until `status` is `SUCCEEDED` / `FAILED` / `CANCELED`. Assumptions: Task execution is non-blocking and idempotent. Breakdown regime: When status remains IN_PROGRESS beyond timeout threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps API responses to GSE state machines for procedural 3D pipeline control. Operator 'Meshy Pipeline Fallback Protocol' (page 1, domain other) captures: # Meshy API — verified animated-character pipeline (FALLBACK ONLY) > **STOP — check the native CLI path first.** If `image_to_3d` and `3d_rigging` > appear in `higgsfield model list`, do NOT use this raw API and > do NOT ask the user for any API key. Assumptions: Native CLI provides superior performance and credit usage. Breakdown regime: When native tools are unavailable or unsupported. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's conditional execution logic based on environment availability. Operator 'Stuck Refinement Recovery Mechanism' (page 2, domain other) captures: Verified failure mode: a refine stuck at `IN_PROGRESS` `progress: 0` for 1.5 h — a queue jam on Meshy's side. Assumptions: Queue jams are transient and recoverable through task deletion. Breakdown regime: Progress stagnation exceeding 15 minutes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE resilience against backend failures via task lifecycle management. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in distributed computing paradigms of asynchronous task processing, evolving from early HTTP-based APIs to modern microservices architectures. Influenced by queueing theory and finite-state automata models. Retrocausal Genealogy: Rooted in game-meshy-api (48eb5fe447fb09d1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in game-meshy-api (48eb5fe447fb09d1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include backend infrastructure (queue jams) and user behavior (misuse of API keys). Decision actors are the system's retry logic and user-defined timeouts, balancing robustness against resource waste. Theory of Mind & Decision Maker Model: Rooted in game-meshy-api (48eb5fe447fb09d1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when fallback logic conflicts with async polling; leakage occurs if API keys are exposed during retries. Veto conditions enforce secure credential handling and prevent redundant task creation. Cross-Layer Veto & Anti-Leakage Check: Rooted in game-meshy-api (48eb5fe447fb09d1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

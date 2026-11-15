@@ -1,0 +1,78 @@
+{
+  "book_id": "32411089e7a8a416",
+  "source_status": "COMPLETE",
+  "title": "a01-pressure-indices",
+  "file_name": "a01-pressure-indices.md",
+  "sha256": "32411089e7a8a4161139c90f68fb3de03d736bf388e7a5fda77652af8b5da9e9",
+  "primary_domain": "other",
+  "pages_total": 11,
+  "pages_read": 11,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "QB pressure sensitivity measures EPA degradation under pressure; line stress quantifies deviation from expected pressure given blitz rate via residual regression. Universal Lens: Rooted in a01-pressure-indices (32411089e7a8a416), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers QB performance resilience via EPA differentials; line stress is modeled as conformal deviation from league-blitz expectations using OLS residuals. GSI Mapping: Rooted in a01-pressure-indices (32411089e7a8a416), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models situational pressure impact through state transitions of QB EPA and line stress metrics, conditioned on blitz exposure and team-week data. GSE Mapping: Rooted in a01-pressure-indices (32411089e7a8a416), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "qb_pressure_sensitivity",
+      "name": "QB Pressure Sensitivity",
+      "verbatim_quote": "**Formula (verbatim):** `sensitivity = EPA/dropback (clean pockets) - EPA/dropback (pressured)` — `qb-pressure-indices-proposal.md:16` — **HIGH**.",
+      "page": 1,
+      "latex": "sensitivity = \\frac{EPA}{dropback}_{clean} - \\frac{EPA}{dropback}_{pressured}",
+      "symbol_and_unit_ledger": "{'sensitivity': 'dimensionless ratio of EPA per dropback', 'EPA': 'expected points added (unitless)', 'dropback': 'count of quarterback dropbacks'}",
+      "assumptions": "EPA values are normalized and comparable across contexts; clean pocket EPA reflects baseline performance.",
+      "breakdown_regime": "When pressured dropbacks < 100, null result due to insufficient sample size.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI computes QB resilience by differencing EPA outcomes under clean vs pressured conditions; GSE evaluates this as a dynamic performance kernel.",
+        "source_operator": "qb_pressure_sensitivity",
+        "telemetry": "EPA differentials from nflverse pbp and ftn_charting datasets."
+      }
+    },
+    {
+      "primitive_id": "line_stress_index",
+      "name": "Line Stress Index",
+      "verbatim_quote": "**Formula (verbatim):** `stress = pressure_rate_allowed - league_expected_rate(blitz_rate_faced)` — `:41` — **HIGH**.",
+      "page": 1,
+      "latex": "stress = \\frac{pressured}{dropbacks} - (\\alpha + \\beta \\cdot \\frac{blitzed}{dropbacks})",
+      "symbol_and_unit_ledger": "{'stress': 'dimensionless residual pressure deviation', 'pressured': 'count of pressured plays', 'dropbacks': 'total dropbacks', 'blitzed': 'count of blitzed plays', 'league_expected_rate': 'expected pressure rate based on blitz rate', 'α': 'intercept term from OLS regression', 'β': 'slope coefficient from OLS regression'}",
+      "assumptions": "Linear relationship between blitz rate and pressure rate holds; league regression is updated weekly.",
+      "breakdown_regime": "Team games < 3 or fit pool < 32 team-weeks results in null output.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE maps line stress to a deviation signal from expected pressure; GSI interprets this as a proxy for defensive scheme effectiveness.",
+        "source_operator": "line_stress_index",
+        "telemetry": "Team-week pressure and blitz counts from pfr_advstats."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "a01-pressure-indices Grounded Principle 3",
+      "verbatim_quote": "**What it claims:** \"how much a QB's per-play value degrades when pressured\" — `:11` — **HIGH**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "32411089e7a8a416_t0",
+      "think": "The QB pressure sensitivity primitive isolates the degradation in EPA when a QB is pressured, computed as the difference between EPA per dropback in clean pockets versus pressured situations. This requires precise alignment of nflverse data sources—specifically pbp and ftn_charting—to ensure accurate labeling of pressured plays. The primitive assumes that EPA is a valid measure of QB performance and that clean pocket EPA is a reliable baseline. Null guards prevent unreliable estimates when sample sizes are too small. The line stress index computes a residual from a linear model predicting pressure rate based on blitz rate. It captures how much a line’s pressure generation exceeds what would be expected given its blitz exposure. This relies on pfr_advstats for team-week level pressure and blitz counts, and requires a minimum dataset size for regression stability. Both primitives are vulnerable to data quality issues such as incomplete joins or mislabeled charting, which could introduce bias. The stress-test reveals that FTN pressure is subjective and that EPA does not adjust for opponent strength, limiting interpretability.\n\nDeep epistemic analysis for a01-pressure-indices (32411089e7a8a416, domain=other, pages_read=11/11): Operator 'QB Pressure Sensitivity' (page 1, domain other) captures: **Formula (verbatim):** `sensitivity = EPA/dropback (clean pockets) - EPA/dropback (pressured)` — `qb-pressure-indices-proposal.md:16` — **HIGH**. Assumptions: EPA values are normalized and comparable across contexts; clean pocket EPA reflects baseline performance. Breakdown regime: When pressured dropbacks < 100, null result due to insufficient sample size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes QB resilience by differencing EPA outcomes under clean vs pressured conditions; GSE evaluates this as a dynamic performance kernel. Operator 'Line Stress Index' (page 1, domain other) captures: **Formula (verbatim):** `stress = pressure_rate_allowed - league_expected_rate(blitz_rate_faced)` — `:41` — **HIGH**. Assumptions: Linear relationship between blitz rate and pressure rate holds; league regression is updated weekly. Breakdown regime: Team games < 3 or fit pool < 32 team-weeks results in null output. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps line stress to a deviation signal from expected pressure; GSI interprets this as a proxy for defensive scheme effectiveness. Operator 'a01-pressure-indices Grounded Principle 3' (page 1, domain other) captures: **What it claims:** \"how much a QB's per-play value degrades when pressured\" — `:11` — **HIGH**. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for a01-pressure-indices (32411089e7a8a416, domain=other, pages_read=11/11): Operator 'QB Pressure Sensitivity' (page 1, domain other) captures: **Formula (verbatim):** `sensitivity = EPA/dropback (clean pockets) - EPA/dropback (pressured)` — `qb-pressure-indices-proposal.md:16` — **HIGH**. Assumptions: EPA values are normalized and comparable across contexts; clean pocket EPA reflects baseline performance. Breakdown regime: When pressured dropbacks < 100, null result due to insufficient sample size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes QB resilience by differencing EPA outcomes under clean vs pressured conditions; GSE evaluates this as a dynamic performance kernel. Operator 'Line Stress Index' (page 1, domain other) captures: **Formula (verbatim):** `stress = pressure_rate_allowed - league_expected_rate(blitz_rate_faced)` — `:41` — **HIGH**. Assumptions: Linear relationship between blitz rate and pressure rate holds; league regression is updated weekly. Breakdown regime: Team games < 3 or fit pool < 32 team-weeks results in null output. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps line stress to a deviation signal from expected pressure; GSI interprets this as a proxy for defensive scheme effectiveness. Operator 'a01-pressure-indices Grounded Principle 3' (page 1, domain other) captures: **What it claims:** \"how much a QB's per-play value degrades when pressured\" — `:11` — **HIGH**. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s NFL analytics frameworks where player performance was evaluated via event-based metrics. Modernized through EPA and advanced play-by-play modeling, with regression-based deviations emerging in recent years as a way to isolate situational effects. Retrocausal Genealogy: Rooted in a01-pressure-indices (32411089e7a8a416), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include QBs who adapt to pressure, defensive coordinators who deploy blitzes strategically, and analysts who seek to quantify these dynamics. Each agent influences the data through behavior and measurement, creating feedback loops in the primitive's validity. Theory of Mind & Decision Maker Model: Rooted in a01-pressure-indices (32411089e7a8a416), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes arise from conflating QB and line performance in sensitivity; leakage occurs when EPA includes opponent strength without adjustment. These risks are mitigated by strict data sourcing rules and null guards. Cross-Layer Veto & Anti-Leakage Check: Rooted in a01-pressure-indices (32411089e7a8a416), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

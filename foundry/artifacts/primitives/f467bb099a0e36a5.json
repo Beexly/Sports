@@ -1,0 +1,78 @@
+{
+  "book_id": "f467bb099a0e36a5",
+  "source_status": "COMPLETE",
+  "title": "prop_reconciliation",
+  "file_name": "prop_reconciliation.md",
+  "sha256": "f467bb099a0e36a58fb9a38e5678df53c04068744097f37df378c35b5f9e97e6",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The reconciliation process defines a categorical functor mapping disjoint, source-specific string vocabularies into a unified canonical space. By establishing an isomorphism between heterogeneous entity identifiers and normalizing statistical nomenclature, the primitive constructs a rigorous intersection graph where multi-source overlaps represent mathematically well-defined market consensus substrates.",
+  "gsi_mapping": "GSI treats the 98.4% ID resolution as a high-confidence prior for entity alignment. The emergence of 674 three-source overlaps provides a dense manifold for conformal inference, allowing GSI to construct robust uncertainty intervals around player performance by fusing independent pricing signals from distinct books-of-record.",
+  "gse_mapping": "GSE utilizes the canonical `(nfl_id, stat)` pairs as discrete state nodes in a situational transition graph. The tolerance-based line comparison models continuous market drift, enabling the engine to detect arbitrage edges when book-specific lines diverge beyond acceptable variance thresholds on identical underlying states.",
+  "primitives": [
+    {
+      "primitive_id": "entity_crosswalk_resolution",
+      "name": "Entity Crosswalk Resolution",
+      "verbatim_quote": "## Results - **98.4%** of rows resolved to an `nfl_id` via the crosswalk (73,083 of 74,306) — the id graph holds up at scale, not just on a sample.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "N_total: Total raw rows (dimensionless count); N_resolved: Rows mapped to canonical nfl_id (dimensionless count); R: Resolution ratio (dimensionless probability).",
+      "assumptions": "Assumes a global, bijective mapping exists between source-specific opaque IDs and the canonical nfl_id namespace without cyclic dependencies.",
+      "breakdown_regime": "Breaks down when encountering newly signed players or roster anomalies absent from the historical crosswalk graph, resulting in unresolvable orphan nodes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's Entity Graph Isomorphism layer, ensuring all subsequent probabilistic tensors operate on a strictly unified actor topology.",
+        "source_operator": "entity_crosswalk_resolution",
+        "telemetry": "Resolution Ratio (R = N_resolved / N_total), empirically observed at 0.984."
+      }
+    },
+    {
+      "primitive_id": "stat_vocab_canonicalisation",
+      "name": "Stat Vocabulary Canonicaliser",
+      "verbatim_quote": "- After canonicalisation (period prefix + base stat): 5,502 pairs, **1,817 on 2+ sources, 674 on all three**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "V_raw: Raw disjoint vocabulary set; V_canon: Normalized vocabulary set; P_overlap: Intersection of player-stat pairs across k sources.",
+      "assumptions": "Assumes semantic equivalence can be perfectly extracted via deterministic string parsing (e.g., stripping prefixes like 'H1' to isolate base stats).",
+      "breakdown_regime": "Fails on highly idiosyncratic or novel prop definitions that lack a clear mapping to the standardized base-stat dictionary.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates the foundational feature kernel for GSE's situational reasoning, collapsing syntactic noise into semantically identical market primitives.",
+        "source_operator": "stat_vocab_canonicalisation",
+        "telemetry": "Intersection density: 674 triple-overlaps out of 5,502 total canonical pairs."
+      }
+    },
+    {
+      "primitive_id": "tolerance_market_comparison",
+      "name": "Tolerance Market Comparison",
+      "verbatim_quote": "Comparison has to be against the line with a tolerance, not row-to-row.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "L_i: Line value offered by source i (continuous real number); epsilon: Acceptable tolerance threshold (same units as L_i).",
+      "assumptions": "Assumes market lines for identical underlying events are subject to minor stochastic noise and require fuzzy matching rather than exact equality.",
+      "breakdown_regime": "Becomes ill-posed if the tolerance epsilon is set too wide, erroneously merging fundamentally different alternate markets (e.g., 25.5 vs 49.5).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's Conformal Prediction Sets, defining valid regions of agreement across independent pricing engines.",
+        "source_operator": "tolerance_market_comparison",
+        "telemetry": "Number of matched line clusters within defined epsilon bounds."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f467bb099a0e36a5_t0",
+      "think": "The derivation begins with a massive, noisy dataset of 74,306 rows representing disjoint universes of discourse across three proprietary sportsbooks. The first mathematical operation is an injective mapping function, the ID crosswalk, which projects these opaque local identifiers into a globally consistent `nfl_id` Hilbert space. This yields a 98.4% resolution rate, effectively eliminating topological fragmentation in the actor graph. However, identity alignment alone is insufficient; the statistical vocabulary remains entirely disjoint (0 triple overlaps initially). We therefore apply a second operator: a deterministic string morphism (the canonicaliser) that strips temporal prefixes and normalizes base statistics. This collapses the raw 7,757 pairs into 5,502 canonical pairs, miraculously revealing a dense core of 674 triple-source intersections. These intersections form the 'consensus substrate.' Crucially, recognizing that identical `(nfl_id, stat)` tuples do not imply identical markets, we introduce a metric space with a tolerance parameter `epsilon`. Instead of Kronecker delta equality on pricing lines, we employ fuzzy clustering. This prevents the catastrophic conflation of alternate lines (e.g., 25.5 vs 49.5) while accurately capturing true market consensus. The final output is a rigorously defined, multi-layered market graph ready for Bayesian fusion.\n\nDeep epistemic analysis for prop_reconciliation (f467bb099a0e36a5, domain=other, pages_read=1/1): Operator 'Entity Crosswalk Resolution' (page 1, domain other) captures: ## Results - **98.4%** of rows resolved to an `nfl_id` via the crosswalk (73,083 of 74,306) — the id graph holds up at scale, not just on a sample. Assumptions: Assumes a global, bijective mapping exists between source-specific opaque IDs and the canonical nfl_id namespace without cyclic dependencies. Breakdown regime: Breaks down when encountering newly signed players or roster anomalies absent from the historical crosswalk graph, resulting in unresolvable orphan nodes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's Entity Graph Isomorphism layer, ensuring all subsequent probabilistic tensors operate on a strictly unified actor topology. Operator 'Stat Vocabulary Canonicaliser' (page 1, domain other) captures: - After canonicalisation (period prefix + base stat): 5,502 pairs, **1,817 on 2+ sources, 674 on all three**. Assumptions: Assumes semantic equivalence can be perfectly extracted via deterministic string parsing (e.g., stripping prefixes like 'H1' to isolate base stats). Breakdown regime: Fails on highly idiosyncratic or novel prop definitions that lack a clear mapping to the standardized base-stat dictionary. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates the foundational feature kernel for GSE's situational reasoning, collapsing syntactic noise into semantically identical market primitives. Operator 'Tolerance Market Comparison' (page 1, domain other) captures: Comparison has to be against the line with a tolerance, not row-to-row. Assumptions: Assumes market lines for identical underlying events are subject to minor stochastic noise and require fuzzy matching rather than exact equality. Breakdown regime: Becomes ill-posed if the tolerance epsilon is set too wide, erroneously merging fundamentally different alternate markets (e.g., 25.5 vs 49.5). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's Conformal Prediction Sets, defining valid regions of agreement across independent pricing engines. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prop_reconciliation (f467bb099a0e36a5, domain=other, pages_read=1/1): Operator 'Entity Crosswalk Resolution' (page 1, domain other) captures: ## Results - **98.4%** of rows resolved to an `nfl_id` via the crosswalk (73,083 of 74,306) — the id graph holds up at scale, not just on a sample. Assumptions: Assumes a global, bijective mapping exists between source-specific opaque IDs and the canonical nfl_id namespace without cyclic dependencies. Breakdown regime: Breaks down when encountering newly signed players or roster anomalies absent from the historical crosswalk graph, resulting in unresolvable orphan nodes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's Entity Graph Isomorphism layer, ensuring all subsequent probabilistic tensors operate on a strictly unified actor topology. Operator 'Stat Vocabulary Canonicaliser' (page 1, domain other) captures: - After canonicalisation (period prefix + base stat): 5,502 pairs, **1,817 on 2+ sources, 674 on all three**. Assumptions: Assumes semantic equivalence can be perfectly extracted via deterministic string parsing (e.g., stripping prefixes like 'H1' to isolate base stats). Breakdown regime: Fails on highly idiosyncratic or novel prop definitions that lack a clear mapping to the standardized base-stat dictionary. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates the foundational feature kernel for GSE's situational reasoning, collapsing syntactic noise into semantically identical market primitives. Operator 'Tolerance Market Comparison' (page 1, domain other) captures: Comparison has to be against the line with a tolerance, not row-to-row. Assumptions: Assumes market lines for identical underlying events are subject to minor stochastic noise and require fuzzy matching rather than exact equality. Breakdown regime: Becomes ill-posed if the tolerance epsilon is set too wide, erroneously merging fundamentally different alternate markets (e.g., 25.5 vs 49.5). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's Conformal Prediction Sets, defining valid regions of agreement across independent pricing engines. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This methodology echoes the historical challenges of data integration in particle physics, specifically the PDG (Particle Data Group) averaging problem. Just as disparate experimental measurements of fundamental constants required rigorous error-weighted consensus building, our sportsbook lines require tolerance-based reconciliation. It also mirrors the development of canonical correlation analysis in multivariate statistics, seeking invariant structures across noisy, differently scaled observational domains.",
+      "theory_of_mind": "We model the three sportsbooks not as omniscient oracles, but as bounded-rational agents optimizing for local liquidity and risk management. Their disjoint vocabularies reflect isolated internal legacy systems. By forcing them into a shared canonical space, we expose their latent disagreements. The 674 triple overlaps represent moments where these distinct cognitive architectures converge on a shared reality, providing the highest signal-to-noise ratio for our predictive engines.",
+      "cross_layer_veto": "A strict veto condition must be applied during the tolerance matching phase: if the variance between source lines for a given canonical pair exceeds a dynamic threshold derived from the global volatility distribution, the match is rejected. This prevents anti-collinear leakage where a genuine arbitrage opportunity (a massive pricing dislocation) is erroneously smoothed over as mere statistical noise, preserving the structural integrity of the edge detection layer."
+    }
+  ]
+}

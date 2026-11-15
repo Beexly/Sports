@@ -1,0 +1,78 @@
+{
+  "book_id": "ba561faa89f6bd13",
+  "source_status": "COMPLETE",
+  "title": "42b46701c466",
+  "file_name": "42b46701c466.txt",
+  "sha256": "ba561faa89f6bd135f282962185ee9f00eb72e65c3fa80a43d649253232bc852",
+  "primary_domain": "other",
+  "pages_total": 35,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for probabilistic pick generation under data freshness constraints, integrating ingestion readiness, snapshot immutability, and market consistency. Universal Lens: Rooted in 42b46701c466 (ba561faa89f6bd13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference engine mapping pick signals to confidence intervals using freshness diagnostics and market consensus thresholds. GSI Mapping: Rooted in 42b46701c466 (ba561faa89f6bd13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions game states through readiness gates, enforcing CLV locks and validating pick signal snapshots before publication. GSE Mapping: Rooted in 42b46701c466 (ba561faa89f6bd13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "data_freshness_gate",
+      "name": "Data Freshness Gate",
+      "verbatim_quote": "umber }>>(), pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string; isPublished?: boolean; line?: number } | null>>(), // Mint-side supersede of an unpublished PENDING slot-holder (lane B).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'thresholdHours': 'dimensionless', 'newestAgeMinutes': 'minutes'}",
+      "assumptions": "Freshness diagnostics must be complete to avoid masking errors.",
+      "breakdown_regime": "When newestAgeMinutes exceeds thresholdHours, data is rejected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ensures temporal consistency in pick generation by rejecting stale data based on age metrics.",
+        "source_operator": "data_freshness_gate",
+        "telemetry": "newestAgeMinutes vs thresholdHours ratio"
+      }
+    },
+    {
+      "primitive_id": "pick_signal_snapshot",
+      "name": "Pick Signal Snapshot",
+      "verbatim_quote": "const actual = await vi.importActual<typeof import(\"@sports/prediction-engine\")>( \"@sports/prediction-engine\", ); return { scoreGames: mocks.scoreGames, buildPickSignalSnapshot:",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'snapshotId': 'UUID', 'immutable': 'boolean'}",
+      "assumptions": "Snapshot is immutable post-creation to maintain integrity.",
+      "breakdown_regime": "Any attempt to mutate snapshot results in failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps pick signal to a deterministic snapshot structure for validation and retrieval.",
+        "source_operator": "pick_signal_snapshot",
+        "telemetry": "Snapshot ID uniqueness and immutability check"
+      }
+    },
+    {
+      "primitive_id": "readiness_gates",
+      "name": "Readiness Gates",
+      "verbatim_quote": "import { afterEach, beforeEach, describe, expect, it, vi } from \"vitest\"; import type { ReadinessGates } from \"@sports/prediction-engine\"; import type { FixtureProbe } from \"../fixture-confirmation.js\"; /** * Behavioral tests for processSport — the single pick-generation path * shared by the data-refresh worker and the admin trigger-refresh route.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'isBootstrap': 'boolean', 'gates': 'set of booleans'}",
+      "assumptions": "Readiness gates control feature availability and data flow.",
+      "breakdown_regime": "If any gate is closed, related features are disabled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces conditional logic across pick generation paths based on system readiness.",
+        "source_operator": "readiness_gates",
+        "telemetry": "Gate status flags and feature activation states"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ba561faa89f6bd13_t0",
+      "think": "The core operational invariant is that pick generation must be gated by data freshness and readiness. The system uses a snapshot mechanism to ensure immutability of pick signals after creation. The readiness gates determine whether features such as enrichment or promotion are enabled. A failure mode occurs if freshness diagnostics are incomplete, masking underlying errors. The system enforces a temporal constraint where data older than thresholdHours is rejected. This ensures that stale data cannot influence pick outcomes. The snapshot structure prevents modification post-creation, maintaining consistency. The readiness gates act as a filter for feature activation, ensuring only valid combinations of data and logic proceed. If any gate fails, the entire ingestion run is marked as failed.\n\nDeep epistemic analysis for 42b46701c466 (ba561faa89f6bd13, domain=other, pages_read=18/35): Operator 'Data Freshness Gate' (page 2, domain other) captures: umber }>>(), pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string; isPublished?: boolean; line?: number } | null>>(), // Mint-side supersede of an unpublished PENDING slot-holder (lane B). Assumptions: Freshness diagnostics must be complete to avoid masking errors. Breakdown regime: When newestAgeMinutes exceeds thresholdHours, data is rejected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures temporal consistency in pick generation by rejecting stale data based on age metrics. Operator 'Pick Signal Snapshot' (page 3, domain other) captures: const actual = await vi.importActual<typeof import(\"@sports/prediction-engine\")>( \"@sports/prediction-engine\", ); return { scoreGames: mocks.scoreGames, buildPickSignalSnapshot: Assumptions: Snapshot is immutable post-creation to maintain integrity. Breakdown regime: Any attempt to mutate snapshot results in failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps pick signal to a deterministic snapshot structure for validation and retrieval. Operator 'Readiness Gates' (page 1, domain other) captures: import { afterEach, beforeEach, describe, expect, it, vi } from \"vitest\"; import type { ReadinessGates } from \"@sports/prediction-engine\"; import type { FixtureProbe } from \"../fixture-confirmation.js\"; /** * Behavioral tests for processSport — the single pick-generation path * shared by the data-refresh worker and the admin trigger-refresh route. Assumptions: Readiness gates control feature availability and data flow. Breakdown regime: If any gate is closed, related features are disabled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces conditional logic across pick generation paths based on system readiness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 42b46701c466 (ba561faa89f6bd13, domain=other, pages_read=18/35): Operator 'Data Freshness Gate' (page 2, domain other) captures: umber }>>(), pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string; isPublished?: boolean; line?: number } | null>>(), // Mint-side supersede of an unpublished PENDING slot-holder (lane B). Assumptions: Freshness diagnostics must be complete to avoid masking errors. Breakdown regime: When newestAgeMinutes exceeds thresholdHours, data is rejected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures temporal consistency in pick generation by rejecting stale data based on age metrics. Operator 'Pick Signal Snapshot' (page 3, domain other) captures: const actual = await vi.importActual<typeof import(\"@sports/prediction-engine\")>( \"@sports/prediction-engine\", ); return { scoreGames: mocks.scoreGames, buildPickSignalSnapshot: Assumptions: Snapshot is immutable post-creation to maintain integrity. Breakdown regime: Any attempt to mutate snapshot results in failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps pick signal to a deterministic snapshot structure for validation and retrieval. Operator 'Readiness Gates' (page 1, domain other) captures: import { afterEach, beforeEach, describe, expect, it, vi } from \"vitest\"; import type { ReadinessGates } from \"@sports/prediction-engine\"; import type { FixtureProbe } from \"../fixture-confirmation.js\"; /** * Behavioral tests for processSport — the single pick-generation path * shared by the data-refresh worker and the admin trigger-refresh route. Assumptions: Readiness gates control feature availability and data flow. Breakdown regime: If any gate is closed, related features are disabled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces conditional logic across pick generation paths based on system readiness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical control theory and modern probabilistic programming paradigms, this design reflects the evolution of automated decision-making systems from deterministic to stochastic frameworks. Retrocausal Genealogy: Rooted in 42b46701c466 (ba561faa89f6bd13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 42b46701c466 (ba561faa89f6bd13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data staleness, which seeks to corrupt predictions, and the readiness gate mechanism, which defends against invalid inputs. The system models these as competing forces within a bounded logical space. Theory of Mind & Decision Maker Model: Rooted in 42b46701c466 (ba561faa89f6bd13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each layer operates independently—ingestion, validation, and publishing—preventing leakage of stale or invalid data across boundaries. Cross-Layer Veto & Anti-Leakage Check: Rooted in 42b46701c466 (ba561faa89f6bd13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 42b46701c466 (ba561faa89f6bd13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

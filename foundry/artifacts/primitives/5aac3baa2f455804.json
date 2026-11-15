@@ -1,78 +1,16 @@
 {
   "book_id": "5aac3baa2f455804",
-  "source_status": "COMPLETE",
-  "title": "peri-peri-night-recipe",
-  "file_name": "peri-peri-night-recipe.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_5aac3baa2f455804",
+  "file_name": "5aac3baa2f455804.quarantined",
   "sha256": "5aac3baa2f4558047ba4021db0cfe433278127cb425e2115cdf635c12ec7ddae",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Peri-peri sauce synthesis as a multi-variable cost-optimization under sensory and culinary constraints. Universal Lens: Rooted in peri-peri-night-recipe (5aac3baa2f455804), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian cost-benefit inference over ingredient substitutes and spice intensity levels using observed market prices and flavor profiles. GSI Mapping: Rooted in peri-peri-night-recipe (5aac3baa2f455804), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "State transition model for marinade preparation, blending, and serving with time-dependent sensory feedback loops. GSE Mapping: Rooted in peri-peri-night-recipe (5aac3baa2f455804), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "cost_optimization",
-      "name": "Cost Optimization Function",
-      "verbatim_quote": "# Homemade Peri Peri Night — serves 6, budget version Target: ~$10–13 total if you have spices + oil on hand.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'C': 'total cost in USD', 'S': 'serving size in persons', 'B': 'budget range in USD'}",
-      "assumptions": "Linear dependency of cost on ingredient quantity and price per unit.",
-      "breakdown_regime": "C < B when S = 6",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "GSI inference engine maps ingredient substitutions to expected cost variance.",
-        "source_operator": "cost_optimization",
-        "telemetry": "Observed price elasticity of substitute ingredients."
-      }
-    },
-    {
-      "primitive_id": "spice_intensity_model",
-      "name": "Spice Intensity Model",
-      "verbatim_quote": "**Split:** - Mild: 4–6 bird's eyes (or 2 jalapeños), simmer 5 min, blend.",
-      "page": 1,
-      "latex": "\\text{Intensity} = f(\\text{chili_count}, \\text{simmer_time})",
-      "symbol_and_unit_ledger": "{'I': 'spice intensity (dimensionless)', 'n': 'number of chili peppers', 't': 'simmer time in minutes'}",
-      "assumptions": "Intensity increases linearly with chili count and simmer duration.",
-      "breakdown_regime": "I(n,t) = k_1 n + k_2 t",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "GSE state transition from mild to hot sauce via controlled parameter variation.",
-        "source_operator": "spice_intensity_model",
-        "telemetry": "Subjective capsaicin threshold response."
-      }
-    },
-    {
-      "primitive_id": "marinade_dynamics",
-      "name": "Marinade Dynamics",
-      "verbatim_quote": "Score, rub with 2 cups mild sauce + juice of 2 lemons + 1/4 cup oil.",
-      "page": 1,
-      "latex": "\\frac{dM}{dt} = k_1 \\cdot \\text{surface_area} \\cdot \\text{temperature}",
-      "symbol_and_unit_ledger": "{'M': 'marinade penetration depth in cm', 'k_1': 'penetration rate constant in cm/min', 'A': 'surface area in cm²', 'T': 'temperature in °C'}",
-      "assumptions": "Penetration rate depends on surface area and temperature.",
-      "breakdown_regime": "M(t) = k_1 A T t",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "GSE situational reasoning engine simulates marinade interaction with chicken texture.",
-        "source_operator": "marinade_dynamics",
-        "telemetry": "Time-dependent moisture and flavor absorption."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "5aac3baa2f455804_t0",
-      "think": "The recipe encodes a constrained optimization problem where cost C is minimized subject to serving size S and flavor profile F. The spice intensity model defines a parametric function I(n,t) that maps chili count and simmer time to perceived heat level. The marinade dynamics describe how flavor penetrates chicken over time, modeled by a diffusion-like process. These primitives form a dual system: one optimizing economic constraints (cost), the other optimizing sensory outcomes (flavor). Failure modes include over-simmering leading to bitter taste, under-marinating causing uneven flavor, and poor substitution choices increasing cost beyond target. The system exhibits nonlinearity in flavor perception due to capsaicin concentration and synergistic effects of multiple spices.\n\nDeep epistemic analysis for peri-peri-night-recipe (5aac3baa2f455804, domain=other, pages_read=1/1): Operator 'Cost Optimization Function' (page 1, domain other) captures: # Homemade Peri Peri Night — serves 6, budget version Target: ~$10–13 total if you have spices + oil on hand. Assumptions: Linear dependency of cost on ingredient quantity and price per unit. Breakdown regime: C < B when S = 6 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI inference engine maps ingredient substitutions to expected cost variance. Operator 'Spice Intensity Model' (page 1, domain other) captures: **Split:** - Mild: 4–6 bird's eyes (or 2 jalapeños), simmer 5 min, blend. Assumptions: Intensity increases linearly with chili count and simmer duration. Breakdown regime: I(n,t) = k_1 n + k_2 t Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state transition from mild to hot sauce via controlled parameter variation. Operator 'Marinade Dynamics' (page 1, domain other) captures: Score, rub with 2 cups mild sauce + juice of 2 lemons + 1/4 cup oil. Assumptions: Penetration rate depends on surface area and temperature. Breakdown regime: M(t) = k_1 A T t Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE situational reasoning engine simulates marinade interaction with chicken texture. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for peri-peri-night-recipe (5aac3baa2f455804, domain=other, pages_read=1/1): Operator 'Cost Optimization Function' (page 1, domain other) captures: # Homemade Peri Peri Night — serves 6, budget version Target: ~$10–13 total if you have spices + oil on hand. Assumptions: Linear dependency of cost on ingredient quantity and price per unit. Breakdown regime: C < B when S = 6 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI inference engine maps ingredient substitutions to expected cost variance. Operator 'Spice Intensity Model' (page 1, domain other) captures: **Split:** - Mild: 4–6 bird's eyes (or 2 jalapeños), simmer 5 min, blend. Assumptions: Intensity increases linearly with chili count and simmer duration. Breakdown regime: I(n,t) = k_1 n + k_2 t Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state transition from mild to hot sauce via controlled parameter variation. Operator 'Marinade Dynamics' (page 1, domain other) captures: Score, rub with 2 cups mild sauce + juice of 2 lemons + 1/4 cup oil. Assumptions: Penetration rate depends on surface area and temperature. Breakdown regime: M(t) = k_1 A T t Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE situational reasoning engine simulates marinade interaction with chicken texture. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for peri-peri-night-recipe (5aac3baa2f455804, domain=other, pages_read=1/1): Operator 'Cost Optimization Function' (page 1, domain other) captures: # Homemade Peri Peri Night — serves 6, budget version Target: ~$10–13 total if you have spices + oil on hand. Assumptions: Linear dependency of cost on ingredient quantity and price per unit. Breakdown regime: C < B when S = 6 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI inference engine maps ingredient substitutions to expected cost variance. Operator 'Spice Intensity Model' (page 1, domain other) captures: **Split:** - Mild: 4–6 bird's eyes (or 2 jalapeños), simmer 5 min, blend. Assumptions: Intensity increases linearly with chili count and simmer duration. Breakdown regime: I(n,t) = k_1 n + k_2 t Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state transition from mild to hot sauce via controlled parameter variation. Operator 'Marinade Dynamics' (page 1, domain other) captures: Score, rub with 2 cups mild sauce + juice of 2 lemons + 1/4 cup oil. Assumptions: Penetration rate depends on surface area and temperature. Breakdown regime: M(t) = k_1 A T t Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE situational reasoning engine simulates marinade interaction with chicken texture. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in classical culinary thermodynamics and sensory science, tracing back to early spice trade models and modern food engineering. Retrocausal Genealogy: Rooted in peri-peri-night-recipe (5aac3baa2f455804), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in peri-peri-night-recipe (5aac3baa2f455804), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Agents include the cook (optimizing cost and time), diners (seeking flavor balance), and market forces (price fluctuations). Each agent influences outcome through constraint satisfaction. Theory of Mind & Decision Maker Model: Rooted in peri-peri-night-recipe (5aac3baa2f455804), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in peri-peri-night-recipe (5aac3baa2f455804), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity between cost and flavor parameters prevents overfitting to either domain. Leakage occurs if marinade dynamics are ignored during spice selection, invalidating the sensory model. Cross-Layer Veto & Anti-Leakage Check: Rooted in peri-peri-night-recipe (5aac3baa2f455804), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in peri-peri-night-recipe (5aac3baa2f455804), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

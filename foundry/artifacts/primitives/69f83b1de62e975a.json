@@ -1,0 +1,78 @@
+{
+  "book_id": "69f83b1de62e975a",
+  "source_status": "COMPLETE",
+  "title": "2020 - Quantifying Passing Using NBA Tracking Data to Create an Expected Assist Model - Unknown Authors",
+  "file_name": "2020 - Quantifying Passing Using NBA Tracking Data to Create an Expected Assist Model - Unknown Authors.md",
+  "sha256": "69f83b1de62e975ae6112c72ab7b411d72e3b77efe417dcfe2730a8c9dcb8a45",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The expected points added operator defines a conditional expectation over the joint spatial-temporal distribution of ball-handler and receiver kinematics. It maps discrete passing events to continuous value spaces, isolating playmaking skill from team success via a Markovian state-transition framework.",
+  "gsi_mapping": "GSI employs conformal inference on tracking-derived pass features to construct prediction intervals for shot quality. Bayesian hierarchical priors regularize sparse pass types, ensuring robust quantification of passer value while strictly separating individual creation from systemic team advantages.",
+  "gse_mapping": "GSE models passing as a directed graph transition within a high-dimensional spatial manifold. The algorithm identifies valid edges by filtering dribble-through-traffic noise, mapping directional ball tracking into a rigorous state-transition matrix that predicts future scoring probabilities.",
+  "primitives": [
+    {
+      "primitive_id": "expected_points_added_operator",
+      "name": "Expected Points Added from a Pass",
+      "verbatim_quote": "picture text --> Research Question<br>⬥<br>How can tracking data be used<br>to generate metrics that can<br>predict expected points",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "E[PTS]: Expected points (dimensionless score), X_pass: Spatial-temporal pass vector (meters, seconds)",
+      "assumptions": "Passing event cleanly separates from dribbling; shot outcome is conditionally independent given pass state.",
+      "breakdown_regime": "Fails during inbound passes or when ball-handler/receiver are less than two feet from the basket.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw SportVU coordinates to a scalar value kernel representing offensive probability elevation.",
+        "source_operator": "expected_points_added_operator",
+        "telemetry": "Algorithmic recall of 72% on visual film inspection."
+      }
+    },
+    {
+      "primitive_id": "directional_ball_tracking_filter",
+      "name": "Directional Ball Tracking Filter",
+      "verbatim_quote": "<!-- Start of picture text --> Identifying Passes<br>Directional Ball Tracking<br><!-- End of picture text --> <!--",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "v_ball: Ball velocity vector (m/s), d_threshold: Proximity threshold (meters)",
+      "assumptions": "Ball trajectory exhibits distinct acceleration profiles differentiating passes from dribbles.",
+      "breakdown_regime": "Singularities occur with lobs, steals, and rapid dribbles through defensive traffic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to edge detection in dynamic spatial graphs, filtering non-passing node transitions.",
+        "source_operator": "directional_ball_tracking_filter",
+        "telemetry": "85.8% precision on flagged passing events."
+      }
+    },
+    {
+      "primitive_id": "shot_defender_density_metric",
+      "name": "Shot-Defender Density Metric",
+      "verbatim_quote": "missing passes<br>were inbounds<br>Additionally, of those plays<br> 85.8% were in<br>flagged as passes,<br>fact passes.<br>-<br>Most trouble misidentifying<br>dribbles through traffic<br>7<br><!--",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "d_min: Distance to nearest defender (meters), N_def: Count of local defenders (integer)",
+      "assumptions": "Local defensive pressure monotonically decreases the probability of shot conversion.",
+      "breakdown_regime": "Breaks down in highly chaotic transition states where defender proximity does not correlate with contest severity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Defines the local potential energy field around the shooter, modulating the base expected point value.",
+        "source_operator": "shot_defender_density_metric",
+        "telemetry": "Variable selection inputs for the initial expected points model."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "69f83b1de62e975a_t0",
+      "think": "The derivation begins by defining the basketball court as a bounded Euclidean domain containing N agents. The core objective is to isolate the marginal contribution of a passer, mathematically formalized as the Expected Points Added (EPA) operator. By leveraging high-frequency SportVU tracking data, we construct a feature space encompassing both shot-specific metrics (e.g., shooter location) and pass-specific metrics (e.g., distance to nearest defender). The EPA operator acts as a conditional expectation, E[Points | Pass State], effectively decoupling the intrinsic value of the resulting shot from the playmaker's ability to create it. A critical step involves the Directional Ball Tracking filter, which functions as a topological edge detector in the temporal graph of player interactions. This filter must distinguish true passing events from dribbles through traffic—a notorious source of noise. The algorithm achieves this by analyzing velocity vectors and endpoint proximities, explicitly removing events where the end node is within two feet of the basket or where handlers belong to opposing teams. The resulting clean dataset allows for the construction of a robust regression model. However, the system exhibits known failure modes, particularly with inbound passes and complex aerial trajectories like lobs, where standard kinematic assumptions break down. Ultimately, the framework transforms raw coordinate telemetry into a rigorous, continuous valuation of basketball playmaking.\n\nDeep epistemic analysis for 2020 - Quantifying Passing Using NBA Tracking Data to Create an Expected Assist Model - Unknown Authors (69f83b1de62e975a, domain=other, pages_read=4/4): Operator 'Expected Points Added from a Pass' (page 1, domain other) captures: picture text --> Research Question<br>⬥<br>How can tracking data be used<br>to generate metrics that can<br>predict expected points Assumptions: Passing event cleanly separates from dribbling; shot outcome is conditionally independent given pass state. Breakdown regime: Fails during inbound passes or when ball-handler/receiver are less than two feet from the basket. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw SportVU coordinates to a scalar value kernel representing offensive probability elevation. Operator 'Directional Ball Tracking Filter' (page 1, domain other) captures: <!-- Start of picture text --> Identifying Passes<br>Directional Ball Tracking<br><!-- End of picture text --> <!-- Assumptions: Ball trajectory exhibits distinct acceleration profiles differentiating passes from dribbles. Breakdown regime: Singularities occur with lobs, steals, and rapid dribbles through defensive traffic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to edge detection in dynamic spatial graphs, filtering non-passing node transitions. Operator 'Shot-Defender Density Metric' (page 1, domain other) captures: missing passes<br>were inbounds<br>Additionally, of those plays<br> 85.8% were in<br>flagged as passes,<br>fact passes.<br>-<br>Most trouble misidentifying<br>dribbles through traffic<br>7<br><!-- Assumptions: Local defensive pressure monotonically decreases the probability of shot conversion. Breakdown regime: Breaks down in highly chaotic transition states where defender proximity does not correlate with contest severity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the local potential energy field around the shooter, modulating the base expected point value. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2020 - Quantifying Passing Using NBA Tracking Data to Create an Expected Assist Model - Unknown Authors (69f83b1de62e975a, domain=other, pages_read=4/4): Operator 'Expected Points Added from a Pass' (page 1, domain other) captures: picture text --> Research Question<br>⬥<br>How can tracking data be used<br>to generate metrics that can<br>predict expected points Assumptions: Passing event cleanly separates from dribbling; shot outcome is conditionally independent given pass state. Breakdown regime: Fails during inbound passes or when ball-handler/receiver are less than two feet from the basket. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw SportVU coordinates to a scalar value kernel representing offensive probability elevation. Operator 'Directional Ball Tracking Filter' (page 1, domain other) captures: <!-- Start of picture text --> Identifying Passes<br>Directional Ball Tracking<br><!-- End of picture text --> <!-- Assumptions: Ball trajectory exhibits distinct acceleration profiles differentiating passes from dribbles. Breakdown regime: Singularities occur with lobs, steals, and rapid dribbles through defensive traffic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to edge detection in dynamic spatial graphs, filtering non-passing node transitions. Operator 'Shot-Defender Density Metric' (page 1, domain other) captures: missing passes<br>were inbounds<br>Additionally, of those plays<br> 85.8% were in<br>flagged as passes,<br>fact passes.<br>-<br>Most trouble misidentifying<br>dribbles through traffic<br>7<br><!-- Assumptions: Local defensive pressure monotonically decreases the probability of shot conversion. Breakdown regime: Breaks down in highly chaotic transition states where defender proximity does not correlate with contest severity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the local potential energy field around the shooter, modulating the base expected point value. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This methodology inherits directly from the foundational work in Expected Points (EP) models pioneered by Dean Oliver and later refined by Second Spectrum. It extends traditional box-score analytics by integrating continuous spatial-temporal tracking data, bridging the gap between discrete event logs and high-frequency kinematic streams. The conceptual lineage traces back to moneyball-era marginal analysis, now elevated through modern machine learning techniques applied to multi-agent spatial systems.",
+      "theory_of_mind": "The model implicitly constructs a theory of mind for both the passer and the defense. The passer is modeled as an agent optimizing the receiver's local defensive density, actively seeking to minimize the distance to the nearest defender relative to the shot quality. Conversely, the defense is treated as a dynamic constraint field attempting to maximize this distance. The EPA metric essentially quantifies the passer's cognitive success in manipulating this adversarial spatial geometry to generate high-probability scoring opportunities.",
+      "cross_layer_veto": "To prevent statistical leakage, strict cross-layer veto conditions are enforced. Specifically, any event where the ball handler and receiver are separated by less than two feet near the basket is vetoed to exclude put-backs or loose-ball scrambles masquerading as passes. Furthermore, events involving opposite-team handlers are aggressively filtered to eliminate steal misclassifications. These vetoes ensure the EPA operator remains strictly collinear with intentional playmaking actions, preserving the integrity of the isolated skill metric."
+    }
+  ]
+}

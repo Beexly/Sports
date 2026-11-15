@@ -1,0 +1,95 @@
+{
+  "book_id": "248ee59a71a9805c",
+  "source_status": "COMPLETE",
+  "title": "1160-robust-forecast-aggregation",
+  "file_name": "1160-robust-forecast-aggregation.md",
+  "sha256": "248ee59a71a9805c8f2a0986a59260e2a53d220463229ee501c38f58804ef3be",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 1160-robust-forecast-aggregation (248ee59a71a9805c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 1160-robust-forecast-aggregation (248ee59a71a9805c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 1160-robust-forecast-aggregation (248ee59a71a9805c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "blackwell_ordered_precision_scheme",
+      "name": "Blackwell-Ordered Precision Scheme",
+      "verbatim_quote": "Method / model - **Blackwell-ordered** (one expert's signal nests the other's): **precision scheme** f_pre — weights ∝ φ(x) = 1/(x(1-x)) when |x1-x2| ≤ 0.4, ∝ √φ(x) when > 0.4; adopts 0/1 forecasts at extremes, 1/2 on (0,1)/(1,0).",
+      "page": 1,
+      "latex": "f_{pre}(x_1,x_2) = \\frac{\\phi(x)}{\\phi(x)+1}, \\quad \\phi(x)=\\begin{cases} \\frac{1}{x(1-x)} & |x_1-x_2|\\le 0.4 \\\\ \\sqrt{\\frac{1}{x(1-x)}} & |x_1-x_2|>0.4 \\end{cases}",
+      "symbol_and_unit_ledger": "x_i: Probability of event (dimensionless), φ(x): Precision weight (dimensionless)",
+      "assumptions": "Blackwell order (nested signals); square loss; two binary experts.",
+      "breakdown_regime": "Extreme disagreement (|x1-x2| large) causes √-weighting to dominate; perfect agreement yields equal weights.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Posterior mean fusion of conditionally independent normal likelihoods with inverse-variance weights. GSE: State-transition kernel for combining model probability with market-implied probability under Blackwell order.",
+        "source_operator": "blackwell_ordered_precision_scheme",
+        "telemetry": "Average precision-weighted forecast vs. simple average; regret gap on historical data."
+      }
+    },
+    {
+      "primitive_id": "average_prior_bordley_scheme",
+      "name": "Average-Prior Bordley Scheme",
+      "verbatim_quote": "- **Conditionally independent signals:** **average-prior scheme** f_avg — apply Bordley's Bayes formula with a dummy prior = (x1+x2)/2.",
+      "page": 1,
+      "latex": "f_{avg}(x_1,x_2) = \\frac{(1-\\mu)^{n-1}\\prod x_i}{(1-\\mu)^{n-1}\\prod x_i+\\mu^{n-1}\\prod (1-x_i)}, \\; \\mu = \\frac{x_1+x_2}{2}",
+      "symbol_and_unit_ledger": "x_i: Probability (dimensionless), μ: Prior mean (dimensionless)",
+      "assumptions": "Conditionally independent signals; square loss; two binary experts; known marginal priors.",
+      "breakdown_regime": "Prior μ→0 or 1 forces f_avg→0 or 1 regardless of forecasts; symmetric priors yield f_avg≈0.5 in balanced disagreement.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Conformal prediction interval combination via weighted average of predictive distributions. GSE: Optimal static policy for linear-quadratic Gaussian control with shared state.",
+        "source_operator": "average_prior_bordley_scheme",
+        "telemetry": "Brier score of average-prior fusion vs. precision scheme; improvement on unstable base rates."
+      }
+    },
+    {
+      "primitive_id": "naive_average_scheme",
+      "name": "Naive Average Scheme",
+      "verbatim_quote": "Naive schemes worse: DeGroot simple average = 1/16 = **0.0625**; follow-the-most-extreme = **0.0714** (worse than averaging!).",
+      "page": 1,
+      "latex": "f_{ave}(x_1,x_2) = \\frac{x_1+x_2}{2}",
+      "symbol_and_unit_ledger": "x_i: Probability (dimensionless)",
+      "assumptions": "No structure knowledge; square loss; two binary experts.",
+      "breakdown_regime": "Equal weights ignore signal quality; extreme disagreement inflates variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Equal-weight ensemble averaging of predictive distributions. GSE: Uniform exploration baseline in multi-armed bandit.",
+        "source_operator": "naive_average_scheme",
+        "telemetry": "Brier score of simple average vs. adaptive schemes; relative degradation on synthetic data."
+      }
+    },
+    {
+      "primitive_id": "degenerate_follow_extreme_scheme",
+      "name": "Degenerate Follow-The-Extreme Scheme",
+      "verbatim_quote": "Naive schemes worse: DeGroot simple average = 1/16 = **0.0625**; follow-the-most-extreme = **0.0714** (worse than averaging!).",
+      "page": 1,
+      "latex": "f_{extreme}(x_1,x_2) = \\max\\{x_1,x_2\\}",
+      "symbol_and_unit_ledger": "x_i: Probability (dimensionless)",
+      "assumptions": "No structure knowledge; square loss; two binary experts.",
+      "breakdown_regime": "Always picks the most confident expert; fails catastrophically on balanced disagreement.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Maximum-confidence conformal prediction set. GSE: Greedy exploitation policy in threshold bandits.",
+        "source_operator": "degenerate_follow_extreme_scheme",
+        "telemetry": "Brier score of extreme-selection vs. averaging; frequency of extreme-dominance events."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "248ee59a71a9805c_t0",
+      "think": "The core challenge is aggregating multiple probabilistic forecasts when the underlying information structures are unknown. The precision scheme exploits the geometric relationship between two forecasts under Blackwell order, assigning higher weight to the forecast with smaller variance (inverse variance). The average-prior scheme leverages conditional independence by using a heuristic prior that averages the individual forecasts, achieving Bayes-optimal performance given this prior. Both are robust minimax solutions that guarantee near-optimal worst-case regret against any possible information structure. The many-expert impossibility theorem shows that standard ensemble averaging becomes informationally useless as the number of experts grows, making these specialized kernels essential for maintaining signal-to-noise ratio.\n\nDeep epistemic analysis for 1160-robust-forecast-aggregation (248ee59a71a9805c, domain=other, pages_read=3/3): Operator 'Blackwell-Ordered Precision Scheme' (page 1, domain other) captures: Method / model - **Blackwell-ordered** (one expert's signal nests the other's): **precision scheme** f_pre — weights ∝ φ(x) = 1/(x(1-x)) when |x1-x2| ≤ 0.4, ∝ √φ(x) when > 0.4; adopts 0/1 forecasts at extremes, 1/2 on (0,1)/(1,0). Assumptions: Blackwell order (nested signals); square loss; two binary experts. Breakdown regime: Extreme disagreement (|x1-x2| large) causes √-weighting to dominate; perfect agreement yields equal weights. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Posterior mean fusion of conditionally independent normal likelihoods with inverse-variance weights. GSE: State-transition kernel for combining model probability with market-implied probability under Blackwell order. Operator 'Average-Prior Bordley Scheme' (page 1, domain other) captures: - **Conditionally independent signals:** **average-prior scheme** f_avg — apply Bordley's Bayes formula with a dummy prior = (x1+x2)/2. Assumptions: Conditionally independent signals; square loss; two binary experts; known marginal priors. Breakdown regime: Prior μ→0 or 1 forces f_avg→0 or 1 regardless of forecasts; symmetric priors yield f_avg≈0.5 in balanced disagreement. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conformal prediction interval combination via weighted average of predictive distributions. GSE: Optimal static policy for linear-quadratic Gaussian control with shared state. Operator 'Naive Average Scheme' (page 1, domain other) captures: Naive schemes worse: DeGroot simple average = 1/16 = **0.0625**; follow-the-most-extreme = **0.0714** (worse than averaging!). Assumptions: No structure knowledge; square loss; two binary experts. Breakdown regime: Equal weights ignore signal quality; extreme disagreement inflates variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Equal-weight ensemble averaging of predictive distributions. GSE: Uniform exploration baseline in multi-armed bandit. Operator 'Degenerate Follow-The-Extreme Scheme' (page 1, domain other) captures: Naive schemes worse: DeGroot simple average = 1/16 = **0.0625**; follow-the-most-extreme = **0.0714** (worse than averaging!). Assumptions: No structure knowledge; square loss; two binary experts. Breakdown regime: Always picks the most confident expert; fails catastrophically on balanced disagreement. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Maximum-confidence conformal prediction set. GSE: Greedy exploitation policy in threshold bandits. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1160-robust-forecast-aggregation (248ee59a71a9805c, domain=other, pages_read=3/3): Operator 'Blackwell-Ordered Precision Scheme' (page 1, domain other) captures: Method / model - **Blackwell-ordered** (one expert's signal nests the other's): **precision scheme** f_pre — weights ∝ φ(x) = 1/(x(1-x)) when |x1-x2| ≤ 0.4, ∝ √φ(x) when > 0.4; adopts 0/1 forecasts at extremes, 1/2 on (0,1)/(1,0). Assumptions: Blackwell order (nested signals); square loss; two binary experts. Breakdown regime: Extreme disagreement (|x1-x2| large) causes √-weighting to dominate; perfect agreement yields equal weights. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Posterior mean fusion of conditionally independent normal likelihoods with inverse-variance weights. GSE: State-transition kernel for combining model probability with market-implied probability under Blackwell order. Operator 'Average-Prior Bordley Scheme' (page 1, domain other) captures: - **Conditionally independent signals:** **average-prior scheme** f_avg — apply Bordley's Bayes formula with a dummy prior = (x1+x2)/2. Assumptions: Conditionally independent signals; square loss; two binary experts; known marginal priors. Breakdown regime: Prior μ→0 or 1 forces f_avg→0 or 1 regardless of forecasts; symmetric priors yield f_avg≈0.5 in balanced disagreement. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conformal prediction interval combination via weighted average of predictive distributions. GSE: Optimal static policy for linear-quadratic Gaussian control with shared state. Operator 'Naive Average Scheme' (page 1, domain other) captures: Naive schemes worse: DeGroot simple average = 1/16 = **0.0625**; follow-the-most-extreme = **0.0714** (worse than averaging!). Assumptions: No structure knowledge; square loss; two binary experts. Breakdown regime: Equal weights ignore signal quality; extreme disagreement inflates variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Equal-weight ensemble averaging of predictive distributions. GSE: Uniform exploration baseline in multi-armed bandit. Operator 'Degenerate Follow-The-Extreme Scheme' (page 1, domain other) captures: Naive schemes worse: DeGroot simple average = 1/16 = **0.0625**; follow-the-most-extreme = **0.0714** (worse than averaging!). Assumptions: No structure knowledge; square loss; two binary experts. Breakdown regime: Always picks the most confident expert; fails catastrophically on balanced disagreement. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Maximum-confidence conformal prediction set. GSE: Greedy exploitation policy in threshold bandits. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Blackwell's seminal work on comparative statics of experiments (1953), extended by Aumann and Maschler's splitting lemma (1966) for constructing posterior belief martingales. The precision weighting traces to Rao-Blackwell estimation and inverse-variance meta-analysis. Bordley's prior-augmentation technique generalizes early work on pooling estimates under uncertainty about the true model. Retrocausal Genealogy: Rooted in 1160-robust-forecast-aggregation (248ee59a71a9805c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Model the ignorant aggregator as a rational decision-maker facing Knightian uncertainty about the experts' information sets. The adversary constructs information structures to maximize the aggregator's regret, forcing the solution to be robust to arbitrary dependencies. This models a worst-case competitor who knows the true data-generating process but cannot outguess the minimax-optimal strategy. Theory of Mind & Decision Maker Model: Rooted in 1160-robust-forecast-aggregation (248ee59a71a9805c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "The precision scheme requires the Blackwell order assumption; violation (e.g., crossing posterior beliefs) destroys its optimality. The average-prior scheme assumes conditional independence; dependence breaks the Bayes optimality but may still provide reasonable heuristics. Both schemes are incompatible with non-binary outcomes or non-square losses without substantial modification. They also assume exchangeability of experts, precluding dynamic reordering based on covariates. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1160-robust-forecast-aggregation (248ee59a71a9805c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

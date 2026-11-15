@@ -1,0 +1,78 @@
+{
+  "book_id": "217b3744b779ba73",
+  "source_status": "COMPLETE",
+  "title": "05-open-the-signal-vote-path",
+  "file_name": "05-open-the-signal-vote-path.md",
+  "sha256": "217b3744b779ba73bf8b8b48a645c1984f6c845a12a73198ea2f3fb0a60908dc",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Signal vote path opens continuous value evaluation via homeSign metadata, enabling probabilistic inference through registered signal semantics. Universal Lens: Rooted in 05-open-the-signal-vote-path (217b3744b779ba73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference integrates continuous signals via trueProb updates using homeSign-derived directional coefficients from evaluator semantics. GSI Mapping: Rooted in 05-open-the-signal-vote-path (217b3744b779ba73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning transitions state by applying signal tilt through stored-env bridge, conditioned on metadata-driven sign alignment. GSE Mapping: Rooted in 05-open-the-signal-vote-path (217b3744b779ba73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "home_sign_assignment",
+      "name": "Home Sign Assignment",
+      "verbatim_quote": "`metadata.homeSign` on every CONTINUOUS_VALUE signal The signal registry already carries a `metadata` bag.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'homeSign': 'dimensionless {-1, +1} indicating signal favorability toward home team'}",
+      "assumptions": "Each signal's evaluator computes a directional coefficient; homeSign reflects this semantic orientation.",
+      "breakdown_regime": "When signal evaluator returns spread-point adjustment in HOME direction",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "homeSign encodes the sign of the coefficient computed by the signal's own evaluator, used to adjust trueProb during inference",
+        "source_operator": "home_sign_assignment",
+        "telemetry": "Signal registry entry includes homeSign field verified at runtime"
+      }
+    },
+    {
+      "primitive_id": "signal_vote_path_activation",
+      "name": "Signal Vote Path Activation",
+      "verbatim_quote": "**The path that lets an ingested signal move a published probability is closed, and it was closed before this mandate started.** `packages/ingestion-pipeline/src/continuous-signal-tilt.ts:59-164` is the **only** place a signal affects `trueProb` (`generate-signal-slate.ts:607`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'trueProb': 'probability scalar in [0,1] updated by signal tilt'}",
+      "assumptions": "Only continuous signals with valid homeSign propagate into trueProb computation.",
+      "breakdown_regime": "Before mandate activation, no live signal could modify trueProb",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Signal vote path enables direct influence of raw signal data on probabilistic outcomes via continuous-signal-tilt module",
+        "source_operator": "signal_vote_path_activation",
+        "telemetry": "Published probability changes observed post-activation of signal tilt logic"
+      }
+    },
+    {
+      "primitive_id": "env_bridge_isolation",
+      "name": "Environment Bridge Isolation",
+      "verbatim_quote": "**The lesson for every future signal mechanism: do not route through `ctx.env`.** --## What changes ### 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ctx.env': 'environment variable container for signal injection'}",
+      "assumptions": "Direct context access bypasses signal validation and introduces instability.",
+      "breakdown_regime": "Use of ctx.env for signal propagation leads to uncontrolled data flow",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isolation of signal processing from environment context prevents contamination and ensures deterministic behavior",
+        "source_operator": "env_bridge_isolation",
+        "telemetry": "Test suite verifies absence of env-based signal routing"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "217b3744b779ba73_t0",
+      "think": "The core insight is that signal voting requires explicit semantic encoding of directional bias—homeSign—derived from evaluator logic rather than heuristic naming. This avoids arbitrary assignment and ensures probabilistic integrity. The failure mode occurs when signals lack homeSign, leading to silent omission. The activation gate ensures only vetted signals influence trueProb, while the staleness gate prevents outdated signals from skewing predictions. The environment bridge is isolated to prevent leakage into inference pipeline. These primitives form a minimal but sufficient framework for robust signal integration.\n\nDeep epistemic analysis for 05-open-the-signal-vote-path (217b3744b779ba73, domain=other, pages_read=3/3): Operator 'Home Sign Assignment' (page 1, domain other) captures: `metadata.homeSign` on every CONTINUOUS_VALUE signal The signal registry already carries a `metadata` bag. Assumptions: Each signal's evaluator computes a directional coefficient; homeSign reflects this semantic orientation. Breakdown regime: When signal evaluator returns spread-point adjustment in HOME direction Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): homeSign encodes the sign of the coefficient computed by the signal's own evaluator, used to adjust trueProb during inference Operator 'Signal Vote Path Activation' (page 1, domain other) captures: **The path that lets an ingested signal move a published probability is closed, and it was closed before this mandate started.** `packages/ingestion-pipeline/src/continuous-signal-tilt.ts:59-164` is the **only** place a signal affects `trueProb` (`generate-signal-slate.ts:607`). Assumptions: Only continuous signals with valid homeSign propagate into trueProb computation. Breakdown regime: Before mandate activation, no live signal could modify trueProb Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Signal vote path enables direct influence of raw signal data on probabilistic outcomes via continuous-signal-tilt module Operator 'Environment Bridge Isolation' (page 1, domain other) captures: **The lesson for every future signal mechanism: do not route through `ctx.env`.** --## What changes ### 1. Assumptions: Direct context access bypasses signal validation and introduces instability. Breakdown regime: Use of ctx.env for signal propagation leads to uncontrolled data flow Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isolation of signal processing from environment context prevents contamination and ensures deterministic behavior Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 05-open-the-signal-vote-path (217b3744b779ba73, domain=other, pages_read=3/3): Operator 'Home Sign Assignment' (page 1, domain other) captures: `metadata.homeSign` on every CONTINUOUS_VALUE signal The signal registry already carries a `metadata` bag. Assumptions: Each signal's evaluator computes a directional coefficient; homeSign reflects this semantic orientation. Breakdown regime: When signal evaluator returns spread-point adjustment in HOME direction Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): homeSign encodes the sign of the coefficient computed by the signal's own evaluator, used to adjust trueProb during inference Operator 'Signal Vote Path Activation' (page 1, domain other) captures: **The path that lets an ingested signal move a published probability is closed, and it was closed before this mandate started.** `packages/ingestion-pipeline/src/continuous-signal-tilt.ts:59-164` is the **only** place a signal affects `trueProb` (`generate-signal-slate.ts:607`). Assumptions: Only continuous signals with valid homeSign propagate into trueProb computation. Breakdown regime: Before mandate activation, no live signal could modify trueProb Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Signal vote path enables direct influence of raw signal data on probabilistic outcomes via continuous-signal-tilt module Operator 'Environment Bridge Isolation' (page 1, domain other) captures: **The lesson for every future signal mechanism: do not route through `ctx.env`.** --## What changes ### 1. Assumptions: Direct context access bypasses signal validation and introduces instability. Breakdown regime: Use of ctx.env for signal propagation leads to uncontrolled data flow Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isolation of signal processing from environment context prevents contamination and ensures deterministic behavior Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian signal processing principles, this evolution mirrors earlier work on probabilistic forecasting systems where signal semantics were implicitly encoded in weights or heuristics. Retrocausal Genealogy: Rooted in 05-open-the-signal-vote-path (217b3744b779ba73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 05-open-the-signal-vote-path (217b3744b779ba73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to manipulate signal semantics or exploit weak validation gates, necessitating strong vetting criteria such as Brier score thresholds and divergence checks. Theory of Mind & Decision Maker Model: Rooted in 05-open-the-signal-vote-path (217b3744b779ba73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 05-open-the-signal-vote-path (217b3744b779ba73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring explicit homeSign per signal; leakage is prevented by isolating env bridge from inference engine. Cross-Layer Veto & Anti-Leakage Check: Rooted in 05-open-the-signal-vote-path (217b3744b779ba73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 05-open-the-signal-vote-path (217b3744b779ba73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

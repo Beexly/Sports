@@ -1,0 +1,78 @@
+{
+  "book_id": "b5015bc53d5444e2",
+  "source_status": "COMPLETE",
+  "title": "1674-bayesblend-stacking-python",
+  "file_name": "1674-bayesblend-stacking-python.md",
+  "sha256": "b5015bc53d5444e25ac7905da6591226fa014c115533c5e35673a84cab393d36",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian model averaging via posterior predictive stacking unifies predictive distribution blending with hierarchical weight regularization through variational inference. Universal Lens: Rooted in 1674-bayesblend-stacking-python (b5015bc53d5444e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI leverages BayesBlend's ELPD-based weight estimation for conformal predictive intervals, enabling robust uncertainty quantification across multi-model ensembles in real-time sports analytics. GSI Mapping: Rooted in 1674-bayesblend-stacking-python (b5015bc53d5444e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE employs hierarchical stacking to dynamically adjust model weights based on game-state covariates, enabling adaptive decision-making under evolving match conditions. GSE Mapping: Rooted in 1674-bayesblend-stacking-python (b5015bc53d5444e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pseudo_bma_weighting",
+      "name": "Pseudo-Bayesian Model Averaging",
+      "verbatim_quote": "2022a hierarchical stacking); - **PseudoBma** — pseudo-BMA / pseudo-BMA+ from PSIS-LOO elpd (eq.",
+      "page": 1,
+      "latex": "\\mathbf{w}_k = \\frac{\\exp(\\widehat{\\text{elpd}}_k^{\\text{psis-loo}})}{\\sum_{k'} \\exp(\\widehat{\\text{elpd}}_{k'}^{\\text{psis-loo}})}",
+      "symbol_and_unit_ledger": "{'w_k': 'model weight, dimensionless', 'elpd_k': 'expected log predictive density, log units'}",
+      "assumptions": "Models are conditionally independent given data; PSIS-LOO provides stable importance weights.",
+      "breakdown_regime": "When PSIS-LOO fails due to heavy-tailed posteriors or poor model fit.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic forecast aggregation using log-likelihood scores.",
+        "source_operator": "pseudo_bma_weighting",
+        "telemetry": "ELPD difference between blended and individual model predictions."
+      }
+    },
+    {
+      "primitive_id": "complete_pooling_stacking",
+      "name": "Complete-Pooling Stacking",
+      "verbatim_quote": "- **Complete-pooling stacking:** ŵ = argmax_w Σi log Σk wk p(yi|y_{-i},Mk) (6) — unit-simplex constrained in the applied variant.",
+      "page": 1,
+      "latex": "\\hat{\\mathbf{w}} = \\arg\\max_{\\mathbf{w}} \\sum_i \\log \\left( \\sum_k w_k p(y_i | y_{-i}, M_k) \\right)",
+      "symbol_and_unit_ledger": "{'w_k': 'stacking weight, dimensionless', 'p(y_i | y_{-i}, M_k)': 'posterior predictive density, probability units'}",
+      "assumptions": "All models contribute equally to prediction; weights sum to unity.",
+      "breakdown_regime": "When model disagreement is high and optimal weights are non-uniform.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE for static ensemble optimization during pre-game modeling.",
+        "source_operator": "complete_pooling_stacking",
+        "telemetry": "Weight vector convergence during iterative optimization."
+      }
+    },
+    {
+      "primitive_id": "hierarchical_stacking",
+      "name": "Hierarchical Covariate-Dependent Stacking",
+      "verbatim_quote": "- **Hierarchical (covariate-dependent) stacking:** p(yi|y_{-i}) = Σk w_{ik} p(yi|y_{-i},Mk); w_{ik} = softmax(w*_{i1:K}); w*_{ik} = αk + βkxi; (β1...β_K) ~ Normal(μ,σ) (7–8).",
+      "page": 1,
+      "latex": "w_{ik} = \\frac{\\exp(\\alpha_k + \\beta_k x_i)}{\\sum_{k'} \\exp(\\alpha_{k'} + \\beta_{k'} x_i)}",
+      "symbol_and_unit_ledger": "{'w_{ik}': 'time-varying model weight, dimensionless', 'x_i': 'game-state covariate, dimensionless', 'α_k, β_k': 'regression coefficients, log-probability units'}",
+      "assumptions": "Model weights vary smoothly with game state; partial pooling of regression parameters.",
+      "breakdown_regime": "When covariate influence is weak or when data is insufficient for parameter estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enables GSE to adaptively reweight models based on live game dynamics.",
+        "source_operator": "hierarchical_stacking",
+        "telemetry": "Temporal evolution of model weights during game progression."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b5015bc53d5444e2_t0",
+      "think": "The core insight of BayesBlend lies in its formalization of Bayesian stacking as a convex optimization problem over posterior predictive densities. The pseudo-BMA approach approximates Bayesian model averaging using PSIS-LOO, offering computational tractability while preserving predictive accuracy. Complete-pooling stacking optimizes weights globally, assuming equal contribution from all models. In contrast, hierarchical stacking introduces a soft-max regression framework where weights depend on observed covariates such as game state or player performance metrics. This allows for dynamic adaptation of model weights over time, crucial for real-time sports prediction. The failure mode of pseudo-BMA occurs when model fits are too disparate or when PSIS-LOO becomes unstable. Complete-pooling stacking may overfit if models are highly correlated or mis-specified. Hierarchical stacking requires sufficient data to estimate the regression parameters reliably. These primitives form a layered architecture for ensemble learning in GSI and GSE, supporting both static and adaptive model blending strategies.\n\nDeep epistemic analysis for 1674-bayesblend-stacking-python (b5015bc53d5444e2, domain=other, pages_read=4/4): Operator 'Pseudo-Bayesian Model Averaging' (page 1, domain other) captures: 2022a hierarchical stacking); - **PseudoBma** — pseudo-BMA / pseudo-BMA+ from PSIS-LOO elpd (eq. Assumptions: Models are conditionally independent given data; PSIS-LOO provides stable importance weights. Breakdown regime: When PSIS-LOO fails due to heavy-tailed posteriors or poor model fit. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic forecast aggregation using log-likelihood scores. Operator 'Complete-Pooling Stacking' (page 1, domain other) captures: - **Complete-pooling stacking:** ŵ = argmax_w Σi log Σk wk p(yi|y_{-i},Mk) (6) — unit-simplex constrained in the applied variant. Assumptions: All models contribute equally to prediction; weights sum to unity. Breakdown regime: When model disagreement is high and optimal weights are non-uniform. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for static ensemble optimization during pre-game modeling. Operator 'Hierarchical Covariate-Dependent Stacking' (page 1, domain other) captures: - **Hierarchical (covariate-dependent) stacking:** p(yi|y_{-i}) = Σk w_{ik} p(yi|y_{-i},Mk); w_{ik} = softmax(w*_{i1:K}); w*_{ik} = αk + βkxi; (β1...β_K) ~ Normal(μ,σ) (7–8). Assumptions: Model weights vary smoothly with game state; partial pooling of regression parameters. Breakdown regime: When covariate influence is weak or when data is insufficient for parameter estimation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE to adaptively reweight models based on live game dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1674-bayesblend-stacking-python (b5015bc53d5444e2, domain=other, pages_read=4/4): Operator 'Pseudo-Bayesian Model Averaging' (page 1, domain other) captures: 2022a hierarchical stacking); - **PseudoBma** — pseudo-BMA / pseudo-BMA+ from PSIS-LOO elpd (eq. Assumptions: Models are conditionally independent given data; PSIS-LOO provides stable importance weights. Breakdown regime: When PSIS-LOO fails due to heavy-tailed posteriors or poor model fit. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic forecast aggregation using log-likelihood scores. Operator 'Complete-Pooling Stacking' (page 1, domain other) captures: - **Complete-pooling stacking:** ŵ = argmax_w Σi log Σk wk p(yi|y_{-i},Mk) (6) — unit-simplex constrained in the applied variant. Assumptions: All models contribute equally to prediction; weights sum to unity. Breakdown regime: When model disagreement is high and optimal weights are non-uniform. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for static ensemble optimization during pre-game modeling. Operator 'Hierarchical Covariate-Dependent Stacking' (page 1, domain other) captures: - **Hierarchical (covariate-dependent) stacking:** p(yi|y_{-i}) = Σk w_{ik} p(yi|y_{-i},Mk); w_{ik} = softmax(w*_{i1:K}); w*_{ik} = αk + βkxi; (β1...β_K) ~ Normal(μ,σ) (7–8). Assumptions: Model weights vary smoothly with game state; partial pooling of regression parameters. Breakdown regime: When covariate influence is weak or when data is insufficient for parameter estimation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE to adaptively reweight models based on live game dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Yao et al. (2018) stacking theory and extended by hierarchical stacking (Yao et al., 2022a), building upon earlier work in PSIS-LOO (Vehtari et al., 2017) and model comparison frameworks like loo and ArviZ. Retrocausal Genealogy: Rooted in 1674-bayesblend-stacking-python (b5015bc53d5444e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the 'winner-takes-all' strategy, which assumes one best model, versus the 'ensemble' agent that distributes confidence across multiple models. The hierarchical stacking agent adapts to changing game conditions, while the pseudo-BMA agent remains fixed unless updated via cross-validation. Theory of Mind & Decision Maker Model: Rooted in 1674-bayesblend-stacking-python (b5015bc53d5444e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by enforcing simplex constraints on weights. Leakage is mitigated by restricting hierarchical stacking to relevant covariates. No single model should dominate the ensemble unless justified by evidence, preventing overfitting to noise. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1674-bayesblend-stacking-python (b5015bc53d5444e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

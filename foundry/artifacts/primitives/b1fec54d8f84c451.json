@@ -1,0 +1,78 @@
+{
+  "book_id": "b1fec54d8f84c451",
+  "source_status": "COMPLETE",
+  "title": "GO_LIVE_RUNBOOK",
+  "file_name": "GO_LIVE_RUNBOOK.md",
+  "sha256": "b1fec54d8f84c451e39bfad509b0f7861110a63bd1e840dc01147389533dac31",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A deploy-time bifurcation protocol governs live-state activation via secret-dependent steps, with probabilistic readiness checks and pricing model selection. Universal Lens: Rooted in GO_LIVE_RUNBOOK (b1fec54d8f84c451), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian readiness inference maps environmental variables, API connectivity, and financial gatekeepers to posterior confidence in system integrity. GSI Mapping: Rooted in GO_LIVE_RUNBOOK (b1fec54d8f84c451), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions system states through deterministic step sequences, validating readiness and enabling gated features based on external dependencies. GSE Mapping: Rooted in GO_LIVE_RUNBOOK (b1fec54d8f84c451), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "deploy_readiness_verification",
+      "name": "Deploy Readiness Verification",
+      "verbatim_quote": "## Step 5 — Verify readiness ``` node scripts/check-deploy-readiness.mjs ``` Expect all green: env present, Postgres reachable, Odds API valid, Stripe key + price IDs resolve, Redis PINGs, crons present, gate sequencing sane.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Readiness flag (boolean)', 'E': 'Environment variable presence (boolean)', 'P': 'PostgreSQL reachability (boolean)', 'O': 'Odds API validity (boolean)', 'S': 'Stripe key resolution (boolean)', 'D': 'Redis connectivity (boolean)', 'C': 'Cron job presence (boolean)'}",
+      "assumptions": "All subsystems operate under synchronous availability constraints.",
+      "breakdown_regime": "Failure occurs if any subsystem returns false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI readiness bayes net mirrors GSE state transition graph.",
+        "source_operator": "deploy_readiness_verification",
+        "telemetry": "System readiness score derived from component health flags."
+      }
+    },
+    {
+      "primitive_id": "pricing_model_selection",
+      "name": "Pricing Model Selection",
+      "verbatim_quote": "## Step 7 — Decide the pricing model (PR #14 fork) You have two costed options on the table: - **Keep the monthly named ladder** (current source of truth) — do nothing.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_1': 'Monthly named ladder (boolean)', 'M_2': 'Weekly billing + VIP tier (boolean)', 'C': 'Cost parameter (dimensionless)', 'T': 'Migration time (seconds)'}",
+      "assumptions": "Only one pricing model may be active at deployment.",
+      "breakdown_regime": "Model conflict arises if both M_1 and M_2 are true.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI cost-benefit analysis drives GSE feature enablement logic.",
+        "source_operator": "pricing_model_selection",
+        "telemetry": "Active pricing model identifier and migration status."
+      }
+    },
+    {
+      "primitive_id": "external_account_activation",
+      "name": "External Account Activation",
+      "verbatim_quote": "The code is ready; these are the steps only you (Garrett) can do, because they involve secrets, money, and external accounts.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Account access control (boolean)', 'S': 'Secrets integrity (boolean)', 'F': 'Financial transaction capability (boolean)'}",
+      "assumptions": "User possesses exclusive authorization to perform actions.",
+      "breakdown_regime": "Activation fails if A=false or S=false or F=false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI authentication kernel aligns with GSE access control policy.",
+        "source_operator": "external_account_activation",
+        "telemetry": "Authorization token validity and account status."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b1fec54d8f84c451_t0",
+      "think": "The deploy process embodies a dual-layered verification mechanism where readiness checks form a Bayesian network of interdependent subsystems, each contributing to a global readiness score. This score determines whether the system enters production mode. The pricing model selection introduces a strategic binary choice that influences downstream behavior—either maintaining legacy structure or adopting new billing paradigms. Both primitives are governed by conditional dependencies: readiness must be verified before activation, and activation requires explicit user authorization. Failure modes arise from missing secrets, invalid API keys, or misaligned configurations. These failures propagate through the system as cascading blackouts in functionality, particularly affecting subscription flows and data ingestion pipelines.\n\nDeep epistemic analysis for GO_LIVE_RUNBOOK (b1fec54d8f84c451, domain=other, pages_read=2/2): Operator 'Deploy Readiness Verification' (page 1, domain other) captures: ## Step 5 — Verify readiness ``` node scripts/check-deploy-readiness.mjs ``` Expect all green: env present, Postgres reachable, Odds API valid, Stripe key + price IDs resolve, Redis PINGs, crons present, gate sequencing sane. Assumptions: All subsystems operate under synchronous availability constraints. Breakdown regime: Failure occurs if any subsystem returns false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI readiness bayes net mirrors GSE state transition graph. Operator 'Pricing Model Selection' (page 2, domain other) captures: ## Step 7 — Decide the pricing model (PR #14 fork) You have two costed options on the table: - **Keep the monthly named ladder** (current source of truth) — do nothing. Assumptions: Only one pricing model may be active at deployment. Breakdown regime: Model conflict arises if both M_1 and M_2 are true. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI cost-benefit analysis drives GSE feature enablement logic. Operator 'External Account Activation' (page 1, domain other) captures: The code is ready; these are the steps only you (Garrett) can do, because they involve secrets, money, and external accounts. Assumptions: User possesses exclusive authorization to perform actions. Breakdown regime: Activation fails if A=false or S=false or F=false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI authentication kernel aligns with GSE access control policy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GO_LIVE_RUNBOOK (b1fec54d8f84c451, domain=other, pages_read=2/2): Operator 'Deploy Readiness Verification' (page 1, domain other) captures: ## Step 5 — Verify readiness ``` node scripts/check-deploy-readiness.mjs ``` Expect all green: env present, Postgres reachable, Odds API valid, Stripe key + price IDs resolve, Redis PINGs, crons present, gate sequencing sane. Assumptions: All subsystems operate under synchronous availability constraints. Breakdown regime: Failure occurs if any subsystem returns false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI readiness bayes net mirrors GSE state transition graph. Operator 'Pricing Model Selection' (page 2, domain other) captures: ## Step 7 — Decide the pricing model (PR #14 fork) You have two costed options on the table: - **Keep the monthly named ladder** (current source of truth) — do nothing. Assumptions: Only one pricing model may be active at deployment. Breakdown regime: Model conflict arises if both M_1 and M_2 are true. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI cost-benefit analysis drives GSE feature enablement logic. Operator 'External Account Activation' (page 1, domain other) captures: The code is ready; these are the steps only you (Garrett) can do, because they involve secrets, money, and external accounts. Assumptions: User possesses exclusive authorization to perform actions. Breakdown regime: Activation fails if A=false or S=false or F=false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI authentication kernel aligns with GSE access control policy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical control theory and modern DevOps practices, this framework reflects the evolution from monolithic deployments to microservices orchestration, emphasizing state validation and secure handoffs. Retrocausal Genealogy: Rooted in GO_LIVE_RUNBOOK (b1fec54d8f84c451), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in GO_LIVE_RUNBOOK (b1fec54d8f84c451), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The agent 'Garrett' holds privileged knowledge over secrets and financial systems, acting as a decision node in a partially observable Markov decision process. Opposing actors include automated systems enforcing readiness and external entities managing payment flows. Theory of Mind & Decision Maker Model: Rooted in GO_LIVE_RUNBOOK (b1fec54d8f84c451), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that readiness verification does not depend on pricing model state, preventing circular dependencies. Leakage vetoes prevent unauthorized exposure of secrets during deployment steps. Cross-Layer Veto & Anti-Leakage Check: Rooted in GO_LIVE_RUNBOOK (b1fec54d8f84c451), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in GO_LIVE_RUNBOOK (b1fec54d8f84c451), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

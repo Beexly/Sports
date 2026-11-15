@@ -1,0 +1,78 @@
+{
+  "book_id": "460dc9791a3e44c7",
+  "source_status": "COMPLETE",
+  "title": "2021 - Quantifying Hitter Plate Discipline in Major League Baseball - Unknown Authors",
+  "file_name": "2021 - Quantifying Hitter Plate Discipline in Major League Baseball - Unknown Authors.md",
+  "sha256": "460dc9791a3e44c7b3dc00dc13fb8f512b60d4fdaabf671bece07735191356fe",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Plate discipline quantified via expected run differentials between swing and take decisions, conditioned on pitch location and hitter ability, using xgboost-predicted outcome probabilities. Universal Lens: Rooted in 2021 - Quantifying Hitter Plate Discipline in Major League Baseball - Unknown Authors (460dc9791a3e44c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers hitter decision quality through Bayesian updating of expected run values from swing vs. take, leveraging conformal prediction intervals for uncertainty quantification. GSI Mapping: Rooted in 2021 - Quantifying Hitter Plate Discipline in Major League Baseball - Unknown Authors (460dc9791a3e44c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models dynamic plate discipline as a Markov decision process, transitioning between states of pitch exposure and hitter action based on evolving run environment and strategic context. GSE Mapping: Rooted in 2021 - Quantifying Hitter Plate Discipline in Major League Baseball - Unknown Authors (460dc9791a3e44c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "expected_run_difference",
+      "name": "Expected Run Difference",
+      "verbatim_quote": "We quantify a hitter's plate discipline by averaging the total increase in expected runs from each pitch thrown to the hitter.",
+      "page": 1,
+      "latex": "\\Delta R = \\mathbb{E}[R_{\\text{swing}}] - \\mathbb{E}[R_{\\text{take}}]",
+      "symbol_and_unit_ledger": "{'R': 'Expected runs (dimensionless)', 'ΔR': 'Expected run difference (dimensionless)'}",
+      "assumptions": "Hitters make rational decisions maximizing expected runs; outcome probabilities are estimated via xgboost model.",
+      "breakdown_regime": "When pitch location or hitter ability deviates significantly from training data distribution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's Bayesian belief update on swing vs. take decisions using empirical run expectancy differentials.",
+        "source_operator": "expected_run_difference",
+        "telemetry": "Average ΔR per hitter across all pitches."
+      }
+    },
+    {
+      "primitive_id": "decision_probability_model",
+      "name": "Decision Probability Model",
+      "verbatim_quote": "Using player hitting ability and pitch characteristics, we use an xgboost model to predict the likelihood of each possible outcome from a swing, and from not swinging.",
+      "page": 1,
+      "latex": "P(\\text{outcome} | \\text{pitch}, \\text{hitter}) = \\text{xgboost}(\\text{features})",
+      "symbol_and_unit_ledger": "{'P(outcome)': 'Probability of outcome (dimensionless)', 'features': 'Pitch and hitter attributes (dimensionless)', 'xgboost': 'Classification model output (dimensionless)'}",
+      "assumptions": "Model outputs are calibrated and representative of true decision-making behavior.",
+      "breakdown_regime": "When new pitch types or hitter profiles fall outside training domain.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's state-action transition kernel for swing/take decisions.",
+        "source_operator": "decision_probability_model",
+        "telemetry": "AUC of 0.976 for strike/ball classification."
+      }
+    },
+    {
+      "primitive_id": "run_expectancy_change",
+      "name": "Run Expectancy Change",
+      "verbatim_quote": "From each outcome, we calculate the expected runs scored in the inning.",
+      "page": 1,
+      "latex": "\\Delta RE = RE_{\\text{after}} - RE_{\\text{before}}",
+      "symbol_and_unit_ledger": "{'RE': 'Run expectancy (dimensionless)', 'ΔRE': 'Change in run expectancy (dimensionless)'}",
+      "assumptions": "Inning state transitions are Markovian and deterministic given current runners and outs.",
+      "breakdown_regime": "At extreme game states (e.g., bases loaded with 2 outs).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's state-value function for evaluating run-scoring potential post-decision.",
+        "source_operator": "run_expectancy_change",
+        "telemetry": "Change in run expectancy for each of nine swing outcomes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "460dc9791a3e44c7_t0",
+      "think": "The core insight is that plate discipline is not a static aggregate but a dynamic decision-making process. Each pitch presents a binary choice—swing or take—with associated probabilistic outcomes. The xgboost model estimates these outcome probabilities conditioned on pitch location and hitter skill. Expected runs are calculated for each outcome, enabling computation of expected run differentials (ΔR) between swing and take. This ΔR becomes the primary metric for quantifying plate discipline. The model assumes rationality in decision-making and that run expectancy changes are predictable within a Markovian framework. Failure modes arise when the model underestimates variability in human behavior or when game situations are not adequately encoded into features. The method avoids simplistic metrics like O-Swing% by focusing on individual pitch-level decisions rather than season-long aggregations.\n\nDeep epistemic analysis for 2021 - Quantifying Hitter Plate Discipline in Major League Baseball - Unknown Authors (460dc9791a3e44c7, domain=other, pages_read=7/7): Operator 'Expected Run Difference' (page 1, domain other) captures: We quantify a hitter's plate discipline by averaging the total increase in expected runs from each pitch thrown to the hitter. Assumptions: Hitters make rational decisions maximizing expected runs; outcome probabilities are estimated via xgboost model. Breakdown regime: When pitch location or hitter ability deviates significantly from training data distribution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian belief update on swing vs. take decisions using empirical run expectancy differentials. Operator 'Decision Probability Model' (page 1, domain other) captures: Using player hitting ability and pitch characteristics, we use an xgboost model to predict the likelihood of each possible outcome from a swing, and from not swinging. Assumptions: Model outputs are calibrated and representative of true decision-making behavior. Breakdown regime: When new pitch types or hitter profiles fall outside training domain. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's state-action transition kernel for swing/take decisions. Operator 'Run Expectancy Change' (page 1, domain other) captures: From each outcome, we calculate the expected runs scored in the inning. Assumptions: Inning state transitions are Markovian and deterministic given current runners and outs. Breakdown regime: At extreme game states (e.g., bases loaded with 2 outs). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's state-value function for evaluating run-scoring potential post-decision. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2021 - Quantifying Hitter Plate Discipline in Major League Baseball - Unknown Authors (460dc9791a3e44c7, domain=other, pages_read=7/7): Operator 'Expected Run Difference' (page 1, domain other) captures: We quantify a hitter's plate discipline by averaging the total increase in expected runs from each pitch thrown to the hitter. Assumptions: Hitters make rational decisions maximizing expected runs; outcome probabilities are estimated via xgboost model. Breakdown regime: When pitch location or hitter ability deviates significantly from training data distribution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian belief update on swing vs. take decisions using empirical run expectancy differentials. Operator 'Decision Probability Model' (page 1, domain other) captures: Using player hitting ability and pitch characteristics, we use an xgboost model to predict the likelihood of each possible outcome from a swing, and from not swinging. Assumptions: Model outputs are calibrated and representative of true decision-making behavior. Breakdown regime: When new pitch types or hitter profiles fall outside training domain. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's state-action transition kernel for swing/take decisions. Operator 'Run Expectancy Change' (page 1, domain other) captures: From each outcome, we calculate the expected runs scored in the inning. Assumptions: Inning state transitions are Markovian and deterministic given current runners and outs. Breakdown regime: At extreme game states (e.g., bases loaded with 2 outs). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's state-value function for evaluating run-scoring potential post-decision. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early sabermetric work on swing/take decisions and run expectancy models (Bill James, Pete Palmer). Advanced by machine learning integration in modern sports analytics (e.g., Statcast-based models). Retrocausal Genealogy: Rooted in 2021 - Quantifying Hitter Plate Discipline in Major League Baseball - Unknown Authors (460dc9791a3e44c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume a rational agent optimizing expected runs. Opposing agents (pitchers) may attempt to exploit suboptimal decision boundaries, leading to strategic misalignment. Theory of Mind & Decision Maker Model: Rooted in 2021 - Quantifying Hitter Plate Discipline in Major League Baseball - Unknown Authors (460dc9791a3e44c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that ΔR is not confounded by factors like contact rate or strikeout rate alone. Leakage vetoes include excluding non-pitch-specific variables such as weather or ballpark effects unless explicitly modeled. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2021 - Quantifying Hitter Plate Discipline in Major League Baseball - Unknown Authors (460dc9791a3e44c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

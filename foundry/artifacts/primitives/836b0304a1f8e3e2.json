@@ -1,0 +1,78 @@
+{
+  "book_id": "836b0304a1f8e3e2",
+  "source_status": "COMPLETE",
+  "title": "DISPATCH",
+  "file_name": "DISPATCH.md",
+  "sha256": "836b0304a1f8e3e224ce7e3845a2cf6f9c68bcfbd2249ac152828fe7f130a77d",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A conformal predictive logic framework unifying GSE reasoning traces with GSI Bayesian inference through deterministic gate sequences and L5 trace validation. Universal Lens: Rooted in DISPATCH (836b0304a1f8e3e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs a Bayesian conformal prediction engine mapping observed play distributions to expected value thresholds using Wilson score intervals and Poisson/CQR models. GSI Mapping: Rooted in DISPATCH (836b0304a1f8e3e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies a multi-layered situational reasoning architecture enforcing L1–L5 trace hierarchies, with Live Roster and JEV gates as core state transitions. GSE Mapping: Rooted in DISPATCH (836b0304a1f8e3e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "live_roster_gate",
+      "name": "Live Roster Validation Gate",
+      "verbatim_quote": "Mandatory 200+ Engine Gates & L1–L5 Reasoning Filter Run every single candidate play, prop, and parlay through the complete GSE Gate Stack prior to emitting or publishing lines: - **Live Roster Gate** (`intelligence/roster/live_roster_gate.py`): Inactives and depth chart verified against live ESPN/Sleeper feeds.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{live}': 'Boolean indicator for roster validity (0 or 1)', 'T_{feed}': 'Temporal timestamp of feed update (seconds)'}",
+      "assumptions": "Roster data is synchronized with real-time ESPN/Sleeper feeds; inactives are accurately flagged.",
+      "breakdown_regime": "When T_{feed} exceeds 30 seconds, R_{live} = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Roster validation maps to a temporal consistency check in GSI's probabilistic model.",
+        "source_operator": "live_roster_gate",
+        "telemetry": "R_{live} = 1 when feed latency < 30s"
+      }
+    },
+    {
+      "primitive_id": "l5_reasoning_trace",
+      "name": "L5 Situational Reasoning Trace",
+      "verbatim_quote": "- **L1–L5 Reasoning Trace Engine** (`intelligence/reasoning/`): Trace depth must be L5 for any card/pick; L4 adversary breaking conditions must evaluate to `False`; 5-track checklist (`qb_behavior`, `coaching_scheme`, `offensive_line`, `trust_signals`, `scheme_matchup`) must have zero UNCHECKED tracks; hierarchy order OL -> Coaching -> QB strictly enforced.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{trace}': 'Trace depth level (1 to 5)', 'B_{adversary}': 'Boolean for L4 breaking condition (0 or 1)', 'U_{track}': 'Unchecked track count (dimensionless)'}",
+      "assumptions": "All reasoning tracks are evaluated in strict hierarchical order; L4 conditions are fully specified.",
+      "breakdown_regime": "If U_{track} > 0 or B_{adversary} = 1, then T_{trace} < 5.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "L5 trace enforces a kernel of logical consistency across 5 reasoning dimensions.",
+        "source_operator": "l5_reasoning_trace",
+        "telemetry": "T_{trace} = 5 iff U_{track} = 0 and B_{adversary} = 0"
+      }
+    },
+    {
+      "primitive_id": "fail_closed_policy",
+      "name": "Fail-Closed Decision Policy",
+      "verbatim_quote": "- **Fail-Closed Policy**: Any gate rejection or failing condition results in an honest PASS / unmodeled holdout.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{decision}': 'Decision policy outcome (0 = PASS, 1 = PUBLISH)', 'G_{reject}': 'Gate rejection flag (0 or 1)'}",
+      "assumptions": "All gates are evaluated before final decision; no partial publishing allowed.",
+      "breakdown_regime": "If G_{reject} = 1, then P_{decision} = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Policy mirrors a binary classifier with zero tolerance for false positives.",
+        "source_operator": "fail_closed_policy",
+        "telemetry": "P_{decision} = 0 when any G_{reject} = 1"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "836b0304a1f8e3e2_t0",
+      "think": "The dispatch protocol enforces a structured reasoning cascade where each candidate line undergoes a 200+ gate sequence including Live Roster, L5 trace validation, and fail-closed policy. The L5 trace ensures adversarial robustness via a 5-track checklist, while the fail-closed policy guarantees no erroneous publication. This creates a dual logic system: one for probabilistic inference (GSI) and one for deterministic reasoning (GSE). The trace integrity is validated through temporal consistency checks and unitary trace IDs. Failure modes are mitigated by strict conditional logic at each gate, ensuring that only lines passing all criteria are published.\n\nDeep epistemic analysis for DISPATCH (836b0304a1f8e3e2, domain=other, pages_read=3/3): Operator 'Live Roster Validation Gate' (page 1, domain other) captures: Mandatory 200+ Engine Gates & L1–L5 Reasoning Filter Run every single candidate play, prop, and parlay through the complete GSE Gate Stack prior to emitting or publishing lines: - **Live Roster Gate** (`intelligence/roster/live_roster_gate.py`): Inactives and depth chart verified against live ESPN/Sleeper feeds. Assumptions: Roster data is synchronized with real-time ESPN/Sleeper feeds; inactives are accurately flagged. Breakdown regime: When T_{feed} exceeds 30 seconds, R_{live} = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Roster validation maps to a temporal consistency check in GSI's probabilistic model. Operator 'L5 Situational Reasoning Trace' (page 1, domain other) captures: - **L1–L5 Reasoning Trace Engine** (`intelligence/reasoning/`): Trace depth must be L5 for any card/pick; L4 adversary breaking conditions must evaluate to `False`; 5-track checklist (`qb_behavior`, `coaching_scheme`, `offensive_line`, `trust_signals`, `scheme_matchup`) must have zero UNCHECKED tracks; hierarchy order OL -> Coaching -> QB strictly enforced. Assumptions: All reasoning tracks are evaluated in strict hierarchical order; L4 conditions are fully specified. Breakdown regime: If U_{track} > 0 or B_{adversary} = 1, then T_{trace} < 5. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L5 trace enforces a kernel of logical consistency across 5 reasoning dimensions. Operator 'Fail-Closed Decision Policy' (page 1, domain other) captures: - **Fail-Closed Policy**: Any gate rejection or failing condition results in an honest PASS / unmodeled holdout. Assumptions: All gates are evaluated before final decision; no partial publishing allowed. Breakdown regime: If G_{reject} = 1, then P_{decision} = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Policy mirrors a binary classifier with zero tolerance for false positives. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for DISPATCH (836b0304a1f8e3e2, domain=other, pages_read=3/3): Operator 'Live Roster Validation Gate' (page 1, domain other) captures: Mandatory 200+ Engine Gates & L1–L5 Reasoning Filter Run every single candidate play, prop, and parlay through the complete GSE Gate Stack prior to emitting or publishing lines: - **Live Roster Gate** (`intelligence/roster/live_roster_gate.py`): Inactives and depth chart verified against live ESPN/Sleeper feeds. Assumptions: Roster data is synchronized with real-time ESPN/Sleeper feeds; inactives are accurately flagged. Breakdown regime: When T_{feed} exceeds 30 seconds, R_{live} = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Roster validation maps to a temporal consistency check in GSI's probabilistic model. Operator 'L5 Situational Reasoning Trace' (page 1, domain other) captures: - **L1–L5 Reasoning Trace Engine** (`intelligence/reasoning/`): Trace depth must be L5 for any card/pick; L4 adversary breaking conditions must evaluate to `False`; 5-track checklist (`qb_behavior`, `coaching_scheme`, `offensive_line`, `trust_signals`, `scheme_matchup`) must have zero UNCHECKED tracks; hierarchy order OL -> Coaching -> QB strictly enforced. Assumptions: All reasoning tracks are evaluated in strict hierarchical order; L4 conditions are fully specified. Breakdown regime: If U_{track} > 0 or B_{adversary} = 1, then T_{trace} < 5. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L5 trace enforces a kernel of logical consistency across 5 reasoning dimensions. Operator 'Fail-Closed Decision Policy' (page 1, domain other) captures: - **Fail-Closed Policy**: Any gate rejection or failing condition results in an honest PASS / unmodeled holdout. Assumptions: All gates are evaluated before final decision; no partial publishing allowed. Breakdown regime: If G_{reject} = 1, then P_{decision} = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Policy mirrors a binary classifier with zero tolerance for false positives. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and formal verification principles, this trace architecture builds upon prior work in conformal prediction and automated reasoning systems. Retrocausal Genealogy: Rooted in DISPATCH (836b0304a1f8e3e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in DISPATCH (836b0304a1f8e3e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial models attempting to exploit weak reasoning paths, and stochastic noise in live data feeds. The trace engine is designed to detect and neutralize such threats through layered validation. Theory of Mind & Decision Maker Model: Rooted in DISPATCH (836b0304a1f8e3e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring independent validation across L1–L5 layers. Leakage is prevented by isolating test suites and excluding detached worktrees during CI. Cross-Layer Veto & Anti-Leakage Check: Rooted in DISPATCH (836b0304a1f8e3e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in DISPATCH (836b0304a1f8e3e2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

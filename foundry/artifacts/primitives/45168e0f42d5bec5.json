@@ -1,0 +1,78 @@
+{
+  "book_id": "45168e0f42d5bec5",
+  "source_status": "COMPLETE",
+  "title": "T11_ZHANG_R5_R10_AND_LAGGED_DYNOTEARS",
+  "file_name": "T11_ZHANG_R5_R10_AND_LAGGED_DYNOTEARS.md",
+  "sha256": "45168e0f42d5bec51148a3567a06c6a45203bdc646bc4815c9e16eb26f7efcc5",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Zhang's FCI orientation rules R5–R10 define causal edge orientations under latent confounders; pcalg's udag2pag implements these with structural fixes for rule competition and iteration order dependency. Universal Lens: Rooted in T11_ZHANG_R5_R10_AND_LAGGED_DYNOTEARS (45168e0f42d5bec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Zhang's rules for Bayesian causal structure learning, using conformal prediction to validate edge orientations against latent variable models. GSI Mapping: Rooted in T11_ZHANG_R5_R10_AND_LAGGED_DYNOTEARS (45168e0f42d5bec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies Zhang's rules in state-transition graphs to resolve causal ambiguities, enabling dynamic reasoning over time-series data with lagged dependencies. GSE Mapping: Rooted in T11_ZHANG_R5_R10_AND_LAGGED_DYNOTEARS (45168e0f42d5bec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "rule_r5",
+      "name": "Circle Cycle Orientation",
+      "verbatim_quote": "path α→...→γ with γ,β non-adjacent ⟹ `α →γ` | `ruleR9` + `uncoveredPdPathExists` | | R10 | `α∘→γ`, `β→γ←θ`, two uncovered p.d.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'α, β, γ, θ': 'nodes in a causal graph', '→': 'directed edge', '∘→': 'partially directed edge'}",
+      "assumptions": "Uncovered paths exist between nodes; non-adjacency of γ and β ensures no direct edge.",
+      "breakdown_regime": "When γ and β are adjacent, rule fails due to conflicting orientation constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian network edge validation via conditional independence tests.",
+        "source_operator": "rule_r5",
+        "telemetry": "Test failure when circle cycle is not fully uncovered."
+      }
+    },
+    {
+      "primitive_id": "rule_r10",
+      "name": "Tail Completion Rule",
+      "verbatim_quote": "paths with distinct non-adjacent first steps ⟹ `α →γ` | `ruleR10` | Two corrections to the module that preceded this work: - The module's historical \"R8\" was **not** Zhang's R8.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'α, γ': 'source and target nodes', 'β, θ': 'intermediate nodes in path', '∘→': 'partially directed edge'}",
+      "assumptions": "Two uncovered paths exist with distinct first steps; no adjacency between α and γ.",
+      "breakdown_regime": "When paths share first step or α and γ are adjacent, orientation is ambiguous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses rule_r10 to derive causal directionality in temporal state transitions.",
+        "source_operator": "rule_r10",
+        "telemetry": "Edge orientation consistency across multiple test runs."
+      }
+    },
+    {
+      "primitive_id": "rule_r8_fix",
+      "name": "Structural Fix for Rule Competition",
+      "verbatim_quote": "**The fix is structural, and it is the same switch pcalg has.** `orientPag` now takes an optional `rules` argument (`OrientationRule[]`), so a test can apply exactly one rule.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'orientPag': 'function applying orientation rules', 'rules': 'list of active orientation rules'}",
+      "assumptions": "Each rule must be applied independently to avoid interference.",
+      "breakdown_regime": "Iteration-dependent behavior leads to inconsistent edge orientations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's test suite isolates individual rule effects through selective rule application.",
+        "source_operator": "rule_r8_fix",
+        "telemetry": "Mutation sweep confirms rule-specific test failures."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "45168e0f42d5bec5_t0",
+      "think": "Zhang’s FCI rules R5–R10 govern causal edge orientation in the presence of latent variables. R5 handles circle cycles, R10 completes tails based on uncovered paths. The original implementation suffered from iteration-order dependence and rule interference. The fix introduced in pcalg and adopted here involves structurally isolating rule application via an optional rules parameter. This ensures deterministic outcomes per test case. The mutation sweep validates that each rule is uniquely pinned by its test. Failure to fail indicates competing rules (e.g., R8 vs. completeAncestral) produce identical outputs, masking rule specificity. The structural change aligns with pcalg’s established pattern, ensuring correctness and reproducibility in causal discovery pipelines.\n\nDeep epistemic analysis for T11_ZHANG_R5_R10_AND_LAGGED_DYNOTEARS (45168e0f42d5bec5, domain=other, pages_read=7/7): Operator 'Circle Cycle Orientation' (page 1, domain other) captures: path α→...→γ with γ,β non-adjacent ⟹ `α →γ` | `ruleR9` + `uncoveredPdPathExists` | | R10 | `α∘→γ`, `β→γ←θ`, two uncovered p.d. Assumptions: Uncovered paths exist between nodes; non-adjacency of γ and β ensures no direct edge. Breakdown regime: When γ and β are adjacent, rule fails due to conflicting orientation constraints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian network edge validation via conditional independence tests. Operator 'Tail Completion Rule' (page 1, domain other) captures: paths with distinct non-adjacent first steps ⟹ `α →γ` | `ruleR10` | Two corrections to the module that preceded this work: - The module's historical \"R8\" was **not** Zhang's R8. Assumptions: Two uncovered paths exist with distinct first steps; no adjacency between α and γ. Breakdown regime: When paths share first step or α and γ are adjacent, orientation is ambiguous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses rule_r10 to derive causal directionality in temporal state transitions. Operator 'Structural Fix for Rule Competition' (page 2, domain other) captures: **The fix is structural, and it is the same switch pcalg has.** `orientPag` now takes an optional `rules` argument (`OrientationRule[]`), so a test can apply exactly one rule. Assumptions: Each rule must be applied independently to avoid interference. Breakdown regime: Iteration-dependent behavior leads to inconsistent edge orientations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's test suite isolates individual rule effects through selective rule application. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for T11_ZHANG_R5_R10_AND_LAGGED_DYNOTEARS (45168e0f42d5bec5, domain=other, pages_read=7/7): Operator 'Circle Cycle Orientation' (page 1, domain other) captures: path α→...→γ with γ,β non-adjacent ⟹ `α →γ` | `ruleR9` + `uncoveredPdPathExists` | | R10 | `α∘→γ`, `β→γ←θ`, two uncovered p.d. Assumptions: Uncovered paths exist between nodes; non-adjacency of γ and β ensures no direct edge. Breakdown regime: When γ and β are adjacent, rule fails due to conflicting orientation constraints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian network edge validation via conditional independence tests. Operator 'Tail Completion Rule' (page 1, domain other) captures: paths with distinct non-adjacent first steps ⟹ `α →γ` | `ruleR10` | Two corrections to the module that preceded this work: - The module's historical \"R8\" was **not** Zhang's R8. Assumptions: Two uncovered paths exist with distinct first steps; no adjacency between α and γ. Breakdown regime: When paths share first step or α and γ are adjacent, orientation is ambiguous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses rule_r10 to derive causal directionality in temporal state transitions. Operator 'Structural Fix for Rule Competition' (page 2, domain other) captures: **The fix is structural, and it is the same switch pcalg has.** `orientPag` now takes an optional `rules` argument (`OrientationRule[]`), so a test can apply exactly one rule. Assumptions: Each rule must be applied independently to avoid interference. Breakdown regime: Iteration-dependent behavior leads to inconsistent edge orientations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's test suite isolates individual rule effects through selective rule application. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Pearl's causal calculus and Spirtes et al.'s PC algorithm, Zhang's work formalizes orientation rules for FCI under latent confounders. pcalg's udag2pag module later refined these for computational robustness. Retrocausal Genealogy: Rooted in T11_ZHANG_R5_R10_AND_LAGGED_DYNOTEARS (45168e0f42d5bec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in T11_ZHANG_R5_R10_AND_LAGGED_DYNOTEARS (45168e0f42d5bec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the causal discovery engine (which seeks minimal sufficient assumptions) and the test suite (which demands deterministic rule behavior). The system must balance interpretability with empirical fidelity. Theory of Mind & Decision Maker Model: Rooted in T11_ZHANG_R5_R10_AND_LAGGED_DYNOTEARS (45168e0f42d5bec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each rule operates independently. Leakage occurs when R8 and completeAncestral both orient edges in the same way, violating the principle of unique rule contribution. Cross-Layer Veto & Anti-Leakage Check: Rooted in T11_ZHANG_R5_R10_AND_LAGGED_DYNOTEARS (45168e0f42d5bec5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

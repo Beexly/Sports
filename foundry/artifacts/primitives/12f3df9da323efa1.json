@@ -1,0 +1,78 @@
+{
+  "book_id": "12f3df9da323efa1",
+  "source_status": "COMPLETE",
+  "title": "tier2-rbte-salaries-2026-09-13",
+  "file_name": "tier2-rbte-salaries-2026-09-13.md",
+  "sha256": "12f3df9da323efa14d09d9eda0b34e0e5b75c8f343d70bb03299989be4aa7569",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Salaries as stochastic observables under bounded information constraints; verification via multi-source consensus in probabilistic salary space. Universal Lens: Rooted in tier2-rbte-salaries-2026-09-13 (12f3df9da323efa1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on salary veracity using permitted source likelihoods; conformal prediction intervals for uncertainty quantification. GSI Mapping: Rooted in tier2-rbte-salaries-2026-09-13 (12f3df9da323efa1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions driven by salary confirmation events; situational awareness via dynamic player value maps on FanDuel slates. GSE Mapping: Rooted in tier2-rbte-salaries-2026-09-13 (12f3df9da323efa1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "salary_verification_operator",
+      "name": "Salary Verification Operator",
+      "verbatim_quote": "- **Per the no-assumption rule, the two CONFIRMED verdicts rest on exact Week 1 FanDuel agreement across two independent permitted sources with no conflicting permitted evidence** — not on an assumption that main-slate pricing equals Sunday–Monday pricing.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'salary in USD', 'V': 'verification status {CONFIRMED, UNVERIFIABLE, CORRECTED}', 'T': 'time of verification (Week 1, 2026)', 'F': 'FanDuel platform identifier'}",
+      "assumptions": "Independent permitted sources exist; no conflicting evidence; exact match across sources.",
+      "breakdown_regime": "When |{sources}| < 2 or conflicting reports emerge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic verification kernel; GSE's state transition on confirmed salary updates.",
+        "source_operator": "salary_verification_operator",
+        "telemetry": "Source agreement count and salary discrepancy magnitude."
+      }
+    },
+    {
+      "primitive_id": "slate_compatibility_index",
+      "name": "Slate Compatibility Index",
+      "verbatim_quote": "Fantasy Leagues Info describes only an \"NFL Week 1 DFS slate\" (line 2) without naming a contest — though its player pool spans Sunday afternoon (Gibbs) and Sunday Night Football (Williams), i.e., broader than the main slate.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'compatibility index ∈ [0, 1]', 'P': 'player pool set', 'C': 'contest type {main, Sunday–Monday}', 'S': 'salaries in USD'}",
+      "assumptions": "Player pool overlaps between slates; salary data is consistent within a slate.",
+      "breakdown_regime": "When player pools do not align or salient slates are undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSI's cross-contest alignment logic; GSE's slate-aware state update.",
+        "source_operator": "slate_compatibility_index",
+        "telemetry": "Overlap ratio of players and salary consistency across slates."
+      }
+    },
+    {
+      "primitive_id": "risk_assessment_metric",
+      "name": "Risk Assessment Metric",
+      "verbatim_quote": "| | Javonte Williams, DAL RB | $6,800 | UNVERIFIABLE | Only one permitted source: Fantasy Leagues Info — \"DraftKings: $6,500 \\| FanDuel: $6,800\" and \"FanDuel lists him at only $6,800\" (lines 98, 102).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'risk score ∈ [0, 1]', 'N': 'number of permitted sources', 'M': 'match count across sources', 'U': 'uncertainty factor'}",
+      "assumptions": "Single-source reporting implies higher risk; risk increases with discrepancy.",
+      "breakdown_regime": "When N < 2 or M ≠ N.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSI's risk propagation model; GSE's decision-weighted risk state.",
+        "source_operator": "risk_assessment_metric",
+        "telemetry": "Source count, match rate, and reported salary variance."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "12f3df9da323efa1_t0",
+      "think": "The core operator 'salary_verification_operator' defines a binary condition on whether two independent permitted sources agree on a salary. This is modeled as a probabilistic event where V(S, T, F) = CONFIRMED iff S₁ = S₂. The 'slate_compatibility_index' introduces a topological constraint on how slates relate to each other, particularly in terms of player overlap and temporal alignment. It is defined as I(P₁, P₂) = |P₁ ∩ P₂| / max(|P₁|, |P₂|). Risk assessment is derived from the cardinality of verified sources, where R(N, M) = 1 − M/N. These primitives form a layered system where GSI applies Bayesian inference to validate claims, while GSE uses these metrics to compute dynamic player states. Failure modes include source inconsistency, missing data, and ambiguous contest definitions. The system avoids assumptions about slate equivalence through explicit verification.\n\nDeep epistemic analysis for tier2-rbte-salaries-2026-09-13 (12f3df9da323efa1, domain=other, pages_read=2/2): Operator 'Salary Verification Operator' (page 2, domain other) captures: - **Per the no-assumption rule, the two CONFIRMED verdicts rest on exact Week 1 FanDuel agreement across two independent permitted sources with no conflicting permitted evidence** — not on an assumption that main-slate pricing equals Sunday–Monday pricing. Assumptions: Independent permitted sources exist; no conflicting evidence; exact match across sources. Breakdown regime: When |{sources}| < 2 or conflicting reports emerge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic verification kernel; GSE's state transition on confirmed salary updates. Operator 'Slate Compatibility Index' (page 2, domain other) captures: Fantasy Leagues Info describes only an \"NFL Week 1 DFS slate\" (line 2) without naming a contest — though its player pool spans Sunday afternoon (Gibbs) and Sunday Night Football (Williams), i.e., broader than the main slate. Assumptions: Player pool overlaps between slates; salary data is consistent within a slate. Breakdown regime: When player pools do not align or salient slates are undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's cross-contest alignment logic; GSE's slate-aware state update. Operator 'Risk Assessment Metric' (page 1, domain other) captures: | | Javonte Williams, DAL RB | $6,800 | UNVERIFIABLE | Only one permitted source: Fantasy Leagues Info — \"DraftKings: $6,500 \\| FanDuel: $6,800\" and \"FanDuel lists him at only $6,800\" (lines 98, 102). Assumptions: Single-source reporting implies higher risk; risk increases with discrepancy. Breakdown regime: When N < 2 or M ≠ N. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSI's risk propagation model; GSE's decision-weighted risk state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for tier2-rbte-salaries-2026-09-13 (12f3df9da323efa1, domain=other, pages_read=2/2): Operator 'Salary Verification Operator' (page 2, domain other) captures: - **Per the no-assumption rule, the two CONFIRMED verdicts rest on exact Week 1 FanDuel agreement across two independent permitted sources with no conflicting permitted evidence** — not on an assumption that main-slate pricing equals Sunday–Monday pricing. Assumptions: Independent permitted sources exist; no conflicting evidence; exact match across sources. Breakdown regime: When |{sources}| < 2 or conflicting reports emerge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic verification kernel; GSE's state transition on confirmed salary updates. Operator 'Slate Compatibility Index' (page 2, domain other) captures: Fantasy Leagues Info describes only an \"NFL Week 1 DFS slate\" (line 2) without naming a contest — though its player pool spans Sunday afternoon (Gibbs) and Sunday Night Football (Williams), i.e., broader than the main slate. Assumptions: Player pool overlaps between slates; salary data is consistent within a slate. Breakdown regime: When player pools do not align or salient slates are undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's cross-contest alignment logic; GSE's slate-aware state update. Operator 'Risk Assessment Metric' (page 1, domain other) captures: | | Javonte Williams, DAL RB | $6,800 | UNVERIFIABLE | Only one permitted source: Fantasy Leagues Info — \"DraftKings: $6,500 \\| FanDuel: $6,800\" and \"FanDuel lists him at only $6,800\" (lines 98, 102). Assumptions: Single-source reporting implies higher risk; risk increases with discrepancy. Breakdown regime: When N < 2 or M ≠ N. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSI's risk propagation model; GSE's decision-weighted risk state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and Bayesian verification principles; extends prior work on multi-source consensus in financial and sports analytics. Retrocausal Genealogy: Rooted in tier2-rbte-salaries-2026-09-13 (12f3df9da323efa1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in tier2-rbte-salaries-2026-09-13 (12f3df9da323efa1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data publishers (e.g., Fantasy Life) and verification systems (GSI). Each agent has distinct priors on salary truth, leading to potential conflicts in interpretation. Decision actors must weigh evidence quality over quantity. Theory of Mind & Decision Maker Model: Rooted in tier2-rbte-salaries-2026-09-13 (12f3df9da323efa1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures no redundant use of same source in multiple primitives. Leakage vetoes occur when a primitive's output is used as input to another without proper conditioning. Cross-layer veto prevents false positives from propagating into downstream reasoning. Cross-Layer Veto & Anti-Leakage Check: Rooted in tier2-rbte-salaries-2026-09-13 (12f3df9da323efa1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

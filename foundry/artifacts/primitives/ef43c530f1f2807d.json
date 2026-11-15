@@ -1,0 +1,78 @@
+{
+  "book_id": "ef43c530f1f2807d",
+  "source_status": "COMPLETE",
+  "title": "decision-os-vision",
+  "file_name": "decision-os-vision.md",
+  "sha256": "ef43c530f1f2807dce7458f47bb9dbb7272982cf8462c0f13abeed3ca4b0f84d",
+  "primary_domain": "psych",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Decision-intelligence OS as a temporal evidence-governed state transition system with feedback loops. Universal Lens: Rooted in decision-os-vision (ef43c530f1f2807d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating over live sports evidence streams using conformal predictive inference for uncertainty quantification. GSI Mapping: Rooted in decision-os-vision (ef43c530f1f2807d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine with multi-agent evidence debate and dynamic decision-state transitions via signal courtrooms. GSE Mapping: Rooted in decision-os-vision (ef43c530f1f2807d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "signal_courtroom",
+      "name": "Signal Courtroom",
+      "verbatim_quote": "- **Signal Courtroom** (`components/courtroom/signal-courtroom.tsx`, `lib/courtroom/courtroom.ts`) — every signal is a CASE: Claim · Prosecution (evidence) · Defense (counter-evidence) · Judge (falsifiers + what would flip it) · Verdict (incl.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Claim (evidence assertion)', 'P': 'Prosecution (supporting evidence)', 'D': 'Defense (counter-evidence)', 'J': 'Judge (falsifiers + flip conditions)', 'V': 'Verdict (structured decision)'}",
+      "assumptions": "Each signal operates under a formalized case structure with adversarial evidence presentation.",
+      "breakdown_regime": "When evidence becomes insufficient or contradictory, verdicts collapse into ambiguity.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian inference framework where each case represents a probabilistic hypothesis test.",
+        "source_operator": "signal_courtroom",
+        "telemetry": "Evidence weight distribution across prosecution, defense, and judge layers."
+      }
+    },
+    {
+      "primitive_id": "decision_loop",
+      "name": "Decision Loop",
+      "verbatim_quote": "**The moat is the loop:** live data → signal detection → evidence debate → user decision → result autopsy → calibration → education → better future decisions.",
+      "page": 1,
+      "latex": "\\mathcal{L} = \\left\\{ D_{t} \\rightarrow S_{t+1} \\rightarrow E_{t+1} \\rightarrow U_{t+1} \\rightarrow R_{t+1} \\rightarrow C_{t+1} \\rightarrow E_{t+2} \\right\\}",
+      "symbol_and_unit_ledger": "{'D_t': 'Decision state at time t', 'S_t': 'Signal input at time t', 'E_t': 'Evidence set at time t', 'U_t': 'User action at time t', 'R_t': 'Result observed at time t', 'C_t': 'Calibration feedback at time t'}",
+      "assumptions": "Feedback cycle maintains closed-loop control over decision quality and calibration.",
+      "breakdown_regime": "Loop fails when result data is delayed or misinterpreted.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE’s core architecture as a recurrent decision-making kernel.",
+        "source_operator": "decision_loop",
+        "telemetry": "Autopsy accuracy and calibration drift over repeated cycles."
+      }
+    },
+    {
+      "primitive_id": "bias_mirror",
+      "name": "Bias Mirror",
+      "verbatim_quote": "## Built this phase - **CinematicEntrance** — the cold open (above).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_i': 'Bias tendency i ∈ {1..7}', 'P_i': 'Pattern score for bias i', 'M': 'Recommended mode (Standard/Watch/Cool-down)'}",
+      "assumptions": "User behavior can be modeled as a latent variable with observable behavioral indicators.",
+      "breakdown_regime": "Mirror fails when biases are not accurately self-reported or misclassified.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's internal cognitive bias detection module using reinforcement learning.",
+        "source_operator": "bias_mirror",
+        "telemetry": "Self-reported bias scores and corresponding behavioral deviation metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ef43c530f1f2807d_t0",
+      "think": "The foundational logic of the system is rooted in a dual-process model of decision-making: one driven by real-time evidence (via signal courtroom), and another by learned behavioral patterns (via bias mirror). These two components interact within a closed-loop feedback mechanism (decision loop) that ensures continuous calibration against outcomes. The system avoids traditional sportsbook paradigms by rejecting static pick generation in favor of dynamic, interactive decision environments. Each primitive maps to a distinct layer of cognitive processing—evidence evaluation, bias correction, and iterative refinement—forming a coherent operational semantics for intelligent sports decision-making.\n\nDeep epistemic analysis for decision-os-vision (ef43c530f1f2807d, domain=psych, pages_read=5/5): Operator 'Signal Courtroom' (page 1, domain psych) captures: - **Signal Courtroom** (`components/courtroom/signal-courtroom.tsx`, `lib/courtroom/courtroom.ts`) — every signal is a CASE: Claim · Prosecution (evidence) · Defense (counter-evidence) · Judge (falsifiers + what would flip it) · Verdict (incl. Assumptions: Each signal operates under a formalized case structure with adversarial evidence presentation. Breakdown regime: When evidence becomes insufficient or contradictory, verdicts collapse into ambiguity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian inference framework where each case represents a probabilistic hypothesis test. Operator 'Decision Loop' (page 1, domain psych) captures: **The moat is the loop:** live data → signal detection → evidence debate → user decision → result autopsy → calibration → education → better future decisions. Assumptions: Feedback cycle maintains closed-loop control over decision quality and calibration. Breakdown regime: Loop fails when result data is delayed or misinterpreted. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE’s core architecture as a recurrent decision-making kernel. Operator 'Bias Mirror' (page 1, domain psych) captures: ## Built this phase - **CinematicEntrance** — the cold open (above). Assumptions: User behavior can be modeled as a latent variable with observable behavioral indicators. Breakdown regime: Mirror fails when biases are not accurately self-reported or misclassified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's internal cognitive bias detection module using reinforcement learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for decision-os-vision (ef43c530f1f2807d, domain=psych, pages_read=5/5): Operator 'Signal Courtroom' (page 1, domain psych) captures: - **Signal Courtroom** (`components/courtroom/signal-courtroom.tsx`, `lib/courtroom/courtroom.ts`) — every signal is a CASE: Claim · Prosecution (evidence) · Defense (counter-evidence) · Judge (falsifiers + what would flip it) · Verdict (incl. Assumptions: Each signal operates under a formalized case structure with adversarial evidence presentation. Breakdown regime: When evidence becomes insufficient or contradictory, verdicts collapse into ambiguity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian inference framework where each case represents a probabilistic hypothesis test. Operator 'Decision Loop' (page 1, domain psych) captures: **The moat is the loop:** live data → signal detection → evidence debate → user decision → result autopsy → calibration → education → better future decisions. Assumptions: Feedback cycle maintains closed-loop control over decision quality and calibration. Breakdown regime: Loop fails when result data is delayed or misinterpreted. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE’s core architecture as a recurrent decision-making kernel. Operator 'Bias Mirror' (page 1, domain psych) captures: ## Built this phase - **CinematicEntrance** — the cold open (above). Assumptions: User behavior can be modeled as a latent variable with observable behavioral indicators. Breakdown regime: Mirror fails when biases are not accurately self-reported or misclassified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's internal cognitive bias detection module using reinforcement learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and cognitive science models of dual-process thinking, particularly influenced by Kahneman’s System 1/2 dichotomy and modern reinforcement learning frameworks. Retrocausal Genealogy: Rooted in decision-os-vision (ef43c530f1f2807d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in decision-os-vision (ef43c530f1f2807d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing decision actors as competing agents within the signal courtroom, each representing different sources of information or influence (e.g., public money, injury impacts, narrative signals). Theory of Mind & Decision Maker Model: Rooted in decision-os-vision (ef43c530f1f2807d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in decision-os-vision (ef43c530f1f2807d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced through orthogonalization of evidence types and explicit veto conditions on redundant or conflicting inputs in the decision loop. Cross-Layer Veto & Anti-Leakage Check: Rooted in decision-os-vision (ef43c530f1f2807d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in decision-os-vision (ef43c530f1f2807d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

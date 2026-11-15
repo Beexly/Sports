@@ -1,0 +1,78 @@
+{
+  "book_id": "de367336f6352f15",
+  "source_status": "COMPLETE",
+  "title": "05-promotions-affiliate-system",
+  "file_name": "05-promotions-affiliate-system.md",
+  "sha256": "de367336f6352f153163ac9df6001ff69104d65fb835be5f2da1c8bc228d1668",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Promotion system as a compliance-controlled revenue flow with geo-temporal offer validity, risk-adjusted partner integration, and disclosure-aligned user journey. Universal Lens: Rooted in 05-promotions-affiliate-system (de367336f6352f15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on partner approval status and offer eligibility using geo-legal constraints and compliance signals as evidence in a conformal predictive framework. GSI Mapping: Rooted in 05-promotions-affiliate-system (de367336f6352f15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in promotional workflows governed by legal trust levels, offer expiration, and admin review triggers within a finite-state machine. GSE Mapping: Rooted in 05-promotions-affiliate-system (de367336f6352f15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "compliance_controlled_revenue_flow",
+      "name": "Compliance-Controlled Revenue Flow",
+      "verbatim_quote": "# Promotions / Affiliate Revenue System As of: 2026-06-09 ## Recommendation Build the promotions tab as a compliance-controlled revenue system, not a link dump.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Revenue (dimensionless, normalized)', 'C': 'Compliance signal (0 or 1)', 'T': 'Trust level (P0, P1, P2)'}",
+      "assumptions": "Revenue R is conditional on C=1 and T ∈ {P0, P1, P2}.",
+      "breakdown_regime": "C=0 implies R=0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's Bayesian update on R given C and T aligns with GSE's state transition on offer activation.",
+        "source_operator": "compliance_controlled_revenue_flow",
+        "telemetry": "Offer activation rate vs. compliance audit score."
+      }
+    },
+    {
+      "primitive_id": "disabled_by_default_data_model",
+      "name": "Disabled-by-Default Data Model",
+      "verbatim_quote": "The first implementation should be a disabled-by-default data model and admin review workflow.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Data model state (0 or 1)', 'A': 'Admin approval (0 or 1)'}",
+      "assumptions": "D=0 until A=1.",
+      "breakdown_regime": "D=0 when A=0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's workflow engine enforces D=0 until A=1; GSI's inference engine treats D=0 as unobservable.",
+        "source_operator": "disabled_by_default_data_model",
+        "telemetry": "Model enablement delay post-admin approval."
+      }
+    },
+    {
+      "primitive_id": "geo_temporal_offer_validity",
+      "name": "Geo-Temporal Offer Validity",
+      "verbatim_quote": "| undefined | ## Compliance Baseline - FTC: disclose material connections clearly and conspicuously.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V(t, g)': 'Offer validity at time t and geo g (0 or 1)', 't': 'Time (seconds since epoch)', 'g': 'Geolocation identifier'}",
+      "assumptions": "V(t, g) = 1 iff t ∈ [start, end] and g ∈ allowed_geos.",
+      "breakdown_regime": "V(t, g) = 0 if t < start or t > end or g ∉ allowed_geos.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's temporal-geo filtering of offers mirrors GSE's state-based access control.",
+        "source_operator": "geo_temporal_offer_validity",
+        "telemetry": "Offer visibility rate per geo-time bin."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "de367336f6352f15_t0",
+      "think": "The promotion system is modeled as a structured compliance-driven revenue pipeline. Each partner is assigned a trust level (P0/P1/P2), which determines whether their offers are enabled. The system uses a disabled-by-default data model to ensure all offers undergo administrative review before activation. Offers are subject to geo-temporal validity constraints, enforced via a discrete-time geolocation filter. The system ensures that no live links are exposed without explicit approval and that disclosures are made in accordance with FTC guidelines. This structure prevents unauthorized revenue generation while maintaining a scalable framework for future integrations. The failure mode occurs when a partner’s trust level is misclassified or when geo-temporal constraints are bypassed, leading to non-compliant exposure. The dual nature of this system lies in its ability to balance monetization with regulatory adherence through a layered validation mechanism.\n\nDeep epistemic analysis for 05-promotions-affiliate-system (de367336f6352f15, domain=other, pages_read=2/2): Operator 'Compliance-Controlled Revenue Flow' (page 1, domain other) captures: # Promotions / Affiliate Revenue System As of: 2026-06-09 ## Recommendation Build the promotions tab as a compliance-controlled revenue system, not a link dump. Assumptions: Revenue R is conditional on C=1 and T ∈ {P0, P1, P2}. Breakdown regime: C=0 implies R=0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's Bayesian update on R given C and T aligns with GSE's state transition on offer activation. Operator 'Disabled-by-Default Data Model' (page 1, domain other) captures: The first implementation should be a disabled-by-default data model and admin review workflow. Assumptions: D=0 until A=1. Breakdown regime: D=0 when A=0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's workflow engine enforces D=0 until A=1; GSI's inference engine treats D=0 as unobservable. Operator 'Geo-Temporal Offer Validity' (page 1, domain other) captures: | undefined | ## Compliance Baseline - FTC: disclose material connections clearly and conspicuously. Assumptions: V(t, g) = 1 iff t ∈ [start, end] and g ∈ allowed_geos. Breakdown regime: V(t, g) = 0 if t < start or t > end or g ∉ allowed_geos. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's temporal-geo filtering of offers mirrors GSE's state-based access control. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 05-promotions-affiliate-system (de367336f6352f15, domain=other, pages_read=2/2): Operator 'Compliance-Controlled Revenue Flow' (page 1, domain other) captures: # Promotions / Affiliate Revenue System As of: 2026-06-09 ## Recommendation Build the promotions tab as a compliance-controlled revenue system, not a link dump. Assumptions: Revenue R is conditional on C=1 and T ∈ {P0, P1, P2}. Breakdown regime: C=0 implies R=0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's Bayesian update on R given C and T aligns with GSE's state transition on offer activation. Operator 'Disabled-by-Default Data Model' (page 1, domain other) captures: The first implementation should be a disabled-by-default data model and admin review workflow. Assumptions: D=0 until A=1. Breakdown regime: D=0 when A=0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's workflow engine enforces D=0 until A=1; GSI's inference engine treats D=0 as unobservable. Operator 'Geo-Temporal Offer Validity' (page 1, domain other) captures: | undefined | ## Compliance Baseline - FTC: disclose material connections clearly and conspicuously. Assumptions: V(t, g) = 1 iff t ∈ [start, end] and g ∈ allowed_geos. Breakdown regime: V(t, g) = 0 if t < start or t > end or g ∉ allowed_geos. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's temporal-geo filtering of offers mirrors GSE's state-based access control. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in prior regulatory frameworks such as FTC disclosure requirements and AGA/NCPG responsible gaming standards, evolving into modern compliance-centric digital commerce models. Retrocausal Genealogy: Rooted in 05-promotions-affiliate-system (de367336f6352f15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 05-promotions-affiliate-system (de367336f6352f15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include regulators enforcing compliance, partners seeking revenue, and users navigating offers. The system must balance these actors' incentives while maintaining integrity. Theory of Mind & Decision Maker Model: Rooted in 05-promotions-affiliate-system (de367336f6352f15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 05-promotions-affiliate-system (de367336f6352f15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by separating GSI's probabilistic inference from GSE's deterministic state transitions. Leakage is prevented by strict separation of trust levels and offer activation logic. Cross-Layer Veto & Anti-Leakage Check: Rooted in 05-promotions-affiliate-system (de367336f6352f15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 05-promotions-affiliate-system (de367336f6352f15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

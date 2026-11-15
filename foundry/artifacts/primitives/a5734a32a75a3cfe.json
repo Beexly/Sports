@@ -1,0 +1,78 @@
+{
+  "book_id": "a5734a32a75a3cfe",
+  "source_status": "COMPLETE",
+  "title": "sports-science-partnerships",
+  "file_name": "sports-science-partnerships.md",
+  "sha256": "a5734a32a75a3cfe809cba8a2f6b691556494ab1fbb750e635a5dd4b0f463748",
+  "primary_domain": "other",
+  "pages_total": 11,
+  "pages_read": 11,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Honesty layers unify epistemic uncertainty with measurement via calibrated abstention and probabilistic thresholding. Universal Lens: Rooted in sports-science-partnerships (a5734a32a75a3cfe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI maps vendor outputs to Bayesian posterior distributions with conformal prediction intervals, enabling decision-theoretic abstention. GSI Mapping: Rooted in sports-science-partnerships (a5734a32a75a3cfe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models situational states using Markovian transitions conditioned on calibrated uncertainty, supporting dynamic risk-aware actions. GSE Mapping: Rooted in sports-science-partnerships (a5734a32a75a3cfe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "honesty_layer",
+      "name": "Honesty Layer",
+      "verbatim_quote": "**Date**: 2026-07-24 **Owner**: UQ / prediction-engine track **Companion**: `docs/ops/UQ_HANDOFF_2026-07-24.md` §3 (this doc is item 5 of §6) The thesis in one paragraph: the sports-science vendor market is well served on *measurement* and poorly served on *epistemics*.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Vendor data lacks calibrated uncertainty quantification; epistemic risk is underrepresented in current tooling.",
+      "breakdown_regime": "When measurement is treated as deterministic rather than probabilistic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw metrics to calibrated belief states with abstention capability, aligning with GSI's Bayesian inference framework.",
+        "source_operator": "honesty_layer",
+        "telemetry": "Calibration slope, coverage rate, and abstention frequency."
+      }
+    },
+    {
+      "primitive_id": "threshold_crossing",
+      "name": "Threshold Crossing",
+      "verbatim_quote": "The commercial object is a per-team, per-season contract bundling vests/pods, the platform seat, and support.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Decision boundaries are treated as binary outcomes without probabilistic interpretation.",
+      "breakdown_regime": "At boundary regions where small perturbations yield opposite decisions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Transforms deterministic thresholds into stochastic decision surfaces using calibrated confidence bands.",
+        "source_operator": "threshold_crossing",
+        "telemetry": "Probability of crossing given uncertainty band width."
+      }
+    },
+    {
+      "primitive_id": "calibrated_abstention",
+      "name": "Calibrated Abstention",
+      "verbatim_quote": "That gap is what `packages/prediction-engine`'s calibration + selective-gate stack already does for betting edges, and it transfers.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Abstaining from a decision when confidence falls below a threshold improves overall reliability.",
+      "breakdown_regime": "When predictive confidence drops below acceptable levels for action.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enables GSE to defer decisions when input uncertainty exceeds tolerable limits, mirroring GSI’s abstention logic.",
+        "source_operator": "calibrated_abstention",
+        "telemetry": "Frequency of abstentions, average confidence at abstention points."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a5734a32a75a3cfe_t0",
+      "think": "The core insight is that modern sports science tools excel at generating numerical outputs but fail to communicate the epistemic uncertainty inherent in those estimates. This leads to misinterpretation of thresholds and overconfidence in deterministic conclusions. The honesty layer addresses this by embedding calibrated uncertainty into decision-making processes. It operates through a dual mechanism: first, it applies conformal prediction techniques to quantify how wrong a given score might be; second, it introduces a selective-gate mechanism that allows for abstention when uncertainty exceeds predefined bounds. These primitives form a coherent mathematical structure where each component contributes to a robust, uncertainty-aware decision framework. The failure mode arises when vendors treat all outputs as definitive, ignoring the probabilistic nature of underlying data. In contrast, the proposed honesty layer ensures that decisions are made only when sufficient evidence supports them, thereby reducing false positives and improving operational reliability.\n\nDeep epistemic analysis for sports-science-partnerships (a5734a32a75a3cfe, domain=other, pages_read=11/11): Operator 'Honesty Layer' (page 1, domain other) captures: **Date**: 2026-07-24 **Owner**: UQ / prediction-engine track **Companion**: `docs/ops/UQ_HANDOFF_2026-07-24.md` §3 (this doc is item 5 of §6) The thesis in one paragraph: the sports-science vendor market is well served on *measurement* and poorly served on *epistemics*. Assumptions: Vendor data lacks calibrated uncertainty quantification; epistemic risk is underrepresented in current tooling. Breakdown regime: When measurement is treated as deterministic rather than probabilistic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw metrics to calibrated belief states with abstention capability, aligning with GSI's Bayesian inference framework. Operator 'Threshold Crossing' (page 1, domain other) captures: The commercial object is a per-team, per-season contract bundling vests/pods, the platform seat, and support. Assumptions: Decision boundaries are treated as binary outcomes without probabilistic interpretation. Breakdown regime: At boundary regions where small perturbations yield opposite decisions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transforms deterministic thresholds into stochastic decision surfaces using calibrated confidence bands. Operator 'Calibrated Abstention' (page 1, domain other) captures: That gap is what `packages/prediction-engine`'s calibration + selective-gate stack already does for betting edges, and it transfers. Assumptions: Abstaining from a decision when confidence falls below a threshold improves overall reliability. Breakdown regime: When predictive confidence drops below acceptable levels for action. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE to defer decisions when input uncertainty exceeds tolerable limits, mirroring GSI’s abstention logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sports-science-partnerships (a5734a32a75a3cfe, domain=other, pages_read=11/11): Operator 'Honesty Layer' (page 1, domain other) captures: **Date**: 2026-07-24 **Owner**: UQ / prediction-engine track **Companion**: `docs/ops/UQ_HANDOFF_2026-07-24.md` §3 (this doc is item 5 of §6) The thesis in one paragraph: the sports-science vendor market is well served on *measurement* and poorly served on *epistemics*. Assumptions: Vendor data lacks calibrated uncertainty quantification; epistemic risk is underrepresented in current tooling. Breakdown regime: When measurement is treated as deterministic rather than probabilistic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw metrics to calibrated belief states with abstention capability, aligning with GSI's Bayesian inference framework. Operator 'Threshold Crossing' (page 1, domain other) captures: The commercial object is a per-team, per-season contract bundling vests/pods, the platform seat, and support. Assumptions: Decision boundaries are treated as binary outcomes without probabilistic interpretation. Breakdown regime: At boundary regions where small perturbations yield opposite decisions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transforms deterministic thresholds into stochastic decision surfaces using calibrated confidence bands. Operator 'Calibrated Abstention' (page 1, domain other) captures: That gap is what `packages/prediction-engine`'s calibration + selective-gate stack already does for betting edges, and it transfers. Assumptions: Abstaining from a decision when confidence falls below a threshold improves overall reliability. Breakdown regime: When predictive confidence drops below acceptable levels for action. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE to defer decisions when input uncertainty exceeds tolerable limits, mirroring GSI’s abstention logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and conformal prediction, tracing back to Vapnik's statistical learning theory and the work of Shafer and Vovk on probability bounds. Retrocausal Genealogy: Rooted in sports-science-partnerships (a5734a32a75a3cfe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in sports-science-partnerships (a5734a32a75a3cfe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include vendors who prioritize data richness over epistemic clarity, and end-users who may misinterpret deterministic signals. The strategy models both as bounded rational actors seeking to optimize within their constraints. Theory of Mind & Decision Maker Model: Rooted in sports-science-partnerships (a5734a32a75a3cfe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the honesty layer does not interfere with existing measurement pipelines but enhances them. Leakage vetoes ensure that uncertainty estimates do not leak into downstream models without proper calibration, maintaining integrity across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in sports-science-partnerships (a5734a32a75a3cfe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

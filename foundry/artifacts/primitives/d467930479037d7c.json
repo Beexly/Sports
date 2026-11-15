@@ -1,0 +1,78 @@
+{
+  "book_id": "d467930479037d7c",
+  "source_status": "COMPLETE",
+  "title": "1222-fractional-growth-portfolio-investment",
+  "file_name": "1222-fractional-growth-portfolio-investment.md",
+  "sha256": "d467930479037d7c1274fb3ffee77897bda1d0643db1df22e9a3aecb362536e6",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Kelly portfolio optimization under geometric Brownian motion maps expected log-wealth maximization to quadratic forms in drift and covariance, with fractional scaling providing risk-adjusted growth control. Universal Lens: Rooted in 1222-fractional-growth-portfolio-investment (d467930479037d7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian posterior inference on estimated μ, Σ to compute Kelly weights, using conformal prediction for uncertainty quantification in portfolio allocation decisions. GSI Mapping: Rooted in 1222-fractional-growth-portfolio-investment (d467930479037d7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses Kelly-derived weights as state transitions in dynamic portfolio rebalancing, with fractional Kelly acting as a safety kernel to mitigate estimation error and regime shifts. GSE Mapping: Rooted in 1222-fractional-growth-portfolio-investment (d467930479037d7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "growth_optimal_kelly",
+      "name": "Growth Optimal Kelly",
+      "verbatim_quote": "**Kelly derivation:** maximize expected log-growth → optimal risky fraction k⋆ = (μ-r)/σ2 (univariate); multivariate k⋆ = Σ-1(μ-r).",
+      "page": 1,
+      "latex": "\\mathbf{k}^* = \\Sigma^{-1}(\\mu - r\\mathbf{1})",
+      "symbol_and_unit_ledger": "{'k*': 'dimensionless portfolio weight vector', 'μ': 'drift vector (annualized returns)', 'r': 'risk-free rate (dimensionless)', 'Σ': 'covariance matrix (dimensionless)', '1': 'vector of ones'}",
+      "assumptions": "Geometric Brownian motion with constant μ, σ, r; continuous rebalancing; no transaction costs.",
+      "breakdown_regime": "When μ, Σ are unknown or time-varying, Kelly becomes unstable due to estimation error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's core portfolio sizing logic by computing optimal exposure to risky assets based on risk-adjusted return.",
+        "source_operator": "growth_optimal_kelly",
+        "telemetry": "Terminal wealth, annualized Sharpe ratio, maximum drawdown."
+      }
+    },
+    {
+      "primitive_id": "fractional_kelly_scaling",
+      "name": "Fractional Kelly Scaling",
+      "verbatim_quote": "**Fractional Kelly:** k_α = αΣ-1(μ-r), α ∈ (0,1) — scales down the growth-optimal bet.",
+      "page": 1,
+      "latex": "\\mathbf{k}_\\alpha = \\alpha \\Sigma^{-1}(\\mu - r\\mathbf{1})",
+      "symbol_and_unit_ledger": "{'k_α': 'scaled portfolio weight vector', 'α': 'fractional scaling factor (0 < α ≤ 1)', 'Σ': 'covariance matrix (dimensionless)', 'μ': 'drift vector (annualized returns)', 'r': 'risk-free rate (dimensionless)', '1': 'vector of ones'}",
+      "assumptions": "Same as Kelly, but with α as a tuning parameter for risk aversion.",
+      "breakdown_regime": "α = 0 implies no exposure; α = 1 recovers full Kelly; values in between provide risk control.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI’s risk-adjusted inference framework, where α acts as a Bayesian prior strength modifier.",
+        "source_operator": "fractional_kelly_scaling",
+        "telemetry": "Expected log-growth rate, variance of log-growth, terminal wealth distribution."
+      }
+    },
+    {
+      "primitive_id": "log_growth_expectation",
+      "name": "Log-Growth Expectation",
+      "verbatim_quote": "**Closed forms:** expected log-growth L(k_α) = r + (α - α2/2)S2 where S2 = (μ-r)TΣ-1(μ-r) (squared Sharpe); variance of log-growth V(k_α) = α2S2.",
+      "page": 1,
+      "latex": "L(\\mathbf{k}_\\alpha) = r + (\\alpha - \\alpha^2/2)S^2, \\quad S^2 = (\\mu - r\\mathbf{1})^T \\Sigma^{-1} (\\mu - r\\mathbf{1})",
+      "symbol_and_unit_ledger": "{'L(k_α)': 'expected log-growth rate (dimensionless)', 'r': 'risk-free rate (dimensionless)', 'α': 'fractional scaling factor (0 < α ≤ 1)', 'S2': 'squared Sharpe ratio (dimensionless)', 'μ': 'drift vector (annualized returns)', 'Σ': 'covariance matrix (dimensionless)'}",
+      "assumptions": "GBM model holds; μ, Σ fixed; log-normality of returns.",
+      "breakdown_regime": "Invalid under regime changes or non-log-normal returns; estimation error dominates in finite samples.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to evaluate portfolio performance metrics such as risk-adjusted return and volatility of log-wealth.",
+        "source_operator": "log_growth_expectation",
+        "telemetry": "Annualized volatility of log-wealth, expected terminal wealth, Sharpe ratio."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d467930479037d7c_t0",
+      "think": "The Kelly criterion arises from maximizing expected logarithmic utility of wealth, leading to a quadratic optimization problem in drift and covariance. For univariate case, k* = (μ − r)/σ²; for multivariate, k* = Σ⁻¹(μ − r). This formulation assumes constant drift and volatility, and that the investor can continuously rebalance. The fractional Kelly introduces a scalar α ∈ (0,1) to scale the optimal bet, offering a hedge against estimation error and overfitting. Its expected log-growth is L(k_α) = r + (α − α²/2)S², where S² is the squared Sharpe ratio. Variance of log-growth is V(k_α) = α²S². These closed-form expressions allow rapid simulation and comparison of strategies. However, the model fails under regime shifts, estimation error, or non-stationary dynamics. The empirical study on VFIAX/VUSUX validates these principles over two decades, showing that fractional Kelly often outperforms full Kelly in terms of stability and drawdown control.\n\nDeep epistemic analysis for 1222-fractional-growth-portfolio-investment (d467930479037d7c, domain=other, pages_read=2/2): Operator 'Growth Optimal Kelly' (page 1, domain other) captures: **Kelly derivation:** maximize expected log-growth → optimal risky fraction k⋆ = (μ-r)/σ2 (univariate); multivariate k⋆ = Σ-1(μ-r). Assumptions: Geometric Brownian motion with constant μ, σ, r; continuous rebalancing; no transaction costs. Breakdown regime: When μ, Σ are unknown or time-varying, Kelly becomes unstable due to estimation error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's core portfolio sizing logic by computing optimal exposure to risky assets based on risk-adjusted return. Operator 'Fractional Kelly Scaling' (page 1, domain other) captures: **Fractional Kelly:** k_α = αΣ-1(μ-r), α ∈ (0,1) — scales down the growth-optimal bet. Assumptions: Same as Kelly, but with α as a tuning parameter for risk aversion. Breakdown regime: α = 0 implies no exposure; α = 1 recovers full Kelly; values in between provide risk control. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI’s risk-adjusted inference framework, where α acts as a Bayesian prior strength modifier. Operator 'Log-Growth Expectation' (page 1, domain other) captures: **Closed forms:** expected log-growth L(k_α) = r + (α - α2/2)S2 where S2 = (μ-r)TΣ-1(μ-r) (squared Sharpe); variance of log-growth V(k_α) = α2S2. Assumptions: GBM model holds; μ, Σ fixed; log-normality of returns. Breakdown regime: Invalid under regime changes or non-log-normal returns; estimation error dominates in finite samples. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to evaluate portfolio performance metrics such as risk-adjusted return and volatility of log-wealth. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1222-fractional-growth-portfolio-investment (d467930479037d7c, domain=other, pages_read=2/2): Operator 'Growth Optimal Kelly' (page 1, domain other) captures: **Kelly derivation:** maximize expected log-growth → optimal risky fraction k⋆ = (μ-r)/σ2 (univariate); multivariate k⋆ = Σ-1(μ-r). Assumptions: Geometric Brownian motion with constant μ, σ, r; continuous rebalancing; no transaction costs. Breakdown regime: When μ, Σ are unknown or time-varying, Kelly becomes unstable due to estimation error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's core portfolio sizing logic by computing optimal exposure to risky assets based on risk-adjusted return. Operator 'Fractional Kelly Scaling' (page 1, domain other) captures: **Fractional Kelly:** k_α = αΣ-1(μ-r), α ∈ (0,1) — scales down the growth-optimal bet. Assumptions: Same as Kelly, but with α as a tuning parameter for risk aversion. Breakdown regime: α = 0 implies no exposure; α = 1 recovers full Kelly; values in between provide risk control. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI’s risk-adjusted inference framework, where α acts as a Bayesian prior strength modifier. Operator 'Log-Growth Expectation' (page 1, domain other) captures: **Closed forms:** expected log-growth L(k_α) = r + (α - α2/2)S2 where S2 = (μ-r)TΣ-1(μ-r) (squared Sharpe); variance of log-growth V(k_α) = α2S2. Assumptions: GBM model holds; μ, Σ fixed; log-normality of returns. Breakdown regime: Invalid under regime changes or non-log-normal returns; estimation error dominates in finite samples. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to evaluate portfolio performance metrics such as risk-adjusted return and volatility of log-wealth. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Originates from John Kelly's 1956 work on information theory and gambling, later extended by Edward O. Thorp and others to portfolio management. It bridges information theory and financial engineering through log-utility maximization. Retrocausal Genealogy: Rooted in 1222-fractional-growth-portfolio-investment (d467930479037d7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the 'estimation-error agent' who assumes perfect knowledge of μ and Σ, and the 'realistic agent' who accounts for estimation risk and model misspecification. The fractional Kelly serves as a robust compromise between these extremes. Theory of Mind & Decision Maker Model: Rooted in 1222-fractional-growth-portfolio-investment (d467930479037d7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity: Kelly does not account for transaction costs or discrete rebalancing. Leakage: Estimation error in μ and Σ dominates in small samples. Veto condition: When regime changes occur, the model must be re-evaluated or replaced with adaptive strategies. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1222-fractional-growth-portfolio-investment (d467930479037d7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

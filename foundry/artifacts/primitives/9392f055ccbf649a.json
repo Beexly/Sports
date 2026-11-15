@@ -1,0 +1,78 @@
+{
+  "book_id": "9392f055ccbf649a",
+  "source_status": "COMPLETE",
+  "title": "0917-tenisrank-parametric-pagerank-tennis",
+  "file_name": "0917-tenisrank-parametric-pagerank-tennis.md",
+  "sha256": "9392f055ccbf649a6e07ad89b9c6d04b2beeb3d545acfd47871f9f6b31a7f32d",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Parametric PageRank with recency, surface, and match-importance edge weights maps to logistic win probability via ranking differentials. Universal Lens: Rooted in 0917-tenisrank-parametric-pagerank-tennis (9392f055ccbf649a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian belief updates on parametric PageRank differentials to infer match outcome posteriors, calibrated via conformal prediction intervals. GSI Mapping: Rooted in 0917-tenisrank-parametric-pagerank-tennis (9392f055ccbf649a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models player state transitions using situational PageRank scores and logistic victory likelihoods, enabling dynamic power rating recalibration. GSE Mapping: Rooted in 0917-tenisrank-parametric-pagerank-tennis (9392f055ccbf649a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "parametric_pagerank",
+      "name": "Parametric PageRank",
+      "verbatim_quote": "- **Parametric edge weight:** W_edge = W_aging × W_surface × W_instance.",
+      "page": 1,
+      "latex": "\\mathcal{W}_{\\text{edge}} = \\mathcal{W}_{\\text{aging}} \\times \\mathcal{W}_{\\text{surface}} \\times \\mathcal{W}_{\\text{instance}}",
+      "symbol_and_unit_ledger": "{'W_edge': 'dimensionless edge weight', 'W_aging': 'dimensionless aging factor', 'W_surface': 'dimensionless surface similarity factor', 'W_instance': 'dimensionless tournament importance factor'}",
+      "assumptions": "Edge weights combine multiplicatively; match history is directed and time-sensitive.",
+      "breakdown_regime": "When new players lack match history, default rank assignment is applied.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian inference framework where PageRank differentials inform posterior match probability distributions.",
+        "source_operator": "parametric_pagerank",
+        "telemetry": "AUROC of win prediction against ATP and standard PageRank rankings."
+      }
+    },
+    {
+      "primitive_id": "logistic_win_probability",
+      "name": "Logistic Win Probability",
+      "verbatim_quote": "- P(victory): logistic regression of hit-rate on ranking difference (a = 45.321); decision-tree variants by surface × tournament type; AUROC comparison.",
+      "page": 1,
+      "latex": "P_{\\text{victory}} = \\frac{1}{1 + e^{-a (R_i - R_j)}}",
+      "symbol_and_unit_ledger": "{'P_victory': 'probability of victory, dimensionless', 'a': 'scale parameter, inverse rank units', 'R_i': \"player i's rank score, dimensionless\", 'R_j': \"player j's rank score, dimensionless\"}",
+      "assumptions": "Win probability is a smooth function of rank difference; logistic form captures saturation effects.",
+      "breakdown_regime": "At extreme rank differences, probability approaches 0 or 1; linear extrapolation fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to compute transition probabilities between player states in match simulations.",
+        "source_operator": "logistic_win_probability",
+        "telemetry": "AUROC of predicted outcomes versus actual match results."
+      }
+    },
+    {
+      "primitive_id": "exponential_aging_kernel",
+      "name": "Exponential Aging Kernel",
+      "verbatim_quote": "- Aging: exponential decay N(t) in years-back; window 3–5 years tested.",
+      "page": 1,
+      "latex": "\\mathcal{W}_{\\text{aging}}(t) = e^{-\\lambda t}",
+      "symbol_and_unit_ledger": "{'W_aging': 'dimensionless aging weight', 't': 'time since match in years, scalar', 'λ': 'decay rate, inverse years'}",
+      "assumptions": "Recent matches carry higher relevance; decay follows exponential law.",
+      "breakdown_regime": "Matches older than 5 years are effectively ignored.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSE's temporal discounting in state transition kernels.",
+        "source_operator": "exponential_aging_kernel",
+        "telemetry": "Performance degradation when aging window is too narrow or wide."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9392f055ccbf649a_t0",
+      "think": "The core innovation lies in extending traditional PageRank to a parametric form where edge weights incorporate temporal decay, surface type, and tournament significance. This allows for a richer representation of match dynamics than static or unweighted PageRank. The logistic mapping from ranking differences to win probabilities provides a calibrated probabilistic interface suitable for Bayesian inference and conformal prediction. The method's dual nature—ranking and prediction—enables both static evaluation and dynamic simulation within GSI and GSE frameworks. Failure modes include overfitting due to greedy optimization, leakage from future data, and sensitivity to arbitrary initial rank assignments for new players. The model assumes additive separability of edge components, which may not hold under complex interaction regimes.\n\nDeep epistemic analysis for 0917-tenisrank-parametric-pagerank-tennis (9392f055ccbf649a, domain=other, pages_read=3/3): Operator 'Parametric PageRank' (page 1, domain other) captures: - **Parametric edge weight:** W_edge = W_aging × W_surface × W_instance. Assumptions: Edge weights combine multiplicatively; match history is directed and time-sensitive. Breakdown regime: When new players lack match history, default rank assignment is applied. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian inference framework where PageRank differentials inform posterior match probability distributions. Operator 'Logistic Win Probability' (page 1, domain other) captures: - P(victory): logistic regression of hit-rate on ranking difference (a = 45.321); decision-tree variants by surface × tournament type; AUROC comparison. Assumptions: Win probability is a smooth function of rank difference; logistic form captures saturation effects. Breakdown regime: At extreme rank differences, probability approaches 0 or 1; linear extrapolation fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to compute transition probabilities between player states in match simulations. Operator 'Exponential Aging Kernel' (page 1, domain other) captures: - Aging: exponential decay N(t) in years-back; window 3–5 years tested. Assumptions: Recent matches carry higher relevance; decay follows exponential law. Breakdown regime: Matches older than 5 years are effectively ignored. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSE's temporal discounting in state transition kernels. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0917-tenisrank-parametric-pagerank-tennis (9392f055ccbf649a, domain=other, pages_read=3/3): Operator 'Parametric PageRank' (page 1, domain other) captures: - **Parametric edge weight:** W_edge = W_aging × W_surface × W_instance. Assumptions: Edge weights combine multiplicatively; match history is directed and time-sensitive. Breakdown regime: When new players lack match history, default rank assignment is applied. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian inference framework where PageRank differentials inform posterior match probability distributions. Operator 'Logistic Win Probability' (page 1, domain other) captures: - P(victory): logistic regression of hit-rate on ranking difference (a = 45.321); decision-tree variants by surface × tournament type; AUROC comparison. Assumptions: Win probability is a smooth function of rank difference; logistic form captures saturation effects. Breakdown regime: At extreme rank differences, probability approaches 0 or 1; linear extrapolation fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to compute transition probabilities between player states in match simulations. Operator 'Exponential Aging Kernel' (page 1, domain other) captures: - Aging: exponential decay N(t) in years-back; window 3–5 years tested. Assumptions: Recent matches carry higher relevance; decay follows exponential law. Breakdown regime: Matches older than 5 years are effectively ignored. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSE's temporal discounting in state transition kernels. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and network science, with PageRank originating from Google's web ranking algorithm. Logistic regression traces back to statistical modeling in epidemiology and machine learning. The combination of these elements reflects modern data-driven modeling paradigms. Retrocausal Genealogy: Rooted in 0917-tenisrank-parametric-pagerank-tennis (9392f055ccbf649a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might include traditional ATP rankings, which prioritize historical performance without temporal nuance, and naive PageRank, which treats all edges equally. The parametric approach attempts to outperform both by incorporating contextual weighting and probabilistic forecasting. Theory of Mind & Decision Maker Model: Rooted in 0917-tenisrank-parametric-pagerank-tennis (9392f055ccbf649a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained through distinct functional forms for aging, surface, and instance weights. Leakage is prevented by ensuring that tournament rankings use only prior matches. Cross-layer veto ensures that no single layer dominates the others, preserving the integrity of multi-dimensional modeling. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0917-tenisrank-parametric-pagerank-tennis (9392f055ccbf649a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

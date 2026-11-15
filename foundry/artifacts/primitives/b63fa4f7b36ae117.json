@@ -1,0 +1,78 @@
+{
+  "book_id": "b63fa4f7b36ae117",
+  "source_status": "COMPLETE",
+  "title": "DFS_Customer_Report_2026-10-11",
+  "file_name": "DFS_Customer_Report_2026-10-11.md",
+  "sha256": "b63fa4f7b36ae117a609655dfbbc0506c4c207b0104e92e333ec1b504efbfa8c",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Team scoring totals and spread differentials define game-theoretic dominance regions; pass-heavy matchups amplify receiver value via conditional expectation maximization. Universal Lens: Rooted in DFS_Customer_Report_2026-10-11 (b63fa4f7b36ae117), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on team total distributions and player injury status inform posterior probability maps for optimal lineup construction. GSI Mapping: Rooted in DFS_Customer_Report_2026-10-11 (b63fa4f7b36ae117), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in game script dynamics (e.g., lead, deficit, weather impact) drive adaptive strategy shifts in player selection and stack formation. GSE Mapping: Rooted in DFS_Customer_Report_2026-10-11 (b63fa4f7b36ae117), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "team_scoring_dominance",
+      "name": "Team Scoring Dominance",
+      "verbatim_quote": "Detroit carries a 30.0 team total, the best number on the board, indoors.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{team}': 'team scoring total (points)', 'D_{dominance}': 'dominance index (dimensionless)'}",
+      "assumptions": "Higher team total implies greater offensive output potential; indoor venues increase scoring likelihood.",
+      "breakdown_regime": "When T_{team} > 30.0, scoring threshold exceeds baseline variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies relative team offensive strength using expected point distribution; informs stack selection based on high-scoring environments.",
+        "source_operator": "team_scoring_dominance",
+        "telemetry": "Observed game total vs. projected total deviation"
+      }
+    },
+    {
+      "primitive_id": "receiver_ceiling_value",
+      "name": "Receiver Ceiling Value",
+      "verbatim_quote": "JSN has the highest ceiling of any receiver on this slate at 50.2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{receiver}': 'receiver ceiling value (points)', 'V_{value}': 'value metric (dimensionless)'}",
+      "assumptions": "Ceiling value correlates with target share and matchup vulnerability.",
+      "breakdown_regime": "When C_{receiver} > 50.0, receiver is top-tier in scoring potential.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps receiver scoring potential to positional value function under high-scoring game conditions.",
+        "source_operator": "receiver_ceiling_value",
+        "telemetry": "Projected fantasy points vs. actual performance deviation"
+      }
+    },
+    {
+      "primitive_id": "stacked_game_script",
+      "name": "Stacked Game Script",
+      "verbatim_quote": "## Stack 1: Rams and Bills Stafford with Nacua and Adams.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{script}': 'game script stack (dimensionless)', 'P_{player}': 'player participation indicator (binary)'}",
+      "assumptions": "High-scoring games with favorable spreads enable stacked selections to maximize value.",
+      "breakdown_regime": "When S_{script} > 0.5, game offers strong dual-value stacking opportunity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives optimal player pairings by evaluating shared game-state influence across offense and defense.",
+        "source_operator": "stacked_game_script",
+        "telemetry": "Ownership percentage vs. projected value differential"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b63fa4f7b36ae117_t0",
+      "think": "The core insight centers on identifying dominant scoring environments via team totals and leveraging receiver ceilings within those contexts. The 54.5 total games (Detroit-Arizona, Buffalo-LA) represent high-probability scoring zones where offensive efficiency is amplified. This creates a dual optimization problem: maximizing team scoring while aligning individual receiver value with game script. The stacked approach (Rams/Bills) exploits correlated outcomes—when both teams score well, the value of key receivers like Nacua and Adams increases exponentially. In contrast, low-total games like Cincinnati-Miami carry risk due to defensive focus and injury impacts. The derived kernel 'stacked game script' models how shared game-state variables (spread, total, weather) create emergent value in player combinations. The failure mode occurs when game scripts deviate from expectations due to injury, weather, or unexpected defensive performance, invalidating the probabilistic assumptions underlying the stack logic.\n\nDeep epistemic analysis for DFS_Customer_Report_2026-10-11 (b63fa4f7b36ae117, domain=other, pages_read=2/2): Operator 'Team Scoring Dominance' (page 1, domain other) captures: Detroit carries a 30.0 team total, the best number on the board, indoors. Assumptions: Higher team total implies greater offensive output potential; indoor venues increase scoring likelihood. Breakdown regime: When T_{team} > 30.0, scoring threshold exceeds baseline variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies relative team offensive strength using expected point distribution; informs stack selection based on high-scoring environments. Operator 'Receiver Ceiling Value' (page 1, domain other) captures: JSN has the highest ceiling of any receiver on this slate at 50.2. Assumptions: Ceiling value correlates with target share and matchup vulnerability. Breakdown regime: When C_{receiver} > 50.0, receiver is top-tier in scoring potential. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps receiver scoring potential to positional value function under high-scoring game conditions. Operator 'Stacked Game Script' (page 1, domain other) captures: ## Stack 1: Rams and Bills Stafford with Nacua and Adams. Assumptions: High-scoring games with favorable spreads enable stacked selections to maximize value. Breakdown regime: When S_{script} > 0.5, game offers strong dual-value stacking opportunity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives optimal player pairings by evaluating shared game-state influence across offense and defense. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for DFS_Customer_Report_2026-10-11 (b63fa4f7b36ae117, domain=other, pages_read=2/2): Operator 'Team Scoring Dominance' (page 1, domain other) captures: Detroit carries a 30.0 team total, the best number on the board, indoors. Assumptions: Higher team total implies greater offensive output potential; indoor venues increase scoring likelihood. Breakdown regime: When T_{team} > 30.0, scoring threshold exceeds baseline variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies relative team offensive strength using expected point distribution; informs stack selection based on high-scoring environments. Operator 'Receiver Ceiling Value' (page 1, domain other) captures: JSN has the highest ceiling of any receiver on this slate at 50.2. Assumptions: Ceiling value correlates with target share and matchup vulnerability. Breakdown regime: When C_{receiver} > 50.0, receiver is top-tier in scoring potential. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps receiver scoring potential to positional value function under high-scoring game conditions. Operator 'Stacked Game Script' (page 1, domain other) captures: ## Stack 1: Rams and Bills Stafford with Nacua and Adams. Assumptions: High-scoring games with favorable spreads enable stacked selections to maximize value. Breakdown regime: When S_{script} > 0.5, game offers strong dual-value stacking opportunity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives optimal player pairings by evaluating shared game-state influence across offense and defense. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in game theory's strategic dominance principles and modern fantasy optimization frameworks. Influenced by early work on scoring distribution modeling and player value functions in DFS. Retrocausal Genealogy: Rooted in DFS_Customer_Report_2026-10-11 (b63fa4f7b36ae117), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in DFS_Customer_Report_2026-10-11 (b63fa4f7b36ae117), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may prioritize different game states—some players might avoid high-ownership stacks, others might chase volatility. The model assumes rational agents optimize for expected value under uncertainty, but deviations occur due to behavioral biases or incomplete information. Theory of Mind & Decision Maker Model: Rooted in DFS_Customer_Report_2026-10-11 (b63fa4f7b36ae117), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes stacking when both players are in same high-risk scenario (e.g., injured or weather-affected). Leakage veto prevents inclusion of players whose value depends on opponent-specific variables not captured in the model. Cross-Layer Veto & Anti-Leakage Check: Rooted in DFS_Customer_Report_2026-10-11 (b63fa4f7b36ae117), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

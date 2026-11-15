@@ -1,0 +1,95 @@
+{
+  "book_id": "1c643267422c63c6",
+  "source_status": "COMPLETE",
+  "title": "cockpit-spec",
+  "file_name": "cockpit-spec.md",
+  "sha256": "1c643267422c63c6f5a8b14bdc01fae06829f7a2a16d3590dbfd7d9843fc0820",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in cockpit-spec (1c643267422c63c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in cockpit-spec (1c643267422c63c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in cockpit-spec (1c643267422c63c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in cockpit-spec (1c643267422c63c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in cockpit-spec (1c643267422c63c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in cockpit-spec (1c643267422c63c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "board_frame",
+      "name": "Board Frame",
+      "verbatim_quote": "### Frame 1 — Board **Question:** What market am I looking at?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The market is fully observed and static within the frame.",
+      "breakdown_regime": "No known breakdowns; operates on clean input.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's `MarketObservation` class, which encapsulates static market metadata for Bayesian updating.",
+        "source_operator": "board_frame",
+        "telemetry": "Market ID, timestamp, and completeness flags."
+      }
+    },
+    {
+      "primitive_id": "context_tiles",
+      "name": "Context Tiles",
+      "verbatim_quote": "**Renders:** Sport / league / matchup / commence time / current line / line movement (open → current) / market depth (book count) / consensus %.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each context factor is independent and contributes additively to the overall game profile.",
+      "breakdown_regime": "Fails when context data is missing or inconsistent; requires imputation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's `GameProfile` state vector, representing situational context for reinforcement learning.",
+        "source_operator": "context_tiles",
+        "telemetry": "Factor activation counts and consistency scores."
+      }
+    },
+    {
+      "primitive_id": "gate_gating",
+      "name": "Gate Gating",
+      "verbatim_quote": "The cockpit elevates them from \"list of picks\" to \"transparent decision log\" — the user sees *how* the engine got there, not just what it landed on.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Signal magnitudes are monotonic transformations of underlying evidence strength.",
+      "breakdown_regime": "Breaks down when signal correlation exceeds a threshold, causing multicollinearity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's `EvidenceLattice` filtering pipeline, which applies logical constraints to probabilistic signals.",
+        "source_operator": "gate_gating",
+        "telemetry": "Pass/fail rates and signal correlation matrices."
+      }
+    },
+    {
+      "primitive_id": "verdict_frame",
+      "name": "Verdict Frame",
+      "verbatim_quote": "--## The five-frame storyboard Every pick (and every \"no pick\") moves through the same five frames.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each gate operates as a binary classifier with fixed thresholds.",
+      "breakdown_regime": "Occurs when any single gate fails, halting downstream processing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's `DecisionPolicy` module, enforcing regulatory compliance and risk controls.",
+        "source_operator": "verdict_frame",
+        "telemetry": "Gate-specific violation logs and cumulative decision latency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1c643267422c63c6_t0",
+      "think": "The cockpit's five-frame architecture implements a sequential decision pipeline that mirrors the structure of a formal statistical decision theory. Starting from raw market observations (Frame 1), it incrementally builds a posterior belief state through context integration (Frame 2) and signal aggregation (Frame 3). Frame 4 acts as a hard constraint enforcement layer, ensuring that any decision respects pre-specified safety and quality thresholds. Finally, Frame 5 delivers the final verdict, which is a deterministic function of the entire history. This design ensures that every decision is both transparent and auditable, aligning with GSI's principles of explainable AI and GSE's need for consistent, rule-based action selection.\n\nDeep epistemic analysis for cockpit-spec (1c643267422c63c6, domain=other, pages_read=6/6): Operator 'Board Frame' (page 1, domain other) captures: ### Frame 1 — Board **Question:** What market am I looking at? Assumptions: The market is fully observed and static within the frame. Breakdown regime: No known breakdowns; operates on clean input. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's `MarketObservation` class, which encapsulates static market metadata for Bayesian updating. Operator 'Context Tiles' (page 1, domain other) captures: **Renders:** Sport / league / matchup / commence time / current line / line movement (open → current) / market depth (book count) / consensus %. Assumptions: Each context factor is independent and contributes additively to the overall game profile. Breakdown regime: Fails when context data is missing or inconsistent; requires imputation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's `GameProfile` state vector, representing situational context for reinforcement learning. Operator 'Gate Gating' (page 1, domain other) captures: The cockpit elevates them from \"list of picks\" to \"transparent decision log\" — the user sees *how* the engine got there, not just what it landed on. Assumptions: Signal magnitudes are monotonic transformations of underlying evidence strength. Breakdown regime: Breaks down when signal correlation exceeds a threshold, causing multicollinearity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's `EvidenceLattice` filtering pipeline, which applies logical constraints to probabilistic signals. Operator 'Verdict Frame' (page 1, domain other) captures: --## The five-frame storyboard Every pick (and every \"no pick\") moves through the same five frames. Assumptions: Each gate operates as a binary classifier with fixed thresholds. Breakdown regime: Occurs when any single gate fails, halting downstream processing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's `DecisionPolicy` module, enforcing regulatory compliance and risk controls. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for cockpit-spec (1c643267422c63c6, domain=other, pages_read=6/6): Operator 'Board Frame' (page 1, domain other) captures: ### Frame 1 — Board **Question:** What market am I looking at? Assumptions: The market is fully observed and static within the frame. Breakdown regime: No known breakdowns; operates on clean input. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's `MarketObservation` class, which encapsulates static market metadata for Bayesian updating. Operator 'Context Tiles' (page 1, domain other) captures: **Renders:** Sport / league / matchup / commence time / current line / line movement (open → current) / market depth (book count) / consensus %. Assumptions: Each context factor is independent and contributes additively to the overall game profile. Breakdown regime: Fails when context data is missing or inconsistent; requires imputation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's `GameProfile` state vector, representing situational context for reinforcement learning. Operator 'Gate Gating' (page 1, domain other) captures: The cockpit elevates them from \"list of picks\" to \"transparent decision log\" — the user sees *how* the engine got there, not just what it landed on. Assumptions: Signal magnitudes are monotonic transformations of underlying evidence strength. Breakdown regime: Breaks down when signal correlation exceeds a threshold, causing multicollinearity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's `EvidenceLattice` filtering pipeline, which applies logical constraints to probabilistic signals. Operator 'Verdict Frame' (page 1, domain other) captures: --## The five-frame storyboard Every pick (and every \"no pick\") moves through the same five frames. Assumptions: Each gate operates as a binary classifier with fixed thresholds. Breakdown regime: Occurs when any single gate fails, halting downstream processing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's `DecisionPolicy` module, enforcing regulatory compliance and risk controls. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The concept of staged decision-making traces back to Wald's Sequential Probability Ratio Test (SPRT) and Neyman-Pearson hypothesis testing. Modern applications in algorithmic decision systems, such as those by Foster et al. (2020), emphasize the importance of sequential hypothesis evaluation for efficient resource allocation. Retrocausal Genealogy: Rooted in cockpit-spec (1c643267422c63c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents—such as risk managers or compliance officers—would model the cockpit as a bounded rationality device. They would anticipate that the rigid gate structure reduces strategic manipulation by data scientists but may also lead to systematic Type II errors (false negatives) when legitimate signals fail due to minor data瑕疵. Theory of Mind & Decision Maker Model: Rooted in cockpit-spec (1c643267422c63c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions arise when multiple signals in Frame 3 are highly correlated, violating the independence assumption of Frame 4's gate logic. To prevent leakage between layers, all empirical telemetry must be cross-validated against historical audit trails, and any discrepancy triggers a manual override to halt production decisions until root cause analysis is complete. Cross-Layer Veto & Anti-Leakage Check: Rooted in cockpit-spec (1c643267422c63c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

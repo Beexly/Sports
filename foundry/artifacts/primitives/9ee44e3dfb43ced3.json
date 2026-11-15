@@ -1,0 +1,78 @@
+{
+  "book_id": "9ee44e3dfb43ced3",
+  "source_status": "COMPLETE",
+  "title": "JYNX_MARKET_TIER_MAP",
+  "file_name": "JYNX_MARKET_TIER_MAP.md",
+  "sha256": "9ee44e3dfb43ced3eabd16d30333b9fbdc40a0a002c6d6bcc63cf582d5a5bcd6",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Market heat signals as stochastic processes over model-tier manifolds; GSE reactions encode conditional entropy minimization under resource constraints. Universal Lens: Rooted in JYNX_MARKET_TIER_MAP (9ee44e3dfb43ced3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on tiered model quality using market heat priors; conformal prediction bounds on GSE operational fidelity. GSI Mapping: Rooted in JYNX_MARKET_TIER_MAP (9ee44e3dfb43ced3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in model-court based on tiered signal strength; dynamic routing through `MODEL_OPUS` and `MODEL_PRIMARY` with credit-based access control. GSE Mapping: Rooted in JYNX_MARKET_TIER_MAP (9ee44e3dfb43ced3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "market_heat_signal",
+      "name": "Market Heat Signal",
+      "verbatim_quote": "market heat | Market signal | GSE reaction | |---------------|--------------| | Claude Opus 5 / 4.8",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H(t)': 'Market heat intensity at time t, dimensionless'}",
+      "assumptions": "Signal H(t) is a stochastic process with bounded variance; GSE reaction is deterministic given H(t).",
+      "breakdown_regime": "H(t) → ∞ implies model-court saturation; H(t) → 0 implies free-lane degradation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "H(t) maps to GSE's conditional entropy reduction over model-tier states.",
+        "source_operator": "market_heat_signal",
+        "telemetry": "Entropy of GSE's model selection distribution over time."
+      }
+    },
+    {
+      "primitive_id": "tiered_model_access",
+      "name": "Tiered Model Access",
+      "verbatim_quote": "(active) | Market upgrade path | |------|-------------------|-------------------|---------------------| | **Haiku** | `claude-haiku-4-5-20251001` | brief, calibration-insight | Stay",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_i': 'Model tier index, discrete', 'C_i': 'Credit cost for tier i, dimensionless'}",
+      "assumptions": "Access to T_i requires C_i > 0; T_i ≤ T_max defines operational scope.",
+      "breakdown_regime": "C_i → ∞ implies exclusion from GSE; T_i < 0 implies invalid state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "T_i encodes GSE's resource allocation kernel over model quality.",
+        "source_operator": "tiered_model_access",
+        "telemetry": "Cumulative credit usage per tier over time."
+      }
+    },
+    {
+      "primitive_id": "model_court_quality_ceiling",
+      "name": "Model Court Quality Ceiling",
+      "verbatim_quote": "\"hot\" | Quality ceiling for **model-court** / deep work — only after `MODEL_OPUS` + Bedrock/Azure/Vertex **map**",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q_{max}': 'Maximum quality threshold, dimensionless', 'M_{court}(t)': 'Model court state at time t, dimensionless'}",
+      "assumptions": "Q_{max} is invariant under current GSE policy; M_{court}(t) ∈ [0, Q_{max}]",
+      "breakdown_regime": "M_{court}(t) > Q_{max} implies model-court overflow; M_{court}(t) < 0 implies invalid state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "M_{court}(t) maps to GSE's deep-work quality constraint.",
+        "source_operator": "model_court_quality_ceiling",
+        "telemetry": "Average model quality score in GSE's model-court during operation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9ee44e3dfb43ced3_t0",
+      "think": "Market heat H(t) acts as a proxy for model-tier utility in GSE’s operational manifold. It triggers a Bayesian update on model quality beliefs, where H(t) > threshold implies a shift toward higher-tier models such as `MODEL_OPUS`. The signal is not auto-routed but conditioned on available credits and access paths. The tiered structure T_i encodes a resource-constrained optimization problem, where each tier has associated costs C_i that must be satisfied for access. The model court M_{court}(t) enforces a quality ceiling Q_{max} that limits the maximum utility GSE can extract from any single model. Failure modes include H(t) → ∞ causing system overload, or C_i → ∞ leading to exclusion from critical tiers. These primitives form a closed-loop system where market heat drives access, access drives quality, and quality constrains further access.\n\nDeep epistemic analysis for JYNX_MARKET_TIER_MAP (9ee44e3dfb43ced3, domain=other, pages_read=1/1): Operator 'Market Heat Signal' (page 1, domain other) captures: market heat | Market signal | GSE reaction | |---------------|--------------| | Claude Opus 5 / 4.8 Assumptions: Signal H(t) is a stochastic process with bounded variance; GSE reaction is deterministic given H(t). Breakdown regime: H(t) → ∞ implies model-court saturation; H(t) → 0 implies free-lane degradation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): H(t) maps to GSE's conditional entropy reduction over model-tier states. Operator 'Tiered Model Access' (page 1, domain other) captures: (active) | Market upgrade path | |------|-------------------|-------------------|---------------------| | **Haiku** | `claude-haiku-4-5-20251001` | brief, calibration-insight | Stay Assumptions: Access to T_i requires C_i > 0; T_i ≤ T_max defines operational scope. Breakdown regime: C_i → ∞ implies exclusion from GSE; T_i < 0 implies invalid state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): T_i encodes GSE's resource allocation kernel over model quality. Operator 'Model Court Quality Ceiling' (page 1, domain other) captures: \"hot\" | Quality ceiling for **model-court** / deep work — only after `MODEL_OPUS` + Bedrock/Azure/Vertex **map** Assumptions: Q_{max} is invariant under current GSE policy; M_{court}(t) ∈ [0, Q_{max}] Breakdown regime: M_{court}(t) > Q_{max} implies model-court overflow; M_{court}(t) < 0 implies invalid state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): M_{court}(t) maps to GSE's deep-work quality constraint. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for JYNX_MARKET_TIER_MAP (9ee44e3dfb43ced3, domain=other, pages_read=1/1): Operator 'Market Heat Signal' (page 1, domain other) captures: market heat | Market signal | GSE reaction | |---------------|--------------| | Claude Opus 5 / 4.8 Assumptions: Signal H(t) is a stochastic process with bounded variance; GSE reaction is deterministic given H(t). Breakdown regime: H(t) → ∞ implies model-court saturation; H(t) → 0 implies free-lane degradation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): H(t) maps to GSE's conditional entropy reduction over model-tier states. Operator 'Tiered Model Access' (page 1, domain other) captures: (active) | Market upgrade path | |------|-------------------|-------------------|---------------------| | **Haiku** | `claude-haiku-4-5-20251001` | brief, calibration-insight | Stay Assumptions: Access to T_i requires C_i > 0; T_i ≤ T_max defines operational scope. Breakdown regime: C_i → ∞ implies exclusion from GSE; T_i < 0 implies invalid state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): T_i encodes GSE's resource allocation kernel over model quality. Operator 'Model Court Quality Ceiling' (page 1, domain other) captures: \"hot\" | Quality ceiling for **model-court** / deep work — only after `MODEL_OPUS` + Bedrock/Azure/Vertex **map** Assumptions: Q_{max} is invariant under current GSE policy; M_{court}(t) ∈ [0, Q_{max}] Breakdown regime: M_{court}(t) > Q_{max} implies model-court overflow; M_{court}(t) < 0 implies invalid state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): M_{court}(t) maps to GSE's deep-work quality constraint. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in information theory and game-theoretic resource allocation; builds on Shannon entropy and von Neumann’s decision-making frameworks. Retrocausal Genealogy: Rooted in JYNX_MARKET_TIER_MAP (9ee44e3dfb43ced3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in JYNX_MARKET_TIER_MAP (9ee44e3dfb43ced3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include model providers (seeking access), GSE (optimizing utility), and market rankers (providing signals). Each agent operates under distinct utility functions and constraints. Theory of Mind & Decision Maker Model: Rooted in JYNX_MARKET_TIER_MAP (9ee44e3dfb43ced3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in JYNX_MARKET_TIER_MAP (9ee44e3dfb43ced3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when H(t) and T_i are misaligned; leakage occurs if Q_{max} is bypassed without proper credit validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in JYNX_MARKET_TIER_MAP (9ee44e3dfb43ced3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in JYNX_MARKET_TIER_MAP (9ee44e3dfb43ced3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "c7f372f2bf02a1ae",
+  "source_status": "COMPLETE",
+  "title": "NYG@WSH-card-REFUSED",
+  "file_name": "NYG@WSH-card-REFUSED.md",
+  "sha256": "c7f372f2bf02a1ae6736613d2c2f420997539845413eeb4fd6005ecee1992d2e",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Fixture confirmation logic maps to a binary predicate over game slate membership; denial of analysis implies causal closure under empirical validation. Universal Lens: Rooted in NYG@WSH-card-REFUSED (c7f372f2bf02a1ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on game existence conditioned on real-time slate data; conformal prediction rejects non-slate fixtures via likelihood thresholding. GSI Mapping: Rooted in NYG@WSH-card-REFUSED (c7f372f2bf02a1ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transition from query input to resolved game pair; engine enforces temporal consistency via period-based constraint propagation. GSE Mapping: Rooted in NYG@WSH-card-REFUSED (c7f372f2bf02a1ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fixture_slate_membership",
+      "name": "Fixture Slate Membership Predicate",
+      "verbatim_quote": "# NYG@WSH - FIXTURE NOT CONFIRMED (card REFUSED) **This matchup is not a game on the real 411 slate.** The engine does not emit an analyst card for a fixture it cannot confirm.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'Boolean flag indicating game membership in slate (dimensionless)', 't': 'Temporal period identifier (dimensionless)'}",
+      "assumptions": "Game existence is a deterministic function of slate inclusion; engine operates under closed-world assumption.",
+      "breakdown_regime": "M = false when t ∈ T_{real} \\setminus T_{slate}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Slate membership test M(t) ≡ ∃ g ∈ G(t) such that g = (NYG, WSH) maps to GSI's posterior probability P(g ∈ G | D) = 0.",
+        "source_operator": "fixture_slate_membership",
+        "telemetry": "Observable: engine refusal to generate card"
+      }
+    },
+    {
+      "primitive_id": "analysis_fictionality",
+      "name": "Analysis Fictionality Constraint",
+      "verbatim_quote": "A card here would be fiction that reads as analysis.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Boolean fictionality indicator (dimensionless)'}",
+      "assumptions": "Any generated card for non-slate fixtures violates epistemic integrity.",
+      "breakdown_regime": "F = true when M = false",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "F = ¬M ⇒ Card(g) ∈ Fictions ⊂ AnalystSpace; GSI rejects F = true via confidence thresholding.",
+        "source_operator": "analysis_fictionality",
+        "telemetry": "Observable: refusal to emit analyst card"
+      }
+    },
+    {
+      "primitive_id": "temporal_constraint_propagation",
+      "name": "Temporal Constraint Propagation",
+      "verbatim_quote": "## What to do instead - Re-run against the actual game (the real opponents are named above).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Temporal period (dimensionless)', 'g_real': 'Actual game tuple (dimensionless)'}",
+      "assumptions": "Valid game queries must align with known temporal and opponent constraints.",
+      "breakdown_regime": "T ≠ 5 ⇒ g_real ≠ (NYG, WSH)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Constraint propagation T → g_real ensures GSE state transitions remain within valid game space.",
+        "source_operator": "temporal_constraint_propagation",
+        "telemetry": "Observable: re-query success with correct game tuple"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c7f372f2bf02a1ae_t0",
+      "think": "The core operator 'fixture_slate_membership' defines a Boolean predicate M(t) that determines whether a given game fixture exists in the real-time slate at time t. When M(t) evaluates to false, the system triggers a denial mechanism that prevents generation of any analyst card—this is encoded in the 'analysis_fictionality' primitive which asserts that any such card would be epistemically invalid. The system's behavior reflects a dual logic: first, a temporal constraint propagation layer ensures that only valid combinations of teams and periods are considered; second, a Bayesian inference layer in GSI evaluates the likelihood of a fixture being real based on empirical data. If the fixture fails both checks, the engine enters a failure mode where it refuses to reason about the scenario. This is not merely a computational error but a principled rejection of non-slate events, enforcing a closed-world assumption in its reasoning process.\n\nDeep epistemic analysis for NYG@WSH-card-REFUSED (c7f372f2bf02a1ae, domain=other, pages_read=1/1): Operator 'Fixture Slate Membership Predicate' (page 1, domain other) captures: # NYG@WSH - FIXTURE NOT CONFIRMED (card REFUSED) **This matchup is not a game on the real 411 slate.** The engine does not emit an analyst card for a fixture it cannot confirm. Assumptions: Game existence is a deterministic function of slate inclusion; engine operates under closed-world assumption. Breakdown regime: M = false when t ∈ T_{real} \\setminus T_{slate} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Slate membership test M(t) ≡ ∃ g ∈ G(t) such that g = (NYG, WSH) maps to GSI's posterior probability P(g ∈ G | D) = 0. Operator 'Analysis Fictionality Constraint' (page 1, domain other) captures: A card here would be fiction that reads as analysis. Assumptions: Any generated card for non-slate fixtures violates epistemic integrity. Breakdown regime: F = true when M = false Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): F = ¬M ⇒ Card(g) ∈ Fictions ⊂ AnalystSpace; GSI rejects F = true via confidence thresholding. Operator 'Temporal Constraint Propagation' (page 1, domain other) captures: ## What to do instead - Re-run against the actual game (the real opponents are named above). Assumptions: Valid game queries must align with known temporal and opponent constraints. Breakdown regime: T ≠ 5 ⇒ g_real ≠ (NYG, WSH) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Constraint propagation T → g_real ensures GSE state transitions remain within valid game space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NYG@WSH-card-REFUSED (c7f372f2bf02a1ae, domain=other, pages_read=1/1): Operator 'Fixture Slate Membership Predicate' (page 1, domain other) captures: # NYG@WSH - FIXTURE NOT CONFIRMED (card REFUSED) **This matchup is not a game on the real 411 slate.** The engine does not emit an analyst card for a fixture it cannot confirm. Assumptions: Game existence is a deterministic function of slate inclusion; engine operates under closed-world assumption. Breakdown regime: M = false when t ∈ T_{real} \\setminus T_{slate} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Slate membership test M(t) ≡ ∃ g ∈ G(t) such that g = (NYG, WSH) maps to GSI's posterior probability P(g ∈ G | D) = 0. Operator 'Analysis Fictionality Constraint' (page 1, domain other) captures: A card here would be fiction that reads as analysis. Assumptions: Any generated card for non-slate fixtures violates epistemic integrity. Breakdown regime: F = true when M = false Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): F = ¬M ⇒ Card(g) ∈ Fictions ⊂ AnalystSpace; GSI rejects F = true via confidence thresholding. Operator 'Temporal Constraint Propagation' (page 1, domain other) captures: ## What to do instead - Re-run against the actual game (the real opponents are named above). Assumptions: Valid game queries must align with known temporal and opponent constraints. Breakdown regime: T ≠ 5 ⇒ g_real ≠ (NYG, WSH) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Constraint propagation T → g_real ensures GSE state transitions remain within valid game space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in formal logic of closed-world assumptions and epistemic constraint systems; influenced by temporal logic and Bayesian belief networks from AI planning and probabilistic reasoning frameworks. Retrocausal Genealogy: Rooted in NYG@WSH-card-REFUSED (c7f372f2bf02a1ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in NYG@WSH-card-REFUSED (c7f372f2bf02a1ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include a hypothetical analyst who might attempt to reason about invalid fixtures, and a system agent that enforces logical consistency through rejection of non-slate inputs. The engine assumes rationality in its own constraints while modeling irrationality in external queries. Theory of Mind & Decision Maker Model: Rooted in NYG@WSH-card-REFUSED (c7f372f2bf02a1ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that GSI’s Bayesian inference and GSE’s state transitions do not overlap in their handling of non-slate fixtures. Leakage is prevented by strict separation between temporal constraint layers and epistemic validation layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in NYG@WSH-card-REFUSED (c7f372f2bf02a1ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

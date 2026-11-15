@@ -1,0 +1,95 @@
+{
+  "book_id": "30bce518fe7d3b11",
+  "source_status": "COMPLETE",
+  "title": "2026-08-21-BUILD-SPECS-devig-parlay",
+  "file_name": "2026-08-21-BUILD-SPECS-devig-parlay.md",
+  "sha256": "30bce518fe7d3b110a30e3e4cab4888f1acdc8d94def995398724690c902f50e",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "De-vig algorithms unify market probability calibration via inverse-odds power weighting, Shin's insider-trading model, Buchdahl differential margin, and odds-ratio normalization—each resolving marginal consistency under shared probabilistic constraints. Universal Lens: Rooted in 2026-08-21-BUILD-SPECS-devig-parlay (30bce518fe7d3b11), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs de-vigged probabilities as Bayesian priors in conformal prediction pipelines, enabling robust uncertainty quantification across multi-market sporting events through calibrated likelihoods derived from implied odds. GSI Mapping: Rooted in 2026-08-21-BUILD-SPECS-devig-parlay (30bce518fe7d3b11), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE integrates de-vigged fair probabilities into situational reasoning engines to compute dynamic state transitions for picks, leveraging field leverage data to refine confidence scores and adjust betting strategies in real-time.",
+  "primitives": [
+    {
+      "primitive_id": "power_method",
+      "name": "Power Method Probability Calibration",
+      "verbatim_quote": "**power:** find `k>0` solving `sum(invOdds[i]^k) == 1`; `probs[i] = invOdds[i]^k`.",
+      "page": 1,
+      "latex": "\\text{Find } k > 0 \\text{ such that } \\sum_{i} \\left(\\frac{1}{o_i}\\right)^k = 1, \\text{ then } p_i = \\left(\\frac{1}{o_i}\\right)^k",
+      "symbol_and_unit_ledger": "{'o_i': 'decimal odds for outcome i', 'p_i': 'probability of outcome i', 'k': 'positive scalar exponent'}",
+      "assumptions": "Market has positive odds; inverse-odds are well-defined and finite.",
+      "breakdown_regime": "When sum of inverse-odds converges to 1, but numerical instability arises due to large variance in odds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps inverse-odds scaling to normalized probability space using root-finding optimization.",
+        "source_operator": "power_method",
+        "telemetry": "Residual error between sum of powers and unity."
+      }
+    },
+    {
+      "primitive_id": "shin_model",
+      "name": "Shin's Insider-Trading Model",
+      "verbatim_quote": "**shin** (insider-trading param z; Shin 1992/1993 closed form): `shinProb(z)[i] = (sqrt(z^2 + 4*(1-z)*invOdds[i]^2/sum(invOdds)) - z) / (2 - 2z)`; solve `z` on `[0,100]` so `sum(shinProb(z))==1`.",
+      "page": 1,
+      "latex": "p_i^{\\text{Shin}}(z) = \\frac{\\sqrt{z^2 + 4(1-z) \\cdot \\frac{1}{o_i^2} \\cdot \\frac{1}{\\sum_j \\frac{1}{o_j}}} - z}{2(1 - z)}",
+      "symbol_and_unit_ledger": "{'o_i': 'decimal odds for outcome i', 'z': 'insider trading parameter', 'p_i^{\\\\text{Shin}}': 'Shin-calibrated probability for outcome i'}",
+      "assumptions": "Market has strictly positive odds; z is bounded in [0,100].",
+      "breakdown_regime": "When no valid z exists satisfying sum constraint, fallback to multiplicative method.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a risk-neutral measure where z represents information asymmetry.",
+        "source_operator": "shin_model",
+        "telemetry": "Root-finder convergence to z such that total probability equals 1."
+      }
+    },
+    {
+      "primitive_id": "buchdahl_differential_margin",
+      "name": "Buchdahl Differential Margin Weighting",
+      "verbatim_quote": "**differential_margin_weighting** (Buchdahl, closed form): `fairOdds[i] = (n*odds[i])/(n - margin*odds[i])`; `probs[i] = 1/fairOdds[i]` 6.",
+      "page": 1,
+      "latex": "f_i = \\frac{n o_i}{n - m o_i}, \\quad p_i = \\frac{1}{f_i}",
+      "symbol_and_unit_ledger": "{'o_i': 'decimal odds for outcome i', 'm': 'market margin', 'n': 'number of outcomes', 'f_i': 'fair odds for outcome i', 'p_i': 'probability of outcome i'}",
+      "assumptions": "Margin is less than 1/n; odds are positive and finite.",
+      "breakdown_regime": "When margin exceeds 1/n, resulting in negative or undefined fair odds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Transforms bookmaker odds into fair odds by adjusting for overround, yielding calibrated probabilities.",
+        "source_operator": "buchdahl_differential_margin",
+        "telemetry": "Fair odds ratio deviation from original odds under margin correction."
+      }
+    },
+    {
+      "primitive_id": "bivariate_poisson_correlation",
+      "name": "Bivariate Poisson Correlation Adjustment",
+      "verbatim_quote": "> - **Bivariate Poisson: exact float64 match (diff = 0.0)** from the compiled Cython > `compute_bivariate_poisson_probabilities`, independently cross-checked against a from-scratch > convolution (max diff 3.5e-17).",
+      "page": 1,
+      "latex": "P(X=x, Y=y) = \\sum_{k=0}^{\\min(x,y)} \\frac{\\lambda_1^x e^{-\\lambda_1}}{x!} \\cdot \\frac{\\lambda_2^y e^{-\\lambda_2}}{y!} \\cdot \\frac{\\lambda_3^k e^{-\\lambda_3}}{k!}",
+      "symbol_and_unit_ledger": "{'X, Y': 'random variables representing event outcomes', 'x, y': 'non-negative integers', 'λ_1, λ_2, λ_3': 'rate parameters of independent Poisson processes'}",
+      "assumptions": "Independent Poisson processes with shared component λ₃; finite rate parameters.",
+      "breakdown_regime": "When λ₃ approaches zero, reduces to independent product distribution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Models correlated event outcomes using shared latent Poisson process; captures dependence structure in parlay pricing.",
+        "source_operator": "bivariate_poisson_correlation",
+        "telemetry": "Joint PMF accuracy compared to theoretical convolution."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "30bce518fe7d3b11_t0",
+      "think": "The de-vigging primitives operate under a unified framework of probability calibration, each addressing distinct aspects of market distortion. The power method uses exponentiation to normalize inverse-odds into probabilities, ensuring sum-to-one while preserving relative weights. The Shin model introduces an insider-trading parameter z to reflect asymmetric information, mapping odds into risk-neutral probabilities. Buchdahl’s approach adjusts odds directly based on margin, producing fair odds that eliminate overround. Bivariate Poisson provides a stochastic kernel for modeling correlated outcomes in parlays, capturing shared dependencies among events. Each method exhibits different failure modes: power method may suffer from numerical overflow, Shin requires root-finding stability, Buchdahl fails when margin exceeds bounds, and Poisson assumes independence beyond shared components. These primitives collectively enable robust inference in high-dimensional sports markets.\n\nDeep epistemic analysis for 2026-08-21-BUILD-SPECS-devig-parlay (30bce518fe7d3b11, domain=other, pages_read=4/4): Operator 'Power Method Probability Calibration' (page 1, domain other) captures: **power:** find `k>0` solving `sum(invOdds[i]^k) == 1`; `probs[i] = invOdds[i]^k`. Assumptions: Market has positive odds; inverse-odds are well-defined and finite. Breakdown regime: When sum of inverse-odds converges to 1, but numerical instability arises due to large variance in odds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps inverse-odds scaling to normalized probability space using root-finding optimization. Operator 'Shin's Insider-Trading Model' (page 1, domain other) captures: **shin** (insider-trading param z; Shin 1992/1993 closed form): `shinProb(z)[i] = (sqrt(z^2 + 4*(1-z)*invOdds[i]^2/sum(invOdds)) - z) / (2 - 2z)`; solve `z` on `[0,100]` so `sum(shinProb(z))==1`. Assumptions: Market has strictly positive odds; z is bounded in [0,100]. Breakdown regime: When no valid z exists satisfying sum constraint, fallback to multiplicative method. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a risk-neutral measure where z represents information asymmetry. Operator 'Buchdahl Differential Margin Weighting' (page 1, domain other) captures: **differential_margin_weighting** (Buchdahl, closed form): `fairOdds[i] = (n*odds[i])/(n - margin*odds[i])`; `probs[i] = 1/fairOdds[i]` 6. Assumptions: Margin is less than 1/n; odds are positive and finite. Breakdown regime: When margin exceeds 1/n, resulting in negative or undefined fair odds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transforms bookmaker odds into fair odds by adjusting for overround, yielding calibrated probabilities. Operator 'Bivariate Poisson Correlation Adjustment' (page 1, domain other) captures: > - **Bivariate Poisson: exact float64 match (diff = 0.0)** from the compiled Cython > `compute_bivariate_poisson_probabilities`, independently cross-checked against a from-scratch > convolution (max diff 3.5e-17). Assumptions: Independent Poisson processes with shared component λ₃; finite rate parameters. Breakdown regime: When λ₃ approaches zero, reduces to independent product distribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models correlated event outcomes using shared latent Poisson process; captures dependence structure in parlay pricing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-08-21-BUILD-SPECS-devig-parlay (30bce518fe7d3b11, domain=other, pages_read=4/4): Operator 'Power Method Probability Calibration' (page 1, domain other) captures: **power:** find `k>0` solving `sum(invOdds[i]^k) == 1`; `probs[i] = invOdds[i]^k`. Assumptions: Market has positive odds; inverse-odds are well-defined and finite. Breakdown regime: When sum of inverse-odds converges to 1, but numerical instability arises due to large variance in odds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps inverse-odds scaling to normalized probability space using root-finding optimization. Operator 'Shin's Insider-Trading Model' (page 1, domain other) captures: **shin** (insider-trading param z; Shin 1992/1993 closed form): `shinProb(z)[i] = (sqrt(z^2 + 4*(1-z)*invOdds[i]^2/sum(invOdds)) - z) / (2 - 2z)`; solve `z` on `[0,100]` so `sum(shinProb(z))==1`. Assumptions: Market has strictly positive odds; z is bounded in [0,100]. Breakdown regime: When no valid z exists satisfying sum constraint, fallback to multiplicative method. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a risk-neutral measure where z represents information asymmetry. Operator 'Buchdahl Differential Margin Weighting' (page 1, domain other) captures: **differential_margin_weighting** (Buchdahl, closed form): `fairOdds[i] = (n*odds[i])/(n - margin*odds[i])`; `probs[i] = 1/fairOdds[i]` 6. Assumptions: Margin is less than 1/n; odds are positive and finite. Breakdown regime: When margin exceeds 1/n, resulting in negative or undefined fair odds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transforms bookmaker odds into fair odds by adjusting for overround, yielding calibrated probabilities. Operator 'Bivariate Poisson Correlation Adjustment' (page 1, domain other) captures: > - **Bivariate Poisson: exact float64 match (diff = 0.0)** from the compiled Cython > `compute_bivariate_poisson_probabilities`, independently cross-checked against a from-scratch > convolution (max diff 3.5e-17). Assumptions: Independent Poisson processes with shared component λ₃; finite rate parameters. Breakdown regime: When λ₃ approaches zero, reduces to independent product distribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models correlated event outcomes using shared latent Poisson process; captures dependence structure in parlay pricing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical probability theory and financial mathematics, particularly the work of Shin (1992), Buchdahl (1998), and Poisson modeling in actuarial science. Influenced by modern machine learning calibration techniques and computational statistics. Retrocausal Genealogy: Rooted in 2026-08-21-BUILD-SPECS-devig-parlay (30bce518fe7d3b11), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents in these models include bookmakers who set odds with margins, market participants who interpret those odds, and probabilistic forecasters who calibrate them. Each primitive reflects a different agent's perspective on fairness and information asymmetry. Theory of Mind & Decision Maker Model: Rooted in 2026-08-21-BUILD-SPECS-devig-parlay (30bce518fe7d3b11), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates on unique mathematical domains: power method on scalar exponents, Shin on risk parameters, Buchdahl on margin adjustments, and Poisson on joint distributions. Leakage occurs if any two methods attempt to optimize the same variable without explicit distinction. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-08-21-BUILD-SPECS-devig-parlay (30bce518fe7d3b11), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

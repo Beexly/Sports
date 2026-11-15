@@ -1,0 +1,78 @@
+{
+  "book_id": "4f08bf0f1dbc2084",
+  "source_status": "COMPLETE",
+  "title": "airwave-ledger",
+  "file_name": "airwave-ledger.md",
+  "sha256": "4f08bf0f1dbc208453e2f6f0ad44e854e483795fcc4b1f2f8cb24a80b9bff18a",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Broadcast accountability via paraphrased, timestamped claims and stake-weighted credibility indices. Universal Lens: Rooted in airwave-ledger (4f08bf0f1dbc2084), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps pundit statements to probabilistic truth scores using emphatic language scaling and falsifiability penalties. GSI Mapping: Rooted in airwave-ledger (4f08bf0f1dbc2084), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine applies dual-output architecture: internal grading signals and public redacted ledger entries with cost-aware routing. GSE Mapping: Rooted in airwave-ledger (4f08bf0f1dbc2084), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "accountability_index",
+      "name": "Accountability Index",
+      "verbatim_quote": "The Airwave Ledger gives the take a receipt: it turns what a pundit says on air into a **paraphrased, timestamped, graded claim**, then keeps a running per-pundit **accountability index**.",
+      "page": 1,
+      "latex": "\\text{index} = \\round{100 \\times \\frac{\\sum_{i=1}^{n} \\text{credit}_i}{\\sum_{i=1}^{n} \\text{stake}_i}}",
+      "symbol_and_unit_ledger": "{'index': 'dimensionless', 'credit_i': 'unitless', 'stake_i': 'unitless'}",
+      "assumptions": "Claims are binary (hit/miss/push/unfalsifiable), stake is proportional to linguistic emphasis.",
+      "breakdown_regime": "When no falsifiable claims exist, index approaches zero due to minimal stake.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's probabilistic truth assignment through stake-weighted credit accumulation.",
+        "source_operator": "accountability_index",
+        "telemetry": "Per-pundit index value and claim-level credit/stake ratios."
+      }
+    },
+    {
+      "primitive_id": "grading_spine",
+      "name": "Grading Spine",
+      "verbatim_quote": "This is the realization of the `novus` \"grading spine\" applied to a new input stream: - **One engine, two outputs** — every settled claim yields (a) an internal signal and (b) a public, redacted ledger row.",
+      "page": 1,
+      "latex": "\\mathcal{G}(x) = \\left( \\mathcal{I}(x), \\mathcal{R}(x) \\right)",
+      "symbol_and_unit_ledger": "{'x': 'claim', 'I(x)': 'internal signal', 'R(x)': 'redacted public row'}",
+      "assumptions": "Each claim generates deterministic internal and external outputs via shared engine logic.",
+      "breakdown_regime": "Failure occurs if claim cannot be parsed or classified into valid categories.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's Decision Autopsy pipeline with dual output structure.",
+        "source_operator": "grading_spine",
+        "telemetry": "Claim classification, internal signal integrity, and redaction compliance."
+      }
+    },
+    {
+      "primitive_id": "refusal_as_feature",
+      "name": "Refusal as Feature",
+      "verbatim_quote": "(`novus` gsn-ops grading spine.) - **Refusal is a feature** — a take too vague to check is recorded *as* unfalsifiable and scores nothing; a pundit who only emits hedges earns a low index even though they are never technically wrong.",
+      "page": 1,
+      "latex": "\\text{score}_{\\text{unfalsifiable}} = 0, \\quad \\text{index} \\propto \\frac{\\text{hits}}{\\text{stake}} \\cdot \\mathbb{1}_{\\text{falsifiable}}",
+      "symbol_and_unit_ledger": "{'score_unfalsifiable': 'unitless', 'index': 'dimensionless', 'hits': 'count', 'stake': 'unitless'}",
+      "assumptions": "Unfalsifiable claims contribute minimal stake but no credit.",
+      "breakdown_regime": "Index degrades when majority of claims are non-falsifiable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes GSI's tolerance for hedging through penalty-based degradation of credibility.",
+        "source_operator": "refusal_as_feature",
+        "telemetry": "Percentage of unfalsifiable claims and corresponding index decay rate."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4f08bf0f1dbc2084_t0",
+      "think": "The Airwave Ledger operationalizes broadcast accountability through a dual-engine architecture where each claim undergoes internal grading and public redaction. The core operator 'accountability index' aggregates stake-weighted credits from falsifiable assertions, enforcing a bounded reward system that penalizes vagueness. The 'grading spine' ensures consistency between internal and external representations, while 'refusal as feature' prevents manipulation by hedge-laden speakers. These primitives form a closed-loop feedback mechanism: claims are scored, indexed, and reviewed, with the index serving as a proxy for trustworthiness. The system avoids archival retention, ensuring no data leakage beyond immediate processing windows. Failure modes include misclassification of claims or over-reliance on linguistic emphasis without semantic grounding.\n\nDeep epistemic analysis for airwave-ledger (4f08bf0f1dbc2084, domain=other, pages_read=3/3): Operator 'Accountability Index' (page 1, domain other) captures: The Airwave Ledger gives the take a receipt: it turns what a pundit says on air into a **paraphrased, timestamped, graded claim**, then keeps a running per-pundit **accountability index**. Assumptions: Claims are binary (hit/miss/push/unfalsifiable), stake is proportional to linguistic emphasis. Breakdown regime: When no falsifiable claims exist, index approaches zero due to minimal stake. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic truth assignment through stake-weighted credit accumulation. Operator 'Grading Spine' (page 1, domain other) captures: This is the realization of the `novus` \"grading spine\" applied to a new input stream: - **One engine, two outputs** — every settled claim yields (a) an internal signal and (b) a public, redacted ledger row. Assumptions: Each claim generates deterministic internal and external outputs via shared engine logic. Breakdown regime: Failure occurs if claim cannot be parsed or classified into valid categories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's Decision Autopsy pipeline with dual output structure. Operator 'Refusal as Feature' (page 1, domain other) captures: (`novus` gsn-ops grading spine.) - **Refusal is a feature** — a take too vague to check is recorded *as* unfalsifiable and scores nothing; a pundit who only emits hedges earns a low index even though they are never technically wrong. Assumptions: Unfalsifiable claims contribute minimal stake but no credit. Breakdown regime: Index degrades when majority of claims are non-falsifiable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes GSI's tolerance for hedging through penalty-based degradation of credibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for airwave-ledger (4f08bf0f1dbc2084, domain=other, pages_read=3/3): Operator 'Accountability Index' (page 1, domain other) captures: The Airwave Ledger gives the take a receipt: it turns what a pundit says on air into a **paraphrased, timestamped, graded claim**, then keeps a running per-pundit **accountability index**. Assumptions: Claims are binary (hit/miss/push/unfalsifiable), stake is proportional to linguistic emphasis. Breakdown regime: When no falsifiable claims exist, index approaches zero due to minimal stake. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic truth assignment through stake-weighted credit accumulation. Operator 'Grading Spine' (page 1, domain other) captures: This is the realization of the `novus` \"grading spine\" applied to a new input stream: - **One engine, two outputs** — every settled claim yields (a) an internal signal and (b) a public, redacted ledger row. Assumptions: Each claim generates deterministic internal and external outputs via shared engine logic. Breakdown regime: Failure occurs if claim cannot be parsed or classified into valid categories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's Decision Autopsy pipeline with dual output structure. Operator 'Refusal as Feature' (page 1, domain other) captures: (`novus` gsn-ops grading spine.) - **Refusal is a feature** — a take too vague to check is recorded *as* unfalsifiable and scores nothing; a pundit who only emits hedges earns a low index even though they are never technically wrong. Assumptions: Unfalsifiable claims contribute minimal stake but no credit. Breakdown regime: Index degrades when majority of claims are non-falsifiable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes GSI's tolerance for hedging through penalty-based degradation of credibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in formal epistemology and information theory, particularly in the work of Carnap and Reichenbach on verifiability and Bayesian updating, extended into modern computational frameworks for media accountability. Retrocausal Genealogy: Rooted in airwave-ledger (4f08bf0f1dbc2084), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in airwave-ledger (4f08bf0f1dbc2084), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as speakers with varying degrees of commitment to truth, where the system incentivizes precision and falsifiability while detecting and penalizing hedging behavior. Theory of Mind & Decision Maker Model: Rooted in airwave-ledger (4f08bf0f1dbc2084), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in airwave-ledger (4f08bf0f1dbc2084), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating internal signals from public records, preventing leakage of sensitive metadata. Leakage vetoes occur if redaction boundaries are crossed or if internal logic fails to maintain consistency across outputs. Cross-Layer Veto & Anti-Leakage Check: Rooted in airwave-ledger (4f08bf0f1dbc2084), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

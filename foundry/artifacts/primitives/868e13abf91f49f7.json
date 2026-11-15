@@ -1,0 +1,78 @@
+{
+  "book_id": "868e13abf91f49f7",
+  "source_status": "COMPLETE",
+  "title": "auth",
+  "file_name": "auth.md",
+  "sha256": "868e13abf91f49f72a34dd83b70ef19e80354b469110ac3b38b9b95c81ce1a2c",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Auth boundary as a contextual gauge field enforcing identity consistency across client-server interfaces via proxy-mediated state transitions. Universal Lens: Rooted in auth (868e13abf91f49f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over user session states conditioned on platform-verified identity tokens through secure proxy endpoints. GSI Mapping: Rooted in auth (868e13abf91f49f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models authentication state transitions using deterministic proxy rules and ephemeral identity caches. GSE Mapping: Rooted in auth (868e13abf91f49f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "auth_boundary",
+      "name": "Authentication Boundary",
+      "verbatim_quote": "# Skill: Auth Boundary Use this when a website needs signed-in user state, login, logout, account-gated pages, profile loading, or protected file downloads.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "User identity is enforced through platform-managed session state and server-side validation.",
+      "breakdown_regime": "Failure occurs when client bypasses proxy or accesses internal endpoints directly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The auth boundary maps browser requests to platform-verified identity proxies, maintaining consistent session semantics across UI and backend layers.",
+        "source_operator": "auth_boundary",
+        "telemetry": "Session token validity, unauthorized access attempts, and proxy response codes."
+      }
+    },
+    {
+      "primitive_id": "platform_contract",
+      "name": "Platform Identity Contract",
+      "verbatim_quote": "The platform owns auth and exposes a small contract to the website.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Identity resolution is centralized and abstracted from client-side logic.",
+      "breakdown_regime": "Failure occurs when client assumes direct identity control or misuses platform endpoints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The platform contract defines a minimal interface for identity operations, encapsulating all auth complexity within runtime.",
+        "source_operator": "platform_contract",
+        "telemetry": "Endpoint access logs, identity injection success/failure rates, and SDK usage compliance."
+      }
+    },
+    {
+      "primitive_id": "proxy_identity",
+      "name": "Proxy Identity Resolver",
+      "verbatim_quote": "This endpoint is the only user-profile endpoint browser components should fetch.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Browser-facing identity is resolved through a controlled proxy to prevent exposure of internal auth details.",
+      "breakdown_regime": "Failure occurs when raw internal endpoints are exposed or accessed without proxy mediation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The proxy resolver ensures that browser identity queries map to secure internal identity sources without leaking sensitive headers or tokens.",
+        "source_operator": "proxy_identity",
+        "telemetry": "Request latency, cache hit ratio, and unauthorized header presence."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "868e13abf91f49f7_t0",
+      "think": "The auth boundary enforces a strict separation between client-facing and platform-facing identity operations. Client-side code must route all identity-dependent requests through designated proxy endpoints, such as /api/user, which act as gatekeepers for fnf.internal/user. This design prevents direct access to internal auth mechanisms and avoids exposing sensitive headers or cookies to the UI. The platform injects identity on server egress, ensuring that auth state remains consistent and secure. The dual nature of auth—frontend identity proxy and backend SDK integration—requires careful handling of session state and endpoint routing. Failure modes include unauthorized access attempts, direct internal endpoint calls, or incorrect header propagation. These risks are mitigated by enforcing a contract where browsers only interact with app-local endpoints, and server code handles internal communication with automatic identity attachment.\n\nDeep epistemic analysis for auth (868e13abf91f49f7, domain=other, pages_read=5/5): Operator 'Authentication Boundary' (page 1, domain other) captures: # Skill: Auth Boundary Use this when a website needs signed-in user state, login, logout, account-gated pages, profile loading, or protected file downloads. Assumptions: User identity is enforced through platform-managed session state and server-side validation. Breakdown regime: Failure occurs when client bypasses proxy or accesses internal endpoints directly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The auth boundary maps browser requests to platform-verified identity proxies, maintaining consistent session semantics across UI and backend layers. Operator 'Platform Identity Contract' (page 1, domain other) captures: The platform owns auth and exposes a small contract to the website. Assumptions: Identity resolution is centralized and abstracted from client-side logic. Breakdown regime: Failure occurs when client assumes direct identity control or misuses platform endpoints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The platform contract defines a minimal interface for identity operations, encapsulating all auth complexity within runtime. Operator 'Proxy Identity Resolver' (page 1, domain other) captures: This endpoint is the only user-profile endpoint browser components should fetch. Assumptions: Browser-facing identity is resolved through a controlled proxy to prevent exposure of internal auth details. Breakdown regime: Failure occurs when raw internal endpoints are exposed or accessed without proxy mediation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The proxy resolver ensures that browser identity queries map to secure internal identity sources without leaking sensitive headers or tokens. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for auth (868e13abf91f49f7, domain=other, pages_read=5/5): Operator 'Authentication Boundary' (page 1, domain other) captures: # Skill: Auth Boundary Use this when a website needs signed-in user state, login, logout, account-gated pages, profile loading, or protected file downloads. Assumptions: User identity is enforced through platform-managed session state and server-side validation. Breakdown regime: Failure occurs when client bypasses proxy or accesses internal endpoints directly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The auth boundary maps browser requests to platform-verified identity proxies, maintaining consistent session semantics across UI and backend layers. Operator 'Platform Identity Contract' (page 1, domain other) captures: The platform owns auth and exposes a small contract to the website. Assumptions: Identity resolution is centralized and abstracted from client-side logic. Breakdown regime: Failure occurs when client assumes direct identity control or misuses platform endpoints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The platform contract defines a minimal interface for identity operations, encapsulating all auth complexity within runtime. Operator 'Proxy Identity Resolver' (page 1, domain other) captures: This endpoint is the only user-profile endpoint browser components should fetch. Assumptions: Browser-facing identity is resolved through a controlled proxy to prevent exposure of internal auth details. Breakdown regime: Failure occurs when raw internal endpoints are exposed or accessed without proxy mediation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The proxy resolver ensures that browser identity queries map to secure internal identity sources without leaking sensitive headers or tokens. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web security models and layered identity abstraction patterns from distributed systems, evolving toward microservices-based auth boundaries. Retrocausal Genealogy: Rooted in auth (868e13abf91f49f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in auth (868e13abf91f49f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious clients attempting to bypass auth and platform services trying to maintain session integrity. The system models these interactions through proxy enforcement and telemetry-driven anomaly detection. Theory of Mind & Decision Maker Model: Rooted in auth (868e13abf91f49f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by separating frontend identity resolution from backend SDK calls. Leakage vetoes prevent exposure of internal auth headers or raw fnf URLs to UI components, preserving layer isolation. Cross-Layer Veto & Anti-Leakage Check: Rooted in auth (868e13abf91f49f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

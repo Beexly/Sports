@@ -1,0 +1,78 @@
+{
+  "book_id": "6b290c5406d68377",
+  "source_status": "COMPLETE",
+  "title": "stale-sports-engine",
+  "file_name": "stale-sports-engine.md",
+  "sha256": "6b290c5406d68377976e1d9cb2395436ae9bcb79e24447451692babe9dc48a42",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Stale sports-branch audit formalizes refusal contracts and diagnostic calibration as distinct operational regimes: one for predictive refusal, another for empirical validation. Universal Lens: Rooted in stale-sports-engine (6b290c5406d68377), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference to map refusal states into probabilistic bounds; conformal prediction ensures validity under uncertainty via calibrated confidence intervals. GSI Mapping: Rooted in stale-sports-engine (6b290c5406d68377), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning to evaluate matchup deltas and projection adjustments through bounded, position-sensitive transforms; state transitions reflect data availability and model readiness. GSE Mapping: Rooted in stale-sports-engine (6b290c5406d68377), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "refusal_contract",
+      "name": "Refusal Contract",
+      "verbatim_quote": "This is a genuine refusal/withholding behavior, not a claim of predictive edge: - `loadMatchupEngine()` returns a `source-error` result with no rows and `canPublishProjections: false` when the player model or schedule is unavailable or empty.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'source_error': 'dimensionless', 'canPublishProjections': 'boolean'}",
+      "assumptions": "Player model or schedule must be available for projection publishing.",
+      "breakdown_regime": "When source data is missing or invalid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's refusal-to-predict contract where absence of data implies zero-confidence outcome.",
+        "source_operator": "refusal_contract",
+        "telemetry": "Source error flag and projection publishability boolean."
+      }
+    },
+    {
+      "primitive_id": "matchup_delta_adjustment",
+      "name": "Matchup Delta Adjustment",
+      "verbatim_quote": "The actual matchup delta is a hand-weighted, bounded presentation adjustment (fixed reference bands, position sensitivities, and a ±12 cap).",
+      "page": 1,
+      "latex": "\\Delta_{\\text{adj}} = \\min(12, \\max(-12, w_p \\cdot \\Delta_{\\text{base}}))",
+      "symbol_and_unit_ledger": "{'\\\\Delta_{\\\\text{adj}}': 'points', '\\\\Delta_{\\\\text{base}}': 'points', 'w_p': 'dimensionless weight factor'}",
+      "assumptions": "Adjustment is bounded and position-dependent.",
+      "breakdown_regime": "When opponent context is insufficient for meaningful delta calculation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's core scoring kernel with fixed bounds and sensitivity weights applied post-computation.",
+        "source_operator": "matchup_delta_adjustment",
+        "telemetry": "Computed delta value and bounded adjustment."
+      }
+    },
+    {
+      "primitive_id": "calibration_diagnostic",
+      "name": "Calibration Diagnostic",
+      "verbatim_quote": "The implementation is a real diagnostic: it reads settled picks, calculates Brier/bucket statistics and a Wilson interval, records a 150-pick minimum, and emits a verdict.",
+      "page": 2,
+      "latex": "Brier = \\frac{1}{n} \\sum_{i=1}^{n} (p_i - o_i)^2",
+      "symbol_and_unit_ledger": "{'Brier': 'unitless', 'p_i': 'probability', 'o_i': 'outcome {0,1}', 'n': 'count of picks'}",
+      "assumptions": "Minimum pick count required for valid statistical inference.",
+      "breakdown_regime": "Upon data availability and sufficient sample size.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's calibration framework using Brier score and Wilson interval for statistical validity checks.",
+        "source_operator": "calibration_diagnostic",
+        "telemetry": "Brier score, Wilson interval, and pick count."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6b290c5406d68377_t0",
+      "think": "The audit identifies three key operational primitives: refusal contracts that halt projections upon data insufficiency, bounded matchup adjustments derived from fixed reference bands, and calibration diagnostics that assess predictive consistency. These form a dual logic: refusal prevents erroneous inference while calibration validates it. Failure modes include empty-data refusal leading to null projections, bounded adjustments masking true variation, and diagnostic stubs lacking database input. Each primitive operates within distinct regimes—data availability, boundedness, and statistical sufficiency—ensuring no single point of collapse. The refusal contract enforces a hard stop, the adjustment applies soft constraints, and the diagnostic offers empirical feedback. Dualities emerge between predictive refusal and validation, with each layer reinforcing the other’s integrity.\n\nDeep epistemic analysis for stale-sports-engine (6b290c5406d68377, domain=other, pages_read=4/4): Operator 'Refusal Contract' (page 1, domain other) captures: This is a genuine refusal/withholding behavior, not a claim of predictive edge: - `loadMatchupEngine()` returns a `source-error` result with no rows and `canPublishProjections: false` when the player model or schedule is unavailable or empty. Assumptions: Player model or schedule must be available for projection publishing. Breakdown regime: When source data is missing or invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's refusal-to-predict contract where absence of data implies zero-confidence outcome. Operator 'Matchup Delta Adjustment' (page 1, domain other) captures: The actual matchup delta is a hand-weighted, bounded presentation adjustment (fixed reference bands, position sensitivities, and a ±12 cap). Assumptions: Adjustment is bounded and position-dependent. Breakdown regime: When opponent context is insufficient for meaningful delta calculation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's core scoring kernel with fixed bounds and sensitivity weights applied post-computation. Operator 'Calibration Diagnostic' (page 2, domain other) captures: The implementation is a real diagnostic: it reads settled picks, calculates Brier/bucket statistics and a Wilson interval, records a 150-pick minimum, and emits a verdict. Assumptions: Minimum pick count required for valid statistical inference. Breakdown regime: Upon data availability and sufficient sample size. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's calibration framework using Brier score and Wilson interval for statistical validity checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for stale-sports-engine (6b290c5406d68377, domain=other, pages_read=4/4): Operator 'Refusal Contract' (page 1, domain other) captures: This is a genuine refusal/withholding behavior, not a claim of predictive edge: - `loadMatchupEngine()` returns a `source-error` result with no rows and `canPublishProjections: false` when the player model or schedule is unavailable or empty. Assumptions: Player model or schedule must be available for projection publishing. Breakdown regime: When source data is missing or invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's refusal-to-predict contract where absence of data implies zero-confidence outcome. Operator 'Matchup Delta Adjustment' (page 1, domain other) captures: The actual matchup delta is a hand-weighted, bounded presentation adjustment (fixed reference bands, position sensitivities, and a ±12 cap). Assumptions: Adjustment is bounded and position-dependent. Breakdown regime: When opponent context is insufficient for meaningful delta calculation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's core scoring kernel with fixed bounds and sensitivity weights applied post-computation. Operator 'Calibration Diagnostic' (page 2, domain other) captures: The implementation is a real diagnostic: it reads settled picks, calculates Brier/bucket statistics and a Wilson interval, records a 150-pick minimum, and emits a verdict. Assumptions: Minimum pick count required for valid statistical inference. Breakdown regime: Upon data availability and sufficient sample size. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's calibration framework using Brier score and Wilson interval for statistical validity checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century decision theory and modern Bayesian falsifiability principles, these primitives evolve from formal control systems and statistical validation frameworks developed in computational finance and machine learning. Retrocausal Genealogy: Rooted in stale-sports-engine (6b290c5406d68377), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in stale-sports-engine (6b290c5406d68377), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit refusal boundaries or misinterpret bounded adjustments as predictive signals. A rational agent would recognize refusal as a constraint rather than a signal, and calibration diagnostics as a measure of trustworthiness, not accuracy. Theory of Mind & Decision Maker Model: Rooted in stale-sports-engine (6b290c5406d68377), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring refusal contracts do not leak into calibration diagnostics, and bounded adjustments do not bias diagnostic outcomes. Leakage vetoes prevent misuse of bounded values as probabilistic estimates. Cross-Layer Veto & Anti-Leakage Check: Rooted in stale-sports-engine (6b290c5406d68377), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

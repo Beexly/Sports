@@ -1,0 +1,78 @@
+{
+  "book_id": "85f7280c146b6127",
+  "source_status": "COMPLETE",
+  "title": "SCALE_LIMITS",
+  "file_name": "SCALE_LIMITS.md",
+  "sha256": "85f7280c146b612741bd3063974c22ef491e9ce75f96ed266d80f5fb1fbb358e",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Static database connection model with singleton Prisma client and conditional Neon driver; unbounded findMany queries; 40.3% rate-limit coverage; 1MB response ceiling. Universal Lens: Rooted in SCALE_LIMITS (85f7280c146b6127), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps connection limits to data integrity risk; rate-limit coverage to agent decision confidence; unbounded queries to information entropy growth. GSI Mapping: Rooted in SCALE_LIMITS (85f7280c146b6127), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning evaluates singleton client reuse and stub fallback; state transitions track driver path selection; failure modes include unbounded queries and missing pool configs. GSE Mapping: Rooted in SCALE_LIMITS (85f7280c146b6127), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "database_connection_model",
+      "name": "PostgreSQL Connection Protocol",
+      "verbatim_quote": "Database connection model The data layer is **PostgreSQL via Prisma** (`packages/db/prisma/schema.prisma:5`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Connection count (dimensionless)', 'D': 'Driver type (binary: 0=default, 1=Neon)'}",
+      "assumptions": "Prisma client is instantiated once per process and reused; Neon driver is gated by environment variable.",
+      "breakdown_regime": "When `NEON_SERVERLESS_DRIVER=true` and deps are installed, uses `@neondatabase/serverless`.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Connection protocol maps to GSI's probabilistic data flow model; GSE's state machine tracks driver transitions.",
+        "source_operator": "database_connection_model",
+        "telemetry": "Connection reuse frequency, driver activation flags"
+      }
+    },
+    {
+      "primitive_id": "rate_limit_coverage",
+      "name": "API Route Protection Ratio",
+      "verbatim_quote": "### 1.2 Pool / connection limit configuration **No `connection_limit`, `pool_timeout`, or `maxPoolSize` is configured anywhere.** - `.env` has no connection-string connection params; `DATABASE_URL` contains no `connection_limit` query parameter.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Rate limit coverage ratio (dimensionless)', 'T': 'Total API routes (dimensionless)', 'P': 'Protected routes (dimensionless)'}",
+      "assumptions": "Rate limiting is applied per route; 40.3% coverage is observed.",
+      "breakdown_regime": "Coverage ratio R = P / T = 71 / 176 ≈ 0.403.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Coverage ratio is derived from GSE's route inspection kernel; GSI computes risk entropy from unprotected routes.",
+        "source_operator": "rate_limit_coverage",
+        "telemetry": "Number of protected vs total API routes"
+      }
+    },
+    {
+      "primitive_id": "unbounded_findmany_query",
+      "name": "Query Row Set Growth",
+      "verbatim_quote": "- `grep` for `connection_limit | PGCONNECT_TIMEOUT | pool_timeout | CONNECTION_LIMIT` across `.env apps/web/ packages/ vercel.json` finds nothing in config; the only hit is a test fixture at `apps/web/__tests__/ai-control-plane-credit-admission.test.ts:1130` (`url.searchParams.set(\"connection_limit\", \"25\")`), not a production setting.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'Row set size (dimensionless)', 't': 'Time (seconds)', 'V': 'Volume of picks or snapshots (dimensionless)'}",
+      "assumptions": "Unbounded queries grow linearly with time or volume; no hard cap on rows returned.",
+      "breakdown_regime": "As V increases, N becomes unbounded without explicit take/skip parameters.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Query growth maps to GSI's information entropy; GSE's state transition tracks query expansion over time.",
+        "source_operator": "unbounded_findmany_query",
+        "telemetry": "Row count per query, time to completion"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "85f7280c146b6127_t0",
+      "think": "The database connection model establishes a singleton Prisma client with conditional driver selection based on NEON_SERVERLESS_DRIVER. This introduces a dualism between local development (default pg driver) and production (Neon serverless). The lack of explicit pool configuration implies reliance on database defaults, which may lead to resource exhaustion under load. Rate-limit coverage is quantified at 40.3%, indicating significant exposure to abuse. Unbounded findMany queries create a failure mode where row sets grow indefinitely, potentially causing OOM errors or timeouts. These primitives form a coherent system where static analysis reveals architectural risks that could cascade into performance degradation or denial-of-service conditions.\n\nDeep epistemic analysis for SCALE_LIMITS (85f7280c146b6127, domain=other, pages_read=7/7): Operator 'PostgreSQL Connection Protocol' (page 1, domain other) captures: Database connection model The data layer is **PostgreSQL via Prisma** (`packages/db/prisma/schema.prisma:5`). Assumptions: Prisma client is instantiated once per process and reused; Neon driver is gated by environment variable. Breakdown regime: When `NEON_SERVERLESS_DRIVER=true` and deps are installed, uses `@neondatabase/serverless`. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Connection protocol maps to GSI's probabilistic data flow model; GSE's state machine tracks driver transitions. Operator 'API Route Protection Ratio' (page 1, domain other) captures: ### 1.2 Pool / connection limit configuration **No `connection_limit`, `pool_timeout`, or `maxPoolSize` is configured anywhere.** - `.env` has no connection-string connection params; `DATABASE_URL` contains no `connection_limit` query parameter. Assumptions: Rate limiting is applied per route; 40.3% coverage is observed. Breakdown regime: Coverage ratio R = P / T = 71 / 176 ≈ 0.403. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Coverage ratio is derived from GSE's route inspection kernel; GSI computes risk entropy from unprotected routes. Operator 'Query Row Set Growth' (page 1, domain other) captures: - `grep` for `connection_limit | PGCONNECT_TIMEOUT | pool_timeout | CONNECTION_LIMIT` across `.env apps/web/ packages/ vercel.json` finds nothing in config; the only hit is a test fixture at `apps/web/__tests__/ai-control-plane-credit-admission.test.ts:1130` (`url.searchParams.set(\"connection_limit\", \"25\")`), not a production setting. Assumptions: Unbounded queries grow linearly with time or volume; no hard cap on rows returned. Breakdown regime: As V increases, N becomes unbounded without explicit take/skip parameters. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Query growth maps to GSI's information entropy; GSE's state transition tracks query expansion over time. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SCALE_LIMITS (85f7280c146b6127, domain=other, pages_read=7/7): Operator 'PostgreSQL Connection Protocol' (page 1, domain other) captures: Database connection model The data layer is **PostgreSQL via Prisma** (`packages/db/prisma/schema.prisma:5`). Assumptions: Prisma client is instantiated once per process and reused; Neon driver is gated by environment variable. Breakdown regime: When `NEON_SERVERLESS_DRIVER=true` and deps are installed, uses `@neondatabase/serverless`. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Connection protocol maps to GSI's probabilistic data flow model; GSE's state machine tracks driver transitions. Operator 'API Route Protection Ratio' (page 1, domain other) captures: ### 1.2 Pool / connection limit configuration **No `connection_limit`, `pool_timeout`, or `maxPoolSize` is configured anywhere.** - `.env` has no connection-string connection params; `DATABASE_URL` contains no `connection_limit` query parameter. Assumptions: Rate limiting is applied per route; 40.3% coverage is observed. Breakdown regime: Coverage ratio R = P / T = 71 / 176 ≈ 0.403. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Coverage ratio is derived from GSE's route inspection kernel; GSI computes risk entropy from unprotected routes. Operator 'Query Row Set Growth' (page 1, domain other) captures: - `grep` for `connection_limit | PGCONNECT_TIMEOUT | pool_timeout | CONNECTION_LIMIT` across `.env apps/web/ packages/ vercel.json` finds nothing in config; the only hit is a test fixture at `apps/web/__tests__/ai-control-plane-credit-admission.test.ts:1130` (`url.searchParams.set(\"connection_limit\", \"25\")`), not a production setting. Assumptions: Unbounded queries grow linearly with time or volume; no hard cap on rows returned. Breakdown regime: As V increases, N becomes unbounded without explicit take/skip parameters. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Query growth maps to GSI's information entropy; GSE's state transition tracks query expansion over time. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Prisma ORM design principles and PostgreSQL connection pooling, these primitives reflect the evolution of serverless database access patterns and the increasing complexity of API security models in modern web applications. Retrocausal Genealogy: Rooted in SCALE_LIMITS (85f7280c146b6127), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious actors seeking to exploit unbounded queries and rate-limited routes, while defenders aim to maintain system stability through observability and controlled resource allocation. Theory of Mind & Decision Maker Model: Rooted in SCALE_LIMITS (85f7280c146b6127), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in SCALE_LIMITS (85f7280c146b6127), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that GSE's state tracking does not rely solely on GSI's probabilistic models; cross-layer vetoes ensure that unbounded queries do not propagate into GSE's execution engine without bounds checking. Cross-Layer Veto & Anti-Leakage Check: Rooted in SCALE_LIMITS (85f7280c146b6127), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

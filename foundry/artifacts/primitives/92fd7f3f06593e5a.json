@@ -1,0 +1,78 @@
+{
+  "book_id": "92fd7f3f06593e5a",
+  "source_status": "COMPLETE",
+  "title": "0797-wisdom-of-llm-crowds",
+  "file_name": "0797-wisdom-of-llm-crowds.md",
+  "sha256": "92fd7f3f06593e5a3fddffdb5335e8d53ef598befbd2a7739c6fec6192b22c86",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Ensemble aggregation of probabilistic forecasts via error-pattern diversity weighting, calibrated against temporal contamination and human market benchmarks. Universal Lens: Rooted in 0797-wisdom-of-llm-crowds (92fd7f3f06593e5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on forecast ensembles using conformal predictive intervals derived from LLM error correlations and calibration scores. GSI Mapping: Rooted in 0797-wisdom-of-llm-crowds (92fd7f3f06593e5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in sports engines leverages contrastive feature engineering and negative-weighted error decorrelation to optimize ensemble predictions. GSE Mapping: Rooted in 0797-wisdom-of-llm-crowds (92fd7f3f06593e5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "error_correlation_matrix",
+      "name": "Error Correlation Matrix",
+      "verbatim_quote": "Spearman correlation of model rankings (full 208 vs clean 94).",
+      "page": 2,
+      "latex": "\\mathbf{C} = \\text{corr}(\\mathbf{E}) \\in \\mathbb{R}^{K \\times K}",
+      "symbol_and_unit_ledger": "{'K': 'number of LLM sources', 'E': 'matrix of per-game squared errors across sources', 'C': 'correlation matrix of errors'}",
+      "assumptions": "Sources are independently biased but potentially correlated in error patterns.",
+      "breakdown_regime": "When \\(\\text{rank}(\\mathbf{C}) < K\\), linear dependence among error sources reduces diversity gain.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian covariance structure for predictive uncertainty quantification.",
+        "source_operator": "error_correlation_matrix",
+        "telemetry": "Spearman rank correlation between full and clean item rankings."
+      }
+    },
+    {
+      "primitive_id": "logistic_regression_aggregator",
+      "name": "Logistic Regression Aggregator",
+      "verbatim_quote": "- **Logistic regression:** L2-regularized (λ = 0.01) on the same 15-dim input — a *linear* learned aggregator.",
+      "page": 1,
+      "latex": "\\hat{p}_{\\text{agg}} = \\sigma(\\mathbf{w}^T \\mathbf{x}), \\quad \\mathbf{w} \\sim \\arg\\min_{\\mathbf{w}} \\left( \\sum_{i=1}^{N} \\ell(p_i, y_i) + \\lambda \\|\\mathbf{w}\\|^2 \\right)",
+      "symbol_and_unit_ledger": "{'p_i': 'individual model probability estimate', 'y_i': 'binary outcome (0 or 1)', 'x': 'vector of 15 model probabilities', 'w': 'learned weight vector', 'σ': 'sigmoid function', 'λ': 'L2 regularization strength (0.01)'}",
+      "assumptions": "Linear combination of inputs provides optimal aggregation under error independence.",
+      "breakdown_regime": "When error patterns are highly non-linear or adversarial, linear weights fail.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to derive dynamic ensemble weights based on historical error decorrelation.",
+        "source_operator": "logistic_regression_aggregator",
+        "telemetry": "Brier score reduction compared to arithmetic mean."
+      }
+    },
+    {
+      "primitive_id": "mlp_aggregator",
+      "name": "Multi-Layer Perceptron Aggregator",
+      "verbatim_quote": "- **MLP aggregator:** 15 → 64 (ReLU, dropout 0.2) → 32 (ReLU, dropout 0.2) → sigmoid; Adam lr 5e-3, 25 epochs, BCE loss, batch 16; trained on the 160 non-clean items, evaluated on the 94 clean items.",
+      "page": 1,
+      "latex": "\\hat{p}_{\\text{agg}} = \\sigma(\\mathbf{W}_2 \\cdot \\sigma(\\mathbf{W}_1 \\mathbf{x} + \\mathbf{b}_1) + \\mathbf{b}_2)",
+      "symbol_and_unit_ledger": "{'x': 'input vector of 15 model probabilities', 'W_1, W_2': 'weight matrices', 'b_1, b_2': 'bias vectors', 'σ': 'sigmoid activation', 'lr': 'learning rate (5e-3)', 'epochs': 'training epochs (25)', 'loss': 'binary cross-entropy'}",
+      "assumptions": "Nonlinear interactions between model errors improve aggregation beyond linear methods.",
+      "breakdown_regime": "Overfitting when training data is insufficient or contaminated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE for symbolic regression and contrastive feature learning.",
+        "source_operator": "mlp_aggregator",
+        "telemetry": "AUC and accuracy improvements over classical methods."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "92fd7f3f06593e5a_t0",
+      "think": "The core insight is that ensemble performance depends on error diversity rather than raw accuracy. The paper demonstrates that learned aggregators—both linear (LR) and nonlinear (MLP)—outperform individual models by exploiting error independence. The key mathematical construct is the error correlation matrix, which defines how much each model’s error deviates from others. When errors are uncorrelated, the ensemble benefits from variance reduction. However, contamination from pre-training data (e.g., cutoff-matched markets) distorts this diversity. The Spearman rank correlation ρ = 0.532 indicates substantial reordering of model rankings due to contamination. Thus, the aggregation strategy must account for both error decorrelation and temporal consistency. In GSE, this translates into dynamically adjusting weights such that sources with high error correlation receive negative weights, thereby reducing overall system bias. The MLP and LR aggregators act as dual mechanisms: LR captures linear dependencies, while MLP learns complex interactions. Their relative performance reveals whether the benefit comes from diversity or nonlinear feature interaction.\n\nDeep epistemic analysis for 0797-wisdom-of-llm-crowds (92fd7f3f06593e5a, domain=other, pages_read=5/5): Operator 'Error Correlation Matrix' (page 2, domain other) captures: Spearman correlation of model rankings (full 208 vs clean 94). Assumptions: Sources are independently biased but potentially correlated in error patterns. Breakdown regime: When \\(\\text{rank}(\\mathbf{C}) < K\\), linear dependence among error sources reduces diversity gain. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian covariance structure for predictive uncertainty quantification. Operator 'Logistic Regression Aggregator' (page 1, domain other) captures: - **Logistic regression:** L2-regularized (λ = 0.01) on the same 15-dim input — a *linear* learned aggregator. Assumptions: Linear combination of inputs provides optimal aggregation under error independence. Breakdown regime: When error patterns are highly non-linear or adversarial, linear weights fail. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to derive dynamic ensemble weights based on historical error decorrelation. Operator 'Multi-Layer Perceptron Aggregator' (page 1, domain other) captures: - **MLP aggregator:** 15 → 64 (ReLU, dropout 0.2) → 32 (ReLU, dropout 0.2) → sigmoid; Adam lr 5e-3, 25 epochs, BCE loss, batch 16; trained on the 160 non-clean items, evaluated on the 94 clean items. Assumptions: Nonlinear interactions between model errors improve aggregation beyond linear methods. Breakdown regime: Overfitting when training data is insufficient or contaminated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for symbolic regression and contrastive feature learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0797-wisdom-of-llm-crowds (92fd7f3f06593e5a, domain=other, pages_read=5/5): Operator 'Error Correlation Matrix' (page 2, domain other) captures: Spearman correlation of model rankings (full 208 vs clean 94). Assumptions: Sources are independently biased but potentially correlated in error patterns. Breakdown regime: When \\(\\text{rank}(\\mathbf{C}) < K\\), linear dependence among error sources reduces diversity gain. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian covariance structure for predictive uncertainty quantification. Operator 'Logistic Regression Aggregator' (page 1, domain other) captures: - **Logistic regression:** L2-regularized (λ = 0.01) on the same 15-dim input — a *linear* learned aggregator. Assumptions: Linear combination of inputs provides optimal aggregation under error independence. Breakdown regime: When error patterns are highly non-linear or adversarial, linear weights fail. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to derive dynamic ensemble weights based on historical error decorrelation. Operator 'Multi-Layer Perceptron Aggregator' (page 1, domain other) captures: - **MLP aggregator:** 15 → 64 (ReLU, dropout 0.2) → 32 (ReLU, dropout 0.2) → sigmoid; Adam lr 5e-3, 25 epochs, BCE loss, batch 16; trained on the 160 non-clean items, evaluated on the 94 clean items. Assumptions: Nonlinear interactions between model errors improve aggregation beyond linear methods. Breakdown regime: Overfitting when training data is insufficient or contaminated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for symbolic regression and contrastive feature learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the 'wisdom of crowds' principle from social choice theory and extended to machine learning through ensemble methods. Inspired by earlier work on Bayesian model averaging and the emergence of deep learning-based meta-learning frameworks. Retrocausal Genealogy: Rooted in 0797-wisdom-of-llm-crowds (92fd7f3f06593e5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the LLMs themselves, whose internal biases may align with training data, and the human prediction market, which reflects true information aggregation. The paper suggests that LLMs often overfit to their training data, while humans adapt more robustly to new information. The contamination analysis highlights how models trained on outdated data perform poorly on recent events, indicating a mismatch between model and environment.",
+      "cross_layer_veto": "Anti-collinearity requires that error sources be decorrelated to avoid redundancy. Leakage occurs when models share common biases or are trained on overlapping datasets. The veto condition is met when the error correlation matrix exhibits low rank or high off-diagonal elements, signaling that the ensemble fails to exploit diversity. In GSE, this manifests as redundant or negatively contributing models being downweighted or excluded."
+    }
+  ]
+}

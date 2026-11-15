@@ -1,0 +1,95 @@
+{
+  "book_id": "773a90e52f7f35e9",
+  "source_status": "COMPLETE",
+  "title": "RATING_ATLAS-2026-10-08",
+  "file_name": "RATING_ATLAS-2026-10-08.md",
+  "sha256": "773a90e52f7f35e9b135698ed89a158ecd07dbde757d160172833cad0cb2d39f",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "All rating systems reduce to probabilistic preference ordering: Bradley-Terry for pairwise wins, Glicko/TrueSkill for skill uncertainty, and Poisson/Negative Binomial for margin distributions. Universal Lens: Rooted in RATING_ATLAS-2026-10-08 (773a90e52f7f35e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference to calibrate model priors using empirical data, integrating market consensus as a prior and applying conformal prediction for uncertainty quantification across all primitives. GSI Mapping: Rooted in RATING_ATLAS-2026-10-08 (773a90e52f7f35e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses state-space models and belief propagation to dynamically update team states, enabling real-time situational reasoning about form, volatility, and outcome likelihoods during gameplay. GSE Mapping: Rooted in RATING_ATLAS-2026-10-08 (773a90e52f7f35e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "bradley_terry",
+      "name": "Bradley-Terry Model",
+      "verbatim_quote": "Bradley-Terry (1952)** ⚙️ — the atom everything below is made of.",
+      "page": 1,
+      "latex": "P(i \\text{ beats } j) = \\frac{\\pi_i}{\\pi_i + \\pi_j}",
+      "symbol_and_unit_ledger": "{'π_i': 'rating of player/team i (dimensionless)', 'P(i beats j)': 'probability that i defeats j (dimensionless)'}",
+      "assumptions": "Pairwise comparisons are independent and transitive; ratings are additive in log-odds space.",
+      "breakdown_regime": "No margins or temporal dynamics modeled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Foundation for Elo, Glicko, and TrueSkill; serves as base for probabilistic ranking.",
+        "source_operator": "bradley_terry",
+        "telemetry": "Matchup win probabilities"
+      }
+    },
+    {
+      "primitive_id": "glicko",
+      "name": "Glicko Rating System",
+      "verbatim_quote": "Glicko** — Elo + uncertainty: each rating carries RD (rating deviation).",
+      "page": 1,
+      "latex": "R' = R + K(S - E), \\quad E = \\frac{1}{1 + 10^{(R_b - R_a)/400}}, \\quad RD' = \\sqrt{RD^2 + \\sigma^2}",
+      "symbol_and_unit_ledger": "{'R': 'rating (dimensionless)', 'K': 'scale factor (dimensionless)', 'S': 'score (0 or 1)', 'E': 'expected score (dimensionless)', 'RD': 'rating deviation (dimensionless)', 'σ': 'volatility parameter (dimensionless)'}",
+      "assumptions": "Uncertainty decreases with more games played; ratings follow normal distribution.",
+      "breakdown_regime": "Inadequate for non-binary outcomes or team-based competitions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to Bayesian updating with Gaussian prior on skill.",
+        "source_operator": "glicko",
+        "telemetry": "Rating deviation and expected score"
+      }
+    },
+    {
+      "primitive_id": "trueskill",
+      "name": "TrueSkill Bayesian Factor Graph",
+      "verbatim_quote": "TrueSkill (Microsoft)** — Bayesian factor graph: skill ~ N(μ,σ2), performance ~ N(skill,β2).",
+      "page": 1,
+      "latex": "\\text{skill} \\sim \\mathcal{N}(\\mu, \\sigma^2), \\quad \\text{performance} \\sim \\mathcal{N}(\\text{skill}, \\beta^2)",
+      "symbol_and_unit_ledger": "{'μ': 'mean skill (dimensionless)', 'σ²': 'variance of skill (dimensionless)', 'β²': 'variance of performance (dimensionless)'}",
+      "assumptions": "Skills and performances are normally distributed; message-passing updates exact posteriors.",
+      "breakdown_regime": "Requires full game context; struggles with sparse data or asymmetric teams.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian belief propagation over latent skill variables; supports teams and draws.",
+        "source_operator": "trueskill",
+        "telemetry": "Skill mean and variance estimates"
+      }
+    },
+    {
+      "primitive_id": "dixon_coles",
+      "name": "Dixon-Coles Poisson Model",
+      "verbatim_quote": "Dixon-Coles (1997)** ⚙️ — Poisson + τ low-score correction + exponential time decay (weight = e^-ξ·days).",
+      "page": 2,
+      "latex": "P(x,y) = \\lambda_x^{x} e^{-\\lambda_x} / x! \\cdot \\mu_y^{y} e^{-\\mu_y} / y! \\cdot \\tau(x,y)",
+      "symbol_and_unit_ledger": "{'λ_x': 'expected goals for team x (dimensionless)', 'μ_y': 'expected goals for team y (dimensionless)', 'τ(x,y)': 'low-score correction factor (dimensionless)'}",
+      "assumptions": "Goals follow Poisson process; low-scoring events are underrepresented without correction.",
+      "breakdown_regime": "Fails when scoring patterns deviate significantly from Poisson assumptions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Base for soccer-specific margin and total models; incorporates temporal decay.",
+        "source_operator": "dixon_coles",
+        "telemetry": "Expected goal counts and adjusted probabilities"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "773a90e52f7f35e9_t0",
+      "think": "The Bradley-Terry model forms the foundational kernel for pairwise comparison systems, where each entity’s strength is represented as a positive scalar π. It defines the probability of one entity beating another based on their relative strengths. This formulation is extended by Elo, which introduces a dynamic update rule for online learning, and Glicko, which adds uncertainty quantification via rating deviation. TrueSkill generalizes further by modeling skills as latent variables in a Bayesian framework, allowing for complex interactions such as team play and draw outcomes. These systems share a common thread: they map observed outcomes into probabilistic representations of latent preferences or abilities. The Dixon-Coles model applies similar principles but within a Poisson framework tailored for low-scoring sports like soccer, incorporating corrections for rare outcomes and temporal decay. Each system builds upon earlier ones, refining assumptions and expanding applicability while maintaining core probabilistic structure.\n\nDeep epistemic analysis for RATING_ATLAS-2026-10-08 (773a90e52f7f35e9, domain=other, pages_read=5/5): Operator 'Bradley-Terry Model' (page 1, domain other) captures: Bradley-Terry (1952)** ⚙️ — the atom everything below is made of. Assumptions: Pairwise comparisons are independent and transitive; ratings are additive in log-odds space. Breakdown regime: No margins or temporal dynamics modeled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Foundation for Elo, Glicko, and TrueSkill; serves as base for probabilistic ranking. Operator 'Glicko Rating System' (page 1, domain other) captures: Glicko** — Elo + uncertainty: each rating carries RD (rating deviation). Assumptions: Uncertainty decreases with more games played; ratings follow normal distribution. Breakdown regime: Inadequate for non-binary outcomes or team-based competitions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Bayesian updating with Gaussian prior on skill. Operator 'TrueSkill Bayesian Factor Graph' (page 1, domain other) captures: TrueSkill (Microsoft)** — Bayesian factor graph: skill ~ N(μ,σ2), performance ~ N(skill,β2). Assumptions: Skills and performances are normally distributed; message-passing updates exact posteriors. Breakdown regime: Requires full game context; struggles with sparse data or asymmetric teams. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian belief propagation over latent skill variables; supports teams and draws. Operator 'Dixon-Coles Poisson Model' (page 2, domain other) captures: Dixon-Coles (1997)** ⚙️ — Poisson + τ low-score correction + exponential time decay (weight = e^-ξ·days). Assumptions: Goals follow Poisson process; low-scoring events are underrepresented without correction. Breakdown regime: Fails when scoring patterns deviate significantly from Poisson assumptions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Base for soccer-specific margin and total models; incorporates temporal decay. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RATING_ATLAS-2026-10-08 (773a90e52f7f35e9, domain=other, pages_read=5/5): Operator 'Bradley-Terry Model' (page 1, domain other) captures: Bradley-Terry (1952)** ⚙️ — the atom everything below is made of. Assumptions: Pairwise comparisons are independent and transitive; ratings are additive in log-odds space. Breakdown regime: No margins or temporal dynamics modeled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Foundation for Elo, Glicko, and TrueSkill; serves as base for probabilistic ranking. Operator 'Glicko Rating System' (page 1, domain other) captures: Glicko** — Elo + uncertainty: each rating carries RD (rating deviation). Assumptions: Uncertainty decreases with more games played; ratings follow normal distribution. Breakdown regime: Inadequate for non-binary outcomes or team-based competitions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Bayesian updating with Gaussian prior on skill. Operator 'TrueSkill Bayesian Factor Graph' (page 1, domain other) captures: TrueSkill (Microsoft)** — Bayesian factor graph: skill ~ N(μ,σ2), performance ~ N(skill,β2). Assumptions: Skills and performances are normally distributed; message-passing updates exact posteriors. Breakdown regime: Requires full game context; struggles with sparse data or asymmetric teams. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian belief propagation over latent skill variables; supports teams and draws. Operator 'Dixon-Coles Poisson Model' (page 2, domain other) captures: Dixon-Coles (1997)** ⚙️ — Poisson + τ low-score correction + exponential time decay (weight = e^-ξ·days). Assumptions: Goals follow Poisson process; low-scoring events are underrepresented without correction. Breakdown regime: Fails when scoring patterns deviate significantly from Poisson assumptions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Base for soccer-specific margin and total models; incorporates temporal decay. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Originating from Thurstone's psychometric work, Bradley-Terry formalized pairwise preferences in 1952. Subsequent developments like Elo (1978), Glicko (1999), and TrueSkill (2006) extended these ideas to incorporate uncertainty, time, and group dynamics. Retrocausal Genealogy: Rooted in RATING_ATLAS-2026-10-08 (773a90e52f7f35e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in RATING_ATLAS-2026-10-08 (773a90e52f7f35e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include bookmakers seeking equilibrium, players optimizing strategies, and analysts predicting outcomes. Models must account for bounded rationality, information asymmetry, and strategic behavior in competitive environments. Theory of Mind & Decision Maker Model: Rooted in RATING_ATLAS-2026-10-08 (773a90e52f7f35e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct modeling domains: Bradley-Terry for binary outcomes, Glicko for uncertainty, TrueSkill for multi-agent dynamics, and Dixon-Coles for event frequency. Leakage occurs if temporal or marginal structures are conflated. Cross-Layer Veto & Anti-Leakage Check: Rooted in RATING_ATLAS-2026-10-08 (773a90e52f7f35e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

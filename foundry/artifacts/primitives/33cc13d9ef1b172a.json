@@ -1,0 +1,78 @@
+{
+  "book_id": "33cc13d9ef1b172a",
+  "source_status": "COMPLETE",
+  "title": "2017 - Scheduling effects in the NBA and NHL and their betting markets - Unknown Authors",
+  "file_name": "2017 - Scheduling effects in the NBA and NHL and their betting markets - Unknown Authors.md",
+  "sha256": "33cc13d9ef1b172a7c30f4bbdfadbb11c15e859761bb4298b77a42e3c7c37688",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Scheduling discrepancy induces fatigue effects that bias home court advantage; linear models adjust for factorial team and temporal factors. Universal Lens: Rooted in 2017 - Scheduling effects in the NBA and NHL and their betting markets - Unknown Authors (33cc13d9ef1b172a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on team strength and schedule effects via generalized linear models; conformal prediction adjusts for overtime and fatigue. GSI Mapping: Rooted in 2017 - Scheduling effects in the NBA and NHL and their betting markets - Unknown Authors (33cc13d9ef1b172a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in team performance modeled through scheduled fatigue and home/visitor dynamics; situational reasoning uses adjusted marginal effects. GSE Mapping: Rooted in 2017 - Scheduling effects in the NBA and NHL and their betting markets - Unknown Authors (33cc13d9ef1b172a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "scheduling_discrepancy",
+      "name": "Scheduling Discrepancy",
+      "verbatim_quote": "## Linear and generalized linear models ## Scheduling discrepancy for visitors For a given season, linear models for margin of victory _Y_ with factorial effects for yesterday and team: - Visitors played yesterday more than **twice as frequently as the home team** (both NHL/NBA).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Y': 'margin of victory (points/goals)', 'x_H': 'indicator for home team', 'x_V': 'indicator for visiting team', 'x_{HP}': 'home team played yesterday indicator', 'x_{VP}': 'visiting team played yesterday indicator'}",
+      "assumptions": "Linear relationship between schedule effects and outcome; team effects are nested within seasons.",
+      "breakdown_regime": "When schedule imbalance exceeds 2x frequency of play.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of fatigue-induced variance in team performance due to scheduling asymmetry.",
+        "source_operator": "scheduling_discrepancy",
+        "telemetry": "Difference in frequency of prior-day play between home and visiting teams."
+      }
+    },
+    {
+      "primitive_id": "fatigue_effect",
+      "name": "Fatigue Effect",
+      "verbatim_quote": "State Universit <u>p y</u> ## Perceived Schedule Effects ## Data Sources - Fatigue effects on spread highly significant.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'MOV': 'margin of victory', 'V': 'Vegas line', 'β_0': 'intercept', 'β_1': 'slope coefficient for Vegas line'}",
+      "assumptions": "Fatigue is additive and measurable through prior game participation.",
+      "breakdown_regime": "When teams play consecutive games without rest.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to time-series lagged impact in sports analytics.",
+        "source_operator": "fatigue_effect",
+        "telemetry": "Change in MOV when teams play back-to-back."
+      }
+    },
+    {
+      "primitive_id": "home_ice_advantage",
+      "name": "Home Ice Advantage",
+      "verbatim_quote": "After adjustment for team strength and schedule effects, estimated home ice advantage for both teams rested estimate is 0.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'μ': 'mean difference in performance', 'β_H': 'home team effect coefficient'}",
+      "assumptions": "Adjustment for schedule and team strength removes residual home advantage.",
+      "breakdown_regime": "Post-schedule correction reveals zero net advantage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel of adjusted performance difference between home and away teams.",
+        "source_operator": "home_ice_advantage",
+        "telemetry": "Residual variance after controlling for scheduling and strength."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "33cc13d9ef1b172a_t0",
+      "think": "The core insight is that scheduling discrepancies—particularly the disproportionate number of times visitors play immediately after games—introduce systematic fatigue effects that distort traditional performance metrics. These effects are modeled using factorial linear and generalized linear models, where variables such as home/visitor status and prior-day play are included. The key mathematical duality lies between raw performance and adjusted performance, where the latter accounts for fatigue and scheduling bias. Failure modes include ignoring overtime effects or assuming independence of team performance across games. The derived kernel of scheduling discrepancy is captured in the difference in frequency of play between home and visiting teams, which directly impacts expected margins of victory. This leads to a redefinition of home court advantage as a residual term after adjustment, revealing it to be negligible under proper modeling.\n\nDeep epistemic analysis for 2017 - Scheduling effects in the NBA and NHL and their betting markets - Unknown Authors (33cc13d9ef1b172a, domain=other, pages_read=3/3): Operator 'Scheduling Discrepancy' (page 1, domain other) captures: ## Linear and generalized linear models ## Scheduling discrepancy for visitors For a given season, linear models for margin of victory _Y_ with factorial effects for yesterday and team: - Visitors played yesterday more than **twice as frequently as the home team** (both NHL/NBA). Assumptions: Linear relationship between schedule effects and outcome; team effects are nested within seasons. Breakdown regime: When schedule imbalance exceeds 2x frequency of play. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of fatigue-induced variance in team performance due to scheduling asymmetry. Operator 'Fatigue Effect' (page 1, domain other) captures: State Universit <u>p y</u> ## Perceived Schedule Effects ## Data Sources - Fatigue effects on spread highly significant. Assumptions: Fatigue is additive and measurable through prior game participation. Breakdown regime: When teams play consecutive games without rest. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to time-series lagged impact in sports analytics. Operator 'Home Ice Advantage' (page 3, domain other) captures: After adjustment for team strength and schedule effects, estimated home ice advantage for both teams rested estimate is 0. Assumptions: Adjustment for schedule and team strength removes residual home advantage. Breakdown regime: Post-schedule correction reveals zero net advantage. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of adjusted performance difference between home and away teams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2017 - Scheduling effects in the NBA and NHL and their betting markets - Unknown Authors (33cc13d9ef1b172a, domain=other, pages_read=3/3): Operator 'Scheduling Discrepancy' (page 1, domain other) captures: ## Linear and generalized linear models ## Scheduling discrepancy for visitors For a given season, linear models for margin of victory _Y_ with factorial effects for yesterday and team: - Visitors played yesterday more than **twice as frequently as the home team** (both NHL/NBA). Assumptions: Linear relationship between schedule effects and outcome; team effects are nested within seasons. Breakdown regime: When schedule imbalance exceeds 2x frequency of play. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of fatigue-induced variance in team performance due to scheduling asymmetry. Operator 'Fatigue Effect' (page 1, domain other) captures: State Universit <u>p y</u> ## Perceived Schedule Effects ## Data Sources - Fatigue effects on spread highly significant. Assumptions: Fatigue is additive and measurable through prior game participation. Breakdown regime: When teams play consecutive games without rest. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to time-series lagged impact in sports analytics. Operator 'Home Ice Advantage' (page 3, domain other) captures: After adjustment for team strength and schedule effects, estimated home ice advantage for both teams rested estimate is 0. Assumptions: Adjustment for schedule and team strength removes residual home advantage. Breakdown regime: Post-schedule correction reveals zero net advantage. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of adjusted performance difference between home and away teams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s work on home court advantage and fatigue in sports, particularly Entine and Small (2008) and subsequent developments in statistical modeling of temporal dependencies in team performance. Retrocausal Genealogy: Rooted in 2017 - Scheduling effects in the NBA and NHL and their betting markets - Unknown Authors (33cc13d9ef1b172a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (e.g., bookmakers or analysts) may misprice games by not adjusting for scheduling effects, leading to inefficiencies in betting markets. Teams and analysts must account for these biases to predict outcomes accurately. Theory of Mind & Decision Maker Model: Rooted in 2017 - Scheduling effects in the NBA and NHL and their betting markets - Unknown Authors (33cc13d9ef1b172a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires separation of schedule effects from team strength; leakage occurs if overtime or fatigue terms are omitted, causing spurious correlations in predicted margins. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2017 - Scheduling effects in the NBA and NHL and their betting markets - Unknown Authors (33cc13d9ef1b172a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

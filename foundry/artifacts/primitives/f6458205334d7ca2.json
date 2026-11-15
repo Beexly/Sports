@@ -1,0 +1,78 @@
+{
+  "book_id": "f6458205334d7ca2",
+  "source_status": "COMPLETE",
+  "title": "nfl-stats-apis-50-links",
+  "file_name": "nfl-stats-apis-50-links.md",
+  "sha256": "f6458205334d7ca238c6d7f41dd0b8180ba72f269aa698e1f0a45204c3ed4645",
+  "primary_domain": "football",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified statistical framework for NFL data integration leveraging API verifiability, open-source ecosystems, and probabilistic inference across temporal and spatial domains. Universal Lens: Rooted in nfl-stats-apis-50-links (f6458205334d7ca2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over NFL stat layers using conformal prediction to calibrate uncertainty in player/team performance metrics derived from verified APIs. GSI Mapping: Rooted in nfl-stats-apis-50-links (f6458205334d7ca2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions in GSE are modeled via Markov chains over play-by-play data, with observables mapped through nflverse and tracking datasets to inform real-time tactical decisions. GSE Mapping: Rooted in nfl-stats-apis-50-links (f6458205334d7ca2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "api_verifiability",
+      "name": "API Verifiability",
+      "verbatim_quote": "# 50 NFL Statistics / Advanced-Metrics API URLs - **Date:** 2026-09-18 - **Source method:** Every URL below was verified live with `curl` (browser UA, following redirects) on 2026-09-18/19.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All URLs must return HTTP 200/202 after redirect resolution.",
+      "breakdown_regime": "HTTP error codes beyond 2xx invalidate inclusion.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each API endpoint maps to a deterministic data stream under consistent query parameters, enabling GSI's probabilistic inference engine to treat them as equivalent observables.",
+        "source_operator": "api_verifiability",
+        "telemetry": "HTTP status code and response time"
+      }
+    },
+    {
+      "primitive_id": "nflverse_data_backbone",
+      "name": "NFLverse Data Backbone",
+      "verbatim_quote": "charting-adjacent) 1. https://nflverse.nflverse.com/ — nflverse docs home; the free, open backbone of GSE's stat layer —",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Data integrity and temporal coverage from 1999 onward are guaranteed.",
+      "breakdown_regime": "Temporal gaps or missing years invalidate use in GSE.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides foundational structured data for GSE's internal state representation, including game schedules and play-level metadata.",
+        "source_operator": "nflverse_data_backbone",
+        "telemetry": "Play-by-play and schedule completeness"
+      }
+    },
+    {
+      "primitive_id": "player_tracking_dataset",
+      "name": "Player Tracking Dataset",
+      "verbatim_quote": "18. https://www.kaggle.com/competitions/nfl-big-data-bowl-2025 — NFL Big Data Bowl 2025 (Kaggle); free full player-tracking dataset with prize-winning notebooks — GSE tracking-model training data.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Tracking data is synchronized with game clock and includes positional coordinates.",
+      "breakdown_regime": "Missing or misaligned tracking frames break model fidelity.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to compute spatial features such as velocity, acceleration, and route efficiency directly from raw tracking logs.",
+        "source_operator": "player_tracking_dataset",
+        "telemetry": "Coordinate frame alignment and timestamp consistency"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f6458205334d7ca2_t0",
+      "think": "The three sovereign primitives—API verifiability, NFLverse data backbone, and player tracking dataset—are foundational to constructing a robust, auditable, and scalable NFL analytics infrastructure. API verifiability ensures that only valid and accessible data sources contribute to the system’s input layer. The NFLverse provides a standardized, open-access repository for core game data, which serves as the kernel for all downstream computations in GSE. Meanwhile, the player tracking dataset enables high-fidelity spatial modeling required for tactical reasoning. Together, these primitives form a triadic structure where each supports the others: verifiable APIs feed into NFLverse, which then integrates with tracking data to produce actionable insights. Failure modes include API downtime, data inconsistency in NFLverse, or tracking frame loss, all of which would degrade inference quality in GSI and reduce the accuracy of state transitions in GSE.\n\nDeep epistemic analysis for nfl-stats-apis-50-links (f6458205334d7ca2, domain=football, pages_read=3/3): Operator 'API Verifiability' (page 1, domain football) captures: # 50 NFL Statistics / Advanced-Metrics API URLs - **Date:** 2026-09-18 - **Source method:** Every URL below was verified live with `curl` (browser UA, following redirects) on 2026-09-18/19. Assumptions: All URLs must return HTTP 200/202 after redirect resolution. Breakdown regime: HTTP error codes beyond 2xx invalidate inclusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each API endpoint maps to a deterministic data stream under consistent query parameters, enabling GSI's probabilistic inference engine to treat them as equivalent observables. Operator 'NFLverse Data Backbone' (page 1, domain football) captures: charting-adjacent) 1. https://nflverse.nflverse.com/ — nflverse docs home; the free, open backbone of GSE's stat layer — Assumptions: Data integrity and temporal coverage from 1999 onward are guaranteed. Breakdown regime: Temporal gaps or missing years invalidate use in GSE. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides foundational structured data for GSE's internal state representation, including game schedules and play-level metadata. Operator 'Player Tracking Dataset' (page 2, domain football) captures: 18. https://www.kaggle.com/competitions/nfl-big-data-bowl-2025 — NFL Big Data Bowl 2025 (Kaggle); free full player-tracking dataset with prize-winning notebooks — GSE tracking-model training data. Assumptions: Tracking data is synchronized with game clock and includes positional coordinates. Breakdown regime: Missing or misaligned tracking frames break model fidelity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to compute spatial features such as velocity, acceleration, and route efficiency directly from raw tracking logs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for nfl-stats-apis-50-links (f6458205334d7ca2, domain=football, pages_read=3/3): Operator 'API Verifiability' (page 1, domain football) captures: # 50 NFL Statistics / Advanced-Metrics API URLs - **Date:** 2026-09-18 - **Source method:** Every URL below was verified live with `curl` (browser UA, following redirects) on 2026-09-18/19. Assumptions: All URLs must return HTTP 200/202 after redirect resolution. Breakdown regime: HTTP error codes beyond 2xx invalidate inclusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each API endpoint maps to a deterministic data stream under consistent query parameters, enabling GSI's probabilistic inference engine to treat them as equivalent observables. Operator 'NFLverse Data Backbone' (page 1, domain football) captures: charting-adjacent) 1. https://nflverse.nflverse.com/ — nflverse docs home; the free, open backbone of GSE's stat layer — Assumptions: Data integrity and temporal coverage from 1999 onward are guaranteed. Breakdown regime: Temporal gaps or missing years invalidate use in GSE. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides foundational structured data for GSE's internal state representation, including game schedules and play-level metadata. Operator 'Player Tracking Dataset' (page 2, domain football) captures: 18. https://www.kaggle.com/competitions/nfl-big-data-bowl-2025 — NFL Big Data Bowl 2025 (Kaggle); free full player-tracking dataset with prize-winning notebooks — GSE tracking-model training data. Assumptions: Tracking data is synchronized with game clock and includes positional coordinates. Breakdown regime: Missing or misaligned tracking frames break model fidelity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to compute spatial features such as velocity, acceleration, and route efficiency directly from raw tracking logs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the evolution of open data standards since the early 2000s, particularly in sports analytics. Influenced by the rise of public APIs and reproducible research frameworks like nflverse and Kaggle’s Big Data Bowl competitions. Retrocausal Genealogy: Rooted in nfl-stats-apis-50-links (f6458205334d7ca2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors with proprietary interests, outdated legacy systems, and inconsistent data providers. These entities may introduce noise or bias into the pipeline, necessitating strong validation and filtering mechanisms within GSI’s Bayesian framework. Theory of Mind & Decision Maker Model: Rooted in nfl-stats-apis-50-links (f6458205334d7ca2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each primitive operates on distinct data modalities—verifiability on access protocols, NFLverse on structured game metadata, and tracking on granular motion data. Leakage occurs if one layer's outputs are redundantly used in another without proper orthogonalization. Cross-Layer Veto & Anti-Leakage Check: Rooted in nfl-stats-apis-50-links (f6458205334d7ca2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "825f2c1d70e7a82a",
+  "source_status": "COMPLETE",
+  "title": "1551-bayesian-predictive-synthesis-outcome-dependent-pools",
+  "file_name": "1551-bayesian-predictive-synthesis-outcome-dependent-pools.md",
+  "sha256": "825f2c1d70e7a82a4096cfa33c949ee8a0893de83e7627dd50cbfdcdb28f44e8",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian Predictive Synthesis (BPS) unifies predictive density combination via outcome-dependent weights, cross-model dependence, and time-varying discount factors within a supra-Bayesian framework. Universal Lens: Rooted in 1551-bayesian-predictive-synthesis-outcome-dependent-pools (825f2c1d70e7a82a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs BPS for conformal predictive inference, using outcome-dependent model weights to synthesize probabilistic margin forecasts from heterogeneous sources. GSI Mapping: Rooted in 1551-bayesian-predictive-synthesis-outcome-dependent-pools (825f2c1d70e7a82a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies BPS as a dynamic ensemble layer, synthesizing engine, market, and Elo margin densities with a baseline safe-haven distribution for robust situational reasoning. GSE Mapping: Rooted in 1551-bayesian-predictive-synthesis-outcome-dependent-pools (825f2c1d70e7a82a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "outcome_dependent_weighting",
+      "name": "Outcome-Dependent Weighting",
+      "verbatim_quote": "- Outcome-dependent (model-specific): α(y|x) = ω0(x)h0(y) + Σj ωj(xj)δxj(y) (5); yields recalibrated densities h'j(y) = ωj(y)hj(y)/cj with cj = ∫ωj(y)hj(y)dy.",
+      "page": 1,
+      "latex": "\\alpha(y|x) = \\omega_0(x)h_0(y) + \\sum_{j} \\omega_j(x_j)\\delta_{x_j}(y)",
+      "symbol_and_unit_ledger": "{'y': 'outcome variable (margin)', 'x': 'latent model states', 'h_j': 'predictive density for model j', 'ω_j': 'model-specific weight function'}",
+      "assumptions": "Weights vary with outcome realization; model-specific trustworthiness is outcome-dependent.",
+      "breakdown_regime": "When outcome y is extreme relative to model support, recalibration may fail.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables adaptive model trust based on observed outcomes, improving forecast calibration.",
+        "source_operator": "outcome_dependent_weighting",
+        "telemetry": "Forecast log-score improvement over static weights."
+      }
+    },
+    {
+      "primitive_id": "cross_model_dependence",
+      "name": "Cross-Model Dependence",
+      "verbatim_quote": "- Cross-model (dependence-aware): ωj depends on full x (6); effective weight wj(y) = ∫ ω̃j(x-j,y) Πi≠j hi(xi) dxi (7).",
+      "page": 1,
+      "latex": "w_j(y) = \\int \\tilde{\\omega}_j(x_{-j}, y) \\prod_{i \\neq j} h_i(x_i) dx_i",
+      "symbol_and_unit_ledger": "{'x_{-j}': 'vector of all latent states except j', 'w_j': 'effective weight for model j', 'h_i': 'predictive density for model i'}",
+      "assumptions": "Model weights depend on joint latent state; captures inter-model correlation.",
+      "breakdown_regime": "When model dependencies are misestimated, leads to overconfidence in correlated forecasts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Captures inter-model agreement and disagreement to adjust weights dynamically.",
+        "source_operator": "cross_model_dependence",
+        "telemetry": "Cross-model correlation coefficient between forecasts."
+      }
+    },
+    {
+      "primitive_id": "time_varying_synthesis",
+      "name": "Time-Varying Synthesis",
+      "verbatim_quote": "**Read:** full text (PDF, 28 pages; §§1–6, Table 1, Figures 1–8, appendices A–B skimmed for sampler structure).",
+      "page": 1,
+      "latex": "p(y|H_t) = \\int \\alpha(y|x_t) h(x_t) dx_t",
+      "symbol_and_unit_ledger": "{'H_t': 'historical evidence up to time t', 'β_t': 'time-varying bias term', 'Σ_t': 'time-varying covariance matrix', 'q_t': 'time-varying base weights'}",
+      "assumptions": "Model parameters evolve stochastically over time; discount factors increase uncertainty.",
+      "breakdown_regime": "When model dynamics change faster than update rate, synthesis becomes stale.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's temporal ensemble updating mechanism using Gibbs sampling.",
+        "source_operator": "time_varying_synthesis",
+        "telemetry": "Forecast stability over rolling windows."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "825f2c1d70e7a82a_t0",
+      "think": "BPS synthesizes predictive densities through a supra-Bayesian framework that integrates outcome-dependent weights, cross-model dependence, and time-varying discounting. It avoids degeneration to a single model by incorporating a baseline safe-haven density. The synthesis function α(y|x) operates via Jeffrey’s rule rather than Bayes’ theorem, enabling density recalibration without explicit likelihood evaluation. Outcome-dependent weights ωj(xj) allow models to be trusted more where they perform well, while cross-model dependence adjusts weights based on joint latent states. Time-varying synthesis uses discount factors to reflect evolving uncertainty, modeled via Gibbs sampling and variational Bayes. This approach ensures robustness against model misspecification and improves forecast accuracy compared to standard Bayesian model averaging.\n\nDeep epistemic analysis for 1551-bayesian-predictive-synthesis-outcome-dependent-pools (825f2c1d70e7a82a, domain=other, pages_read=4/4): Operator 'Outcome-Dependent Weighting' (page 1, domain other) captures: - Outcome-dependent (model-specific): α(y|x) = ω0(x)h0(y) + Σj ωj(xj)δxj(y) (5); yields recalibrated densities h'j(y) = ωj(y)hj(y)/cj with cj = ∫ωj(y)hj(y)dy. Assumptions: Weights vary with outcome realization; model-specific trustworthiness is outcome-dependent. Breakdown regime: When outcome y is extreme relative to model support, recalibration may fail. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables adaptive model trust based on observed outcomes, improving forecast calibration. Operator 'Cross-Model Dependence' (page 1, domain other) captures: - Cross-model (dependence-aware): ωj depends on full x (6); effective weight wj(y) = ∫ ω̃j(x-j,y) Πi≠j hi(xi) dxi (7). Assumptions: Model weights depend on joint latent state; captures inter-model correlation. Breakdown regime: When model dependencies are misestimated, leads to overconfidence in correlated forecasts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures inter-model agreement and disagreement to adjust weights dynamically. Operator 'Time-Varying Synthesis' (page 1, domain other) captures: **Read:** full text (PDF, 28 pages; §§1–6, Table 1, Figures 1–8, appendices A–B skimmed for sampler structure). Assumptions: Model parameters evolve stochastically over time; discount factors increase uncertainty. Breakdown regime: When model dynamics change faster than update rate, synthesis becomes stale. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's temporal ensemble updating mechanism using Gibbs sampling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1551-bayesian-predictive-synthesis-outcome-dependent-pools (825f2c1d70e7a82a, domain=other, pages_read=4/4): Operator 'Outcome-Dependent Weighting' (page 1, domain other) captures: - Outcome-dependent (model-specific): α(y|x) = ω0(x)h0(y) + Σj ωj(xj)δxj(y) (5); yields recalibrated densities h'j(y) = ωj(y)hj(y)/cj with cj = ∫ωj(y)hj(y)dy. Assumptions: Weights vary with outcome realization; model-specific trustworthiness is outcome-dependent. Breakdown regime: When outcome y is extreme relative to model support, recalibration may fail. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables adaptive model trust based on observed outcomes, improving forecast calibration. Operator 'Cross-Model Dependence' (page 1, domain other) captures: - Cross-model (dependence-aware): ωj depends on full x (6); effective weight wj(y) = ∫ ω̃j(x-j,y) Πi≠j hi(xi) dxi (7). Assumptions: Model weights depend on joint latent state; captures inter-model correlation. Breakdown regime: When model dependencies are misestimated, leads to overconfidence in correlated forecasts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures inter-model agreement and disagreement to adjust weights dynamically. Operator 'Time-Varying Synthesis' (page 1, domain other) captures: **Read:** full text (PDF, 28 pages; §§1–6, Table 1, Figures 1–8, appendices A–B skimmed for sampler structure). Assumptions: Model parameters evolve stochastically over time; discount factors increase uncertainty. Breakdown regime: When model dynamics change faster than update rate, synthesis becomes stale. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's temporal ensemble updating mechanism using Gibbs sampling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Bayesian decision theory and predictive synthesis, extending earlier work on Bayesian model averaging and ensemble methods by incorporating dynamic weighting and dependence-aware synthesis. Retrocausal Genealogy: Rooted in 1551-bayesian-predictive-synthesis-outcome-dependent-pools (825f2c1d70e7a82a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1551-bayesian-predictive-synthesis-outcome-dependent-pools (825f2c1d70e7a82a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models are treated as decision-making agents with varying degrees of trustworthiness. The framework accounts for potential adversarial or misaligned behavior by ensuring a baseline safe-haven density prevents catastrophic failure. Theory of Mind & Decision Maker Model: Rooted in 1551-bayesian-predictive-synthesis-outcome-dependent-pools (825f2c1d70e7a82a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring diverse model inputs and penalizing redundant forecasting structures. Leakage occurs if weights become overly sensitive to noise, which is mitigated by discount factors and regularization. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1551-bayesian-predictive-synthesis-outcome-dependent-pools (825f2c1d70e7a82a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

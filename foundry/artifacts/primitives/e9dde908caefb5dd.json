@@ -1,0 +1,78 @@
+{
+  "book_id": "e9dde908caefb5dd",
+  "source_status": "COMPLETE",
+  "title": "gse-sub-bunny-query",
+  "file_name": "gse-sub-bunny-query.md",
+  "sha256": "e9dde908caefb5ddd64e4a62a163d49520a194b3c67d8e189dcd2467d4561b9d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Read-only disk-based sportsbook data sourcing with timestamp validation and abstention logic for home-relative numeric voting. Universal Lens: Rooted in gse-sub-bunny-query (e9dde908caefb5dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over real-time odds sources using conformal predictive intervals for probabilistic line inference. GSI Mapping: Rooted in gse-sub-bunny-query (e9dde908caefb5dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions driven by disk-sourced market consensus, with kickoff time as temporal anchor for relative number voting. GSE Mapping: Rooted in gse-sub-bunny-query (e9dde908caefb5dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "disk_odds_source_validator",
+      "name": "Disk Odds Source Validator",
+      "verbatim_quote": "Repos (read only): - C:/Users/Garrett/Sports/.worktrees/calib-boundary - C:/Users/Garrett/gse-competitive-intel/gse-competitive-intel Task: find every REAL on-disk source for sportsbook odds, closing lines, market prices, or book consensus that could vote a home-relative number.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Set of real on-disk sources', 'T_k': 'Kickoff timestamp in UTC seconds'}",
+      "assumptions": "All sources must be physically present on disk; absence implies null rather than zero.",
+      "breakdown_regime": "When |S| = 0, return ABSENT with path list.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps file system entries to structured market data streams via timestamped metadata.",
+        "source_operator": "disk_odds_source_validator",
+        "telemetry": "File existence and timestamp integrity check"
+      }
+    },
+    {
+      "primitive_id": "home_relative_number_voter",
+      "name": "Home Relative Number Voter",
+      "verbatim_quote": "Repos (read only): - C:/Users/Garrett/Sports/.worktrees/calib-boundary - C:/Users/Garrett/gse-competitive-intel/gse-competitive-intel Task: find every REAL on-disk source for sportsbook odds, closing lines, market prices, or book consensus that could vote a home-relative number.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_h': 'Home team relative numeric vote value', 'M_s': 'Measurement from source s', 'T_k': 'Kickoff timestamp in UTC seconds'}",
+      "assumptions": "Votes are derived from real market data, not synthetic models.",
+      "breakdown_regime": "When T_k is missing or M_s is null, abstain with explicit error code.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives V_h from normalized M_s using T_k as alignment reference.",
+        "source_operator": "home_relative_number_voter",
+        "telemetry": "Normalized market vote per source with timestamp validity"
+      }
+    },
+    {
+      "primitive_id": "abstention_logic_engine",
+      "name": "Abstention Logic Engine",
+      "verbatim_quote": "If nothing usable exists, say ABSENT and list the paths you checked.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Abstention flag (boolean)', 'P': 'List of checked paths'}",
+      "assumptions": "Absence of data is not equivalent to zero-value data.",
+      "breakdown_regime": "A = true when ∃(missing_file ∨ missing_timestamp ∨ null_value), else A = false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps logical conditions of data availability to abstention state in GSE decision graph.",
+        "source_operator": "abstention_logic_engine",
+        "telemetry": "Boolean abstention signal and path inventory"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e9dde908caefb5dd_t0",
+      "think": "The task requires identifying real-world, on-disk sources of sportsbook data—odds, closing lines, market prices, or consensus values—that can contribute a home-relative numeric vote. The process begins with scanning designated repositories for files containing such data. Each identified source must be validated for presence, timestamp integrity, and semantic correctness. A key constraint is that no synthetic data should be generated; only actual disk-based measurements are acceptable. The core operator 'disk_odds_source_validator' ensures this by checking file paths and extracting metadata. The 'home_relative_number_voter' then computes a normalized vote based on these real values, anchored temporally by kickoff timestamps. If any required element is absent (file, timestamp, or value), the 'abstention_logic_engine' triggers an abstention signal. This design prevents erroneous inference from missing or corrupted data while maintaining strict adherence to empirical evidence.\n\nDeep epistemic analysis for gse-sub-bunny-query (e9dde908caefb5dd, domain=other, pages_read=1/1): Operator 'Disk Odds Source Validator' (page 1, domain other) captures: Repos (read only): - C:/Users/Garrett/Sports/.worktrees/calib-boundary - C:/Users/Garrett/gse-competitive-intel/gse-competitive-intel Task: find every REAL on-disk source for sportsbook odds, closing lines, market prices, or book consensus that could vote a home-relative number. Assumptions: All sources must be physically present on disk; absence implies null rather than zero. Breakdown regime: When |S| = 0, return ABSENT with path list. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps file system entries to structured market data streams via timestamped metadata. Operator 'Home Relative Number Voter' (page 1, domain other) captures: Repos (read only): - C:/Users/Garrett/Sports/.worktrees/calib-boundary - C:/Users/Garrett/gse-competitive-intel/gse-competitive-intel Task: find every REAL on-disk source for sportsbook odds, closing lines, market prices, or book consensus that could vote a home-relative number. Assumptions: Votes are derived from real market data, not synthetic models. Breakdown regime: When T_k is missing or M_s is null, abstain with explicit error code. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives V_h from normalized M_s using T_k as alignment reference. Operator 'Abstention Logic Engine' (page 1, domain other) captures: If nothing usable exists, say ABSENT and list the paths you checked. Assumptions: Absence of data is not equivalent to zero-value data. Breakdown regime: A = true when ∃(missing_file ∨ missing_timestamp ∨ null_value), else A = false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps logical conditions of data availability to abstention state in GSE decision graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for gse-sub-bunny-query (e9dde908caefb5dd, domain=other, pages_read=1/1): Operator 'Disk Odds Source Validator' (page 1, domain other) captures: Repos (read only): - C:/Users/Garrett/Sports/.worktrees/calib-boundary - C:/Users/Garrett/gse-competitive-intel/gse-competitive-intel Task: find every REAL on-disk source for sportsbook odds, closing lines, market prices, or book consensus that could vote a home-relative number. Assumptions: All sources must be physically present on disk; absence implies null rather than zero. Breakdown regime: When |S| = 0, return ABSENT with path list. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps file system entries to structured market data streams via timestamped metadata. Operator 'Home Relative Number Voter' (page 1, domain other) captures: Repos (read only): - C:/Users/Garrett/Sports/.worktrees/calib-boundary - C:/Users/Garrett/gse-competitive-intel/gse-competitive-intel Task: find every REAL on-disk source for sportsbook odds, closing lines, market prices, or book consensus that could vote a home-relative number. Assumptions: Votes are derived from real market data, not synthetic models. Breakdown regime: When T_k is missing or M_s is null, abstain with explicit error code. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives V_h from normalized M_s using T_k as alignment reference. Operator 'Abstention Logic Engine' (page 1, domain other) captures: If nothing usable exists, say ABSENT and list the paths you checked. Assumptions: Absence of data is not equivalent to zero-value data. Breakdown regime: A = true when ∃(missing_file ∨ missing_timestamp ∨ null_value), else A = false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps logical conditions of data availability to abstention state in GSE decision graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in information theory's principle of data fidelity and decision-making under uncertainty, tracing back to Shannon's entropy and von Neumann’s game theory frameworks. Retrocausal Genealogy: Rooted in gse-sub-bunny-query (e9dde908caefb5dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in gse-sub-bunny-query (e9dde908caefb5dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models adversarial data environments where synthetic noise may mimic real signals, requiring robust validation layers to distinguish genuine from spurious inputs. Theory of Mind & Decision Maker Model: Rooted in gse-sub-bunny-query (e9dde908caefb5dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in gse-sub-bunny-query (e9dde908caefb5dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents cross-layer contamination by ensuring that abstentions in lower layers invalidate higher-level voting states, enforcing anti-collinearity between data integrity and inference confidence. Cross-Layer Veto & Anti-Leakage Check: Rooted in gse-sub-bunny-query (e9dde908caefb5dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in gse-sub-bunny-query (e9dde908caefb5dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

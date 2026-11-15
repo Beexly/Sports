@@ -1,0 +1,78 @@
+{
+  "book_id": "99ac40f3bdc32f3e",
+  "source_status": "COMPLETE",
+  "title": "SYSTEM_ARCHITECTURE",
+  "file_name": "SYSTEM_ARCHITECTURE.md",
+  "sha256": "99ac40f3bdc32f3e5d17d886e14fe0960bfac38c00c27eeded1cd44c8271e950",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "FABLE formalizes a categorical overlay where existing data pipelines are objects and governance utilities act as morphisms. The architecture enforces structural invariants through pure functional mappings, ensuring that uncertainty quantification and drift detection remain isomorphic across disparate sports data ingestion layers without altering the underlying topological flow.",
+  "gsi_mapping": "Within GSI, FABLE's pure functions map directly to conformal prediction sets and Bayesian posterior updates. Uncertainty rankings define non-conformity scores for calibration, while drift statistics trigger prior adjustments. This ensures probabilistic guarantees over NFL metrics remain robust against distribution shifts in the underlying web scraping modules.",
+  "gse_mapping": "For GSE, the system acts as a state-transition validator. Parity checks and AWS gates enforce valid game-state evolutions. Local labeling manifests provide ground-truth anchors for situational reasoning, allowing the engine to dynamically prune invalid tactical branches based on real-time evidence from the rights-gated source registry.",
+  "primitives": [
+    {
+      "primitive_id": "uncertainty_ranking_kernel",
+      "name": "Uncertainty Ranking Operator",
+      "verbatim_quote": "New FABLE utilities provide pure functions for uncertainty ranking, local labeling manifests, drift statistics, parity checks, and AWS gates.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Dimensionless scalar rank representing epistemic variance; pure function mapping input features to confidence intervals.",
+      "assumptions": "Data generation processes exhibit measurable stochastic variance; pure functional evaluation yields deterministic outputs for identical inputs.",
+      "breakdown_regime": "Singularities occur during extreme out-of-distribution events where historical variance models fail to bound current observations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI conformal non-conformity scores, providing rigorous bounds on predictive uncertainty for downstream inference engines.",
+        "source_operator": "uncertainty_ranking_kernel",
+        "telemetry": "Variance of prediction residuals and coverage rates of conformal intervals."
+      }
+    },
+    {
+      "primitive_id": "drift_statistics_monitor",
+      "name": "Distributional Drift Monitor",
+      "verbatim_quote": "New FABLE utilities provide pure functions for uncertainty ranking, local labeling manifests, drift statistics, parity checks, and AWS gates.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Dimensionless statistical distance (e.g., KL divergence or Wasserstein metric) measuring deviation between baseline and current distributions.",
+      "assumptions": "Stationarity of the underlying data manifold holds locally; deviations can be continuously tracked via sliding window statistics.",
+      "breakdown_regime": "Catastrophic regime shifts where the support of the new distribution entirely disjoint from the training baseline.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives GSI Bayesian prior updates, triggering model re-calibration when empirical drift exceeds predefined significance thresholds.",
+        "source_operator": "drift_statistics_monitor",
+        "telemetry": "Real-time p-values from Kolmogorov-Smirnov tests and rolling KL divergence metrics."
+      }
+    },
+    {
+      "primitive_id": "rights_gated_manifest",
+      "name": "Rights-Gated Source Manifest",
+      "verbatim_quote": "It exposes missing primitives that can be imported by future routes, jobs, or dashboards after owner approval.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Boolean access flags and cryptographic hashes tied to specific data entities; dimensionless authorization states.",
+      "assumptions": "A centralized, immutable registry exists to validate data lineage and ownership constraints before computational consumption.",
+      "breakdown_regime": "Systemic failure if the rights-registry becomes unreachable or experiences consensus failures regarding data ownership.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE state-transition guards, ensuring only legally compliant and verified data enters the situational reasoning graph.",
+        "source_operator": "rights_gated_manifest",
+        "telemetry": "Frequency of blocked imports and latency of owner approval workflows."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "99ac40f3bdc32f3e_t0",
+      "think": "The architectural derivation begins by treating the existing Sports repository not as a monolithic block, but as a collection of independent manifolds: `nflverse` for raw ingestion, and web modules for metric calibration. FABLE introduces a higher-order categorical layer that does not alter these base manifolds but maps them into a governed subspace. By defining pure functions for uncertainty and drift, we establish a dual space where every data point is paired with an epistemic confidence interval and a temporal stability score. \n\nMathematically, this forms a fiber bundle where the base space is the raw sports data, and the fibers represent the governance metadata (parity checks, AWS gates). The transition functions between different data views (routes, jobs) are constrained by the rights-gated manifest, acting as holonomy operators that preserve legal and structural invariants. The failure modes of this system are strictly bounded: if the drift statistics exceed a critical threshold, the fiber bundle tears, signaling a breakdown in the stationarity assumption. Conversely, if the rights registry fails, the holonomy operators return null, effectively halting all state transitions in the GSE. This mathematical unification allows us to treat compliance and uncertainty not as afterthoughts, but as fundamental geometric properties of the data pipeline.\n\nDeep epistemic analysis for SYSTEM_ARCHITECTURE (99ac40f3bdc32f3e, domain=other, pages_read=1/1): Operator 'Uncertainty Ranking Operator' (page 1, domain other) captures: New FABLE utilities provide pure functions for uncertainty ranking, local labeling manifests, drift statistics, parity checks, and AWS gates. Assumptions: Data generation processes exhibit measurable stochastic variance; pure functional evaluation yields deterministic outputs for identical inputs. Breakdown regime: Singularities occur during extreme out-of-distribution events where historical variance models fail to bound current observations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI conformal non-conformity scores, providing rigorous bounds on predictive uncertainty for downstream inference engines. Operator 'Distributional Drift Monitor' (page 1, domain other) captures: New FABLE utilities provide pure functions for uncertainty ranking, local labeling manifests, drift statistics, parity checks, and AWS gates. Assumptions: Stationarity of the underlying data manifold holds locally; deviations can be continuously tracked via sliding window statistics. Breakdown regime: Catastrophic regime shifts where the support of the new distribution entirely disjoint from the training baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSI Bayesian prior updates, triggering model re-calibration when empirical drift exceeds predefined significance thresholds. Operator 'Rights-Gated Source Manifest' (page 1, domain other) captures: It exposes missing primitives that can be imported by future routes, jobs, or dashboards after owner approval. Assumptions: A centralized, immutable registry exists to validate data lineage and ownership constraints before computational consumption. Breakdown regime: Systemic failure if the rights-registry becomes unreachable or experiences consensus failures regarding data ownership. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE state-transition guards, ensuring only legally compliant and verified data enters the situational reasoning graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SYSTEM_ARCHITECTURE (99ac40f3bdc32f3e, domain=other, pages_read=1/1): Operator 'Uncertainty Ranking Operator' (page 1, domain other) captures: New FABLE utilities provide pure functions for uncertainty ranking, local labeling manifests, drift statistics, parity checks, and AWS gates. Assumptions: Data generation processes exhibit measurable stochastic variance; pure functional evaluation yields deterministic outputs for identical inputs. Breakdown regime: Singularities occur during extreme out-of-distribution events where historical variance models fail to bound current observations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI conformal non-conformity scores, providing rigorous bounds on predictive uncertainty for downstream inference engines. Operator 'Distributional Drift Monitor' (page 1, domain other) captures: New FABLE utilities provide pure functions for uncertainty ranking, local labeling manifests, drift statistics, parity checks, and AWS gates. Assumptions: Stationarity of the underlying data manifold holds locally; deviations can be continuously tracked via sliding window statistics. Breakdown regime: Catastrophic regime shifts where the support of the new distribution entirely disjoint from the training baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSI Bayesian prior updates, triggering model re-calibration when empirical drift exceeds predefined significance thresholds. Operator 'Rights-Gated Source Manifest' (page 1, domain other) captures: It exposes missing primitives that can be imported by future routes, jobs, or dashboards after owner approval. Assumptions: A centralized, immutable registry exists to validate data lineage and ownership constraints before computational consumption. Breakdown regime: Systemic failure if the rights-registry becomes unreachable or experiences consensus failures regarding data ownership. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE state-transition guards, ensuring only legally compliant and verified data enters the situational reasoning graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This architecture inherits from the foundational principles of functional programming and category theory, specifically the use of monads to handle side-effects like I/O and permissions. Historically, it mirrors the evolution of distributed systems from naive replication to strongly consistent state machines, borrowing heavily from the CAP theorem's emphasis on partition tolerance and consistency in networked environments. Retrocausal Genealogy: Rooted in SYSTEM_ARCHITECTURE (99ac40f3bdc32f3e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "We model the 'owner' and the 'developer' as opposing agents in a game-theoretic framework. The owner seeks to maximize data utility while minimizing legal exposure, acting as a constraint optimizer. The developer seeks to minimize computational friction. FABLE acts as the Nash equilibrium mechanism, exposing primitives only when the owner's approval condition is met, thereby aligning incentives and preventing unauthorized exploitation of the data assets.",
+      "cross_layer_veto": "To prevent leakage between the ingestion layer and the governance layer, we enforce strict anti-collinearity. The pure functions in FABLE must not contain any hidden state that could be influenced by the raw data streams they monitor. Any attempt to bypass the rights-gated manifest or inject biased uncertainty scores triggers a cross-layer veto, immediately isolating the compromised module and freezing the associated state transitions in the GSE."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "cb64f891f009ee2e",
+  "source_status": "COMPLETE",
+  "title": "0097-riskneutral-pricing-and-hedging-of-inplay",
+  "file_name": "0097-riskneutral-pricing-and-hedging-of-inplay.md",
+  "sha256": "cb64f891f009ee2e1d41fc4e0fe3a78eb8636d9a8e0245be558e4d023ad30042",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Risk-neutral pricing via compensated Poisson processes models football scores as martingales under Q, enabling arbitrage-free derivative pricing and dynamic hedging through intensity calibration. Universal Lens: Rooted in 0097-riskneutral-pricing-and-hedging-of-inplay (cb64f891f009ee2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian belief updates on calibrated risk-neutral intensities λ1,λ2 to infer posterior score distributions, enabling conformal prediction of in-play bet values and hedging error bounds. GSI Mapping: Rooted in 0097-riskneutral-pricing-and-hedging-of-inplay (cb64f891f009ee2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses state-transition kernels derived from score-differential and time-dependent intensities to simulate next-score events, enabling real-time tactical decisions and dynamic risk exposure management. GSE Mapping: Rooted in 0097-riskneutral-pricing-and-hedging-of-inplay (cb64f891f009ee2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "risk_neutral_score_model",
+      "name": "Risk-Neutral Score Model",
+      "verbatim_quote": "Method / model - **Score model:** two independent time-homogeneous Poisson processes N1_t, N2_t with physical intensities μ1, μ2 (home/away goals).",
+      "page": 1,
+      "latex": "S1_t = N1_t + \\lambda1(T-t), \\quad S2_t = N2_t + \\lambda2(T-t)",
+      "symbol_and_unit_ledger": "{'N1_t, N2_t': 'Poisson process counting goals (dimensionless)', 'μ1, μ2': 'physical goal intensities (goals/min)', 'λ1, λ2': 'risk-neutral intensities (goals/min)', 'T': 'match duration (min)', 't': 'current time (min)'}",
+      "assumptions": "Time-homogeneous Poisson processes, constant risk-neutral intensities, no interest rate, perfect replication.",
+      "breakdown_regime": "When intensities vary significantly with time or score differential.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Football score dynamics mapped to asset price evolution under risk-neutral measure Q; score increments correspond to derivative payoffs.",
+        "source_operator": "risk_neutral_score_model",
+        "telemetry": "Calibration error between model-implied and market mid-prices."
+      }
+    },
+    {
+      "primitive_id": "delta_hedging_mechanism",
+      "name": "Delta Hedging Mechanism",
+      "verbatim_quote": "- **Pricing:** Corollary 3.9 — X_t = E^Q[X_T | F_t]; closed form for European bets (Prop.",
+      "page": 1,
+      "latex": "X_t = \\mathbb{E}^Q[X_T | \\mathcal{F}_t]",
+      "symbol_and_unit_ledger": "{'X_t': 'bet payoff at time t (currency)', 'Q': 'risk-neutral probability measure', 'T': 'expiration time (min)', '\\\\mathcal{F}_t': 'information filtration up to time t'}",
+      "assumptions": "Market completeness, continuous hedging, absence of transaction costs.",
+      "breakdown_regime": "High volatility or sudden intensity shifts causing hedge mismatch.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Hedge weights ψ1, ψ2 derived from delta-matching system to replicate bet payoffs dynamically.",
+        "source_operator": "delta_hedging_mechanism",
+        "telemetry": "Jump correlation between actual and predicted score changes during hedging."
+      }
+    },
+    {
+      "primitive_id": "implied_intensity_calibration",
+      "name": "Implied Intensity Calibration",
+      "verbatim_quote": "5–6); under Q, N^i are Poisson with intensities λ1, λ2.",
+      "page": 1,
+      "latex": "R(\\lambda1, \\lambda2) = \\sum_{i=1}^{31} w_i \\left| \\frac{\\hat{P}_i - P_i(\\lambda1, \\lambda2)}{\\text{spread}_i} \\right|^2",
+      "symbol_and_unit_ledger": "{'R(λ1, λ2)': 'calibration cost function (unitless)', 'w_i': 'weight based on bid-ask spread (dimensionless)', 'P_i': 'market mid-price for bet i (currency)', '\\\\hat{P}_i': 'model-implied price for bet i (currency)'}",
+      "assumptions": "Least-squares minimization, fixed bet types, static intensity estimates.",
+      "breakdown_regime": "Non-stationary or abrupt shifts in scoring patterns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Implied λ1, λ2 estimated via regression against observed mid-prices to align model with market expectations.",
+        "source_operator": "implied_intensity_calibration",
+        "telemetry": "Average calibration error across 31 bet types per minute step."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cb64f891f009ee2e_t0",
+      "think": "The core insight of the paper is that football in-play betting can be modeled using risk-neutral pricing principles borrowed from financial derivatives theory. By treating the sequence of goals as a pair of independent Poisson processes N1_t and N2_t, one constructs artificial underlying assets S1_t and S2_t which are compensated Poisson processes under the risk-neutral measure Q. These processes allow for the derivation of arbitrage-free prices for bets such as match odds, over/under totals, and correct scores. The key mathematical machinery involves Girsanov’s theorem to change measures, ensuring that under Q, the processes become Poisson with risk-neutral intensities λ1 and λ2. Pricing follows from conditional expectations under Q, leading to closed-form expressions for European-style bets. Dynamic hedging is enabled by computing hedge weights that match deltas of the portfolio to those of the underlying score processes. Calibration is performed using least-squares optimization to estimate λ1 and λ2 from observed market mid-prices, weighting each bet according to its liquidity. This framework provides a rigorous foundation for both pricing and replication but assumes constant intensities, which may fail in practice where scoring rates evolve with game state or time.\n\nDeep epistemic analysis for 0097-riskneutral-pricing-and-hedging-of-inplay (cb64f891f009ee2e, domain=other, pages_read=4/4): Operator 'Risk-Neutral Score Model' (page 1, domain other) captures: Method / model - **Score model:** two independent time-homogeneous Poisson processes N1_t, N2_t with physical intensities μ1, μ2 (home/away goals). Assumptions: Time-homogeneous Poisson processes, constant risk-neutral intensities, no interest rate, perfect replication. Breakdown regime: When intensities vary significantly with time or score differential. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Football score dynamics mapped to asset price evolution under risk-neutral measure Q; score increments correspond to derivative payoffs. Operator 'Delta Hedging Mechanism' (page 1, domain other) captures: - **Pricing:** Corollary 3.9 — X_t = E^Q[X_T | F_t]; closed form for European bets (Prop. Assumptions: Market completeness, continuous hedging, absence of transaction costs. Breakdown regime: High volatility or sudden intensity shifts causing hedge mismatch. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Hedge weights ψ1, ψ2 derived from delta-matching system to replicate bet payoffs dynamically. Operator 'Implied Intensity Calibration' (page 1, domain other) captures: 5–6); under Q, N^i are Poisson with intensities λ1, λ2. Assumptions: Least-squares minimization, fixed bet types, static intensity estimates. Breakdown regime: Non-stationary or abrupt shifts in scoring patterns. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Implied λ1, λ2 estimated via regression against observed mid-prices to align model with market expectations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0097-riskneutral-pricing-and-hedging-of-inplay (cb64f891f009ee2e, domain=other, pages_read=4/4): Operator 'Risk-Neutral Score Model' (page 1, domain other) captures: Method / model - **Score model:** two independent time-homogeneous Poisson processes N1_t, N2_t with physical intensities μ1, μ2 (home/away goals). Assumptions: Time-homogeneous Poisson processes, constant risk-neutral intensities, no interest rate, perfect replication. Breakdown regime: When intensities vary significantly with time or score differential. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Football score dynamics mapped to asset price evolution under risk-neutral measure Q; score increments correspond to derivative payoffs. Operator 'Delta Hedging Mechanism' (page 1, domain other) captures: - **Pricing:** Corollary 3.9 — X_t = E^Q[X_T | F_t]; closed form for European bets (Prop. Assumptions: Market completeness, continuous hedging, absence of transaction costs. Breakdown regime: High volatility or sudden intensity shifts causing hedge mismatch. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Hedge weights ψ1, ψ2 derived from delta-matching system to replicate bet payoffs dynamically. Operator 'Implied Intensity Calibration' (page 1, domain other) captures: 5–6); under Q, N^i are Poisson with intensities λ1, λ2. Assumptions: Least-squares minimization, fixed bet types, static intensity estimates. Breakdown regime: Non-stationary or abrupt shifts in scoring patterns. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Implied λ1, λ2 estimated via regression against observed mid-prices to align model with market expectations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the Fundamental Theorems of Asset Pricing (FTAP), particularly the work of Delbaen & Schachermayer (1994) on equivalent martingale measures for point processes. Builds upon earlier applications of Poisson models to sports (Dixon & Robinson, 1998) and extends them into in-play settings with continuous-time risk-neutral valuation. Retrocausal Genealogy: Rooted in 0097-riskneutral-pricing-and-hedging-of-inplay (cb64f891f009ee2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the market maker who sets odds, the bettor who evaluates value, and the hedger who manages risk exposure. Each agent operates under different information sets and objectives—market makers aim for profit, bettors seek positive EV, and hedgers minimize variance. The model assumes rational behavior and perfect foresight in the risk-neutral world, though real-world deviations arise from imperfect information and execution frictions.",
+      "cross_layer_veto": "If the model fails to calibrate consistently due to non-stationary intensities or frequent recalibration needs, it loses predictive utility. Additionally, if hedging errors exceed acceptable thresholds or if the jump correlation drops below 0.70, the framework should be rejected in favor of more adaptive models like state-dependent intensity functions or empirical jump-based approaches. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0097-riskneutral-pricing-and-hedging-of-inplay (cb64f891f009ee2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

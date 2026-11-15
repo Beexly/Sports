@@ -1,0 +1,95 @@
+{
+  "book_id": "948feafa55b028c9",
+  "source_status": "COMPLETE",
+  "title": "0272-causal-mediation-analysis-for-stochastic-interventions",
+  "file_name": "0272-causal-mediation-analysis-for-stochastic-interventions.md",
+  "sha256": "948feafa55b028c90f7d43401b3f87e376c1b8564b378a7e992c480a7c31aff2",
+  "primary_domain": "math",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Causal mediation analysis for stochastic interventions unifies the PIE direct/indirect effect decomposition into a single substitution estimator, bridging randomized trial identification with observational data. Universal Lens: Rooted in 0272-causal-mediation-analysis-for-stochastic-interventions (948feafa55b028c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian/conformal inference maps the stochastic-intervention direct effect to a posterior predictive check, leveraging empirical likelihood ratios for falsification. GSI Mapping: Rooted in 0272-causal-mediation-analysis-for-stochastic-interventions (948feafa55b028c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 0272-causal-mediation-analysis-for-stochastic-interventions (948feafa55b028c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in 0272-causal-mediation-analysis-for-stochastic-interventions (948feafa55b028c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "stochastic_intervention_effect",
+      "name": "Stochastic Intervention Effect",
+      "verbatim_quote": "# [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Piecewise smooth invertibility of the modified treatment policy (A1), common support (A2), and conditional exchangeability (A3).",
+      "breakdown_regime": "Violations of A3 (exposure-affected mediator-outcome confounders) lead to biased substitution estimates.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the stochastic-intervention direct effect to a conformal prediction interval for the outcome difference under intervention.",
+        "source_operator": "stochastic_intervention_effect",
+        "telemetry": "Cross-fitted empirical likelihood ratios serve as verification metrics."
+      }
+    },
+    {
+      "primitive_id": "pie_decomposition",
+      "name": "Path-Specific Indirect Effect Estimator",
+      "verbatim_quote": "# [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Conditional exchangeability (A3) and correct specification of nuisance models for exposure, mediator, and outcome.",
+      "breakdown_regime": "Misspecification of the mediator-outcome relationship causes compositional bias in the indirect effect.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Replicates the path-specific indirect effect as a posterior predictive distribution under the intervened mediator distribution.",
+        "source_operator": "pie_decomposition",
+        "telemetry": "Cross-validation error on the mediator-outcome regression quantifies uncertainty."
+      }
+    },
+    {
+      "primitive_id": "efficient_one_step_estimator",
+      "name": "Efficient One-Step Estimator",
+      "verbatim_quote": "# [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Doubly robust nuisance models and sample splitting to control variance inflation.",
+      "breakdown_regime": "Overfitting of nuisance models leads to inefficient influence functions and inflated standard errors.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives a semiparametric efficiency bound kernel that optimally weights the score equations for the direct effect.",
+        "source_operator": "efficient_one_step_estimator",
+        "telemetry": "Empirical sandwich variance estimates provide robust standard errors."
+      }
+    },
+    {
+      "primitive_id": "cross_fitting",
+      "name": "Cross-Fitting",
+      "verbatim_quote": "# [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Independence within folds and sufficient overlap across folds.",
+      "breakdown_regime": "High correlation between training and validation sets biases the cross-fit estimate toward the training set distribution.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps cross-fitting to a leave-one-out Bayesian updating scheme, where each fold provides an independent posterior update.",
+        "source_operator": "cross_fitting",
+        "telemetry": "Variance across fold predictions serves as a diagnostic for model stability."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "948feafa55b028c9_t0",
+      "think": "The core contribution is a unified substitution estimator that bridges the gap between experimental identification and observational mediation analysis. It leverages the efficient influence function to achieve double robustness and local efficiency, while the cross-fitting procedure mitigates overfitting. However, the method relies on the untestable assumption A3, which can introduce bias if exposure affects mediator-outcome confounders. The approach is computationally intensive due to ensemble learning of nuisance models, and its performance depends critically on the quality of the Super Learner ensembles.\n\nDeep epistemic analysis for 0272-causal-mediation-analysis-for-stochastic-interventions (948feafa55b028c9, domain=math, pages_read=6/6): Operator 'Stochastic Intervention Effect' (page 1, domain math) captures: # [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S. Assumptions: Piecewise smooth invertibility of the modified treatment policy (A1), common support (A2), and conditional exchangeability (A3). Breakdown regime: Violations of A3 (exposure-affected mediator-outcome confounders) lead to biased substitution estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the stochastic-intervention direct effect to a conformal prediction interval for the outcome difference under intervention. Operator 'Path-Specific Indirect Effect Estimator' (page 1, domain math) captures: # [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S. Assumptions: Conditional exchangeability (A3) and correct specification of nuisance models for exposure, mediator, and outcome. Breakdown regime: Misspecification of the mediator-outcome relationship causes compositional bias in the indirect effect. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Replicates the path-specific indirect effect as a posterior predictive distribution under the intervened mediator distribution. Operator 'Efficient One-Step Estimator' (page 1, domain math) captures: # [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S. Assumptions: Doubly robust nuisance models and sample splitting to control variance inflation. Breakdown regime: Overfitting of nuisance models leads to inefficient influence functions and inflated standard errors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives a semiparametric efficiency bound kernel that optimally weights the score equations for the direct effect. Operator 'Cross-Fitting' (page 1, domain math) captures: # [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S. Assumptions: Independence within folds and sufficient overlap across folds. Breakdown regime: High correlation between training and validation sets biases the cross-fit estimate toward the training set distribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps cross-fitting to a leave-one-out Bayesian updating scheme, where each fold provides an independent posterior update. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0272-causal-mediation-analysis-for-stochastic-interventions (948feafa55b028c9, domain=math, pages_read=6/6): Operator 'Stochastic Intervention Effect' (page 1, domain math) captures: # [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S. Assumptions: Piecewise smooth invertibility of the modified treatment policy (A1), common support (A2), and conditional exchangeability (A3). Breakdown regime: Violations of A3 (exposure-affected mediator-outcome confounders) lead to biased substitution estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the stochastic-intervention direct effect to a conformal prediction interval for the outcome difference under intervention. Operator 'Path-Specific Indirect Effect Estimator' (page 1, domain math) captures: # [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S. Assumptions: Conditional exchangeability (A3) and correct specification of nuisance models for exposure, mediator, and outcome. Breakdown regime: Misspecification of the mediator-outcome relationship causes compositional bias in the indirect effect. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Replicates the path-specific indirect effect as a posterior predictive distribution under the intervened mediator distribution. Operator 'Efficient One-Step Estimator' (page 1, domain math) captures: # [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S. Assumptions: Doubly robust nuisance models and sample splitting to control variance inflation. Breakdown regime: Overfitting of nuisance models leads to inefficient influence functions and inflated standard errors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives a semiparametric efficiency bound kernel that optimally weights the score equations for the direct effect. Operator 'Cross-Fitting' (page 1, domain math) captures: # [0272] Causal mediation analysis for stochastic interventions (arXiv:1901.02776) **Citation:** Iván Díaz, Nima S. Assumptions: Independence within folds and sufficient overlap across folds. Breakdown regime: High correlation between training and validation sets biases the cross-fit estimate toward the training set distribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps cross-fitting to a leave-one-out Bayesian updating scheme, where each fold provides an independent posterior update. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Neyman-Rubin potential outcomes and Robins' G-formula, extended by van der Laan's targeted maximum likelihood framework and Chernozhukov et al.'s generalized method of moments. Retrocausal Genealogy: Rooted in 0272-causal-mediation-analysis-for-stochastic-interventions (948feafa55b028c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 0272-causal-mediation-analysis-for-stochastic-interventions (948feafa55b028c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include practitioners who prioritize interpretability and researchers who focus on asymptotic optimality. Decision actors must weigh the trade-off between assuming A3 and accepting weaker identifiability. Theory of Mind & Decision Maker Model: Rooted in 0272-causal-mediation-analysis-for-stochastic-interventions (948feafa55b028c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity condition: ensure linear independence among covariates used to adjust for mediator-outcome confounding. Leakage veto: verify that no mediator-outcome confounders are affected by exposure, as this violates the identification strategy. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0272-causal-mediation-analysis-for-stochastic-interventions (948feafa55b028c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

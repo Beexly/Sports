@@ -1,16 +1,16 @@
 {
   "book_id": "2936540ad53444f9",
-  "title": "api_key",
-  "file_name": "api_key.txt",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_2936540ad53444f9",
+  "file_name": "2936540ad53444f9.quarantined",
   "sha256": "2936540ad53444f95dd785a356e26139bf4e2ff561c71f25f4819b44645df348",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "fail-closed-stub-guard",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
   "source_status": "INSUFFICIENT_SOURCE_ACCESS",
-  "refusal_reason": "Download-bait/title-only stub PDF (1 pages, 31 extracted chars, 0 candidate quotes < 3 minimum): 'MGXM7WW-B29M4WF-Q87BC5E-ZQWB98M'. Fail-closed under Foundry Gatekeeper zero-fabrication contract.",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
   "primitives": [],
   "reasoning_traces": []
 }

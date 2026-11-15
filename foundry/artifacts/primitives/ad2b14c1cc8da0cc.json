@@ -1,0 +1,78 @@
+{
+  "book_id": "ad2b14c1cc8da0cc",
+  "source_status": "COMPLETE",
+  "title": "0126-sportsql-an-interactive-system-for-realtime",
+  "file_name": "0126-sportsql-an-interactive-system-for-realtime.md",
+  "sha256": "ad2b14c1cc8da0cc024338e313d7f3ead9e86f14495432209adb31ebf1c90350",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Schema-grounded LLM SQL generation with deterministic verification and just-in-time materialized views enables real-time natural-language sports querying. Universal Lens: Rooted in 0126-sportsql-an-interactive-system-for-realtime (ad2b14c1cc8da0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian belief updates over structured sports data using conformal prediction to validate query outputs and ensure logical consistency across NFL entity states. GSI Mapping: Rooted in 0126-sportsql-an-interactive-system-for-realtime (ad2b14c1cc8da0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning through state-transition graphs that encode temporal sports events, enabling dynamic query resolution via deterministic SQL and validated visualizations. GSE Mapping: Rooted in 0126-sportsql-an-interactive-system-for-realtime (ad2b14c1cc8da0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "schema_only_llm_sql_generation",
+      "name": "Schema-Only LLM SQL Generation",
+      "verbatim_quote": "(b) Schema-only LLM SQL generation: the LLM sees the schema (not the data) and emits SQL; executed against MariaDB.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "LLM operates on schema alone; SQL output is executable against database.",
+      "breakdown_regime": "Query resolution fails if schema misaligned with data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "LLM-generated SQL maps to GSE's nflverse/odds schema via deterministic query translation.",
+        "source_operator": "schema_only_llm_sql_generation",
+        "telemetry": "Query execution success rate and SQL validity check."
+      }
+    },
+    {
+      "primitive_id": "just_in_time_materialized_views",
+      "name": "Just-In-Time Materialized Views",
+      "verbatim_quote": "(c) Just-in-time views: expensive temporal aggregations (per-gameweek history, future fixtures) materialized as in-memory tables on demand, then queried.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Temporal queries are expensive; pre-materialization improves latency.",
+      "breakdown_regime": "Performance degrades without sufficient memory or caching.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Temporal aggregations in GSE are cached as in-memory views for low-latency access during live query processing.",
+        "source_operator": "just_in_time_materialized_views",
+        "telemetry": "View creation time and query response latency."
+      }
+    },
+    {
+      "primitive_id": "entity_resolution",
+      "name": "Entity Resolution",
+      "verbatim_quote": "Method / model (a) Entity resolution: map team/player mentions in the question to DB ids before SQL generation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Natural language contains named entities that map to database identifiers.",
+      "breakdown_regime": "Resolution fails if ambiguous or missing entity mappings exist.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Named entities in NL queries resolve to NFLverse IDs via GSI's entity linking module.",
+        "source_operator": "entity_resolution",
+        "telemetry": "Accuracy of entity-to-ID mapping and false positive rate."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ad2b14c1cc8da0cc_t0",
+      "think": "The SportSQL system integrates three core mechanisms: (1) schema-only LLM SQL generation ensures semantic grounding without data leakage, (2) just-in-time materialized views optimize performance for temporal queries, and (3) entity resolution bridges natural language to database identifiers. These components form a robust pipeline where each step is deterministic and verifiable. The failure mode occurs when LLM hallucinates SQL, views are stale, or entity resolution mismatches. The system's strength lies in its compositional modularity and verification gates—scalar answers are checked for exact match, while tabular results use a correctness protocol. This aligns with GSE’s need for deterministic, fast, and safe query execution over live NFL data.\n\nDeep epistemic analysis for 0126-sportsql-an-interactive-system-for-realtime (ad2b14c1cc8da0cc, domain=other, pages_read=3/3): Operator 'Schema-Only LLM SQL Generation' (page 1, domain other) captures: (b) Schema-only LLM SQL generation: the LLM sees the schema (not the data) and emits SQL; executed against MariaDB. Assumptions: LLM operates on schema alone; SQL output is executable against database. Breakdown regime: Query resolution fails if schema misaligned with data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LLM-generated SQL maps to GSE's nflverse/odds schema via deterministic query translation. Operator 'Just-In-Time Materialized Views' (page 1, domain other) captures: (c) Just-in-time views: expensive temporal aggregations (per-gameweek history, future fixtures) materialized as in-memory tables on demand, then queried. Assumptions: Temporal queries are expensive; pre-materialization improves latency. Breakdown regime: Performance degrades without sufficient memory or caching. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Temporal aggregations in GSE are cached as in-memory views for low-latency access during live query processing. Operator 'Entity Resolution' (page 1, domain other) captures: Method / model (a) Entity resolution: map team/player mentions in the question to DB ids before SQL generation. Assumptions: Natural language contains named entities that map to database identifiers. Breakdown regime: Resolution fails if ambiguous or missing entity mappings exist. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Named entities in NL queries resolve to NFLverse IDs via GSI's entity linking module. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0126-sportsql-an-interactive-system-for-realtime (ad2b14c1cc8da0cc, domain=other, pages_read=3/3): Operator 'Schema-Only LLM SQL Generation' (page 1, domain other) captures: (b) Schema-only LLM SQL generation: the LLM sees the schema (not the data) and emits SQL; executed against MariaDB. Assumptions: LLM operates on schema alone; SQL output is executable against database. Breakdown regime: Query resolution fails if schema misaligned with data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LLM-generated SQL maps to GSE's nflverse/odds schema via deterministic query translation. Operator 'Just-In-Time Materialized Views' (page 1, domain other) captures: (c) Just-in-time views: expensive temporal aggregations (per-gameweek history, future fixtures) materialized as in-memory tables on demand, then queried. Assumptions: Temporal queries are expensive; pre-materialization improves latency. Breakdown regime: Performance degrades without sufficient memory or caching. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Temporal aggregations in GSE are cached as in-memory views for low-latency access during live query processing. Operator 'Entity Resolution' (page 1, domain other) captures: Method / model (a) Entity resolution: map team/player mentions in the question to DB ids before SQL generation. Assumptions: Natural language contains named entities that map to database identifiers. Breakdown regime: Resolution fails if ambiguous or missing entity mappings exist. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Named entities in NL queries resolve to NFLverse IDs via GSI's entity linking module. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in prior work on schema-grounded NL2SQL and temporal database optimization, extending earlier systems like SQLizer and TemporalDB to real-time interactive environments. Retrocausal Genealogy: Rooted in 0126-sportsql-an-interactive-system-for-realtime (ad2b14c1cc8da0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 0126-sportsql-an-interactive-system-for-realtime (ad2b14c1cc8da0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include noisy LLMs prone to hallucination, inconsistent data sources, and adversarial user inputs. The system models these as probabilistic noise in the input pipeline and enforces strict validation to counteract them. Theory of Mind & Decision Maker Model: Rooted in 0126-sportsql-an-interactive-system-for-realtime (ad2b14c1cc8da0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by enforcing read-only SQL execution and requiring byte-for-byte dataframe reproduction before visualization. Leakage is prevented via deterministic SQL allowlists and schema-only prompting. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0126-sportsql-an-interactive-system-for-realtime (ad2b14c1cc8da0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0126-sportsql-an-interactive-system-for-realtime (ad2b14c1cc8da0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

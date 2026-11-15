@@ -1,0 +1,78 @@
+{
+  "book_id": "f6d96b4f57d8e0f7",
+  "source_status": "COMPLETE",
+  "title": "pre-mortem-compare-called-vs-missed",
+  "file_name": "pre-mortem-compare-called-vs-missed.md",
+  "sha256": "f6d96b4f57d8e0f7857461b6a413e943a964bb00b1d98617c69251c0e507b1e8",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Pre-mortem causal comparison maps loss root causes to factor bullet sets via deterministic factor-key mappings, enabling binary classification of coverage completeness. Universal Lens: Rooted in pre-mortem-compare-called-vs-missed (f6d96b4f57d8e0f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian likelihood of pre-mortem coverage conditioned on observed root cause; conformal prediction intervals define minimal sufficient factor sets for causal attribution. GSI Mapping: Rooted in pre-mortem-compare-called-vs-missed (f6d96b4f57d8e0f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions from pre-mortem bullet set to post-hoc causal tagging; state-space projection identifies complete vs incomplete coverage via factor inclusion logic. GSE Mapping: Rooted in pre-mortem-compare-called-vs-missed (f6d96b4f57d8e0f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "compare_pre_mortem",
+      "name": "Pre-Mortem Causal Comparator",
+      "verbatim_quote": "} ``` The comparator runs `comparePreMortem({ bullets, rootCause, lessonTags })`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'bullets': 'array of factor keys with severity ranks', 'rootCause': 'string identifier of actual cause', 'lessonTags': 'array of causal taxonomy tags'}",
+      "assumptions": "Each root cause maps deterministically to a subset of factor keys; bullet tags are mutually exclusive.",
+      "breakdown_regime": "When root cause is not in any bullet's mapped set, coverage is incomplete.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Factor-key inclusion in pre-mortem maps to Bayesian posterior probability of root cause attribution.",
+        "source_operator": "compare_pre_mortem",
+        "telemetry": "Coverage completeness score (COMPLETE/INCOMPLETE)"
+      }
+    },
+    {
+      "primitive_id": "root_cause_factor_mapping",
+      "name": "Root Cause to Factor Mapping",
+      "verbatim_quote": "# Expected behavior — Scenario A: actual cause NOT in pre-mortem (MISSED) Per the `ROOT_CAUSE_TO_FACTORS` mapping: - `INJURY_SHOCK` maps to `['restAdvantage']`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ROOT_CAUSE_TO_FACTORS': 'function mapping string root cause to array of string factor keys'}",
+      "assumptions": "Mapping is deterministic and exhaustive for known root causes.",
+      "breakdown_regime": "When root cause has no associated factor keys, coverage is incomplete.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Deterministic kernel function that projects root cause onto pre-mortem bullet space.",
+        "source_operator": "root_cause_factor_mapping",
+        "telemetry": "Set intersection between mapped factors and pre-mortem bullets"
+      }
+    },
+    {
+      "primitive_id": "coverage_classification",
+      "name": "Coverage Completeness Classifier",
+      "verbatim_quote": "- `coverage: 'COMPLETE'` MUST require at least one CALLED bullet.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'coverage': \"string {'COMPLETE', 'INCOMPLETE'}\"}",
+      "assumptions": "At least one bullet must be tagged CALLED for completeness.",
+      "breakdown_regime": "Failure when no bullet is tagged CALLED despite root cause being present.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Boolean indicator of full pre-mortem coverage based on bullet tagging logic.",
+        "source_operator": "coverage_classification",
+        "telemetry": "Binary flag indicating whether all relevant factors were captured"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f6d96b4f57d8e0f7_t0",
+      "think": "The comparator operates by mapping a root cause to a set of factor keys using a predefined lookup table. Each pre-mortem bullet is evaluated against this set to determine if its factor key is included. If so, it is tagged CALLED; otherwise, DID_NOT_HAPPEN. The final coverage classification depends on whether at least one bullet was tagged CALLED. This process defines a binary decision boundary over the space of possible root causes and bullet sets. The system enforces mutual exclusivity of tags and prevents mutation of inputs to maintain integrity. Incomplete coverage arises when no bullet matches the mapped factors, while complete coverage requires at least one match. The narrative summaries reflect these outcomes without justification or excuse, preserving objectivity.\n\nDeep epistemic analysis for pre-mortem-compare-called-vs-missed (f6d96b4f57d8e0f7, domain=other, pages_read=2/2): Operator 'Pre-Mortem Causal Comparator' (page 1, domain other) captures: } ``` The comparator runs `comparePreMortem({ bullets, rootCause, lessonTags })`. Assumptions: Each root cause maps deterministically to a subset of factor keys; bullet tags are mutually exclusive. Breakdown regime: When root cause is not in any bullet's mapped set, coverage is incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Factor-key inclusion in pre-mortem maps to Bayesian posterior probability of root cause attribution. Operator 'Root Cause to Factor Mapping' (page 1, domain other) captures: # Expected behavior — Scenario A: actual cause NOT in pre-mortem (MISSED) Per the `ROOT_CAUSE_TO_FACTORS` mapping: - `INJURY_SHOCK` maps to `['restAdvantage']`. Assumptions: Mapping is deterministic and exhaustive for known root causes. Breakdown regime: When root cause has no associated factor keys, coverage is incomplete. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Deterministic kernel function that projects root cause onto pre-mortem bullet space. Operator 'Coverage Completeness Classifier' (page 2, domain other) captures: - `coverage: 'COMPLETE'` MUST require at least one CALLED bullet. Assumptions: At least one bullet must be tagged CALLED for completeness. Breakdown regime: Failure when no bullet is tagged CALLED despite root cause being present. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Boolean indicator of full pre-mortem coverage based on bullet tagging logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for pre-mortem-compare-called-vs-missed (f6d96b4f57d8e0f7, domain=other, pages_read=2/2): Operator 'Pre-Mortem Causal Comparator' (page 1, domain other) captures: } ``` The comparator runs `comparePreMortem({ bullets, rootCause, lessonTags })`. Assumptions: Each root cause maps deterministically to a subset of factor keys; bullet tags are mutually exclusive. Breakdown regime: When root cause is not in any bullet's mapped set, coverage is incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Factor-key inclusion in pre-mortem maps to Bayesian posterior probability of root cause attribution. Operator 'Root Cause to Factor Mapping' (page 1, domain other) captures: # Expected behavior — Scenario A: actual cause NOT in pre-mortem (MISSED) Per the `ROOT_CAUSE_TO_FACTORS` mapping: - `INJURY_SHOCK` maps to `['restAdvantage']`. Assumptions: Mapping is deterministic and exhaustive for known root causes. Breakdown regime: When root cause has no associated factor keys, coverage is incomplete. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Deterministic kernel function that projects root cause onto pre-mortem bullet space. Operator 'Coverage Completeness Classifier' (page 2, domain other) captures: - `coverage: 'COMPLETE'` MUST require at least one CALLED bullet. Assumptions: At least one bullet must be tagged CALLED for completeness. Breakdown regime: Failure when no bullet is tagged CALLED despite root cause being present. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Boolean indicator of full pre-mortem coverage based on bullet tagging logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Derives from classical causal inference models and Bayesian network theory, where root causes are mapped to observable variables through deterministic functions. Retrocausal Genealogy: Rooted in pre-mortem-compare-called-vs-missed (f6d96b4f57d8e0f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in pre-mortem-compare-called-vs-missed (f6d96b4f57d8e0f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models adversarial decision-making where the system evaluates whether a pre-mortem adequately anticipated a loss event, simulating a counterfactual causal agent. Theory of Mind & Decision Maker Model: Rooted in pre-mortem-compare-called-vs-missed (f6d96b4f57d8e0f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in pre-mortem-compare-called-vs-missed (f6d96b4f57d8e0f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents contradictory tagging of same bullet as both CALLED and DID_NOT_HAPPEN, ensuring logical consistency across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in pre-mortem-compare-called-vs-missed (f6d96b4f57d8e0f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in pre-mortem-compare-called-vs-missed (f6d96b4f57d8e0f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

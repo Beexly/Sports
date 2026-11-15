@@ -1,0 +1,95 @@
+{
+  "book_id": "9af73229639ff062",
+  "source_status": "COMPLETE",
+  "title": "2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger",
+  "file_name": "2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger.md",
+  "sha256": "9af73229639ff0624adfaf1e1bdcdf5bbf0a0484f35dfb4f44559f48559907e2",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'name': 'SDD Ledger', 'description': 'A formal system tracking software development decisions through atomic commits, test executions, and deployment artifacts.'} Universal Lens: Rooted in 2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger (9af73229639ff062), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "{'name': 'Bayesian Conformal Inference', 'description': \"A statistical framework that combines conformal prediction's distribution-free coverage guarantees with hierarchical Bayesian priors to estimate posterior predictive intervals for model outputs.\"} GSI Mapping: Rooted in 2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger (9af73229639ff062), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "{'name': 'Situational Reasoning & State-Transition Mapping', 'description': 'A computational paradigm that models software systems as finite-state machines evolving under external inputs, enabling systematic verification of behavioral properties across multiple execution contexts.'}",
+  "primitives": [
+    {
+      "primitive_id": "vitest_count_match",
+      "name": "Test Count Verification",
+      "verbatim_quote": "# SDD ledger — plan: docs/superpowers/plans/2026-11-04-gse-gsi-sovereign-v5-executing-plans.md BASE: e09a6614072d02ba6c8c2dde7d127b52fec8b1da Pre-flight: Vitest counts match test files on disk (see Task 1/2).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes deterministic file-to-test mapping; ignores runtime filtering.",
+      "breakdown_regime": "Fails when test runners introduce dynamic discovery or parallelization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State-Transition Mapping: verifies the \"initial configuration\" by comparing expected vs. observed test manifests, ensuring the system starts in a known consistent state.",
+        "source_operator": "vitest_count_match",
+        "telemetry": "Ratio of declared to executed tests per package."
+      }
+    },
+    {
+      "primitive_id": "cpp_iteration_count",
+      "name": "Iteration Count Assertion",
+      "verbatim_quote": "C++ test 10 uses 1000 iterations, not 100000 (see Task 3).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes iteration count is a configurable constant.",
+      "breakdown_regime": "Fails when test logic depends on specific sample size for statistical power.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian Conformal Inference: treats the iteration count as a hyperparameter controlling the empirical coverage of conformal prediction intervals; deviation indicates specification drift.",
+        "source_operator": "cpp_iteration_count",
+        "telemetry": "Observed vs. declared number of Monte Carlo samples."
+      }
+    },
+    {
+      "primitive_id": "python_asyncio_dependency",
+      "name": "Async Test Dependency Resolution",
+      "verbatim_quote": "Task 4: Ruling: Python 45/45 requires pytest-asyncio (was 43/45 before pip install) — added pytest-asyncio+anyio to pyproject dev deps — cost if wrong: fresh env still fails async tests.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes isolated virtual environments prevent dependency conflicts.",
+      "breakdown_regime": "Fails when runtime dependencies shadow compile-time requirements.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian Conformal Inference: models missing dependencies as missing data; the resulting p-values become informative only after resolving all package constraints, ensuring complete probabilistic coverage.",
+        "source_operator": "python_asyncio_dependency",
+        "telemetry": "Dependency resolution success rate per virtual environment snapshot."
+      }
+    },
+    {
+      "primitive_id": "argparse_track_support",
+      "name": "Argument Parser Track Support",
+      "verbatim_quote": "Task 5: Ruling: Track artifacts are stub JSON (hardcoded VERIFIED, no p50/p95/p99, no Pareto frontier, no 3 threads/10 sniper/3 emails) — did not expand or publish Week 9 picks (hard doctrine requires JEV snap-by-snap) — cost if wrong: revenue queue is incomplete.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes command-line arguments form a finite set.",
+      "breakdown_regime": "Fails when new flags introduce backward-incompatible changes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Situational Reasoning & State-Transition Mapping: validates the \"input transition\" function; missing flags trigger error states, while correct parsing leads to successful state updates.",
+        "source_operator": "argparse_track_support",
+        "telemetry": "Command success rate vs. expected argument signatures."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9af73229639ff062_t0",
+      "think": "The SDD ledger operates as a formal verification protocol where each task corresponds to an atomic decision node. The primitives establish dual relationships: `v_test_manifest` and `argparse_validate` enforce syntax-level consistency (state preservation), while `n_iterations` and `pyproject_deps` ensure semantic completeness (coverage guarantees). Failure modes arise from specification drift (e.g., changing iteration counts) or environmental entropy (missing dependencies). This structure mirrors Galois connections between abstract syntax trees and concrete execution traces, enabling retroactive auditability.\n\nDeep epistemic analysis for 2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger (9af73229639ff062, domain=other, pages_read=2/2): Operator 'Test Count Verification' (page 1, domain other) captures: # SDD ledger — plan: docs/superpowers/plans/2026-11-04-gse-gsi-sovereign-v5-executing-plans.md BASE: e09a6614072d02ba6c8c2dde7d127b52fec8b1da Pre-flight: Vitest counts match test files on disk (see Task 1/2). Assumptions: Assumes deterministic file-to-test mapping; ignores runtime filtering. Breakdown regime: Fails when test runners introduce dynamic discovery or parallelization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-Transition Mapping: verifies the \"initial configuration\" by comparing expected vs. observed test manifests, ensuring the system starts in a known consistent state. Operator 'Iteration Count Assertion' (page 1, domain other) captures: C++ test 10 uses 1000 iterations, not 100000 (see Task 3). Assumptions: Assumes iteration count is a configurable constant. Breakdown regime: Fails when test logic depends on specific sample size for statistical power. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian Conformal Inference: treats the iteration count as a hyperparameter controlling the empirical coverage of conformal prediction intervals; deviation indicates specification drift. Operator 'Async Test Dependency Resolution' (page 1, domain other) captures: Task 4: Ruling: Python 45/45 requires pytest-asyncio (was 43/45 before pip install) — added pytest-asyncio+anyio to pyproject dev deps — cost if wrong: fresh env still fails async tests. Assumptions: Assumes isolated virtual environments prevent dependency conflicts. Breakdown regime: Fails when runtime dependencies shadow compile-time requirements. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian Conformal Inference: models missing dependencies as missing data; the resulting p-values become informative only after resolving all package constraints, ensuring complete probabilistic coverage. Operator 'Argument Parser Track Support' (page 1, domain other) captures: Task 5: Ruling: Track artifacts are stub JSON (hardcoded VERIFIED, no p50/p95/p99, no Pareto frontier, no 3 threads/10 sniper/3 emails) — did not expand or publish Week 9 picks (hard doctrine requires JEV snap-by-snap) — cost if wrong: revenue queue is incomplete. Assumptions: Assumes command-line arguments form a finite set. Breakdown regime: Fails when new flags introduce backward-incompatible changes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Situational Reasoning & State-Transition Mapping: validates the \"input transition\" function; missing flags trigger error states, while correct parsing leads to successful state updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger (9af73229639ff062, domain=other, pages_read=2/2): Operator 'Test Count Verification' (page 1, domain other) captures: # SDD ledger — plan: docs/superpowers/plans/2026-11-04-gse-gsi-sovereign-v5-executing-plans.md BASE: e09a6614072d02ba6c8c2dde7d127b52fec8b1da Pre-flight: Vitest counts match test files on disk (see Task 1/2). Assumptions: Assumes deterministic file-to-test mapping; ignores runtime filtering. Breakdown regime: Fails when test runners introduce dynamic discovery or parallelization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-Transition Mapping: verifies the \"initial configuration\" by comparing expected vs. observed test manifests, ensuring the system starts in a known consistent state. Operator 'Iteration Count Assertion' (page 1, domain other) captures: C++ test 10 uses 1000 iterations, not 100000 (see Task 3). Assumptions: Assumes iteration count is a configurable constant. Breakdown regime: Fails when test logic depends on specific sample size for statistical power. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian Conformal Inference: treats the iteration count as a hyperparameter controlling the empirical coverage of conformal prediction intervals; deviation indicates specification drift. Operator 'Async Test Dependency Resolution' (page 1, domain other) captures: Task 4: Ruling: Python 45/45 requires pytest-asyncio (was 43/45 before pip install) — added pytest-asyncio+anyio to pyproject dev deps — cost if wrong: fresh env still fails async tests. Assumptions: Assumes isolated virtual environments prevent dependency conflicts. Breakdown regime: Fails when runtime dependencies shadow compile-time requirements. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian Conformal Inference: models missing dependencies as missing data; the resulting p-values become informative only after resolving all package constraints, ensuring complete probabilistic coverage. Operator 'Argument Parser Track Support' (page 1, domain other) captures: Task 5: Ruling: Track artifacts are stub JSON (hardcoded VERIFIED, no p50/p95/p99, no Pareto frontier, no 3 threads/10 sniper/3 emails) — did not expand or publish Week 9 picks (hard doctrine requires JEV snap-by-snap) — cost if wrong: revenue queue is incomplete. Assumptions: Assumes command-line arguments form a finite set. Breakdown regime: Fails when new flags introduce backward-incompatible changes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Situational Reasoning & State-Transition Mapping: validates the \"input transition\" function; missing flags trigger error states, while correct parsing leads to successful state updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Hoare logic and Floyd's invariant assertions, evolving through modern property-based testing frameworks like QuickCheck and Hypothesis. Retrocausal Genealogy: Rooted in 2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger (9af73229639ff062), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger (9af73229639ff062), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include developers who prioritize feature velocity over correctness, and auditors who demand exhaustive coverage; the ledger mediates their conflict via transparent decision records. Theory of Mind & Decision Maker Model: Rooted in 2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger (9af73229639ff062), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger (9af73229639ff062), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity condition: GSI's conformal predictions must be independent of GSE's state transitions; otherwise, leakage occurs when posterior estimates influence decision boundaries. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger (9af73229639ff062), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-11-04-gse-gsi-sovereign-v5-executing-plans-ledger (9af73229639ff062), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

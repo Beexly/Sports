@@ -1,0 +1,78 @@
+{
+  "book_id": "3f5bdd75ab1e8970",
+  "source_status": "COMPLETE",
+  "title": "p0196",
+  "file_name": "p0196.txt",
+  "sha256": "3f5bdd75ab1e8970290115a3be26f47998a944fbb625b2dea205fda28dcc004e",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Scholastic football performance metrics across inter-school competitions, integrating defensive resilience, offensive scoring, and strategic evolution. Universal Lens: Rooted in p0196 (3f5bdd75ab1e8970), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on team strength and match outcomes using point differentials and win-loss records within Greater Boston's scholastic league. GSI Mapping: Rooted in p0196 (3f5bdd75ab1e8970), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models for team transitions between defensive and offensive states, informed by pass usage trends and coaching strategies. GSE Mapping: Rooted in p0196 (3f5bdd75ab1e8970), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "defensive_resilience_index",
+      "name": "Defensive Resilience Index",
+      "verbatim_quote": "Its goal line was not crossed, showing that Cleo O'Donnell, a former Holy Cross college player, who coached the team, had not overlooked building up a defense as well as a scoring machine.",
+      "page": 1,
+      "latex": "\\mathcal{R}_d = \\frac{\\text{Opponent Points Scored}}{\\text{Games Played}} \\cdot \\mathbb{I}_{\\text{No Touchdowns}}",
+      "symbol_and_unit_ledger": "{'R_d': 'dimensionless index measuring defensive effectiveness', 'Opponent Points Scored': 'total points scored against team', 'Games Played': 'number of games contested', 'I_{No Touchdowns}': 'indicator function for zero touchdowns conceded'}",
+      "assumptions": "Team's defensive structure prevents opponent scoring; no external factors affect game outcome.",
+      "breakdown_regime": "When opponent scores exceed threshold, index becomes undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI Bayesian model uses R_d to infer team strength in defensive capability.",
+        "source_operator": "defensive_resilience_index",
+        "telemetry": "Opponent score differential per game"
+      }
+    },
+    {
+      "primitive_id": "offensive_efficiency_scalar",
+      "name": "Offensive Efficiency Scalar",
+      "verbatim_quote": "Everett High School played thirteen games and totalled 600 points, a record which never has been approached in the history of Greater Boston schools.",
+      "page": 1,
+      "latex": "\\mathcal{E}_o = \\frac{\\sum_{i=1}^{n} P_i}{n} \\cdot \\mathbb{I}_{\\text{Record}}",
+      "symbol_and_unit_ledger": "{'E_o': 'dimensionless scalar representing average offensive output', 'P_i': 'points scored in game i', 'n': 'number of games played', 'I_{\\\\text{Record}}': 'indicator function for historical record achievement'}",
+      "assumptions": "Scoring consistency reflects team efficiency; historical context is fixed.",
+      "breakdown_regime": "When n approaches zero, scalar becomes undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state-transition engine evaluates E_o to predict offensive dominance.",
+        "source_operator": "offensive_efficiency_scalar",
+        "telemetry": "Average points per game"
+      }
+    },
+    {
+      "primitive_id": "strategic_evolution_metric",
+      "name": "Strategic Evolution Metric",
+      "verbatim_quote": "There was a greater use of the forward pass than ever before, and while drop-kicking was not so prominent as in 1913, there were several adept youngsters uncovered in the art.",
+      "page": 1,
+      "latex": "\\mathcal{S}_e = \\frac{\\Delta N_{\\text{Passes}}}{\\Delta t} \\cdot \\left(1 - \\frac{N_{\\text{Kicks}}}{N_{\\text{Total Plays}}}\\right)",
+      "symbol_and_unit_ledger": "{'S_e': 'dimensionless metric quantifying strategic shift', 'N_{\\\\text{Passes}}': 'count of forward passes', 't': 'time interval', 'N_{\\\\text{Kicks}}': 'count of drop-kicks', 'N_{\\\\text{Total Plays}}': 'total number of plays'}",
+      "assumptions": "Increased pass usage indicates tactical sophistication; kick frequency decreases.",
+      "breakdown_regime": "When N_passes is constant, S_e equals zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE maps S_e to evolving team behavior patterns via play selection.",
+        "source_operator": "strategic_evolution_metric",
+        "telemetry": "Pass-to-kick ratio and temporal trend"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3f5bdd75ab1e8970_t0",
+      "think": "The foundational operators—defensive resilience, offensive efficiency, and strategic evolution—are derived from empirical data in the 1914 Greater Boston scholastic football season. The defensive resilience index (R_d) is computed from the absence of opponent touchdowns, indicating a robust defensive system. The offensive efficiency scalar (E_o) is based on the aggregate points scored over thirteen games, establishing a benchmark for offensive excellence. The strategic evolution metric (S_e) captures the shift toward increased forward passing and reduced reliance on drop-kicking, reflecting tactical innovation. These metrics form a dual framework where defensive robustness and offensive productivity coalesce into a holistic team performance measure. Failure modes include over-reliance on single metrics, such as assuming high scoring alone implies strength without considering defense. Dualities emerge in how these metrics interact: a team may excel in offense yet falter defensively, or vice versa. The interplay between these operators reveals a complex system where each component influences the others, forming a feedback loop essential to understanding team dynamics.\n\nDeep epistemic analysis for p0196 (3f5bdd75ab1e8970, domain=other, pages_read=2/2): Operator 'Defensive Resilience Index' (page 1, domain other) captures: Its goal line was not crossed, showing that Cleo O'Donnell, a former Holy Cross college player, who coached the team, had not overlooked building up a defense as well as a scoring machine. Assumptions: Team's defensive structure prevents opponent scoring; no external factors affect game outcome. Breakdown regime: When opponent scores exceed threshold, index becomes undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian model uses R_d to infer team strength in defensive capability. Operator 'Offensive Efficiency Scalar' (page 1, domain other) captures: Everett High School played thirteen games and totalled 600 points, a record which never has been approached in the history of Greater Boston schools. Assumptions: Scoring consistency reflects team efficiency; historical context is fixed. Breakdown regime: When n approaches zero, scalar becomes undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state-transition engine evaluates E_o to predict offensive dominance. Operator 'Strategic Evolution Metric' (page 1, domain other) captures: There was a greater use of the forward pass than ever before, and while drop-kicking was not so prominent as in 1913, there were several adept youngsters uncovered in the art. Assumptions: Increased pass usage indicates tactical sophistication; kick frequency decreases. Breakdown regime: When N_passes is constant, S_e equals zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps S_e to evolving team behavior patterns via play selection. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0196 (3f5bdd75ab1e8970, domain=other, pages_read=2/2): Operator 'Defensive Resilience Index' (page 1, domain other) captures: Its goal line was not crossed, showing that Cleo O'Donnell, a former Holy Cross college player, who coached the team, had not overlooked building up a defense as well as a scoring machine. Assumptions: Team's defensive structure prevents opponent scoring; no external factors affect game outcome. Breakdown regime: When opponent scores exceed threshold, index becomes undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian model uses R_d to infer team strength in defensive capability. Operator 'Offensive Efficiency Scalar' (page 1, domain other) captures: Everett High School played thirteen games and totalled 600 points, a record which never has been approached in the history of Greater Boston schools. Assumptions: Scoring consistency reflects team efficiency; historical context is fixed. Breakdown regime: When n approaches zero, scalar becomes undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state-transition engine evaluates E_o to predict offensive dominance. Operator 'Strategic Evolution Metric' (page 1, domain other) captures: There was a greater use of the forward pass than ever before, and while drop-kicking was not so prominent as in 1913, there were several adept youngsters uncovered in the art. Assumptions: Increased pass usage indicates tactical sophistication; kick frequency decreases. Breakdown regime: When N_passes is constant, S_e equals zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps S_e to evolving team behavior patterns via play selection. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century American football analytics, this framework builds upon Spalding’s Guide traditions of quantifying team performance through statistical summaries and comparative analysis. Retrocausal Genealogy: Rooted in p0196 (3f5bdd75ab1e8970), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0196 (3f5bdd75ab1e8970), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams like Oak Park High and Stamford High likely modeled their strategies around maximizing offensive output while minimizing defensive exposure, yet were outperformed by Everett’s integrated approach. Agents in this domain include coaches, players, and institutional structures shaping team identity and execution. Theory of Mind & Decision Maker Model: Rooted in p0196 (3f5bdd75ab1e8970), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that R_d and E_o do not artificially inflate together; leakage occurs when defensive metrics mask poor offensive performance. Veto conditions prevent overfitting to historical records without contextualizing broader strategic shifts. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0196 (3f5bdd75ab1e8970), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

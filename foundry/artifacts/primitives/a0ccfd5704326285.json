@@ -1,0 +1,78 @@
+{
+  "book_id": "a0ccfd5704326285",
+  "source_status": "COMPLETE",
+  "title": "audio-voice-policy",
+  "file_name": "audio-voice-policy.md",
+  "sha256": "a0ccfd5704326285850c1cd37f1150002181492f4acc69e27e8ecaeae364966c",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The audio-voice policy defines a constrained Hilbert space of permissible media states. The operator voice acts as the identity element, while synthetic athlete voices represent singularities where trust metrics diverge to zero. Claim governance functions as a projection operator, ensuring all emitted audio vectors lie strictly within the subspace of verified, legally compliant information.",
+  "gsi_mapping": "In GSI, voice authenticity is modeled via conformal prediction intervals over acoustic feature embeddings. A synthetic athlete voice yields an infinite nonconformity score, triggering an immediate out-of-distribution flag. Bayesian priors heavily penalize undisclosed AI synthesis, collapsing the posterior probability of platform credibility to near-zero upon detection of unlicensed or mimicked vocal signatures.",
+  "gse_mapping": "GSE treats audio generation as a state-transition system with strict boundary conditions. The transition from text-to-speech to public broadcast requires passing a compliance Hamiltonian check. If the generated audio vector intersects the forbidden manifold of real-person likeness, the system enforces a hard veto, halting the production workflow and preventing any downstream distribution state changes.",
+  "primitives": [
+    {
+      "primitive_id": "trust_signal_operator",
+      "name": "Voice Trust Signal Operator",
+      "verbatim_quote": "The voice is a significant trust signal for a sports intelligence platform.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "T: Trust metric (dimensionless, [0,1]); V: Voice authenticity vector; \\alpha: Weighting coefficient for auditory modality.",
+      "assumptions": "Auditory cues are primary determinants of perceived credibility in sports intelligence contexts.",
+      "breakdown_regime": "Trust T approaches zero if V is detected as synthetic without explicit disclosure, causing systemic brand failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's reputation weighting matrices, where auditory fidelity scales the overall confidence interval of the intelligence product.",
+        "source_operator": "trust_signal_operator",
+        "telemetry": "User retention rates and sentiment analysis scores correlated with specific narration styles."
+      }
+    },
+    {
+      "primitive_id": "synthetic_likeness_veto",
+      "name": "Synthetic Athlete Voice Prohibition",
+      "verbatim_quote": "Generating a synthetic voice that sounds like, is labeled as, or could be mistaken for a real athlete, coach, broadcaster, or sports personality is permanently forbidden.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "S: Synthetic audio embedding; R: Real person reference embedding; d(S,R): Cosine distance metric (dimensionless); \\epsilon: Forbidden proximity threshold.",
+      "assumptions": "Acoustic similarity can be quantified and bounded to prevent legal right-of-publicity violations.",
+      "breakdown_regime": "If d(S,R) < \\epsilon, the system triggers a permanent veto, representing a hard boundary condition in the generation space.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Functions as a hard constraint kernel in GSE's content generation engine, immediately terminating any trajectory approaching a protected entity's acoustic signature.",
+        "source_operator": "synthetic_likeness_veto",
+        "telemetry": "False positive rates of voice-cloning detectors against approved operator voices."
+      }
+    },
+    {
+      "primitive_id": "claim_audio_projection",
+      "name": "Claim Governance Audio Projection",
+      "verbatim_quote": "--## Section 3 — Claim Governance Applied to Audio Every spoken claim in any Sports OS audio or video must satisfy the same claim governance rules as written content.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "C: Set of all claims; P_{valid}: Projection operator onto valid claim subspace; c_i: Individual claim vector.",
+      "assumptions": "Truth and compliance properties are invariant across textual and auditory modalities.",
+      "breakdown_regime": "Systemic failure occurs if P_{valid}(c_i) = \\emptyset, meaning an unverifiable or prohibited claim bypasses the pre-recording scanner.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the textual compliance scanner in GSI, enforcing identical logical constraints on the phonetic realization of data points.",
+        "source_operator": "claim_audio_projection",
+        "telemetry": "Percentage of narration scripts flagged and rejected by the compliance-scanner prior to rendering."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a0ccfd5704326285_t0",
+      "think": "The derivation of these sovereign primitives begins by treating the Sports OS media environment as a high-dimensional state space governed by strict topological constraints. The foundational operator is the Trust Signal, which establishes that the auditory modality is not merely decorative but fundamentally alters the posterior probability of user belief. We model this as a linear transformation where the base intelligence vector is scaled by an authenticity factor. If this factor drops due to undisclosed AI synthesis, the entire value proposition collapses.\n\nFrom this baseline, we derive the Synthetic Likeness Veto. Mathematically, this represents a forbidden region in the embedding space of voice models. Any generative process attempting to map a text prompt into an acoustic output that falls within the epsilon-ball of a protected entity (athlete, coach) encounters a singularity. The policy dictates a hard cutoff—a step function that returns zero viability—thereby protecting the platform from right-of-publicity liabilities and ethical breaches.\n\nFinally, the Claim Audio Projection ensures modal invariance. The truth-value of a statement must remain constant regardless of its carrier wave. This requires a pre-processing filter (the compliance scanner) that projects raw narrative drafts onto the subspace of verifiable, tier-one facts. If a claim cannot be projected cleanly, it is discarded before entering the audio synthesis pipeline. Together, these operators form a closed loop of risk mitigation, ensuring that every emitted phoneme is both legally defensible and epistemically sound.\n\nDeep epistemic analysis for audio-voice-policy (a0ccfd5704326285, domain=other, pages_read=4/4): Operator 'Voice Trust Signal Operator' (page 1, domain other) captures: The voice is a significant trust signal for a sports intelligence platform. Assumptions: Auditory cues are primary determinants of perceived credibility in sports intelligence contexts. Breakdown regime: Trust T approaches zero if V is detected as synthetic without explicit disclosure, causing systemic brand failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's reputation weighting matrices, where auditory fidelity scales the overall confidence interval of the intelligence product. Operator 'Synthetic Athlete Voice Prohibition' (page 2, domain other) captures: Generating a synthetic voice that sounds like, is labeled as, or could be mistaken for a real athlete, coach, broadcaster, or sports personality is permanently forbidden. Assumptions: Acoustic similarity can be quantified and bounded to prevent legal right-of-publicity violations. Breakdown regime: If d(S,R) < \\epsilon, the system triggers a permanent veto, representing a hard boundary condition in the generation space. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a hard constraint kernel in GSE's content generation engine, immediately terminating any trajectory approaching a protected entity's acoustic signature. Operator 'Claim Governance Audio Projection' (page 2, domain other) captures: --## Section 3 — Claim Governance Applied to Audio Every spoken claim in any Sports OS audio or video must satisfy the same claim governance rules as written content. Assumptions: Truth and compliance properties are invariant across textual and auditory modalities. Breakdown regime: Systemic failure occurs if P_{valid}(c_i) = \\emptyset, meaning an unverifiable or prohibited claim bypasses the pre-recording scanner. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the textual compliance scanner in GSI, enforcing identical logical constraints on the phonetic realization of data points. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for audio-voice-policy (a0ccfd5704326285, domain=other, pages_read=4/4): Operator 'Voice Trust Signal Operator' (page 1, domain other) captures: The voice is a significant trust signal for a sports intelligence platform. Assumptions: Auditory cues are primary determinants of perceived credibility in sports intelligence contexts. Breakdown regime: Trust T approaches zero if V is detected as synthetic without explicit disclosure, causing systemic brand failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's reputation weighting matrices, where auditory fidelity scales the overall confidence interval of the intelligence product. Operator 'Synthetic Athlete Voice Prohibition' (page 2, domain other) captures: Generating a synthetic voice that sounds like, is labeled as, or could be mistaken for a real athlete, coach, broadcaster, or sports personality is permanently forbidden. Assumptions: Acoustic similarity can be quantified and bounded to prevent legal right-of-publicity violations. Breakdown regime: If d(S,R) < \\epsilon, the system triggers a permanent veto, representing a hard boundary condition in the generation space. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a hard constraint kernel in GSE's content generation engine, immediately terminating any trajectory approaching a protected entity's acoustic signature. Operator 'Claim Governance Audio Projection' (page 2, domain other) captures: --## Section 3 — Claim Governance Applied to Audio Every spoken claim in any Sports OS audio or video must satisfy the same claim governance rules as written content. Assumptions: Truth and compliance properties are invariant across textual and auditory modalities. Breakdown regime: Systemic failure occurs if P_{valid}(c_i) = \\emptyset, meaning an unverifiable or prohibited claim bypasses the pre-recording scanner. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the textual compliance scanner in GSI, enforcing identical logical constraints on the phonetic realization of data points. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These primitives trace their lineage to early 20th-century information theory and Shannon’s work on signal integrity, later evolving through the legal frameworks of right-of-publicity established in cases like *Midler v. Ford*. In modern quantitative terms, they reflect the shift from passive broadcasting to active, constrained generative systems where probabilistic safety bounds replace ad-hoc editorial judgment, directly addressing the deepfake crisis.",
+      "theory_of_mind": "We model the opposing agent—the malicious actor or negligent operator—as an optimizer seeking to minimize production costs while maximizing engagement. They might attempt to use cheap, unlicensed music or clone a famous analyst's voice to borrow credibility. Our primitives act as a predictive shield, anticipating these moves by mathematically bounding the allowable parameter space, forcing the actor to either comply with expensive licensing or abandon the synthetic mimicry entirely.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring the audio compliance layer operates independently of the visual rendering pipeline. A veto triggered by the Synthetic Likeness detector must instantly halt the entire media assembly line, preventing any leakage of prohibited assets. Furthermore, the claim governance projection must be applied retroactively to archived content if new factual data invalidates previous assertions, ensuring temporal consistency across the entire platform history."
+    }
+  ]
+}

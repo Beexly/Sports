@@ -1,0 +1,95 @@
+{
+  "book_id": "28c0ccacde0c2fa2",
+  "source_status": "COMPLETE",
+  "title": "public-number-audit-2026-07-16",
+  "file_name": "public-number-audit-2026-07-16.md",
+  "sha256": "28c0ccacde0c2fa2de35cee81164d550bea889f9b6ce6fdfb83480cb21c1a591",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Public performance numbers must satisfy statistical validity constraints: sample size floors, confidence intervals, and calibration bounds to prevent FTC liability. Universal Lens: Rooted in public-number-audit-2026-07-16 (28c0ccacde0c2fa2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers substantiated performance via conformal predictive distributions over calibrated confidence bands, enforcing Bayesian consistency across all public-facing metrics. GSI Mapping: Rooted in public-number-audit-2026-07-16 (28c0ccacde0c2fa2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE enforces state transitions through guarded rendering logic that gates display of performance numbers until empirical thresholds (Wilson LCB, min-n) are met. GSE Mapping: Rooted in public-number-audit-2026-07-16 (28c0ccacde0c2fa2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "proof_readiness_score",
+      "name": "Proof Readiness Score",
+      "verbatim_quote": "**`apps/web/app/stats/proof/page.tsx:10`** — `const proofScore = 61;` rendered as a public \"Proof Readiness\" ScoreRing on the page whose stated purpose is \"the honest proof layer.\" A hardcoded, non-computed score presented with visual specificity.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'proofScore': 'dimensionless (0–100 scale)'}",
+      "assumptions": "Score is static, not derived from dynamic inputs; lacks statistical grounding.",
+      "breakdown_regime": "Hardcoded value renders without substantiation guard.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents a synthetic metric lacking empirical validation; should be replaced with computed score or removed.",
+        "source_operator": "proof_readiness_score",
+        "telemetry": "Visual rendering of unvalidated scalar"
+      }
+    },
+    {
+      "primitive_id": "king_standard_performance",
+      "name": "King Standard Performance",
+      "verbatim_quote": "**`apps/web/app/stats/page.tsx:12-17,47,52,101`** — hardcoded \"King Standard 61/100\" + four component scores (Source Coverage 40, Live Feeds 10, Proof Archive 5, Metric Depth 65) as source literals on public `/stats`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'kingStandard': 'dimensionless (0–100 scale)', 'sourceCoverage': 'dimensionless (0–100 scale)', 'liveFeeds': 'dimensionless (0–100 scale)', 'proofArchive': 'dimensionless (0–100 scale)', 'metricDepth': 'dimensionless (0–100 scale)'}",
+      "assumptions": "All components are fixed values; no dynamic computation or validation.",
+      "breakdown_regime": "Hardcoded literals without substantiation mechanism.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Synthetic composite score used as public claim without statistical grounding.",
+        "source_operator": "king_standard_performance",
+        "telemetry": "Static performance summary with no empirical basis"
+      }
+    },
+    {
+      "primitive_id": "per_pick_confidence_edge",
+      "name": "Per-Pick Confidence Edge",
+      "verbatim_quote": "**`apps/web/app/performance/losses/page.tsx:144-146` and `/losses/[id]/page.tsx:163-164`** — bare `Confidence {n}` / `Edge {n}` per-pick renders, zero guard, one page away from the carefully-floored `/performance` aggregate.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'confidence': 'dimensionless (0–100 scale)', 'edge': 'dimensionless (0–100 scale)'}",
+      "assumptions": "Per-pick metrics are rendered without sample-size or calibration controls.",
+      "breakdown_regime": "Unbounded rendering of individual picks without statistical safeguards.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's per-pick inference kernel; requires Wilson LCB and min-n enforcement.",
+        "source_operator": "per_pick_confidence_edge",
+        "telemetry": "Raw per-pick confidence/edge values without guard"
+      }
+    },
+    {
+      "primitive_id": "hit_rate_percentage",
+      "name": "Hit Rate Percentage",
+      "verbatim_quote": "**`components/intelligence/engine-view.tsx:814-841,887-893`** — buy-low/sell-high hit-rate percentages with n shown but **no Wilson LCB and no minimum-n floor**; a thin sample (n=3) prints a headline-looking colored percentage.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'hitRate': 'dimensionless (0–100 scale)', 'n': 'integer (sample size)'}",
+      "assumptions": "Percentage is displayed without statistical correction or sample validation.",
+      "breakdown_regime": "Thin-sample rendering without Wilson lower confidence bound.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's hit rate inference engine; requires min-n floor and Wilson LCB.",
+        "source_operator": "hit_rate_percentage",
+        "telemetry": "Colored percentage without statistical correction"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "28c0ccacde0c2fa2_t0",
+      "think": "Each primitive represents a distinct public-facing performance number that lacks sufficient statistical grounding. The 'Proof Readiness Score' is a hardcoded value with no empirical basis, violating the principle of substantiated claims. The 'King Standard Performance' aggregates multiple fixed components into a misleading composite score. Per-pick metrics such as 'Confidence' and 'Edge' bypass sample-size and calibration checks, exposing the system to FTC scrutiny. Similarly, 'Hit Rate Percentage' displays unreliable statistics from small samples without applying Wilson Lower Confidence Bound corrections. These failures indicate a systemic lack of probabilistic rigor in public-facing data rendering. The core issue lies in the absence of a unified statistical framework that enforces minimum sample sizes, confidence intervals, and calibration bounds across all performance indicators. This creates a dual failure mode: first, false precision in reporting, and second, legal exposure due to unsubstantiated claims. The solution demands a consistent application of Bayesian inference principles, where each metric is either computed from validated data or explicitly marked as non-measured. The GSE must enforce these guards at the rendering layer, while GSI ensures the underlying models maintain conformity to statistical standards.\n\nDeep epistemic analysis for public-number-audit-2026-07-16 (28c0ccacde0c2fa2, domain=other, pages_read=2/2): Operator 'Proof Readiness Score' (page 1, domain other) captures: **`apps/web/app/stats/proof/page.tsx:10`** — `const proofScore = 61;` rendered as a public \"Proof Readiness\" ScoreRing on the page whose stated purpose is \"the honest proof layer.\" A hardcoded, non-computed score presented with visual specificity. Assumptions: Score is static, not derived from dynamic inputs; lacks statistical grounding. Breakdown regime: Hardcoded value renders without substantiation guard. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a synthetic metric lacking empirical validation; should be replaced with computed score or removed. Operator 'King Standard Performance' (page 1, domain other) captures: **`apps/web/app/stats/page.tsx:12-17,47,52,101`** — hardcoded \"King Standard 61/100\" + four component scores (Source Coverage 40, Live Feeds 10, Proof Archive 5, Metric Depth 65) as source literals on public `/stats`. Assumptions: All components are fixed values; no dynamic computation or validation. Breakdown regime: Hardcoded literals without substantiation mechanism. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Synthetic composite score used as public claim without statistical grounding. Operator 'Per-Pick Confidence Edge' (page 1, domain other) captures: **`apps/web/app/performance/losses/page.tsx:144-146` and `/losses/[id]/page.tsx:163-164`** — bare `Confidence {n}` / `Edge {n}` per-pick renders, zero guard, one page away from the carefully-floored `/performance` aggregate. Assumptions: Per-pick metrics are rendered without sample-size or calibration controls. Breakdown regime: Unbounded rendering of individual picks without statistical safeguards. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's per-pick inference kernel; requires Wilson LCB and min-n enforcement. Operator 'Hit Rate Percentage' (page 1, domain other) captures: **`components/intelligence/engine-view.tsx:814-841,887-893`** — buy-low/sell-high hit-rate percentages with n shown but **no Wilson LCB and no minimum-n floor**; a thin sample (n=3) prints a headline-looking colored percentage. Assumptions: Percentage is displayed without statistical correction or sample validation. Breakdown regime: Thin-sample rendering without Wilson lower confidence bound. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's hit rate inference engine; requires min-n floor and Wilson LCB. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for public-number-audit-2026-07-16 (28c0ccacde0c2fa2, domain=other, pages_read=2/2): Operator 'Proof Readiness Score' (page 1, domain other) captures: **`apps/web/app/stats/proof/page.tsx:10`** — `const proofScore = 61;` rendered as a public \"Proof Readiness\" ScoreRing on the page whose stated purpose is \"the honest proof layer.\" A hardcoded, non-computed score presented with visual specificity. Assumptions: Score is static, not derived from dynamic inputs; lacks statistical grounding. Breakdown regime: Hardcoded value renders without substantiation guard. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a synthetic metric lacking empirical validation; should be replaced with computed score or removed. Operator 'King Standard Performance' (page 1, domain other) captures: **`apps/web/app/stats/page.tsx:12-17,47,52,101`** — hardcoded \"King Standard 61/100\" + four component scores (Source Coverage 40, Live Feeds 10, Proof Archive 5, Metric Depth 65) as source literals on public `/stats`. Assumptions: All components are fixed values; no dynamic computation or validation. Breakdown regime: Hardcoded literals without substantiation mechanism. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Synthetic composite score used as public claim without statistical grounding. Operator 'Per-Pick Confidence Edge' (page 1, domain other) captures: **`apps/web/app/performance/losses/page.tsx:144-146` and `/losses/[id]/page.tsx:163-164`** — bare `Confidence {n}` / `Edge {n}` per-pick renders, zero guard, one page away from the carefully-floored `/performance` aggregate. Assumptions: Per-pick metrics are rendered without sample-size or calibration controls. Breakdown regime: Unbounded rendering of individual picks without statistical safeguards. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's per-pick inference kernel; requires Wilson LCB and min-n enforcement. Operator 'Hit Rate Percentage' (page 1, domain other) captures: **`components/intelligence/engine-view.tsx:814-841,887-893`** — buy-low/sell-high hit-rate percentages with n shown but **no Wilson LCB and no minimum-n floor**; a thin sample (n=3) prints a headline-looking colored percentage. Assumptions: Percentage is displayed without statistical correction or sample validation. Breakdown regime: Thin-sample rendering without Wilson lower confidence bound. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's hit rate inference engine; requires min-n floor and Wilson LCB. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early-stage web app design where performance numbers were treated as illustrative rather than substantiated. Influenced by prior Fintech practices that allowed for speculative metrics without rigorous validation. Retrocausal Genealogy: Rooted in public-number-audit-2026-07-16 (28c0ccacde0c2fa2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in public-number-audit-2026-07-16 (28c0ccacde0c2fa2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include regulatory bodies seeking substantiation and users expecting accurate performance signals. The system must balance transparency with legal compliance, requiring a dual-layer approach: one that validates claims statistically and another that communicates uncertainty. Theory of Mind & Decision Maker Model: Rooted in public-number-audit-2026-07-16 (28c0ccacde0c2fa2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that no two public surfaces share identical unguarded performance metrics. Leakage vetoes apply to any rendering of per-pick or low-sample metrics without Wilson LCB or minimum-n enforcement. Cross-Layer Veto & Anti-Leakage Check: Rooted in public-number-audit-2026-07-16 (28c0ccacde0c2fa2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

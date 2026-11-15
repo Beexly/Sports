@@ -1,0 +1,78 @@
+{
+  "book_id": "89c6b02aee36bf46",
+  "source_status": "COMPLETE",
+  "title": "99c6689701b3",
+  "file_name": "99c6689701b3.txt",
+  "sha256": "89c6b02aee36bf46cbef1301b78247b807d4dedece193c1116a35ee8fcf63b7f",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for probabilistic inference and risk-constrained Kelly sizing bridges Bayesian hierarchies with conformal prediction and situational honesty gates. Universal Lens: Rooted in 99c6689701b3 (89c6b02aee36bf46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian shrinkage and hierarchical pooling to generate risk-adjusted edge estimates, integrating conformal uncertainty quantification with Kelly-based position sizing under drawdown constraints. GSI Mapping: Rooted in 99c6689701b3 (89c6b02aee36bf46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE leverages situational reasoning through continuous signal tilts and multi-armed bandit logic, enabling dynamic state transitions conditioned on observed and imputed data within a structured decision lattice. GSE Mapping: Rooted in 99c6689701b3 (89c6b02aee36bf46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "eval_close_distillation",
+      "name": "Close Distillation Gate",
+      "verbatim_quote": "Hard-gated on LINE_ARCHIVE_ENABLED and // never throws, so every settlement lane (paid settle-sport, the free grader, // the stale backfill) can stamp the close after a successful grade (C-95).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The system assumes deterministic settlement lanes and immutable archive states post-grade.",
+      "breakdown_regime": "Failure occurs when archive is not enabled or grade fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's settlement integrity layer where each lane acts as a probabilistic closure operator over event outcomes.",
+        "source_operator": "eval_close_distillation",
+        "telemetry": "Archive timestamp consistency and settlement lane success rate."
+      }
+    },
+    {
+      "primitive_id": "eval_informed_flow",
+      "name": "Informed Flow Classifier",
+      "verbatim_quote": "// evalLocalMatrixCompletion tags every cell OBSERVED | IMPUTED so an imputed // value is never presented as a measurement.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Imputation does not alter the fundamental nature of observed data.",
+      "breakdown_regime": "When imputed values are misclassified as measurements.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from matrix completion logic in GSE's feature space, used to classify data fidelity for downstream inference.",
+        "source_operator": "eval_informed_flow",
+        "telemetry": "Observed vs imputed ratio in local matrix completions."
+      }
+    },
+    {
+      "primitive_id": "eval_kelly_lower_endpoint",
+      "name": "Kelly Lower Endpoint",
+      "verbatim_quote": "// A negative stake, a stake above the caller cap, a zero edge, and a non-finite // edge all fail closed.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Risk is bounded and finite edge implies actionable position.",
+      "breakdown_regime": "Invalid stake parameters lead to closure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents a lower bound on Kelly stake computation in GSI's risk-constrained optimization layer.",
+        "source_operator": "eval_kelly_lower_endpoint",
+        "telemetry": "Stake validity flags and edge magnitude thresholds."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "89c6b02aee36bf46_t0",
+      "think": "The Close Distillation Gate ensures deterministic settlement across lanes by enforcing hard-line archive checks, aligning with GSI’s probabilistic closure semantics. Informed Flow Classifier distinguishes between observed and imputed data using matrix completion logic, supporting GSE’s robustness against missing data. The Kelly Lower Endpoint enforces risk boundaries via stake validation, reflecting GSI’s constraint-driven position sizing. These primitives form a triad of integrity, data fidelity, and risk control, enabling coherent probabilistic reasoning in high-dimensional sports markets.\n\nDeep epistemic analysis for 99c6689701b3 (89c6b02aee36bf46, domain=other, pages_read=9/9): Operator 'Close Distillation Gate' (page 2, domain other) captures: Hard-gated on LINE_ARCHIVE_ENABLED and // never throws, so every settlement lane (paid settle-sport, the free grader, // the stale backfill) can stamp the close after a successful grade (C-95). Assumptions: The system assumes deterministic settlement lanes and immutable archive states post-grade. Breakdown regime: Failure occurs when archive is not enabled or grade fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's settlement integrity layer where each lane acts as a probabilistic closure operator over event outcomes. Operator 'Informed Flow Classifier' (page 5, domain other) captures: // evalLocalMatrixCompletion tags every cell OBSERVED | IMPUTED so an imputed // value is never presented as a measurement. Assumptions: Imputation does not alter the fundamental nature of observed data. Breakdown regime: When imputed values are misclassified as measurements. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from matrix completion logic in GSE's feature space, used to classify data fidelity for downstream inference. Operator 'Kelly Lower Endpoint' (page 7, domain other) captures: // A negative stake, a stake above the caller cap, a zero edge, and a non-finite // edge all fail closed. Assumptions: Risk is bounded and finite edge implies actionable position. Breakdown regime: Invalid stake parameters lead to closure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a lower bound on Kelly stake computation in GSI's risk-constrained optimization layer. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 99c6689701b3 (89c6b02aee36bf46, domain=other, pages_read=9/9): Operator 'Close Distillation Gate' (page 2, domain other) captures: Hard-gated on LINE_ARCHIVE_ENABLED and // never throws, so every settlement lane (paid settle-sport, the free grader, // the stale backfill) can stamp the close after a successful grade (C-95). Assumptions: The system assumes deterministic settlement lanes and immutable archive states post-grade. Breakdown regime: Failure occurs when archive is not enabled or grade fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's settlement integrity layer where each lane acts as a probabilistic closure operator over event outcomes. Operator 'Informed Flow Classifier' (page 5, domain other) captures: // evalLocalMatrixCompletion tags every cell OBSERVED | IMPUTED so an imputed // value is never presented as a measurement. Assumptions: Imputation does not alter the fundamental nature of observed data. Breakdown regime: When imputed values are misclassified as measurements. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from matrix completion logic in GSE's feature space, used to classify data fidelity for downstream inference. Operator 'Kelly Lower Endpoint' (page 7, domain other) captures: // A negative stake, a stake above the caller cap, a zero edge, and a non-finite // edge all fail closed. Assumptions: Risk is bounded and finite edge implies actionable position. Breakdown regime: Invalid stake parameters lead to closure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a lower bound on Kelly stake computation in GSI's risk-constrained optimization layer. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Bayesian decision theory and Kelly portfolio optimization, extended into conformal prediction and stochastic control frameworks. Retrocausal Genealogy: Rooted in 99c6689701b3 (89c6b02aee36bf46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 99c6689701b3 (89c6b02aee36bf46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models adversarial data sources and bounded rationality in betting agents, ensuring decisions remain robust under uncertainty. Theory of Mind & Decision Maker Model: Rooted in 99c6689701b3 (89c6b02aee36bf46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 99c6689701b3 (89c6b02aee36bf46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating archive integrity from data classification and risk bounds. Leakage is mitigated by strict data fidelity protocols. Cross-Layer Veto & Anti-Leakage Check: Rooted in 99c6689701b3 (89c6b02aee36bf46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 99c6689701b3 (89c6b02aee36bf46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

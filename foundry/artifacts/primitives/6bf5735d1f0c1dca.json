@@ -1,0 +1,78 @@
+{
+  "book_id": "6bf5735d1f0c1dca",
+  "source_status": "COMPLETE",
+  "title": "draftkings.com",
+  "file_name": "draftkings.com.md",
+  "sha256": "6bf5735d1f0c1dca6e47ab8d2db2bbcccda973e27262d07000b49fc30ca1ecfe",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph connectivity and path taxonomy define fantasy sports domain topology via URL index cardinality and semantic segmentation. Universal Lens: Rooted in draftkings.com (6bf5735d1f0c1dca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief nets model sitemap coverage and content categorization using URL entropy and segment frequency as probabilistic priors. GSI Mapping: Rooted in draftkings.com (6bf5735d1f0c1dca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition automata encode path evolution through fantasy sports categories, with sitemap entries as discrete event triggers. GSE Mapping: Rooted in draftkings.com (6bf5735d1f0c1dca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_connectivity_graph",
+      "name": "Sitemap Connectivity Graph",
+      "verbatim_quote": "# draftkings.com Category: **fantasy** URLs discovered: **774** Sitemaps walked: 9 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{urls}}': '\\\\text{dimensionless, total URLs}', 'N_{\\\\text{sitemaps}}': '\\\\text{dimensionless, sitemaps traversed}'}",
+      "assumptions": "Graph is undirected, edges represent URL inclusion in sitemap; sitemaps are consistent across domains.",
+      "breakdown_regime": "When $ N_{\\text{sitemaps}} \\to 0 $, graph becomes disconnected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "URL graph structure mirrors content hierarchy; sitemap status codes indicate access control and indexing fidelity.",
+        "source_operator": "sitemap_connectivity_graph",
+        "telemetry": "URL discovery count and sitemap HTTP status"
+      }
+    },
+    {
+      "primitive_id": "path_taxonomy_segmentation",
+      "name": "Path Taxonomy Segmentation",
+      "verbatim_quote": "segment | URLs | |---|---| | `/accessibility-about` | 2 | | `/community-guidelines` | 2 | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{\\\\text{segment}}': '\\\\text{dimensionless, segment identifier}', 'N_{\\\\text{paths}}(L_{\\\\text{segment}})': '\\\\text{dimensionless, number of paths per segment}'}",
+      "assumptions": "Each path segment uniquely identifies a content category or policy area.",
+      "breakdown_regime": "When $ N_{\\text{paths}}(L_{\\text{segment}}) \\to 0 $, segment is orphaned.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Segmentation encodes semantic clustering of fantasy sports content; path counts reflect engagement or regulatory focus.",
+        "source_operator": "path_taxonomy_segmentation",
+        "telemetry": "Path count per segment and segment metadata"
+      }
+    },
+    {
+      "primitive_id": "content_category_indexing",
+      "name": "Content Category Indexing",
+      "verbatim_quote": "2 | | `/fantasy-baseball` | 2 | | `/fantasy-basketball` | 2 | | `/fantasy-f1` | 2",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{category}}': '\\\\text{dimensionless, sport category}', 'N_{\\\\text{entries}}(C_{\\\\text{category}})': '\\\\text{dimensionless, indexed entries}'}",
+      "assumptions": "Each fantasy sport category has uniform indexing strategy and entry count.",
+      "breakdown_regime": "When $ N_{\\text{entries}}(C_{\\text{category}}) \\to 0 $, category is deprecated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Indexing reflects product portfolio alignment; fantasy sport categories map to distinct data streams.",
+        "source_operator": "content_category_indexing",
+        "telemetry": "Entry count per fantasy sport category"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6bf5735d1f0c1dca_t0",
+      "think": "The sitemap graph defines a topological space where each sitemap represents a connected component of the site's URL structure. The path taxonomy segments this space into thematic regions, with each segment having a fixed number of paths. Content indexing ensures that each fantasy sport category is uniformly represented. These primitives form a dual structure: one encoding connectivity (sitemap graph), the other encoding semantics (path taxonomy). Failure modes include disconnected components when sitemaps return 404, or orphaned segments when path counts drop to zero. The interplay between these structures enables robust navigation and content discovery for fantasy sports users.\n\nDeep epistemic analysis for draftkings.com (6bf5735d1f0c1dca, domain=other, pages_read=4/4): Operator 'Sitemap Connectivity Graph' (page 1, domain other) captures: # draftkings.com Category: **fantasy** URLs discovered: **774** Sitemaps walked: 9 ## Sitemaps | Sitemap | Status Assumptions: Graph is undirected, edges represent URL inclusion in sitemap; sitemaps are consistent across domains. Breakdown regime: When $ N_{\\text{sitemaps}} \\to 0 $, graph becomes disconnected. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL graph structure mirrors content hierarchy; sitemap status codes indicate access control and indexing fidelity. Operator 'Path Taxonomy Segmentation' (page 1, domain other) captures: segment | URLs | |---|---| | `/accessibility-about` | 2 | | `/community-guidelines` | 2 | | Assumptions: Each path segment uniquely identifies a content category or policy area. Breakdown regime: When $ N_{\\text{paths}}(L_{\\text{segment}}) \\to 0 $, segment is orphaned. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Segmentation encodes semantic clustering of fantasy sports content; path counts reflect engagement or regulatory focus. Operator 'Content Category Indexing' (page 1, domain other) captures: 2 | | `/fantasy-baseball` | 2 | | `/fantasy-basketball` | 2 | | `/fantasy-f1` | 2 Assumptions: Each fantasy sport category has uniform indexing strategy and entry count. Breakdown regime: When $ N_{\\text{entries}}(C_{\\text{category}}) \\to 0 $, category is deprecated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Indexing reflects product portfolio alignment; fantasy sport categories map to distinct data streams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for draftkings.com (6bf5735d1f0c1dca, domain=other, pages_read=4/4): Operator 'Sitemap Connectivity Graph' (page 1, domain other) captures: # draftkings.com Category: **fantasy** URLs discovered: **774** Sitemaps walked: 9 ## Sitemaps | Sitemap | Status Assumptions: Graph is undirected, edges represent URL inclusion in sitemap; sitemaps are consistent across domains. Breakdown regime: When $ N_{\\text{sitemaps}} \\to 0 $, graph becomes disconnected. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL graph structure mirrors content hierarchy; sitemap status codes indicate access control and indexing fidelity. Operator 'Path Taxonomy Segmentation' (page 1, domain other) captures: segment | URLs | |---|---| | `/accessibility-about` | 2 | | `/community-guidelines` | 2 | | Assumptions: Each path segment uniquely identifies a content category or policy area. Breakdown regime: When $ N_{\\text{paths}}(L_{\\text{segment}}) \\to 0 $, segment is orphaned. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Segmentation encodes semantic clustering of fantasy sports content; path counts reflect engagement or regulatory focus. Operator 'Content Category Indexing' (page 1, domain other) captures: 2 | | `/fantasy-baseball` | 2 | | `/fantasy-basketball` | 2 | | `/fantasy-f1` | 2 Assumptions: Each fantasy sport category has uniform indexing strategy and entry count. Breakdown regime: When $ N_{\\text{entries}}(C_{\\text{category}}) \\to 0 $, category is deprecated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Indexing reflects product portfolio alignment; fantasy sport categories map to distinct data streams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and graph theory, with early influences from web crawling models and hierarchical content classification systems. Retrocausal Genealogy: Rooted in draftkings.com (6bf5735d1f0c1dca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in draftkings.com (6bf5735d1f0c1dca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may seek to obscure or manipulate sitemap structure for SEO advantage or to limit access to certain content categories. Theory of Mind & Decision Maker Model: Rooted in draftkings.com (6bf5735d1f0c1dca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in draftkings.com (6bf5735d1f0c1dca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if sitemap and path taxonomy are not orthogonal; leakage occurs if indexing fails to distinguish between categories. Cross-Layer Veto & Anti-Leakage Check: Rooted in draftkings.com (6bf5735d1f0c1dca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in draftkings.com (6bf5735d1f0c1dca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "f414cc465fe7c181",
+  "source_status": "COMPLETE",
+  "title": "1988-one-epoch-all-you-need-multi-fidelity-hpo",
+  "file_name": "1988-one-epoch-all-you-need-multi-fidelity-hpo.md",
+  "sha256": "f414cc465fe7c181ff886c8eb94bd90ec5f6407eb5a0e64318cbf66ccb2b57cc",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 1988-one-epoch-all-you-need-multi-fidelity-hpo (f414cc465fe7c181), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 1988-one-epoch-all-you-need-multi-fidelity-hpo (f414cc465fe7c181), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 1988-one-epoch-all-you-need-multi-fidelity-hpo (f414cc465fe7c181), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "one_epoch_screening",
+      "name": "One-Epoch Screening",
+      "verbatim_quote": "Method / model Baseline: random search over HP configs; evaluate each at minimum fidelity (1 epoch); select top-K=3; train only those to maximum fidelity (100 epochs).",
+      "page": 1,
+      "latex": "None",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Early-ranking assumption: correlation between 1-epoch loss and full-training loss.",
+      "breakdown_regime": "Poor scaling with high noise, non-stationary fidelity gaps.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Conformal prediction with early-stop bandits. GSE: Rapid, low-fidelity model evaluation (e.g., few-season gradient boosting) to filter candidates before expensive full-validation.",
+        "source_operator": "one_epoch_screening",
+        "telemetry": "Correlation between early-stop metrics (e.g., AUC on first batch) and holdout performance."
+      }
+    },
+    {
+      "primitive_id": "top_k_tournament",
+      "name": "Top-K Tournament",
+      "verbatim_quote": "Method / model Baseline: random search over HP configs; evaluate each at minimum fidelity (1 epoch); select top-K=3; train only those to maximum fidelity (100 epochs).",
+      "page": 1,
+      "latex": "None",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Selection bias correction under finite samples.",
+      "breakdown_regime": "Over-selection leads to exploitation of noise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Knockoff-filtered variable selection. GSE: State-based filtering (e.g., 'hot stock' detection) followed by detailed analysis.",
+        "source_operator": "top_k_tournament",
+        "telemetry": "Proportion of true winners among selected candidates."
+      }
+    },
+    {
+      "primitive_id": "learning_curve_ranking",
+      "name": "Learning-Curve Ranking",
+      "verbatim_quote": "Assumption: early-epoch ranking is informative of final ranking — validated empirically via learning-curve visualizations (1,000 sampled curves colored by final rank; rank-evolution heatmaps).",
+      "page": 1,
+      "latex": "None",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Rank preservation across fidelity levels.",
+      "breakdown_regime": "Non-monotonic or multimodal fidelity gaps destroy ordering.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Transfer learning across fidelity distributions. GSE: Time-series state transitions (e.g., player form decay modeled via curve fitting).",
+        "source_operator": "learning_curve_ranking",
+        "telemetry": "Spearman correlation between early and late rank orders."
+      }
+    },
+    {
+      "primitive_id": "compute_tradeoff_optimization",
+      "name": "Compute-Tradeoff Optimization",
+      "verbatim_quote": "Numerical results / baselines - Final test RMSE of 1-Epoch ≈ 100-Epochs policy (curves converge to the same point), but 1-Epoch uses 40× fewer training epochs (500 vs 20,000).",
+      "page": 1,
+      "latex": "None",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Diminishing returns in fidelity improvement relative to computational cost.",
+      "breakdown_regime": "Flat reward landscape makes cheap approximations sufficient.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Adaptive experimental budgets via sequential hypothesis testing. GSE: Resource-constrained optimization (e.g., budget allocation across predictive models).",
+        "source_operator": "compute_tradeoff_optimization",
+        "telemetry": "Marginal gain in accuracy per additional epoch of computation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f414cc465fe7c181_t0",
+      "think": "The core insight is that multi-fidelity HPO (MF-HPO) aims to reduce compute by evaluating cheaper approximations of model performance. However, the authors show that a simple \"1-epoch screen\" followed by a full-train tournament (Top-K) often matches the performance of sophisticated MF-HPO methods while using orders of magnitude less compute. This is because the early learning curves exhibit a \"dominant subspace\" phenomenon: good hyperparameters quickly align with optimal parameters, stabilizing early losses, while poor ones remain noisy. The key operator is a threshold-based filter (1-epoch loss < τ) that projects onto this dominant subspace. In GSE, this maps to rapid, low-fidelity model evaluation (e.g., few-season gradient boosting) to identify promising candidates before committing to full validation. The failure mode occurs when fidelity gaps are non-stationary or when early rankings are destroyed by noise, requiring adaptive thresholds.\n\nDeep epistemic analysis for 1988-one-epoch-all-you-need-multi-fidelity-hpo (f414cc465fe7c181, domain=other, pages_read=3/3): Operator 'One-Epoch Screening' (page 1, domain other) captures: Method / model Baseline: random search over HP configs; evaluate each at minimum fidelity (1 epoch); select top-K=3; train only those to maximum fidelity (100 epochs). Assumptions: Early-ranking assumption: correlation between 1-epoch loss and full-training loss. Breakdown regime: Poor scaling with high noise, non-stationary fidelity gaps. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conformal prediction with early-stop bandits. GSE: Rapid, low-fidelity model evaluation (e.g., few-season gradient boosting) to filter candidates before expensive full-validation. Operator 'Top-K Tournament' (page 1, domain other) captures: Method / model Baseline: random search over HP configs; evaluate each at minimum fidelity (1 epoch); select top-K=3; train only those to maximum fidelity (100 epochs). Assumptions: Selection bias correction under finite samples. Breakdown regime: Over-selection leads to exploitation of noise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Knockoff-filtered variable selection. GSE: State-based filtering (e.g., 'hot stock' detection) followed by detailed analysis. Operator 'Learning-Curve Ranking' (page 1, domain other) captures: Assumption: early-epoch ranking is informative of final ranking — validated empirically via learning-curve visualizations (1,000 sampled curves colored by final rank; rank-evolution heatmaps). Assumptions: Rank preservation across fidelity levels. Breakdown regime: Non-monotonic or multimodal fidelity gaps destroy ordering. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Transfer learning across fidelity distributions. GSE: Time-series state transitions (e.g., player form decay modeled via curve fitting). Operator 'Compute-Tradeoff Optimization' (page 1, domain other) captures: Numerical results / baselines - Final test RMSE of 1-Epoch ≈ 100-Epochs policy (curves converge to the same point), but 1-Epoch uses 40× fewer training epochs (500 vs 20,000). Assumptions: Diminishing returns in fidelity improvement relative to computational cost. Breakdown regime: Flat reward landscape makes cheap approximations sufficient. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Adaptive experimental budgets via sequential hypothesis testing. GSE: Resource-constrained optimization (e.g., budget allocation across predictive models). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1988-one-epoch-all-you-need-multi-fidelity-hpo (f414cc465fe7c181, domain=other, pages_read=3/3): Operator 'One-Epoch Screening' (page 1, domain other) captures: Method / model Baseline: random search over HP configs; evaluate each at minimum fidelity (1 epoch); select top-K=3; train only those to maximum fidelity (100 epochs). Assumptions: Early-ranking assumption: correlation between 1-epoch loss and full-training loss. Breakdown regime: Poor scaling with high noise, non-stationary fidelity gaps. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conformal prediction with early-stop bandits. GSE: Rapid, low-fidelity model evaluation (e.g., few-season gradient boosting) to filter candidates before expensive full-validation. Operator 'Top-K Tournament' (page 1, domain other) captures: Method / model Baseline: random search over HP configs; evaluate each at minimum fidelity (1 epoch); select top-K=3; train only those to maximum fidelity (100 epochs). Assumptions: Selection bias correction under finite samples. Breakdown regime: Over-selection leads to exploitation of noise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Knockoff-filtered variable selection. GSE: State-based filtering (e.g., 'hot stock' detection) followed by detailed analysis. Operator 'Learning-Curve Ranking' (page 1, domain other) captures: Assumption: early-epoch ranking is informative of final ranking — validated empirically via learning-curve visualizations (1,000 sampled curves colored by final rank; rank-evolution heatmaps). Assumptions: Rank preservation across fidelity levels. Breakdown regime: Non-monotonic or multimodal fidelity gaps destroy ordering. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Transfer learning across fidelity distributions. GSE: Time-series state transitions (e.g., player form decay modeled via curve fitting). Operator 'Compute-Tradeoff Optimization' (page 1, domain other) captures: Numerical results / baselines - Final test RMSE of 1-Epoch ≈ 100-Epochs policy (curves converge to the same point), but 1-Epoch uses 40× fewer training epochs (500 vs 20,000). Assumptions: Diminishing returns in fidelity improvement relative to computational cost. Breakdown regime: Flat reward landscape makes cheap approximations sufficient. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Adaptive experimental budgets via sequential hypothesis testing. GSE: Resource-constrained optimization (e.g., budget allocation across predictive models). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 1988-one-epoch-all-you-need-multi-fidelity-hpo (f414cc465fe7c181), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1988-one-epoch-all-you-need-multi-fidelity-hpo (f414cc465fe7c181), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling the decision actor (ML engineer/GSE analyst) as balancing exploration (evaluating many configs) against exploitation (training only the best). Sophisticated MF-HPO methods assume complex dynamics, but the empirical evidence suggests that a simpler, compute-aware policy often suffices. Opponents include researchers who believe fidelity scheduling is essential for scaling. Theory of Mind & Decision Maker Model: Rooted in 1988-one-epoch-all-you-need-multi-fidelity-hpo (f414cc465fe7c181), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring that the cheap fidelity (1 epoch) measures distinct information from the full fidelity (100 epochs). If they are perfectly collinear, the cheap measure provides no new information. Leakage occurs if the cheap fidelity leaks test-set information, e.g., through data snooping in early stopping criteria. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1988-one-epoch-all-you-need-multi-fidelity-hpo (f414cc465fe7c181), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

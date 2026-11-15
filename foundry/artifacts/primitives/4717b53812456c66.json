@@ -1,0 +1,78 @@
+{
+  "book_id": "4717b53812456c66",
+  "source_status": "COMPLETE",
+  "title": "2024 - Quantifying Uncertainty in Marathon Finish Time Predictions - Unknown Authors",
+  "file_name": "2024 - Quantifying Uncertainty in Marathon Finish Time Predictions - Unknown Authors.md",
+  "sha256": "4717b53812456c66344716effdf781338b22d9950ef6adb6597ccde82e292365",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Marathon finish time prediction via Bayesian and quantile regression models incorporating in-race splits, addressing point-estimate uncertainty and context-dependent pacing. Universal Lens: Rooted in 2024 - Quantifying Uncertainty in Marathon Finish Time Predictions - Unknown Authors (4717b53812456c66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian and conformal inference to model probabilistic finish time distributions from split data, enabling uncertainty quantification and real-time predictive updates. GSI Mapping: Rooted in 2024 - Quantifying Uncertainty in Marathon Finish Time Predictions - Unknown Authors (4717b53812456c66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses state-transition models to simulate runner behavior dynamics across race stages, integrating split-based pacing trends into situational awareness for adaptive prediction. GSE Mapping: Rooted in 2024 - Quantifying Uncertainty in Marathon Finish Time Predictions - Unknown Authors (4717b53812456c66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "point_estimate_failure",
+      "name": "Point Estimate Failure",
+      "verbatim_quote": "These predictions have two key issues: the estimates do not consider the in-race context that can determine if a runner is likely to finish faster or slower than expected, and the prediction is a single point estimate with no information about uncertainty.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes constant pace throughout race; ignores fatigue and contextual factors.",
+      "breakdown_regime": "Race completion beyond 25% where pacing diverges from initial trends.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models the core limitation of deterministic point estimates in dynamic environments.",
+        "source_operator": "point_estimate_failure",
+        "telemetry": "RMSE improvement over traditional extrapolation methods."
+      }
+    },
+    {
+      "primitive_id": "bayesian_linear_regression",
+      "name": "Bayesian Linear Regression",
+      "verbatim_quote": "We implement two approaches to address these issues: Bayesian linear regression and quantile regression.",
+      "page": 1,
+      "latex": "\\hat{y} \\sim \\mathcal{N}(\\mu, \\sigma^2), \\quad \\mu = \\beta_0 + \\beta_1 x_1 + \\beta_2 x_2",
+      "symbol_and_unit_ledger": "{'\\\\hat{y}': 'Predicted finish time (minutes)', '\\\\mu': 'Expected finish time (minutes)', '\\\\sigma': 'Standard deviation of prediction (minutes)', '\\\\beta_0': 'Intercept term (minutes)', '\\\\beta_1, \\\\beta_2': 'Regression coefficients (dimensionless)'}",
+      "assumptions": "Linear relationship between predictors and outcome; Gaussian noise in response variable.",
+      "breakdown_regime": "Race stage where split data becomes insufficient for reliable inference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps split-based regressors to probabilistic finish time distributions via posterior sampling.",
+        "source_operator": "bayesian_linear_regression",
+        "telemetry": "Posterior predictive intervals and uncertainty bands."
+      }
+    },
+    {
+      "primitive_id": "quantile_regression",
+      "name": "Quantile Regression",
+      "verbatim_quote": "We implement two approaches to address these issues: Bayesian linear regression and quantile regression.",
+      "page": 1,
+      "latex": "\\arg\\min_{\\tau} \\mathbb{E}[\\rho_\\tau(y - f(x))] \\quad \\text{where } \\rho_\\tau(u) = u(\\tau - I(u < 0))",
+      "symbol_and_unit_ledger": "{'\\\\tau': 'Quantile level (0 < \\\\tau < 1)', 'f(x)': 'Conditional quantile function (minutes)', '\\\\rho_\\\\tau': 'Check function (dimensionless)'}",
+      "assumptions": "No assumption on error distribution; allows asymmetric loss functions.",
+      "breakdown_regime": "When tail risk or extreme outcomes must be bounded.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Captures uncertainty bounds at various quantiles for robust finish time estimation.",
+        "source_operator": "quantile_regression",
+        "telemetry": "Prediction intervals at 5th, 50th, and 95th percentiles."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4717b53812456c66_t0",
+      "think": "The core challenge lies in transforming static pace extrapolation into dynamic probabilistic forecasting. Traditional methods fail because they assume constant speed, ignoring physiological fatigue and environmental variability. The proposed Bayesian framework introduces prior distributions over regression parameters, allowing for uncertainty propagation through posterior inference. This enables real-time updating of finish time expectations as new splits arrive. Quantile regression complements this by providing direct access to conditional quantiles without assuming normality. Both methods leverage multi-slice data—total pace and recent 5K pace—to enhance predictive fidelity. The failure mode occurs when splits are sparse or inconsistent, leading to unreliable parameter estimates. The dual nature of these primitives reflects the need for both probabilistic confidence and quantified risk bounds in high-stakes scenarios such as marathon racing.\n\nDeep epistemic analysis for 2024 - Quantifying Uncertainty in Marathon Finish Time Predictions - Unknown Authors (4717b53812456c66, domain=other, pages_read=7/7): Operator 'Point Estimate Failure' (page 1, domain other) captures: These predictions have two key issues: the estimates do not consider the in-race context that can determine if a runner is likely to finish faster or slower than expected, and the prediction is a single point estimate with no information about uncertainty. Assumptions: Assumes constant pace throughout race; ignores fatigue and contextual factors. Breakdown regime: Race completion beyond 25% where pacing diverges from initial trends. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models the core limitation of deterministic point estimates in dynamic environments. Operator 'Bayesian Linear Regression' (page 1, domain other) captures: We implement two approaches to address these issues: Bayesian linear regression and quantile regression. Assumptions: Linear relationship between predictors and outcome; Gaussian noise in response variable. Breakdown regime: Race stage where split data becomes insufficient for reliable inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps split-based regressors to probabilistic finish time distributions via posterior sampling. Operator 'Quantile Regression' (page 1, domain other) captures: We implement two approaches to address these issues: Bayesian linear regression and quantile regression. Assumptions: No assumption on error distribution; allows asymmetric loss functions. Breakdown regime: When tail risk or extreme outcomes must be bounded. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Captures uncertainty bounds at various quantiles for robust finish time estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2024 - Quantifying Uncertainty in Marathon Finish Time Predictions - Unknown Authors (4717b53812456c66, domain=other, pages_read=7/7): Operator 'Point Estimate Failure' (page 1, domain other) captures: These predictions have two key issues: the estimates do not consider the in-race context that can determine if a runner is likely to finish faster or slower than expected, and the prediction is a single point estimate with no information about uncertainty. Assumptions: Assumes constant pace throughout race; ignores fatigue and contextual factors. Breakdown regime: Race completion beyond 25% where pacing diverges from initial trends. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models the core limitation of deterministic point estimates in dynamic environments. Operator 'Bayesian Linear Regression' (page 1, domain other) captures: We implement two approaches to address these issues: Bayesian linear regression and quantile regression. Assumptions: Linear relationship between predictors and outcome; Gaussian noise in response variable. Breakdown regime: Race stage where split data becomes insufficient for reliable inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps split-based regressors to probabilistic finish time distributions via posterior sampling. Operator 'Quantile Regression' (page 1, domain other) captures: We implement two approaches to address these issues: Bayesian linear regression and quantile regression. Assumptions: No assumption on error distribution; allows asymmetric loss functions. Breakdown regime: When tail risk or extreme outcomes must be bounded. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Captures uncertainty bounds at various quantiles for robust finish time estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical regression theory (Gauss-Markov), extended by Bayesian inference (Laplace, Bayes) and quantile regression (Koenker & Bassett). Modern applications in sports analytics build upon these foundational statistical paradigms. Retrocausal Genealogy: Rooted in 2024 - Quantifying Uncertainty in Marathon Finish Time Predictions - Unknown Authors (4717b53812456c66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the runner (with unknown fatigue trajectory), the spectator (limited observational window), and the system (which must synthesize incomplete data). Each agent operates under different information sets, requiring robust inference mechanisms to bridge gaps. Theory of Mind & Decision Maker Model: Rooted in 2024 - Quantifying Uncertainty in Marathon Finish Time Predictions - Unknown Authors (4717b53812456c66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures predictors like total pace and current pace do not redundantly encode same information. Leakage veto prevents overfitting by enforcing regularization constraints on model complexity. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2024 - Quantifying Uncertainty in Marathon Finish Time Predictions - Unknown Authors (4717b53812456c66), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

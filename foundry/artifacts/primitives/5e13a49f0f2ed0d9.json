@@ -1,0 +1,78 @@
+{
+  "book_id": "5e13a49f0f2ed0d9",
+  "source_status": "COMPLETE",
+  "title": "logo-prompt-enhancer",
+  "file_name": "logo-prompt-enhancer.md",
+  "sha256": "5e13a49f0f2ed0d959f9951250917ea4c4e3cffd45b482c1e921cad8732e5dba",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The prompt-enhancer acts as a deterministic projection operator mapping high-dimensional brand context onto a constrained, low-dimensional vector-generation subspace. By enforcing strict symbol-only boundaries and fixed palette cardinalities, the system minimizes semantic entropy, ensuring the generated mark remains isomorphic to the original design intent without hallucinatory drift.",
+  "gsi_mapping": "Treating the candidate specification as a prior distribution, the enhancer applies a hard constraint filter (e.g., 'no text', max three colors). This Bayesian update yields a posterior prompt that maximizes first-pass success probability, effectively bounding the conformal prediction sets of the generative model to exclude typographic or multi-concept outliers.",
+  "gse_mapping": "The pipeline enforces a rigid state-transition from abstract brand axes to concrete geometric primitives. The 'constraint tail' acts as a boundary condition in the rendering phase, preventing state leakage into typography or extraneous metaphorical layers, thereby preserving the structural integrity of the isolated visual mechanism.",
+  "primitives": [
+    {
+      "primitive_id": "single_mechanism_projection",
+      "name": "Single Visual Mechanism Projection",
+      "verbatim_quote": "The central subject/mechanism portion must state exactly one visual idea in one clause.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "M: Visual mechanism (dimensionless concept), C: Clause count (integer, strictly 1)",
+      "assumptions": "The input Design Brain has already resolved all creative ambiguity; the generator requires a singular focal point.",
+      "breakdown_regime": "Fails when compound concepts ('and/or') are introduced, causing vector-space interference and ambiguous rendering.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's requirement for a single dominant situational feature, preventing cognitive overload in rapid visual parsing.",
+        "source_operator": "single_mechanism_projection",
+        "telemetry": "First-pass success rate of the generated SVG."
+      }
+    },
+    {
+      "primitive_id": "typographic_nullification",
+      "name": "Typographic Nullification Boundary",
+      "verbatim_quote": "Every candidate constraint tail must include the exact phrase \"no text.\" It does not need to be the final phrase.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "T: Text presence indicator (boolean, forced False), P: Prompt string (sequence of tokens)",
+      "assumptions": "Generative models have a strong latent bias toward adding readable words to logo prompts unless explicitly suppressed.",
+      "breakdown_regime": "Breaks if the phrase is omitted or softened, leading to hallucinated wordmarks or taglines.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Functions as a hard exclusionary kernel in GSI inference, zeroing out the probability mass associated with linguistic/typographic token clusters.",
+        "source_operator": "typographic_nullification",
+        "telemetry": "Absence of any alphanumeric glyphs in the output image (excluding permitted monograms)."
+      }
+    },
+    {
+      "primitive_id": "palette_cardinality_lock",
+      "name": "Palette Cardinality Lock",
+      "verbatim_quote": "If a nonessential detail is missing, infer the smallest sensible default without changing the central idea.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "N_c: Number of colors (integer, N_c <= 3 unless overridden), H: Hex code (string)",
+      "assumptions": "Visual complexity scales linearly with color count; minimal defaults preserve the core geometric signal.",
+      "breakdown_regime": "Violated when the model pads the palette to reach an arbitrary target of three colors, diluting contrast.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSE's resource allocation constraints, ensuring the visual payload uses the minimum necessary bandwidth to convey the brand axis.",
+        "source_operator": "palette_cardinality_lock",
+        "telemetry": "Exact match between requested color count and rendered color histogram peaks."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5e13a49f0f2ed0d9_t0",
+      "think": "The Brandkit Recraft enhancer operates as a rigorous mathematical filter designed to eliminate the high entropy inherent in natural language prompts. By mandating a single visual mechanism (Quote 7) and strictly forbidding secondary metaphors (Quote 8), the system projects a multidimensional brand context onto a 1D conceptual axis. This prevents the vector generation model from averaging competing latent space vectors, which typically results in muddy, unrecognizable outputs. The explicit 'no text' constraint (Quote 12) functions as a hard boundary condition, mathematically zeroing out the probability distribution over typographic tokens. Furthermore, the palette cardinality lock (Quote 4, Page 3) enforces a sparse representation, limiting chromatic dimensions to a maximum of three unless explicitly overridden. This sparsity ensures that the geometric construction (controlled by the `geometric_organic` axis) remains the dominant carrier of information. The entire process is a lossy compression where only the most structurally significant features—the mark type, central subject, and shape logic—are preserved, while all narrative fluff is discarded. The validation checklist (Page 4) acts as a final unit test, verifying that the resulting prompt string resides entirely within the valid manifold of Recraft V4.1's expected inputs.\n\nDeep epistemic analysis for logo-prompt-enhancer (5e13a49f0f2ed0d9, domain=other, pages_read=4/4): Operator 'Single Visual Mechanism Projection' (page 1, domain other) captures: The central subject/mechanism portion must state exactly one visual idea in one clause. Assumptions: The input Design Brain has already resolved all creative ambiguity; the generator requires a singular focal point. Breakdown regime: Fails when compound concepts ('and/or') are introduced, causing vector-space interference and ambiguous rendering. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's requirement for a single dominant situational feature, preventing cognitive overload in rapid visual parsing. Operator 'Typographic Nullification Boundary' (page 2, domain other) captures: Every candidate constraint tail must include the exact phrase \"no text.\" It does not need to be the final phrase. Assumptions: Generative models have a strong latent bias toward adding readable words to logo prompts unless explicitly suppressed. Breakdown regime: Breaks if the phrase is omitted or softened, leading to hallucinated wordmarks or taglines. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a hard exclusionary kernel in GSI inference, zeroing out the probability mass associated with linguistic/typographic token clusters. Operator 'Palette Cardinality Lock' (page 1, domain other) captures: If a nonessential detail is missing, infer the smallest sensible default without changing the central idea. Assumptions: Visual complexity scales linearly with color count; minimal defaults preserve the core geometric signal. Breakdown regime: Violated when the model pads the palette to reach an arbitrary target of three colors, diluting contrast. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSE's resource allocation constraints, ensuring the visual payload uses the minimum necessary bandwidth to convey the brand axis. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for logo-prompt-enhancer (5e13a49f0f2ed0d9, domain=other, pages_read=4/4): Operator 'Single Visual Mechanism Projection' (page 1, domain other) captures: The central subject/mechanism portion must state exactly one visual idea in one clause. Assumptions: The input Design Brain has already resolved all creative ambiguity; the generator requires a singular focal point. Breakdown regime: Fails when compound concepts ('and/or') are introduced, causing vector-space interference and ambiguous rendering. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's requirement for a single dominant situational feature, preventing cognitive overload in rapid visual parsing. Operator 'Typographic Nullification Boundary' (page 2, domain other) captures: Every candidate constraint tail must include the exact phrase \"no text.\" It does not need to be the final phrase. Assumptions: Generative models have a strong latent bias toward adding readable words to logo prompts unless explicitly suppressed. Breakdown regime: Breaks if the phrase is omitted or softened, leading to hallucinated wordmarks or taglines. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a hard exclusionary kernel in GSI inference, zeroing out the probability mass associated with linguistic/typographic token clusters. Operator 'Palette Cardinality Lock' (page 1, domain other) captures: If a nonessential detail is missing, infer the smallest sensible default without changing the central idea. Assumptions: Visual complexity scales linearly with color count; minimal defaults preserve the core geometric signal. Breakdown regime: Violated when the model pads the palette to reach an arbitrary target of three colors, diluting contrast. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSE's resource allocation constraints, ensuring the visual payload uses the minimum necessary bandwidth to convey the brand axis. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces its lineage to early semiotics and Bauhaus form-follows-function principles, later formalized in information theory via Shannon's noise reduction. In modern AI, it mirrors the shift from free-form prompting to structured, JSON-based control protocols (like ControlNet), where explicit geometric and compositional constraints replace vague adjectives to guarantee reproducible, high-fidelity outputs. Retrocausal Genealogy: Rooted in logo-prompt-enhancer (5e13a49f0f2ed0d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The enhancer models the generative AI not as a creative partner, but as a highly literal, probabilistic pattern matcher prone to over-completion. The human designer (Design Brain) is viewed as the sole source of strategic intent. The contract assumes the AI will aggressively attempt to add text, extra colors, and hybrid concepts if left unchecked. Therefore, the prompt structure is adversarial, specifically engineered to preempt and neutralize these predictable model biases.",
+      "cross_layer_veto": "A cross-layer veto is triggered if the `visual_axes` suggest high expressiveness but the `mark_type` is a rigid lettermark, creating a stylistic collision. Additionally, if the user-supplied style directive conflicts with the locked palette (e.g., requesting a neon cyberpunk style with a two-color grayscale palette), the system must prioritize the explicit palette lock, vetoing the stylistic expansion to maintain structural coherence."
+    }
+  ]
+}

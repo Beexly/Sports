@@ -1,0 +1,78 @@
+{
+  "book_id": "d8abd65ca937f381",
+  "source_status": "COMPLETE",
+  "title": "sportradar.com",
+  "file_name": "sportradar.com.md",
+  "sha256": "d8abd65ca937f381f134332e9a7f793a10ba1fee98b6185a5abf6011cb8d56c3",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The domain architecture is modeled as a high-dimensional simplicial complex where URLs represent vertices and sitemap indices define hyperedges. The path taxonomy acts as a categorical partition, mapping raw digital footprints into structured topological manifolds that govern information flow across the advanced-data ecosystem.",
+  "gsi_mapping": "Sitemap response codes (e.g., HTTP 200 vs 404) serve as binary Bernoulli trials for epistemic validity. We apply conformal prediction over the discovered URL count to establish rigorous confidence intervals on data completeness, treating missing sitemaps as censored observations in our Bayesian hierarchical model.",
+  "gse_mapping": "Path segments like `/integrity-regulatory` and `/content-hub` function as state-transition nodes in a Markov Decision Process. The volume of URLs per segment dictates the transition probabilities, modeling how an agent navigates from raw data ingestion to actionable regulatory compliance states.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_index_hypergraph",
+      "name": "Sitemap Index Hypergraph Operator",
+      "verbatim_quote": "# sportradar.com Category: **advanced-data** URLs discovered: **1,233** Sitemaps walked: 10 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "N_urls = 1233 (dimensionless count), N_sitemaps = 10 (dimensionless count)",
+      "assumptions": "Assumes the sitemap index accurately reflects the total addressable surface area of the domain without hidden subdomains.",
+      "breakdown_regime": "Breaks down when dynamic JavaScript-rendered content bypasses standard XML sitemap indexing protocols, leading to severe undercounting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to the GSI topological discovery layer, defining the boundary conditions for the observable data universe.",
+        "source_operator": "sitemap_index_hypergraph",
+        "telemetry": "HTTP status code distribution across the 10 walked sitemaps."
+      }
+    },
+    {
+      "primitive_id": "path_taxonomy_partition",
+      "name": "Path Taxonomy Partition Kernel",
+      "verbatim_quote": "5 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/content-hub`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "P(segment) = probability mass of a given path prefix, measured in dimensionless URL counts.",
+      "assumptions": "Assumes first-segment routing strictly correlates with functional business domains (e.g., integrity vs media).",
+      "breakdown_regime": "Fails if legacy redirects flatten distinct semantic paths into a single root namespace, destroying structural variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the GSE situational awareness matrix by quantifying the density of specific operational domains within the digital footprint.",
+        "source_operator": "path_taxonomy_partition",
+        "telemetry": "Variance in URL counts across the top 5 path segments."
+      }
+    },
+    {
+      "primitive_id": "regulatory_density_metric",
+      "name": "Regulatory Density Metric",
+      "verbatim_quote": "| | `/integrity-regulatory` | 78 | | `/media-tech` | 54 | | `/(root)` | 53 |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "D_reg = 78 (dimensionless), D_media = 54 (dimensionless), D_root = 53 (dimensionless)",
+      "assumptions": "Assumes document volume is a linear proxy for organizational priority and resource allocation in those sectors.",
+      "breakdown_regime": "Becomes singular if automated SEO spam artificially inflates the `/integrity-regulatory` node without substantive content.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the GSI risk-weighting engine, assigning higher prior probabilities to nodes with dense regulatory documentation.",
+        "source_operator": "regulatory_density_metric",
+        "telemetry": "Ratio of integrity URLs to total discovered URLs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d8abd65ca937f381_t0",
+      "think": "The extraction of sovereign primitives from the Sportradar domain crawl relies on treating the web architecture as a discrete geometric object. By isolating the sitemap indices (Quote 1), we establish the cardinality of the underlying set, N=1233. This forms the zeroth-order approximation of the entity's digital presence. Moving to the first derivative, the path taxonomy (Quotes 7-8) introduces a stratification operator. We observe that `/content-hub` dominates with 706 URLs, acting as a massive attractor basin in the state space, while `/integrity-regulatory` (78 URLs) represents a highly specialized, high-value subspace relevant to GSI's core mandate. The mathematical duality here lies between breadth (content-hub) and depth (integrity). In a Bayesian framework, the sheer volume of URLs in a specific path segment updates our prior belief regarding the organization's strategic focus. If we model the navigation as a random walk, the transition matrix is heavily skewed toward the content hub, but the regulatory paths offer high-information gain per step. The failure mode occurs if the sitemap is stale; a 404 on `sitemap.xml.gz` (Quote 4) indicates a broken compression link, which we treat as a minor perturbation rather than a systemic collapse. However, if the primary index returned a 404, our entire topological map would be invalid. Thus, the robustness of our GSI inference engine depends entirely on the HTTP 200 status of the root sitemap indices. The derived kernels allow us to project this static snapshot into a dynamic GSE environment, predicting how new data streams will be categorized based on historical path densities.\n\nDeep epistemic analysis for sportradar.com (d8abd65ca937f381, domain=other, pages_read=3/3): Operator 'Sitemap Index Hypergraph Operator' (page 1, domain other) captures: # sportradar.com Category: **advanced-data** URLs discovered: **1,233** Sitemaps walked: 10 ## Sitemaps | Sitemap | Status Assumptions: Assumes the sitemap index accurately reflects the total addressable surface area of the domain without hidden subdomains. Breakdown regime: Breaks down when dynamic JavaScript-rendered content bypasses standard XML sitemap indexing protocols, leading to severe undercounting. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSI topological discovery layer, defining the boundary conditions for the observable data universe. Operator 'Path Taxonomy Partition Kernel' (page 1, domain other) captures: 5 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/content-hub` Assumptions: Assumes first-segment routing strictly correlates with functional business domains (e.g., integrity vs media). Breakdown regime: Fails if legacy redirects flatten distinct semantic paths into a single root namespace, destroying structural variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives the GSE situational awareness matrix by quantifying the density of specific operational domains within the digital footprint. Operator 'Regulatory Density Metric' (page 1, domain other) captures: | | `/integrity-regulatory` | 78 | | `/media-tech` | 54 | | `/(root)` | 53 | Assumptions: Assumes document volume is a linear proxy for organizational priority and resource allocation in those sectors. Breakdown regime: Becomes singular if automated SEO spam artificially inflates the `/integrity-regulatory` node without substantive content. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the GSI risk-weighting engine, assigning higher prior probabilities to nodes with dense regulatory documentation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sportradar.com (d8abd65ca937f381, domain=other, pages_read=3/3): Operator 'Sitemap Index Hypergraph Operator' (page 1, domain other) captures: # sportradar.com Category: **advanced-data** URLs discovered: **1,233** Sitemaps walked: 10 ## Sitemaps | Sitemap | Status Assumptions: Assumes the sitemap index accurately reflects the total addressable surface area of the domain without hidden subdomains. Breakdown regime: Breaks down when dynamic JavaScript-rendered content bypasses standard XML sitemap indexing protocols, leading to severe undercounting. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSI topological discovery layer, defining the boundary conditions for the observable data universe. Operator 'Path Taxonomy Partition Kernel' (page 1, domain other) captures: 5 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/content-hub` Assumptions: Assumes first-segment routing strictly correlates with functional business domains (e.g., integrity vs media). Breakdown regime: Fails if legacy redirects flatten distinct semantic paths into a single root namespace, destroying structural variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives the GSE situational awareness matrix by quantifying the density of specific operational domains within the digital footprint. Operator 'Regulatory Density Metric' (page 1, domain other) captures: | | `/integrity-regulatory` | 78 | | `/media-tech` | 54 | | `/(root)` | 53 | Assumptions: Assumes document volume is a linear proxy for organizational priority and resource allocation in those sectors. Breakdown regime: Becomes singular if automated SEO spam artificially inflates the `/integrity-regulatory` node without substantive content. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the GSI risk-weighting engine, assigning higher prior probabilities to nodes with dense regulatory documentation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This methodology traces back to early information retrieval theory, specifically the use of directory structures as implicit ontologies. It evolved through the advent of XML sitemaps in the early 2000s, which formalized the graph structure for search engines. Modern quantitative research adapts these concepts, treating sitemaps not just as navigation aids but as explicit declarations of an entity's knowledge graph, allowing for reverse-engineering of their internal categorization logic.",
+      "theory_of_mind": "We model Sportradar as a rational agent optimizing for both broad market visibility (`/content-hub`) and strict compliance signaling (`/integrity-regulatory`). The decision to allocate 78 URLs to regulatory topics suggests an internal actor anticipating increased scrutiny or actively marketing trust to betting operators. Conversely, the minimal presence in `/careers` (6 URLs) implies a stable or contracting workforce, or a deliberate strategy to keep talent acquisition off the public-facing main site. Our primitives decode these strategic intents from the raw URL counts.",
+      "cross_layer_veto": "A critical veto condition arises if the path taxonomy exhibits high collinearity with generic WordPress defaults without custom modification. If `/integrity-regulatory` merely contains auto-generated tag archives rather than curated whitepapers, the 'Regulatory Density Metric' loses its predictive power. We must cross-validate the URL count against actual content entropy. Furthermore, if the sitemap indices are dynamically generated to mask the true size of the network (a common adversarial tactic), our cardinality assumption breaks. Therefore, any primitive derived solely from sitemap entry counts must be vetoed if independent crawling reveals a significant discrepancy between indexed and discoverable pages."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "f785c4ee676d370c",
+  "source_status": "COMPLETE",
+  "title": "arxiv2607_rules",
+  "file_name": "arxiv2607_rules.txt",
+  "sha256": "f785c4ee676d370c5addd5bc64369741e5d113132d0b426bd4e3dc5986b49d2a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The document outlines rigorous orientation rules for causal discovery graphs, establishing a universal lens through which conditional independence relations (Sepsets) are systematically transformed into directed edges. This process ensures acyclicity and captures the full Markov equivalence class, providing a foundational framework for robust causal inference.",
+  "gsi_mapping": "In GSI, these primitives map to conformal prediction algorithms where Sepsets represent observed data partitions. The orientation rules correspond to Bayesian updating procedures that refine posterior distributions over causal structures, enabling uncertainty quantification for sports betting models.",
+  "gse_mapping": "In GSE, the primitives support situational reasoning by representing game states as nodes and transitions as edges. The orientation rules facilitate state-transition matrices that predict outcome probabilities, allowing for dynamic strategy adaptation based on unfolding events.",
+  "primitives": [
+    {
+      "primitive_id": "sepset_elimination_rule",
+      "name": "Sepset Elimination Rule",
+      "verbatim_quote": "A separator Sepset(X, Y ) between two variables X and Y recorded in Sepsets implies that there is no edge between X and Y in the learned graph.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "X and Y are conditionally independent given Sepset(X, Y); the graph is acyclic; the underlying distribution is faithful to the graph.",
+      "breakdown_regime": "Fails when the conditional independence test has low statistical power, leading to spurious edges or missing true independencies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction framework where Sepsets partition training/validation data; the rule corresponds to discarding inconsistent hypotheses. In GSE, it represents pruning impossible game-state transitions based on observed constraints.",
+        "source_operator": "sepset_elimination_rule",
+        "telemetry": "Proportion of eliminated edges vs. sample size; false positive/negative rates of independence tests."
+      }
+    },
+    {
+      "primitive_id": "orientation_rule_1",
+      "name": "Orientation Rule 1",
+      "verbatim_quote": "If X∗→Y ◦-∗Z, Sepset(X, Z) ∈Sepsets, and Y ∈Sepset(X, Z), then orient the triple as X∗→Y →Z.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "X and Z are d-connected given some set S; Y is a collider on the path; Sepset(X, Z) contains all vertices separating X and Z.",
+      "breakdown_regime": "Breaks down under latent confounding or selection bias, causing incorrect directionality assignments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to Bayes' theorem updating in GSI, where evidence (Sepset) updates edge orientations. In GSE, it models sequential decisions where action Y influences outcomes X and Z, guiding optimal policy search.",
+        "source_operator": "orientation_rule_1",
+        "telemetry": "Ratio of correctly oriented triples; consistency with ground truth graph under varying noise levels."
+      }
+    },
+    {
+      "primitive_id": "orientation_rule_2",
+      "name": "Orientation Rule 2",
+      "verbatim_quote": "If X →Y ∗→Z or X∗→Y →Z, and X ∗-◦Z, then orient X ∗-◦Z as X∗→Z.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "X and Z are not adjacent; there is a directed path from X to Z via Y ; the rule applies only when no other orientation can be applied.",
+      "breakdown_regime": "Fails when the skeleton estimate is incorrect, leading to wrong neighborhood identification.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to online learning in GSI where continuous observation updates directional beliefs. In GSE, it represents temporal difference learning, propagating rewards through state transitions.",
+        "source_operator": "orientation_rule_2",
+        "telemetry": "Edge orientation accuracy; convergence speed to true graph structure."
+      }
+    },
+    {
+      "primitive_id": "orient_pag",
+      "name": "OrientPAG Algorithm",
+      "verbatim_quote": "Algorithm 3 OrientPAG Input: A PAG P and a collection of separating sets Sepsets.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The input PAG is a completed partially oriented graph; Sepsets contain all true conditional independences; the algorithm terminates after finite iterations.",
+      "breakdown_regime": "Degenerates when cycles are introduced due to inconsistent orientation rules, requiring additional cycle-breaking heuristics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Corresponds to belief propagation in GSI, iteratively refining causal hypotheses until consensus. In GSE, it implements value iteration, systematically improving state-action value estimates.",
+        "source_operator": "orient_pag",
+        "telemetry": "Number of iterations per graph; proportion of correctly oriented graphs; computational complexity scaling with node count."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f785c4ee676d370c_t0",
+      "think": "These orientation rules form a sound and complete proof system for directed acyclic graphs (DAGs). Starting from a completed partially oriented graph (PAG) and a set of separating events (Sepsets), the rules progressively resolve indeterminacies while preserving global consistency. Soundness guarantees that every edge orientation is valid under the assumed faithfulness; completeness ensures that all possible directions are eventually determined. The algorithm's correctness hinges on the diamond property: any two applications of the rules yield the same result regardless of order. This leads to a unique maximal orientation, capturing the essential causal information shared by all compatible DAGs. Empirically, the method scales well for moderate-sized graphs but suffers from combinatorial explosion in high dimensions, motivating approximate inference techniques.\n\nDeep epistemic analysis for arxiv2607_rules (f785c4ee676d370c, domain=other, pages_read=1/1): Operator 'Sepset Elimination Rule' (page 1, domain other) captures: A separator Sepset(X, Y ) between two variables X and Y recorded in Sepsets implies that there is no edge between X and Y in the learned graph. Assumptions: X and Y are conditionally independent given Sepset(X, Y); the graph is acyclic; the underlying distribution is faithful to the graph. Breakdown regime: Fails when the conditional independence test has low statistical power, leading to spurious edges or missing true independencies. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction framework where Sepsets partition training/validation data; the rule corresponds to discarding inconsistent hypotheses. In GSE, it represents pruning impossible game-state transitions based on observed constraints. Operator 'Orientation Rule 1' (page 1, domain other) captures: If X∗→Y ◦-∗Z, Sepset(X, Z) ∈Sepsets, and Y ∈Sepset(X, Z), then orient the triple as X∗→Y →Z. Assumptions: X and Z are d-connected given some set S; Y is a collider on the path; Sepset(X, Z) contains all vertices separating X and Z. Breakdown regime: Breaks down under latent confounding or selection bias, causing incorrect directionality assignments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to Bayes' theorem updating in GSI, where evidence (Sepset) updates edge orientations. In GSE, it models sequential decisions where action Y influences outcomes X and Z, guiding optimal policy search. Operator 'Orientation Rule 2' (page 1, domain other) captures: If X →Y ∗→Z or X∗→Y →Z, and X ∗-◦Z, then orient X ∗-◦Z as X∗→Z. Assumptions: X and Z are not adjacent; there is a directed path from X to Z via Y ; the rule applies only when no other orientation can be applied. Breakdown regime: Fails when the skeleton estimate is incorrect, leading to wrong neighborhood identification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to online learning in GSI where continuous observation updates directional beliefs. In GSE, it represents temporal difference learning, propagating rewards through state transitions. Operator 'OrientPAG Algorithm' (page 1, domain other) captures: Algorithm 3 OrientPAG Input: A PAG P and a collection of separating sets Sepsets. Assumptions: The input PAG is a completed partially oriented graph; Sepsets contain all true conditional independences; the algorithm terminates after finite iterations. Breakdown regime: Degenerates when cycles are introduced due to inconsistent orientation rules, requiring additional cycle-breaking heuristics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to belief propagation in GSI, iteratively refining causal hypotheses until consensus. In GSE, it implements value iteration, systematically improving state-action value estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv2607_rules (f785c4ee676d370c, domain=other, pages_read=1/1): Operator 'Sepset Elimination Rule' (page 1, domain other) captures: A separator Sepset(X, Y ) between two variables X and Y recorded in Sepsets implies that there is no edge between X and Y in the learned graph. Assumptions: X and Y are conditionally independent given Sepset(X, Y); the graph is acyclic; the underlying distribution is faithful to the graph. Breakdown regime: Fails when the conditional independence test has low statistical power, leading to spurious edges or missing true independencies. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction framework where Sepsets partition training/validation data; the rule corresponds to discarding inconsistent hypotheses. In GSE, it represents pruning impossible game-state transitions based on observed constraints. Operator 'Orientation Rule 1' (page 1, domain other) captures: If X∗→Y ◦-∗Z, Sepset(X, Z) ∈Sepsets, and Y ∈Sepset(X, Z), then orient the triple as X∗→Y →Z. Assumptions: X and Z are d-connected given some set S; Y is a collider on the path; Sepset(X, Z) contains all vertices separating X and Z. Breakdown regime: Breaks down under latent confounding or selection bias, causing incorrect directionality assignments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to Bayes' theorem updating in GSI, where evidence (Sepset) updates edge orientations. In GSE, it models sequential decisions where action Y influences outcomes X and Z, guiding optimal policy search. Operator 'Orientation Rule 2' (page 1, domain other) captures: If X →Y ∗→Z or X∗→Y →Z, and X ∗-◦Z, then orient X ∗-◦Z as X∗→Z. Assumptions: X and Z are not adjacent; there is a directed path from X to Z via Y ; the rule applies only when no other orientation can be applied. Breakdown regime: Fails when the skeleton estimate is incorrect, leading to wrong neighborhood identification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to online learning in GSI where continuous observation updates directional beliefs. In GSE, it represents temporal difference learning, propagating rewards through state transitions. Operator 'OrientPAG Algorithm' (page 1, domain other) captures: Algorithm 3 OrientPAG Input: A PAG P and a collection of separating sets Sepsets. Assumptions: The input PAG is a completed partially oriented graph; Sepsets contain all true conditional independences; the algorithm terminates after finite iterations. Breakdown regime: Degenerates when cycles are introduced due to inconsistent orientation rules, requiring additional cycle-breaking heuristics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to belief propagation in GSI, iteratively refining causal hypotheses until consensus. In GSE, it implements value iteration, systematically improving state-action value estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The theoretical foundation traces back to Pearl's do-calculus (1995) and Spirtes et al.'s PC algorithm (1991), which established the role of conditional independence testing in causal discovery. The specific orientation rules build upon Verma & Pearl's work on directed acyclic graphs (1990) and Zhang's contributions to the Maximal Ancestral Graph (MAG) framework (2008). Earlier precursor ideas appeared in Lauritzen et al.'s graphical models (1990).",
+      "theory_of_mind": "Modeling a rational agent performing causal discovery involves assuming they possess perfect knowledge of the independence oracle and apply the rules exhaustively. An adversarial agent might manipulate the independence tests to produce misleading Sepsets, forcing the learner to either accept incorrect orientations or require more samples. A bounded rational agent may use heuristics to limit the search space, trading optimality for computational efficiency.",
+      "cross_layer_veto": "Anti-collinearity conditions require that the Sepsets must be linearly independent; otherwise, the orientation rules become redundant or contradictory. Leakage occurs when unobserved confounders induce spurious associations, violating the faithfulness assumption. To avoid veto, one must ensure that the observed variables adequately control for all relevant common causes and that the sample size is large enough to reliably estimate the independence relations."
+    }
+  ]
+}

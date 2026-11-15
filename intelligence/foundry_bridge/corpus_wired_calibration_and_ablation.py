@@ -24,7 +24,155 @@ from typing import Any, Dict, Mapping, Optional, Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SHARED_FOUNDRY_DB = Path(r"C:\Users\Garrett\Sports\foundry\foundry.db")
+DEFAULT_SHARED_PRIMITIVES_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\primitives")
 DEFAULT_WT_PRIMITIVES_DIR = REPO_ROOT / "foundry" / "artifacts" / "primitives"
+
+
+def _norm_source_stem(name_or_path: str) -> str:
+    import re as _re
+
+    stem = Path(str(name_or_path or "")).stem.lower()
+    return _re.sub(r"[^a-z0-9]+", "", stem)
+
+
+def _compute_effective_queue_accounting(
+    *,
+    db_path: Path,
+    completed_dirs: Sequence[Path],
+    shard_b_catalog: Mapping[str, Any],
+    raw_queue_counts: Mapping[str, Any],
+) -> Dict[str, Any]:
+    """Reconcile raw corpus_queue counts against settled primitives on disk and Shard-B entries."""
+    db_available = bool(raw_queue_counts.get("db_available", False)) and int(raw_queue_counts.get("total") or 0) > 0
+    if not db_available:
+        return {
+            "disk_completed_union": 0,
+            "raw_pending": -1,
+            "raw_pending_tier_a": -1,
+            "raw_delegated_gcp": 0,
+            "effective_pending": -1,
+            "effective_pending_tier_a": -1,
+            "effective_delegated_gcp_unmatched": 0,
+            "effective_delegated_gcp_unmatched_tier_a": 0,
+            "pending_all_tiers": -1,
+            "pending_tier_a": -1,
+            "shard_b_accounting_mode": "unavailable",
+        }
+
+    done_book_ids: set = set()
+    done_shas: set = set()
+    for pdir in completed_dirs:
+        p = Path(pdir)
+        if not p.is_dir():
+            continue
+        for fp in p.glob("*.json"):
+            try:
+                doc = json.loads(fp.read_text(encoding="utf-8", errors="replace"))
+            except Exception:
+                continue
+            if not isinstance(doc, Mapping):
+                continue
+            done_book_ids.add(fp.stem)
+            if doc.get("book_id"):
+                done_book_ids.add(str(doc["book_id"]))
+            sha = str(doc.get("sha256") or "").strip().lower()
+            if sha:
+                done_shas.add(sha)
+
+    entries = shard_b_catalog.get("entries")
+    has_entries = isinstance(entries, list)
+    sb_exact_basenames: set = set()
+    sb_norm_stems: set = set()
+    if has_entries:
+        for entry in entries:
+            if not isinstance(entry, Mapping):
+                continue
+            src = str(entry.get("source") or "").strip()
+            if not src:
+                continue
+            sb_exact_basenames.add(Path(src).name.lower())
+            ns = _norm_source_stem(src)
+            if len(ns) >= 8:
+                sb_norm_stems.add(ns)
+
+    eff_pending = 0
+    eff_pending_a = 0
+    delegated_not_on_disk = 0
+    delegated_not_on_disk_a = 0
+    delegated_unmatched = 0
+    delegated_unmatched_a = 0
+
+    conn = sqlite3.connect(f"file:{db_path.resolve().as_posix()}?mode=ro", uri=True)
+    try:
+        cols = {
+            str(r[1]).lower()
+            for r in conn.execute("PRAGMA table_info(corpus_queue)").fetchall()
+        }
+        sha_expr = "sha256" if "sha256" in cols else "'' AS sha256"
+        fn_expr = "file_name" if "file_name" in cols else "'' AS file_name"
+        fp_expr = "file_path" if "file_path" in cols else "'' AS file_path"
+        tier_expr = "tier" if "tier" in cols else "'A' AS tier"
+        rows = conn.execute(
+            f"""
+            SELECT book_id, {sha_expr}, {fn_expr}, {fp_expr}, {tier_expr}, status
+            FROM corpus_queue
+            WHERE status IN ('PENDING', 'DELEGATED_GCP')
+            """
+        ).fetchall()
+    finally:
+        conn.close()
+
+    for bid_raw, sha_raw, fn_raw, fp_raw, tier_raw, status_raw in rows:
+        bid = str(bid_raw)
+        sha = str(sha_raw or "").strip().lower()
+        tier = str(tier_raw or "").strip().upper()
+        st = str(status_raw or "").strip().upper()
+        if st == "PENDING":
+            if bid in done_book_ids:
+                continue
+            eff_pending += 1
+            if tier == "A" or "tier" not in cols:
+                eff_pending_a += 1
+        elif st == "DELEGATED_GCP":
+            if bid in done_book_ids or (sha and sha in done_shas):
+                continue
+            delegated_not_on_disk += 1
+            if tier == "A":
+                delegated_not_on_disk_a += 1
+            if has_entries:
+                fn = str(fn_raw or Path(str(fp_raw or "")).name)
+                ns = _norm_source_stem(fn)
+                if fn.lower() in sb_exact_basenames or (len(ns) >= 8 and ns in sb_norm_stems):
+                    continue
+                delegated_unmatched += 1
+                if tier == "A":
+                    delegated_unmatched_a += 1
+
+    if has_entries:
+        mode = "entries_source_match"
+    else:
+        mode = "total_markdown_files_fallback"
+        sb_total_md = int(shard_b_catalog.get("total_markdown_files") or 0)
+        delegated_unmatched = max(0, delegated_not_on_disk - sb_total_md)
+        delegated_unmatched_a = min(delegated_not_on_disk_a, delegated_unmatched)
+
+    raw_pending = int(raw_queue_counts.get("PENDING") or 0)
+    raw_pending_a = int(raw_queue_counts.get("PENDING_TIER_A") or 0)
+    raw_delegated = int(raw_queue_counts.get("DELEGATED_GCP") or 0)
+
+    return {
+        "disk_completed_union": len(done_book_ids),
+        "raw_pending": raw_pending,
+        "raw_pending_tier_a": raw_pending_a,
+        "raw_delegated_gcp": raw_delegated,
+        "effective_pending": eff_pending,
+        "effective_pending_tier_a": eff_pending_a,
+        "effective_delegated_gcp_unmatched": delegated_unmatched,
+        "effective_delegated_gcp_unmatched_tier_a": delegated_unmatched_a,
+        "pending_all_tiers": eff_pending + delegated_unmatched,
+        "pending_tier_a": eff_pending_a + delegated_unmatched_a,
+        "shard_b_accounting_mode": mode,
+    }
 DEFAULT_WIRING_MANIFEST = (
     REPO_ROOT
     / "docs"
@@ -189,6 +337,7 @@ def run_calibration_and_hold_gate(
     *,
     db_path: Path = SHARED_FOUNDRY_DB,
     worktree_primitives_dir: Path = DEFAULT_WT_PRIMITIVES_DIR,
+    shared_primitives_dir: Optional[Path] = None,
     wiring_manifest_path: Path = DEFAULT_WIRING_MANIFEST,
     shard_b_catalog_path: Path = DEFAULT_SHARD_B_CATALOG,
     drive_index_path: Path = DEFAULT_DRIVE_INDEX,
@@ -236,9 +385,23 @@ def run_calibration_and_hold_gate(
 
     # Corpus-regularized effective degrees-of-freedom penalty ratio (strictly bounded diagnostics)
     mean_shrinkage = sum(v["shrinkage_factor"] for v in eb_priors.values()) / max(1, len(eb_priors))
+    resolved_shared_dir = (
+        DEFAULT_SHARED_PRIMITIVES_DIR
+        if (shared_primitives_dir is None and db_path.resolve() == SHARED_FOUNDRY_DB.resolve())
+        else shared_primitives_dir
+    )
+    completed_dirs = tuple(
+        d for d in (resolved_shared_dir, worktree_primitives_dir) if d is not None
+    )
+    accounting = _compute_effective_queue_accounting(
+        db_path=db_path,
+        completed_dirs=completed_dirs,
+        shard_b_catalog=shard_b_catalog,
+        raw_queue_counts=queue_counts,
+    )
     db_available = bool(queue_counts.get("db_available", False)) and int(queue_counts.get("total") or 0) > 0
-    pending_all_tiers = int(queue_counts["PENDING"]) if (db_available and "PENDING" in queue_counts) else (-1 if not db_available else 0)
-    pending_tier_a = int(queue_counts["PENDING_TIER_A"]) if (db_available and "PENDING_TIER_A" in queue_counts) else (-1 if not db_available else 0)
+    pending_all_tiers = int(accounting["pending_all_tiers"])
+    pending_tier_a = int(accounting["pending_tier_a"])
     wt_dir_present = worktree_primitives_dir.is_dir()
     wt_minimum_met = wt_dir_present and wt_summary["count"] >= 21
     eb_all_finite = all(v["all_finite_non_nan"] for v in eb_priors.values())
@@ -246,7 +409,7 @@ def run_calibration_and_hold_gate(
 
     hold_status = (
         "CORPUS_DRAIN_COMPLETE_READY_FOR_GATE"
-        if (db_available and pending_all_tiers == 0 and wt_minimum_met)
+        if (db_available and pending_all_tiers == 0 and pending_tier_a == 0 and wt_minimum_met)
         else "WEEK10_HELD_FOR_CORPUS_COMPLETION"
     )
     wired_tier_a = int(
@@ -262,6 +425,15 @@ def run_calibration_and_hold_gate(
         "slate_hold_status": hold_status,
         "pendingTierACount": pending_tier_a,
         "pendingAllTiersCount": pending_all_tiers,
+        "rawPendingTierACount": int(accounting["raw_pending_tier_a"]),
+        "rawPendingAllTiersCount": int(accounting["raw_pending"]),
+        "rawDelegatedGcpCount": int(accounting["raw_delegated_gcp"]),
+        "effectivePendingTierACount": int(accounting["effective_pending_tier_a"]),
+        "effectivePendingAllTiersCount": int(accounting["effective_pending"]),
+        "effectiveDelegatedGcpUnmatchedCount": int(accounting["effective_delegated_gcp_unmatched"]),
+        "effectiveDelegatedGcpUnmatchedTierACount": int(accounting["effective_delegated_gcp_unmatched_tier_a"]),
+        "diskCompletedUnionCount": int(accounting["disk_completed_union"]),
+        "shardBAccountingMode": accounting["shard_b_accounting_mode"],
         "wiredTierACount": wired_tier_a,
         "public_gates": {
             "LIVE_BOARD": "FAIL_CLOSED_UNCHANGED",

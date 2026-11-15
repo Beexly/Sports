@@ -1,0 +1,78 @@
+{
+  "book_id": "1f3c13756a1861bc",
+  "source_status": "COMPLETE",
+  "title": "engine-ingestion-inventory-2026-10-16",
+  "file_name": "engine-ingestion-inventory-2026-10-16.md",
+  "sha256": "1f3c13756a1861bc06686207bb459be2c0582829d6e787cdeb5e7b315b0ea188",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A foundational inventory of structured sports data streams, including historical lines, live odds, and settled picks, unified under a Bayesian scoring framework with conformal calibration. Universal Lens: Rooted in engine-ingestion-inventory-2026-10-16 (1f3c13756a1861bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs a conformal Bayesian inference engine to score settled picks using historical line data and live odds, with calibrated confidence intervals derived from Glicko-2 and Dixon-Coles models. GSI Mapping: Rooted in engine-ingestion-inventory-2026-10-16 (1f3c13756a1861bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE leverages situational intelligence from Layer 2 to construct premise dossiers and scheme matrices, enabling state transitions in play prediction through camera-vision telemetry and weighted signal integration. GSE Mapping: Rooted in engine-ingestion-inventory-2026-10-16 (1f3c13756a1861bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "closing_line_history",
+      "name": "Closing Line History",
+      "verbatim_quote": "## Market and lines (Layer 1 — the foundation) - Closing-line history: 14,251 games, 1999–2025 (the base the scoring work runs on).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{games}}': 'dimensionless, total number of games', 't_{\\\\text{start}}': 'year, start year of data', 't_{\\\\text{end}}': 'year, end year of data'}",
+      "assumptions": "Data spans uniform temporal coverage; line integrity is preserved across time.",
+      "breakdown_regime": "Temporal extrapolation beyond 2025 may introduce bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI scoring to establish baseline distributions for model calibration.",
+        "source_operator": "closing_line_history",
+        "telemetry": "Historical line consistency over time"
+      }
+    },
+    {
+      "primitive_id": "line_warehouse",
+      "name": "Line Warehouse",
+      "verbatim_quote": "- Line warehouse (code on the rating-atlas branch): 1,717 Pinnacle line rows, 9,923 DraftKings prop rows, 7,615 PrizePicks rows, 800 injury rows.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{Pinnacle}}': 'dimensionless, number of Pinnacle lines', 'N_{\\\\text{DK}}': 'dimensionless, number of DraftKings props', 'N_{\\\\text{PP}}': 'dimensionless, number of PrizePicks rows', 'N_{\\\\text{injury}}': 'dimensionless, number of injury entries'}",
+      "assumptions": "Each row represents a distinct market entry; data is normalized across platforms.",
+      "breakdown_regime": "Cross-platform inconsistency may affect aggregation accuracy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE’s situational reasoning via cross-market signal alignment.",
+        "source_operator": "line_warehouse",
+        "telemetry": "Market entry diversity and temporal consistency"
+      }
+    },
+    {
+      "primitive_id": "settled_picks_export",
+      "name": "Settled Picks Export",
+      "verbatim_quote": "## The engine's own history - Settled picks export: 4,213 settled picks (MLB 2,644, college football 839, MLS 391, NFL 221, NHL 92, NBA 26) — pulled by Motif 2026-10-16 and scored under the frozen evaluation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{picks}}': 'dimensionless, total number of picks', 'N_{\\\\text{MLB}}': 'dimensionless, MLB picks', 'N_{\\\\text{CFB}}': 'dimensionless, college football picks', 'N_{\\\\text{MLS}}': 'dimensionless, MLS picks', 'N_{\\\\text{NFL}}': 'dimensionless, NFL picks', 'N_{\\\\text{NHL}}': 'dimensionless, NHL picks', 'N_{\\\\text{NBA}}': 'dimensionless, NBA picks'}",
+      "assumptions": "All picks are scored under a fixed evaluation protocol; no future data is used.",
+      "breakdown_regime": "Model performance may degrade if underlying market dynamics shift.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Serves as ground truth for GSI Bayesian scoring and GSE outcome validation.",
+        "source_operator": "settled_picks_export",
+        "telemetry": "Accuracy of pick classification and win-loss ratio"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1f3c13756a1861bc_t0",
+      "think": "The inventory primitives form a hierarchical data structure where closing-line history provides the temporal basis for scoring, line warehouse offers multi-source market alignment, and settled picks export delivers empirical validation. These operators define a dualistic system: one layer (Layer 1) aggregates static and dynamic market data, while the other (Layer 2) applies reasoning to derive situational intelligence. The failure mode arises when temporal drift in line history undermines the validity of historical baselines, or when cross-platform inconsistencies in line warehouse distort signal weights. Conformal calibration in GSI ensures robustness against such noise, while GSE’s reasoning engine relies on telemetry-driven premise dossiers to maintain coherence in high-dimensional state transitions.\n\nDeep epistemic analysis for engine-ingestion-inventory-2026-10-16 (1f3c13756a1861bc, domain=other, pages_read=2/2): Operator 'Closing Line History' (page 1, domain other) captures: ## Market and lines (Layer 1 — the foundation) - Closing-line history: 14,251 games, 1999–2025 (the base the scoring work runs on). Assumptions: Data spans uniform temporal coverage; line integrity is preserved across time. Breakdown regime: Temporal extrapolation beyond 2025 may introduce bias. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI scoring to establish baseline distributions for model calibration. Operator 'Line Warehouse' (page 1, domain other) captures: - Line warehouse (code on the rating-atlas branch): 1,717 Pinnacle line rows, 9,923 DraftKings prop rows, 7,615 PrizePicks rows, 800 injury rows. Assumptions: Each row represents a distinct market entry; data is normalized across platforms. Breakdown regime: Cross-platform inconsistency may affect aggregation accuracy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s situational reasoning via cross-market signal alignment. Operator 'Settled Picks Export' (page 1, domain other) captures: ## The engine's own history - Settled picks export: 4,213 settled picks (MLB 2,644, college football 839, MLS 391, NFL 221, NHL 92, NBA 26) — pulled by Motif 2026-10-16 and scored under the frozen evaluation. Assumptions: All picks are scored under a fixed evaluation protocol; no future data is used. Breakdown regime: Model performance may degrade if underlying market dynamics shift. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Serves as ground truth for GSI Bayesian scoring and GSE outcome validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for engine-ingestion-inventory-2026-10-16 (1f3c13756a1861bc, domain=other, pages_read=2/2): Operator 'Closing Line History' (page 1, domain other) captures: ## Market and lines (Layer 1 — the foundation) - Closing-line history: 14,251 games, 1999–2025 (the base the scoring work runs on). Assumptions: Data spans uniform temporal coverage; line integrity is preserved across time. Breakdown regime: Temporal extrapolation beyond 2025 may introduce bias. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI scoring to establish baseline distributions for model calibration. Operator 'Line Warehouse' (page 1, domain other) captures: - Line warehouse (code on the rating-atlas branch): 1,717 Pinnacle line rows, 9,923 DraftKings prop rows, 7,615 PrizePicks rows, 800 injury rows. Assumptions: Each row represents a distinct market entry; data is normalized across platforms. Breakdown regime: Cross-platform inconsistency may affect aggregation accuracy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s situational reasoning via cross-market signal alignment. Operator 'Settled Picks Export' (page 1, domain other) captures: ## The engine's own history - Settled picks export: 4,213 settled picks (MLB 2,644, college football 839, MLS 391, NFL 221, NHL 92, NBA 26) — pulled by Motif 2026-10-16 and scored under the frozen evaluation. Assumptions: All picks are scored under a fixed evaluation protocol; no future data is used. Breakdown regime: Model performance may degrade if underlying market dynamics shift. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Serves as ground truth for GSI Bayesian scoring and GSE outcome validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical inference frameworks like Glicko-2 and Bradley-Terry, extended by conformal prediction and Bayesian networks. Influenced by early sports analytics and modern reinforcement learning paradigms. Retrocausal Genealogy: Rooted in engine-ingestion-inventory-2026-10-16 (1f3c13756a1861bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in engine-ingestion-inventory-2026-10-16 (1f3c13756a1861bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include market inefficiencies, data drift, and adversarial signal manipulation. Decision actors are modeled as stochastic processes with bounded rationality, where GSI and GSE act as probabilistic optimizers within shared information spaces. Theory of Mind & Decision Maker Model: Rooted in engine-ingestion-inventory-2026-10-16 (1f3c13756a1861bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that Layer 1 data does not redundantly encode Layer 2 reasoning. Leakage is mitigated by isolating telemetry inputs from historical line dependencies, maintaining orthogonal signal paths. Cross-Layer Veto & Anti-Leakage Check: Rooted in engine-ingestion-inventory-2026-10-16 (1f3c13756a1861bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

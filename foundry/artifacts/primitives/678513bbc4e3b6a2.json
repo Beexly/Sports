@@ -1,78 +1,16 @@
 {
   "book_id": "678513bbc4e3b6a2",
-  "source_status": "COMPLETE",
-  "title": "WAVE_4_output",
-  "file_name": "WAVE_4_output.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_678513bbc4e3b6a2",
+  "file_name": "678513bbc4e3b6a2.quarantined",
   "sha256": "678513bbc4e3b6a20174a8593a75bf59ec06ce58b349ee4934fec8080f26e940",
   "primary_domain": "other",
-  "pages_total": 2,
-  "pages_read": 2,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "The epistemic state of an unverified retrieval system is modeled as a time-dependent density operator evolving under a non-Hermitian Hamiltonian. The transition from raw generation to verified fact constitutes a quantum Zeno measurement, collapsing the probability amplitude of hallucinated leads into a discrete, verifiable event space.",
-  "gsi_mapping": "GSI maps the verification pass as a conformal prediction process over the embedded document corpus. The posterior probability of a citation's validity is updated via Bayes' theorem, where the prior is the local-model confidence and the likelihood is the binary existence check in the physical text directory.",
-  "gse_mapping": "GSE models the operational timeline as a Markov Decision Process (MDP). States represent chronological milestones (e.g., disclosure, termination), while transitions are governed by the latent variables of corporate policy. The 'emergency-response' report acts as a high-impact stochastic shock altering the state trajectory.",
-  "primitives": [
-    {
-      "primitive_id": "epistemic_collapse_operator",
-      "name": "Verification Collapse Operator",
-      "verbatim_quote": "> Every filename and every quote is a LEAD until the cited file has been opened > in 02_corpus_text\\ and the text confirmed.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "L: Lead set (dimensionless count); V: Verification function (Boolean); t: Time of generation (ISO 8601)",
-      "assumptions": "Initial retrieval yields a superposition of valid and hallucinated citations; verification is a deterministic but delayed projection.",
-      "breakdown_regime": "Breaks down when the underlying corpus is dynamically altered post-retrieval, causing a non-unitary evolution of the lead set.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Isomorphic to the wavefunction collapse in quantum mechanics, mapping the probabilistic output of the LLM to a classical bit upon physical file access.",
-        "source_operator": "epistemic_collapse_operator",
-        "telemetry": "Ratio of confirmed files to total generated leads."
-      }
-    },
-    {
-      "primitive_id": "temporal_event_embedding",
-      "name": "Chronological State Vector",
-      "verbatim_quote": "**May 9, 2026** - Garrett Baxley disclosed a communication-related condition to his manager.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "\\tau_i: Event timestamp (days since epoch); E_i: Event descriptor (categorical variable); \\Delta \\tau: Inter-event interval (days)",
-      "assumptions": "Events are discrete points on a continuous temporal manifold; causal links exist between sequential timestamps.",
-      "breakdown_regime": "Singularities occur if \\Delta \\tau \\to 0 (simultaneous distinct events) or if retrospective memo creation alters the perceived \\tau_i.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Maps discrete legal milestones into a continuous vector space for GSE situational reasoning, allowing interpolation of organizational stress between documented dates.",
-        "source_operator": "temporal_event_embedding",
-        "telemetry": "Variance in inter-event intervals across the reconstructed timeline."
-      }
-    },
-    {
-      "primitive_id": "information_gap_tensor",
-      "name": "Documentation Deficit Tensor",
-      "verbatim_quote": "#### WHAT IS DOCUMENTED VS WHAT IS NOT | DOCUMENTED | NOT DOCUMENTED | |------------|---------------| | Memo of May 4, 2026.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "D: Documented evidence matrix (binary); U: Unknown/Undocumented matrix (binary); \\mathcal{I}: Information entropy (bits)",
-      "assumptions": "The total information space of the employment dispute is finite; missing documentation represents a measurable deficit in the evidentiary basis.",
-      "breakdown_regime": "Fails if the 'NOT DOCUMENTED' category contains inherently unknowable subjective states rather than lost objective records.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Isomorphic to missing data imputation in high-dimensional statistical physics, requiring regularization to prevent overfitting to the sparse 'DOCUMENTED' subset.",
-        "source_operator": "information_gap_tensor",
-        "telemetry": "Sparsity metric of the D matrix relative to the hypothesized full event graph."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "678513bbc4e3b6a2_t0",
-      "think": "The derivation begins with the raw output state at t=0, defined by the prompt execution and embedding of 121 documents. This initial state is highly entropic, characterized by a superposition of potential factual leads. The first operator applied is the Epistemic Collapse Operator, which iterates through the generated leads, applying a strict Boolean verification against the physical `02_corpus_text` directory. This reduces the Hilbert space of possible narratives to a classical set of confirmed facts. Concurrently, the Temporal Event Embedding maps these confirmed facts onto a one-dimensional time axis, identifying critical nodes such as the May 4th operational concerns and the May 9th medical disclosure. The dualities emerge between the 'RAW LOCAL-MODEL OUTPUT' and the subsequent 'verification pass', representing a tension between generative speed and epistemic rigor. The failure modes are explicitly highlighted in the Information Gap Tensor, where the distinction between 'DOCUMENTED' and 'NOT DOCUMENTED' reveals the boundaries of the retrievable truth. The reconstruction of the termination meeting via a contemporaneous memo introduces a retroactive measurement effect, attempting to minimize the uncertainty introduced by the passage of time between the May 19th event and the June 3rd documentation. Ultimately, the system converges on a sparse, high-confidence state vector that serves as the foundational primitive for downstream legal and analytical reasoning.\n\nDeep epistemic analysis for WAVE_4_output (678513bbc4e3b6a2, domain=other, pages_read=2/2): Operator 'Verification Collapse Operator' (page 1, domain other) captures: > Every filename and every quote is a LEAD until the cited file has been opened > in 02_corpus_text\\ and the text confirmed. Assumptions: Initial retrieval yields a superposition of valid and hallucinated citations; verification is a deterministic but delayed projection. Breakdown regime: Breaks down when the underlying corpus is dynamically altered post-retrieval, causing a non-unitary evolution of the lead set. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the wavefunction collapse in quantum mechanics, mapping the probabilistic output of the LLM to a classical bit upon physical file access. Operator 'Chronological State Vector' (page 1, domain other) captures: **May 9, 2026** - Garrett Baxley disclosed a communication-related condition to his manager. Assumptions: Events are discrete points on a continuous temporal manifold; causal links exist between sequential timestamps. Breakdown regime: Singularities occur if \\Delta \\tau \\to 0 (simultaneous distinct events) or if retrospective memo creation alters the perceived \\tau_i. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps discrete legal milestones into a continuous vector space for GSE situational reasoning, allowing interpolation of organizational stress between documented dates. Operator 'Documentation Deficit Tensor' (page 1, domain other) captures: #### WHAT IS DOCUMENTED VS WHAT IS NOT | DOCUMENTED | NOT DOCUMENTED | |------------|---------------| | Memo of May 4, 2026. Assumptions: The total information space of the employment dispute is finite; missing documentation represents a measurable deficit in the evidentiary basis. Breakdown regime: Fails if the 'NOT DOCUMENTED' category contains inherently unknowable subjective states rather than lost objective records. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to missing data imputation in high-dimensional statistical physics, requiring regularization to prevent overfitting to the sparse 'DOCUMENTED' subset. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for WAVE_4_output (678513bbc4e3b6a2, domain=other, pages_read=2/2): Operator 'Verification Collapse Operator' (page 1, domain other) captures: > Every filename and every quote is a LEAD until the cited file has been opened > in 02_corpus_text\\ and the text confirmed. Assumptions: Initial retrieval yields a superposition of valid and hallucinated citations; verification is a deterministic but delayed projection. Breakdown regime: Breaks down when the underlying corpus is dynamically altered post-retrieval, causing a non-unitary evolution of the lead set. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the wavefunction collapse in quantum mechanics, mapping the probabilistic output of the LLM to a classical bit upon physical file access. Operator 'Chronological State Vector' (page 1, domain other) captures: **May 9, 2026** - Garrett Baxley disclosed a communication-related condition to his manager. Assumptions: Events are discrete points on a continuous temporal manifold; causal links exist between sequential timestamps. Breakdown regime: Singularities occur if \\Delta \\tau \\to 0 (simultaneous distinct events) or if retrospective memo creation alters the perceived \\tau_i. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps discrete legal milestones into a continuous vector space for GSE situational reasoning, allowing interpolation of organizational stress between documented dates. Operator 'Documentation Deficit Tensor' (page 1, domain other) captures: #### WHAT IS DOCUMENTED VS WHAT IS NOT | DOCUMENTED | NOT DOCUMENTED | |------------|---------------| | Memo of May 4, 2026. Assumptions: The total information space of the employment dispute is finite; missing documentation represents a measurable deficit in the evidentiary basis. Breakdown regime: Fails if the 'NOT DOCUMENTED' category contains inherently unknowable subjective states rather than lost objective records. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to missing data imputation in high-dimensional statistical physics, requiring regularization to prevent overfitting to the sparse 'DOCUMENTED' subset. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "This framework inherits from the Bayesian epistemology of Thomas Bayes and Pierre-Simon Laplace, extended through the lens of modern information retrieval theory. It parallels the development of formal verification in computer science, specifically model checking, where abstract system states are rigorously mapped against concrete execution traces. The concept of distinguishing documented versus undocumented facts echoes the historical shift in legal analytics from narrative pleading to strict documentary evidence standards.",
-      "theory_of_mind": "The primary agent is the local AI model, operating with a generative bias toward plausible-sounding but potentially hallucinated citations. The secondary agent is the human attorney or verifier, whose cognitive model requires absolute certainty, driving the implementation of the verification pass. The opposing force is the employer's administrative apparatus, which controls the flow of the 'Operational Record Inconsistencies', acting as an adversarial filter that obscures the true state of the employment relationship, necessitating formal discovery to recover the hidden variables.",
-      "cross_layer_veto": "A veto is triggered if the Epistemic Collapse Operator fails to find a physical file match for a highly confident lead, indicating a severe hallucination layer. Furthermore, if the Information Gap Tensor reveals that the 'NOT DOCUMENTED' section contains critical causal links required for the Temporal Event Embedding to maintain logical continuity, the entire reconstructed timeline is flagged as structurally unsound. Cross-layer leakage occurs if the raw model's speculative language bleeds into the final verified summary without the explicit 'LEAD' disclaimer, corrupting the downstream GSI/GSE inference engines."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

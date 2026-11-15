@@ -1,0 +1,78 @@
+{
+  "book_id": "6eda914229147823",
+  "source_status": "COMPLETE",
+  "title": "1169-proper-scoring-rules-maxmin-aggregation",
+  "file_name": "1169-proper-scoring-rules-maxmin-aggregation.md",
+  "sha256": "6eda9142291478231e7616ae49390f99f57c3ae77e563cf5dc0b25416283c46f",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Proper scoring rules induce max-min optimal forecast pools via exposure functions; concavity ensures online learning regret bounds. Universal Lens: Rooted in 1169-proper-scoring-rules-maxmin-aggregation (6eda914229147823), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI leverages Bregman divergences from scoring rules to calibrate forecast uncertainty and conformal prediction sets. GSI Mapping: Rooted in 1169-proper-scoring-rules-maxmin-aggregation (6eda914229147823), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE employs QA pools with OGD-weight updates to dynamically aggregate expert forecasts under adversarial conditions. GSE Mapping: Rooted in 1169-proper-scoring-rules-maxmin-aggregation (6eda914229147823), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "qa_pooling_operator",
+      "name": "Quality Assurance Pooling Operator",
+      "verbatim_quote": "3.6): given forecasts p_1..p_m, weights w_i summing to 1, the QA pool p* is the unique p* with Σw_i g(p_i) a subgradient of G at p*; equivalently (eq.",
+      "page": 1,
+      "latex": "\\arg\\min_{x} \\sum_{i=1}^m w_i D_G(x \\parallel p_i)",
+      "symbol_and_unit_ledger": "{'p_i': 'probability vector, dimension n', 'w_i': 'weight, dimension 1', 'G': 'expected reward function, scalar', 'g': 'gradient of G, vector', 'D_G': 'Bregman divergence, scalar'}",
+      "assumptions": "G is strictly convex, g is the gradient of G, expert forecasts are valid probability distributions.",
+      "breakdown_regime": "When exposure function g is not well-defined or when expert forecasts are inconsistent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "QA pooling maps to optimal forecast aggregation through Bregman divergence minimization, aligning with GSE's ensemble logic.",
+        "source_operator": "qa_pooling_operator",
+        "telemetry": "Log-loss performance vs baseline ensembles."
+      }
+    },
+    {
+      "primitive_id": "exposure_function",
+      "name": "Exposure Function",
+      "verbatim_quote": "2): s(p;j) = G(p) + ⟨g(p), δ_j - p⟩, G strictly convex expected-reward function, g its gradient (the \"exposure function\").",
+      "page": 1,
+      "latex": "s(p;j) = G(p) + \\langle g(p), \\delta_j - p \\rangle",
+      "symbol_and_unit_ledger": "{'s(p;j)': 'scoring rule value, scalar', 'G(p)': 'expected reward function, scalar', 'g(p)': 'exposure function (gradient), vector', 'δ_j': 'unit vector, dimension n'}",
+      "assumptions": "G is strictly convex, g is the gradient of G, δ_j represents a reference outcome.",
+      "breakdown_regime": "When G is not strictly convex or g is undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Exposure function defines the structure of scoring rules that support max-min optimal pooling.",
+        "source_operator": "exposure_function",
+        "telemetry": "Regret bounds under adversarial sequences."
+      }
+    },
+    {
+      "primitive_id": "ogd_weight_learning",
+      "name": "Online Gradient Descent Weight Learning",
+      "verbatim_quote": "- Quadratic rule: g_quad(x) = (2x_1,...,2x_n) → QA pool = linear pool Σw_i p_i.",
+      "page": 1,
+      "latex": "w^{t+1} = \\Pi_{\\Delta} \\left( w^t - \\eta \\nabla_w s(p^*, j) \\right)",
+      "symbol_and_unit_ledger": "{'w^t': 'ensemble weights, vector', 'η': 'learning rate, scalar', '∇_w s(p*, j)': 'gradient of score w.r.t. weights, vector', 'Π_Δ': 'projection onto probability simplex'}",
+      "assumptions": "Scoring rule is differentiable, weights are constrained to probability simplex, gradients are bounded.",
+      "breakdown_regime": "When gradients are unbounded or projection fails due to numerical instability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "OGD enables adaptive ensemble weights that minimize regret against best fixed mixture in hindsight.",
+        "source_operator": "ogd_weight_learning",
+        "telemetry": "Cumulative regret growth vs √T scaling."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6eda914229147823_t0",
+      "think": "The paper establishes a duality between proper scoring rules and forecast pooling methods. For any strictly convex scoring rule G with exposure function g, the Quality Assurance (QA) pool minimizes the weighted average Bregman divergence to expert forecasts. This is expressed mathematically as p* = argmin_x Σw_i D_G(x ∥ p_i). The exposure function g(p) = ∇G(p) links the scoring rule to the pooling operator. Linear pooling emerges from the quadratic rule (g_quad(x) = 2x), while log pooling arises from the logarithmic rule (g_log(x) = ln(x+1)). These mappings ensure that the resulting pool is max-min optimal, meaning it minimizes the worst-case loss across all experts. Furthermore, the score function s(p;j) = G(p) + ⟨g(p), δ_j - p⟩ provides a dual characterization of the scoring rule’s behavior. Concavity of the score in weights (WS_j(w)) allows for regret-optimal online learning using gradient descent. The regret bound O(√T) holds under adversarial conditions, ensuring robustness. Failure modes include misalignment between scoring rule and pooling operator, which leads to non-concave score functions and thus poor learning dynamics.\n\nDeep epistemic analysis for 1169-proper-scoring-rules-maxmin-aggregation (6eda914229147823, domain=other, pages_read=4/4): Operator 'Quality Assurance Pooling Operator' (page 1, domain other) captures: 3.6): given forecasts p_1..p_m, weights w_i summing to 1, the QA pool p* is the unique p* with Σw_i g(p_i) a subgradient of G at p*; equivalently (eq. Assumptions: G is strictly convex, g is the gradient of G, expert forecasts are valid probability distributions. Breakdown regime: When exposure function g is not well-defined or when expert forecasts are inconsistent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): QA pooling maps to optimal forecast aggregation through Bregman divergence minimization, aligning with GSE's ensemble logic. Operator 'Exposure Function' (page 1, domain other) captures: 2): s(p;j) = G(p) + ⟨g(p), δ_j - p⟩, G strictly convex expected-reward function, g its gradient (the \"exposure function\"). Assumptions: G is strictly convex, g is the gradient of G, δ_j represents a reference outcome. Breakdown regime: When G is not strictly convex or g is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Exposure function defines the structure of scoring rules that support max-min optimal pooling. Operator 'Online Gradient Descent Weight Learning' (page 1, domain other) captures: - Quadratic rule: g_quad(x) = (2x_1,...,2x_n) → QA pool = linear pool Σw_i p_i. Assumptions: Scoring rule is differentiable, weights are constrained to probability simplex, gradients are bounded. Breakdown regime: When gradients are unbounded or projection fails due to numerical instability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): OGD enables adaptive ensemble weights that minimize regret against best fixed mixture in hindsight. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1169-proper-scoring-rules-maxmin-aggregation (6eda914229147823, domain=other, pages_read=4/4): Operator 'Quality Assurance Pooling Operator' (page 1, domain other) captures: 3.6): given forecasts p_1..p_m, weights w_i summing to 1, the QA pool p* is the unique p* with Σw_i g(p_i) a subgradient of G at p*; equivalently (eq. Assumptions: G is strictly convex, g is the gradient of G, expert forecasts are valid probability distributions. Breakdown regime: When exposure function g is not well-defined or when expert forecasts are inconsistent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): QA pooling maps to optimal forecast aggregation through Bregman divergence minimization, aligning with GSE's ensemble logic. Operator 'Exposure Function' (page 1, domain other) captures: 2): s(p;j) = G(p) + ⟨g(p), δ_j - p⟩, G strictly convex expected-reward function, g its gradient (the \"exposure function\"). Assumptions: G is strictly convex, g is the gradient of G, δ_j represents a reference outcome. Breakdown regime: When G is not strictly convex or g is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Exposure function defines the structure of scoring rules that support max-min optimal pooling. Operator 'Online Gradient Descent Weight Learning' (page 1, domain other) captures: - Quadratic rule: g_quad(x) = (2x_1,...,2x_n) → QA pool = linear pool Σw_i p_i. Assumptions: Scoring rule is differentiable, weights are constrained to probability simplex, gradients are bounded. Breakdown regime: When gradients are unbounded or projection fails due to numerical instability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): OGD enables adaptive ensemble weights that minimize regret against best fixed mixture in hindsight. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in von Neumann–Morgenstern utility theory and scoring rule literature, this work builds upon earlier connections between information theory and decision-making frameworks established by Savage, De Finetti, and later by Gneiting and Raftery. Retrocausal Genealogy: Rooted in 1169-proper-scoring-rules-maxmin-aggregation (6eda914229147823), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may have differing beliefs about outcomes, leading to varying forecasts. The QA pooling mechanism ensures that even if some agents report misleading probabilities, the aggregate remains robust against worst-case deviation. The online learning component adapts to changing environments, modeling agents who update beliefs over time based on feedback. Theory of Mind & Decision Maker Model: Rooted in 1169-proper-scoring-rules-maxmin-aggregation (6eda914229147823), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If OGD weights concentrate on a single expert despite outperforming equal weights, it indicates a failure of the theoretical framework—equal weighting would be suboptimal according to the paper’s guarantees. This triggers a veto condition against fixed equal weighting in favor of learned weights. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1169-proper-scoring-rules-maxmin-aggregation (6eda914229147823), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

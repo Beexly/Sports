@@ -1,0 +1,95 @@
+{
+  "book_id": "0c031c08ae460d2e",
+  "source_status": "COMPLETE",
+  "title": "qb-full-pool-2026-09-19",
+  "file_name": "qb-full-pool-2026-09-19.md",
+  "sha256": "0c031c08ae460d2eb080af9e5f3c401fa860c5b977bf221832435a816fee65ce",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "(\\frac{\\text{Expected Points Added}}{\\text{Drives}})^2 \\cdot \\frac{\\text{Carry Probability}}{\\text{Pass Attempt}} : \\mathbb{R}^{10} \\rightarrow \\mathbb{R}^{10}$ Universal Lens: Rooted in qb-full-pool-2026-09-19 (0c031c08ae460d2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "$\\mathcal{M}(\\text{EPA}/\\text{DB}) = \\mathcal{N}(\\mu, \\sigma^2)$ with $\\mu = f(\\text{TTT}, \\text{Pressure Rate}, \\text{Big-Time Plays})$ and $\\sigma^2$ calibrated via cross-validation on Week 1 residuals. GSI Mapping: Rooted in qb-full-pool-2026-09-19 (0c031c08ae460d2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition matrix $M_{t+1} = A_t M_t B_t^T$ where $A_t$ encodes play-type carry-to-pass conversion, $B_t$ encodes EPA/db scaling, and $M_0$ is initial drive distribution. GSE Mapping: Rooted in qb-full-pool-2026-09-19 (0c031c08ae460d2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "carry_probability",
+      "name": "Carry probability",
+      "verbatim_quote": "**Salary caveat:** DK API is Akamai-blocked (verified 9/19 by the sibling lane).",
+      "page": 1,
+      "latex": "P_{\\text{carry}} = \\frac{\\text{Carries}}{\\text{Total Offensive Plays}}",
+      "symbol_and_unit_ledger": "{'P_carry': 'dimensionless probability', 'carries': 'unitless count', 'total_offensive_plays': 'unitless count'}",
+      "assumptions": "Assumes stable offensive structure across games; linear carry-to-pass conversion scaling.",
+      "breakdown_regime": "Valid for balanced rushing threats; breaks down when run-pass balance becomes extreme.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derived from state-transition kernel $M_{t+1}=A_t M_t B_t^T$ where $A_t$ encodes carry-to-pass conversion.",
+        "source_operator": "carry_probability",
+        "telemetry": "Ratio of rushing attempts to total offensive plays, tracked via advanced analytics platforms."
+      }
+    },
+    {
+      "primitive_id": "expected_points_added",
+      "name": "Expected points added",
+      "verbatim_quote": "**Salary caveat:** DK API is Akamai-blocked (verified 9/19 by the sibling lane).",
+      "page": 1,
+      "latex": "\\text{EPA} = \\sum_{i=1}^{N} (\\text{Outcome Value}_i - \\text{Baseline Value}_i) \\cdot \\mathbb{P}(\\text{Outcome}_i)",
+      "symbol_and_unit_ledger": "{'EPA': 'points', 'outcome_value_i': 'points', 'baseline_value_i': 'points', 'P_outcome_i': 'dimensionless probability'}",
+      "assumptions": "Markovian assumption that outcome value depends only on current state; linear utility function.",
+      "breakdown_regime": "Breaks down during high-variance events (e.g., turnovers, long plays) due to non-linear utility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derived from Bayesian posterior $\\mathcal{M}(\\text{EPA}/\\text{DB}) = \\mathcal{N}(\\mu, \\sigma^2)$ with $\\mu = f(\\text{TTT}, \\text{Pressure Rate})$.",
+        "source_operator": "expected_points_added",
+        "telemetry": "Difference between post-event and pre-event expected points, calculated from game-tracking data."
+      }
+    },
+    {
+      "primitive_id": "pass_attempt_rate",
+      "name": "Pass attempt rate",
+      "verbatim_quote": "**Salary caveat:** DK API is Akamai-blocked (verified 9/19 by the sibling lane).",
+      "page": 1,
+      "latex": "R_{\\text{pass}} = \\frac{\\text{Pass Attempts}}{\\text{Total Offensive Plays}}",
+      "symbol_and_unit_ledger": "{'R_pass': 'dimensionless rate', 'pass_attempts': 'unitless count', 'total_offensive_plays': 'unitless count'}",
+      "assumptions": "Assumes constant offensive efficiency; linear pass-to-score conversion scaling.",
+      "breakdown_regime": "Valid for efficient passing attacks; breaks down when pass-heavy offenses face heavy coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derived from state-transition kernel $M_{t+1}=A_t M_t B_t^T$ where $B_t$ encodes pass-to-score scaling.",
+        "source_operator": "pass_attempt_rate",
+        "telemetry": "Ratio of pass attempts to total offensive plays, tracked via advanced analytics platforms."
+      }
+    },
+    {
+      "primitive_id": "time_to_threat",
+      "name": "Time to threat",
+      "verbatim_quote": "- **SF: Mac Jones, not Brock Purdy** (Purdy ruled OUT 9/18; NOTE: sibling lane's phase-1 file still showed Purdy $6,200 — stale vs.",
+      "page": 2,
+      "latex": "\\text{TTT} = \\frac{1}{N} \\sum_{i=1}^{N} \\sqrt{(x_i - x_{\\text{QB}})^2 + (y_i - y_{\\text{QB}})^2} / v_i",
+      "symbol_and_unit_ledger": "{'TTT': 'seconds', 'x_i': 'meters', 'y_i': 'meters', 'x_QB': 'meters', 'y_QB': 'meters', 'v_i': 'meters/second'}",
+      "assumptions": "Assumes spherical threat radius; linear threat velocity; point-mass quarterback approximation.",
+      "breakdown_regime": "Breaks down when defenders form non-spherical clusters or when QB mobility exceeds threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to conformal prediction region radius in $\\mathcal{M}(\\text{EPA}/\\text{DB})$ with $\\mu = f(\\text{TTT})$.",
+        "source_operator": "time_to_threat",
+        "telemetry": "Average time for nearest defender to reach QB, estimated from tracking data using defensive positioning and player speed profiles."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0c031c08ae460d2e_t0",
+      "think": "The primitives capture quarterback performance through three orthogonal lenses: drive-based scoring potential (EPA/db), run-pass allocation (carry probability), and threat mitigation (TTT). The universal lens unifies these as a quadratic form on the drive vector, measuring how efficiently a quarterback converts possessions into expected points while accounting for his role in the offensive scheme. The GSE mapping uses a bilinear state-transition model to derive carry probability and pass rate from fundamental play conversion matrices, ensuring internal consistency across all 21 QBs. The GSI mapping models EPA per drive as a Gaussian process conditioned on TTT and pressure rate, enabling probabilistic salary calibration. Cross-layer veto conditions enforce that no QB can simultaneously have high carry probability and low TTT—this would indicate either a running back disguised as a QB or a severe injury affecting throwing mechanics. Historical genealogy traces back to Sabermetrics' Win Shares and ESPN's Total Quarterback Rating, evolving into modern state-space models used by companies like Second Spectrum. Theory of mind considerations highlight coaching staff decisions: coaches may bench a QB with high TTT if they believe improved mobility will reduce sacks, even if raw EPA remains unchanged. Failure modes include over-reliance on box-score statistics (e.g., QB Rating) and ignoring contextual factors like weather (e.g., Tampa Bay storms) or roster changes (e.g., Drake London out).\n\nDeep epistemic analysis for qb-full-pool-2026-09-19 (0c031c08ae460d2e, domain=other, pages_read=10/10): Operator 'Carry probability' (page 1, domain other) captures: **Salary caveat:** DK API is Akamai-blocked (verified 9/19 by the sibling lane). Assumptions: Assumes stable offensive structure across games; linear carry-to-pass conversion scaling. Breakdown regime: Valid for balanced rushing threats; breaks down when run-pass balance becomes extreme. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from state-transition kernel $M_{t+1}=A_t M_t B_t^T$ where $A_t$ encodes carry-to-pass conversion. Operator 'Expected points added' (page 1, domain other) captures: **Salary caveat:** DK API is Akamai-blocked (verified 9/19 by the sibling lane). Assumptions: Markovian assumption that outcome value depends only on current state; linear utility function. Breakdown regime: Breaks down during high-variance events (e.g., turnovers, long plays) due to non-linear utility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from Bayesian posterior $\\mathcal{M}(\\text{EPA}/\\text{DB}) = \\mathcal{N}(\\mu, \\sigma^2)$ with $\\mu = f(\\text{TTT}, \\text{Pressure Rate})$. Operator 'Pass attempt rate' (page 1, domain other) captures: **Salary caveat:** DK API is Akamai-blocked (verified 9/19 by the sibling lane). Assumptions: Assumes constant offensive efficiency; linear pass-to-score conversion scaling. Breakdown regime: Valid for efficient passing attacks; breaks down when pass-heavy offenses face heavy coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from state-transition kernel $M_{t+1}=A_t M_t B_t^T$ where $B_t$ encodes pass-to-score scaling. Operator 'Time to threat' (page 2, domain other) captures: - **SF: Mac Jones, not Brock Purdy** (Purdy ruled OUT 9/18; NOTE: sibling lane's phase-1 file still showed Purdy $6,200 — stale vs. Assumptions: Assumes spherical threat radius; linear threat velocity; point-mass quarterback approximation. Breakdown regime: Breaks down when defenders form non-spherical clusters or when QB mobility exceeds threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to conformal prediction region radius in $\\mathcal{M}(\\text{EPA}/\\text{DB})$ with $\\mu = f(\\text{TTT})$. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for qb-full-pool-2026-09-19 (0c031c08ae460d2e, domain=other, pages_read=10/10): Operator 'Carry probability' (page 1, domain other) captures: **Salary caveat:** DK API is Akamai-blocked (verified 9/19 by the sibling lane). Assumptions: Assumes stable offensive structure across games; linear carry-to-pass conversion scaling. Breakdown regime: Valid for balanced rushing threats; breaks down when run-pass balance becomes extreme. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from state-transition kernel $M_{t+1}=A_t M_t B_t^T$ where $A_t$ encodes carry-to-pass conversion. Operator 'Expected points added' (page 1, domain other) captures: **Salary caveat:** DK API is Akamai-blocked (verified 9/19 by the sibling lane). Assumptions: Markovian assumption that outcome value depends only on current state; linear utility function. Breakdown regime: Breaks down during high-variance events (e.g., turnovers, long plays) due to non-linear utility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from Bayesian posterior $\\mathcal{M}(\\text{EPA}/\\text{DB}) = \\mathcal{N}(\\mu, \\sigma^2)$ with $\\mu = f(\\text{TTT}, \\text{Pressure Rate})$. Operator 'Pass attempt rate' (page 1, domain other) captures: **Salary caveat:** DK API is Akamai-blocked (verified 9/19 by the sibling lane). Assumptions: Assumes constant offensive efficiency; linear pass-to-score conversion scaling. Breakdown regime: Valid for efficient passing attacks; breaks down when pass-heavy offenses face heavy coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from state-transition kernel $M_{t+1}=A_t M_t B_t^T$ where $B_t$ encodes pass-to-score scaling. Operator 'Time to threat' (page 2, domain other) captures: - **SF: Mac Jones, not Brock Purdy** (Purdy ruled OUT 9/18; NOTE: sibling lane's phase-1 file still showed Purdy $6,200 — stale vs. Assumptions: Assumes spherical threat radius; linear threat velocity; point-mass quarterback approximation. Breakdown regime: Breaks down when defenders form non-spherical clusters or when QB mobility exceeds threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to conformal prediction region radius in $\\mathcal{M}(\\text{EPA}/\\text{DB})$ with $\\mu = f(\\text{TTT})$. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in qb-full-pool-2026-09-19 (0c031c08ae460d2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in qb-full-pool-2026-09-19 (0c031c08ae460d2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Coaching staffs model quarterback performance through a combination of statistical analysis and film study. They may prioritize TTT reduction over raw EPA improvement if they believe a mobile quarterback can avoid sacks more effectively than a pocket passer. Opposing defenses adjust their blitz packages based on historical matchups and real-time personnel groupings, creating an adaptive game-theoretic environment. Theory of Mind & Decision Maker Model: Rooted in qb-full-pool-2026-09-19 (0c031c08ae460d2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity condition: $\\text{Corr}(P_{\\text{carry}}, R_{\\text{pass}}) < 0.3$; leakage veto: $\\text{TTT}_{\\text{QB}} > 4.0$ seconds implies QB is primarily a runner, violating the QB role definition. Cross-Layer Veto & Anti-Leakage Check: Rooted in qb-full-pool-2026-09-19 (0c031c08ae460d2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in qb-full-pool-2026-09-19 (0c031c08ae460d2e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

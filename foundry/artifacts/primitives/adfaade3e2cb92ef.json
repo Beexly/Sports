@@ -1,0 +1,78 @@
+{
+  "book_id": "adfaade3e2cb92ef",
+  "source_status": "COMPLETE",
+  "title": "API_V1_CONSUMER_REGISTRY",
+  "file_name": "API_V1_CONSUMER_REGISTRY.md",
+  "sha256": "adfaade3e2cb92efa83ce8ad959418af4dc75c04910c8af92b652118a714bbb6",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Consumer registry as a hash-based access control lattice with tamper-evident audit trail; persistence contract enforces key material isolation and quota consistency. Universal Lens: Rooted in API_V1_CONSUMER_REGISTRY (adfaade3e2cb92ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian credential validation using hash-space posterior probabilities; conformal prediction bounds on active consumer states and quota depletion. GSI Mapping: Rooted in API_V1_CONSUMER_REGISTRY (adfaade3e2cb92ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates consumer lifecycle transitions through audit-logged state machines; state transitions gated by quota-consistent hash checks. GSE Mapping: Rooted in API_V1_CONSUMER_REGISTRY (adfaade3e2cb92ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "consumer_key_hash_registry",
+      "name": "Hash-Based Consumer Key Registry",
+      "verbatim_quote": "The registry answers four questions before an API decision can be considered: - Is the key hash registered without raw key material?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H(k)': 'SHA-256 hash of consumer key, dimensionless', 'R(H(k))': 'Registry lookup result, boolean'}",
+      "assumptions": "Key material is never stored; only its cryptographic hash is retained.",
+      "breakdown_regime": "Collision resistance of SHA-256 ensures unique key identification.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Registry maps consumer identity to hash space; GSI uses this for Bayesian prior updates on credential validity.",
+        "source_operator": "consumer_key_hash_registry",
+        "telemetry": "Registry hit rate and collision frequency."
+      }
+    },
+    {
+      "primitive_id": "active_consumer_state_validator",
+      "name": "Active Consumer State Validator",
+      "verbatim_quote": "- Is the consumer active, unexpired, under quota, and not revoked?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A(c)': 'Activity flag, boolean', 'E(c)': 'Expiration status, boolean', 'Q(c)': 'Quota remaining, integer', 'R(c)': 'Revoked flag, boolean'}",
+      "assumptions": "Consumer state is atomic and updated transactionally with quota decrement.",
+      "breakdown_regime": "State transition failure when quota exceeds limit or consumer is revoked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Validator combines state flags into a composite decision kernel; GSE uses this for dynamic access control.",
+        "source_operator": "active_consumer_state_validator",
+        "telemetry": "State change frequency and quota exhaustion rate."
+      }
+    },
+    {
+      "primitive_id": "tamper_evident_audit_ledger",
+      "name": "Tamper-Evident Audit Ledger",
+      "verbatim_quote": "- Is every decision appendable to a tamper-evident audit ledger?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_i': 'Ledger block index, integer', 'H(L_{i-1})': 'Previous block hash, SHA-256', 'D_i': 'Decision data, byte array', 'H(D_i || H(L_{i-1}))': 'Current block hash, SHA-256'}",
+      "assumptions": "Append-only ledger maintains chronological integrity via cryptographic chaining.",
+      "breakdown_regime": "Audit failure when block hash mismatch occurs or insertion is non-sequential.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ledger structure mirrors decision flow; GSI applies this to verify decision traceability.",
+        "source_operator": "tamper_evident_audit_ledger",
+        "telemetry": "Block integrity check success rate and latency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "adfaade3e2cb92ef_t0",
+      "think": "The registry operates as a hash-based lattice where each consumer key maps to a unique cryptographic identifier, enforcing key material isolation. The validator evaluates a tuple of boolean and integer flags to determine access eligibility. The audit ledger ensures all decisions are cryptographically chained, enabling retroactive verification. Dualities emerge between access control and state consistency, with failure modes including quota exhaustion, revoked access, or audit chain corruption. The system's design implies a Bayesian framework for credential trustworthiness, where each decision contributes to a posterior belief over consumer validity. The persistence contract enforces a separation of concerns between key storage and operational state, aligning with secure multi-party computation principles.\n\nDeep epistemic analysis for API_V1_CONSUMER_REGISTRY (adfaade3e2cb92ef, domain=other, pages_read=2/2): Operator 'Hash-Based Consumer Key Registry' (page 1, domain other) captures: The registry answers four questions before an API decision can be considered: - Is the key hash registered without raw key material? Assumptions: Key material is never stored; only its cryptographic hash is retained. Breakdown regime: Collision resistance of SHA-256 ensures unique key identification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry maps consumer identity to hash space; GSI uses this for Bayesian prior updates on credential validity. Operator 'Active Consumer State Validator' (page 1, domain other) captures: - Is the consumer active, unexpired, under quota, and not revoked? Assumptions: Consumer state is atomic and updated transactionally with quota decrement. Breakdown regime: State transition failure when quota exceeds limit or consumer is revoked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validator combines state flags into a composite decision kernel; GSE uses this for dynamic access control. Operator 'Tamper-Evident Audit Ledger' (page 1, domain other) captures: - Is every decision appendable to a tamper-evident audit ledger? Assumptions: Append-only ledger maintains chronological integrity via cryptographic chaining. Breakdown regime: Audit failure when block hash mismatch occurs or insertion is non-sequential. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ledger structure mirrors decision flow; GSI applies this to verify decision traceability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for API_V1_CONSUMER_REGISTRY (adfaade3e2cb92ef, domain=other, pages_read=2/2): Operator 'Hash-Based Consumer Key Registry' (page 1, domain other) captures: The registry answers four questions before an API decision can be considered: - Is the key hash registered without raw key material? Assumptions: Key material is never stored; only its cryptographic hash is retained. Breakdown regime: Collision resistance of SHA-256 ensures unique key identification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry maps consumer identity to hash space; GSI uses this for Bayesian prior updates on credential validity. Operator 'Active Consumer State Validator' (page 1, domain other) captures: - Is the consumer active, unexpired, under quota, and not revoked? Assumptions: Consumer state is atomic and updated transactionally with quota decrement. Breakdown regime: State transition failure when quota exceeds limit or consumer is revoked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validator combines state flags into a composite decision kernel; GSE uses this for dynamic access control. Operator 'Tamper-Evident Audit Ledger' (page 1, domain other) captures: - Is every decision appendable to a tamper-evident audit ledger? Assumptions: Append-only ledger maintains chronological integrity via cryptographic chaining. Breakdown regime: Audit failure when block hash mismatch occurs or insertion is non-sequential. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ledger structure mirrors decision flow; GSI applies this to verify decision traceability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in cryptographic access control models of the 1970s, extended by blockchain-inspired append-only structures and modern zero-trust architectures. Retrocausal Genealogy: Rooted in API_V1_CONSUMER_REGISTRY (adfaade3e2cb92ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in API_V1_CONSUMER_REGISTRY (adfaade3e2cb92ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious actors attempting credential replay or quota abuse, and internal systems enforcing compliance. The model assumes rational behavior from both parties within defined constraints. Theory of Mind & Decision Maker Model: Rooted in API_V1_CONSUMER_REGISTRY (adfaade3e2cb92ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by separating key hashing from state management; leakage vetoes prevent raw key exposure in logs or audit trails. Cross-Layer Veto & Anti-Leakage Check: Rooted in API_V1_CONSUMER_REGISTRY (adfaade3e2cb92ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in API_V1_CONSUMER_REGISTRY (adfaade3e2cb92ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

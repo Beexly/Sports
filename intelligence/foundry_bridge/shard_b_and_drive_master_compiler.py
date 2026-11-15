@@ -31,6 +31,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Mapping, Optional, Sequence, Tuple
 
+from intelligence.foundry_bridge.multi_lane_sovereign_extractor import is_pii_or_correspondence_row
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_GCP_SYNC_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\gcp_sync")
 DEFAULT_EQUATIONS_GZ = Path(
@@ -352,6 +354,14 @@ def compile_shard_b_directory(
 
     for p in md_files:
         rec = parse_shard_b_markdown_file(p)
+        if is_pii_or_correspondence_row(
+            {
+                "file_name": p.name,
+                "file_path": str(rec.get("folder") or ""),
+                "title": str(rec.get("source") or ""),
+            }
+        ):
+            continue
         if rec["sections_present"]:
             xml_ok += 1
         for sec in rec["sections_present"]:
@@ -395,7 +405,7 @@ def compile_shard_b_directory(
         "schema": "gse.shard_b_operators_and_vetoes_catalog.v1",
         "generated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
         "sync_dir": str(sync_dir),
-        "total_markdown_files": len(md_files),
+        "total_markdown_files": len(compact_entries),
         "files_with_xml_sections": xml_ok,
         "total_extracted_equations": total_equations,
         "family_counts": dict(family_counts),

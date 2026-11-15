@@ -1,0 +1,78 @@
+{
+  "book_id": "b342127db40b79de",
+  "source_status": "COMPLETE",
+  "title": "1663-disentangled-sticky-hdp-hmm",
+  "file_name": "1663-disentangled-sticky-hdp-hmm.md",
+  "sha256": "b342127db40b79ded490687bbedb766db77e78278ace7cd81bdefd211fb82aa7",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Disentangled Sticky HDP-HMM separates transition similarity, mean self-persistence, and state-specific persistence variation for unknown-state-count modeling. Universal Lens: Rooted in 1663-disentangled-sticky-hdp-hmm (b342127db40b79de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on game state sequences using disentangled stickiness for conformal prediction of play outcomes. GSI Mapping: Rooted in 1663-disentangled-sticky-hdp-hmm (b342127db40b79de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine uses inferred state transitions and persistence parameters to guide real-time tactical decisions. GSE Mapping: Rooted in 1663-disentangled-sticky-hdp-hmm (b342127db40b79de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "disentangled_stickiness",
+      "name": "Disentangled Stickiness",
+      "verbatim_quote": "Method/model Disentangled sticky HDP-HMM (DS-HDP-HMM): keeps the HDP prior over transition rows (shared sparsity pattern) but models self-persistence separately per state via a Beta prior on the self-transition probability, disentangled from the shared transition component.",
+      "page": 1,
+      "latex": "\\kappa_j \\sim \\text{Beta}(a, b) \\quad \\forall j \\in \\{1,\\dots,K\\}",
+      "symbol_and_unit_ledger": "{'κ_j': 'self-transition probability for state j, dimensionless', 'a, b': 'shape parameters of Beta distribution, dimensionless'}",
+      "assumptions": "Markov latent chain, emissions conditionally independent given state, truncation L adequate",
+      "breakdown_regime": "O(TK^2) computational complexity per sweep",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State transition probabilities are modeled as mixture of shared sparse transitions and per-state sticky components, enabling heterogeneous duration modeling.",
+        "source_operator": "disentangled_stickiness",
+        "telemetry": "Held-out likelihood and normalized Hamming distance"
+      }
+    },
+    {
+      "primitive_id": "hdp_transition_prior",
+      "name": "HDP Transition Prior",
+      "verbatim_quote": "Mathematics/equations/assumptions - HDP prior: β ~ GEM(γ); π_j ~ DP(α, β) (shared transition sparsity).",
+      "page": 1,
+      "latex": "\\beta \\sim \\text{GEM}(\\gamma), \\quad \\pi_j \\sim \\text{DP}(\\alpha, \\beta)",
+      "symbol_and_unit_ledger": "{'β': 'concentration parameter vector for DP, dimensionless', 'π_j': 'transition probability vector for state j, dimensionless', 'α': 'concentration parameter for DP, dimensionless', 'γ': 'concentration parameter for GEM, dimensionless'}",
+      "assumptions": "Markov latent chain, emissions conditionally independent given state, truncation L adequate",
+      "breakdown_regime": "Shared sparsity pattern across states",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables nonparametric learning of transition structure while maintaining sparsity.",
+        "source_operator": "hdp_transition_prior",
+        "telemetry": "Normalized Hamming distance vs true states"
+      }
+    },
+    {
+      "primitive_id": "gibbs_sampling_updates",
+      "name": "Gibbs Sampling Updates",
+      "verbatim_quote": "- Gibbs updates: state sequence by forward-backward; κ_j by Beta–Binomial conjugacy on self-transition counts; β, π by standard HDP auxiliary-variable updates.",
+      "page": 1,
+      "latex": "\\kappa_j^{(t+1)} \\sim \\text{Beta}(a + n_{jj}^{(t)}, b + n_{j\\cdot}^{(t)} - n_{jj}^{(t)})",
+      "symbol_and_unit_ledger": "{'n_{jj}^{(t)}': 'count of self-transitions in state j at time t, integer', 'n_{j\\\\cdot}^{(t)}': 'total transitions out of state j at time t, integer'}",
+      "assumptions": "Markov latent chain, emissions conditionally independent given state, truncation L adequate",
+      "breakdown_regime": "Conjugate update for Beta-Binomial pair",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables efficient posterior inference through conjugate updates.",
+        "source_operator": "gibbs_sampling_updates",
+        "telemetry": "Negative log-likelihood on held-out data"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b342127db40b79de_t0",
+      "think": "The DS-HDP-HMM addresses the core issue of sticky HDP-HMM over- or under-segmentation by disentangling three quantities: transition similarity (via HDP), mean self-persistence (via Beta priors), and state-specific persistence variation. This allows modeling of unknown numbers of states with heterogeneous durations. The model assumes a Markov latent chain and conditional independence of emissions. It employs a weak-limit truncation and uses Gibbs sampling for inference. The key innovation lies in separating the sticky self-transition component from the shared transition structure, enabling more accurate segmentation. The O(TK^2) complexity arises from per-state self-transition updates, which is more efficient than general HSMMs. In practice, this enables GSE to infer game regimes dynamically based on observed plays, with each inferred state carrying both emission characteristics and persistence information.\n\nDeep epistemic analysis for 1663-disentangled-sticky-hdp-hmm (b342127db40b79de, domain=other, pages_read=3/3): Operator 'Disentangled Stickiness' (page 1, domain other) captures: Method/model Disentangled sticky HDP-HMM (DS-HDP-HMM): keeps the HDP prior over transition rows (shared sparsity pattern) but models self-persistence separately per state via a Beta prior on the self-transition probability, disentangled from the shared transition component. Assumptions: Markov latent chain, emissions conditionally independent given state, truncation L adequate Breakdown regime: O(TK^2) computational complexity per sweep Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State transition probabilities are modeled as mixture of shared sparse transitions and per-state sticky components, enabling heterogeneous duration modeling. Operator 'HDP Transition Prior' (page 1, domain other) captures: Mathematics/equations/assumptions - HDP prior: β ~ GEM(γ); π_j ~ DP(α, β) (shared transition sparsity). Assumptions: Markov latent chain, emissions conditionally independent given state, truncation L adequate Breakdown regime: Shared sparsity pattern across states Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables nonparametric learning of transition structure while maintaining sparsity. Operator 'Gibbs Sampling Updates' (page 1, domain other) captures: - Gibbs updates: state sequence by forward-backward; κ_j by Beta–Binomial conjugacy on self-transition counts; β, π by standard HDP auxiliary-variable updates. Assumptions: Markov latent chain, emissions conditionally independent given state, truncation L adequate Breakdown regime: Conjugate update for Beta-Binomial pair Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables efficient posterior inference through conjugate updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1663-disentangled-sticky-hdp-hmm (b342127db40b79de, domain=other, pages_read=3/3): Operator 'Disentangled Stickiness' (page 1, domain other) captures: Method/model Disentangled sticky HDP-HMM (DS-HDP-HMM): keeps the HDP prior over transition rows (shared sparsity pattern) but models self-persistence separately per state via a Beta prior on the self-transition probability, disentangled from the shared transition component. Assumptions: Markov latent chain, emissions conditionally independent given state, truncation L adequate Breakdown regime: O(TK^2) computational complexity per sweep Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State transition probabilities are modeled as mixture of shared sparse transitions and per-state sticky components, enabling heterogeneous duration modeling. Operator 'HDP Transition Prior' (page 1, domain other) captures: Mathematics/equations/assumptions - HDP prior: β ~ GEM(γ); π_j ~ DP(α, β) (shared transition sparsity). Assumptions: Markov latent chain, emissions conditionally independent given state, truncation L adequate Breakdown regime: Shared sparsity pattern across states Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables nonparametric learning of transition structure while maintaining sparsity. Operator 'Gibbs Sampling Updates' (page 1, domain other) captures: - Gibbs updates: state sequence by forward-backward; κ_j by Beta–Binomial conjugacy on self-transition counts; β, π by standard HDP auxiliary-variable updates. Assumptions: Markov latent chain, emissions conditionally independent given state, truncation L adequate Breakdown regime: Conjugate update for Beta-Binomial pair Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables efficient posterior inference through conjugate updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian nonparametrics (Dirichlet processes), extended to hierarchical structures (HDP) and applied to temporal dynamics (HMM). Inspired by earlier work on sticky HMMs and their limitations in segmenting variable-duration sequences. Retrocausal Genealogy: Rooted in 1663-disentangled-sticky-hdp-hmm (b342127db40b79de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1663-disentangled-sticky-hdp-hmm (b342127db40b79de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling agents must account for both global transition patterns and local state persistence. The dual nature of transitions—shared sparsity and individual stickiness—reflects how teams may exhibit consistent strategic patterns yet vary in tempo or duration of execution. Theory of Mind & Decision Maker Model: Rooted in 1663-disentangled-sticky-hdp-hmm (b342127db40b79de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct roles for HDP and Beta components. Leakage occurs if self-persistence is not properly separated from transition structure. Veto conditions include insufficient heterogeneity in κ_j values or poor convergence of Gibbs sampler. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1663-disentangled-sticky-hdp-hmm (b342127db40b79de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

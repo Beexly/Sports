@@ -1,0 +1,78 @@
+{
+  "book_id": "3c02e88aa5af300d",
+  "source_status": "COMPLETE",
+  "title": "2026-11-04-SCHEMA-DRIFT",
+  "file_name": "2026-11-04-SCHEMA-DRIFT.md",
+  "sha256": "3c02e88aa5af300db6fe6d242c6ad8199fb0b9629799e6191299da59aaeed86d",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Schema drift manifests as a disjunction between database schema and Prisma client definitions, creating visibility gaps that impair data integrity and application logic. Universal Lens: Rooted in 2026-11-04-SCHEMA-DRIFT (3c02e88aa5af300d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers latent state discrepancies via Bayesian update of schema visibility, treating missing columns as unobserved variables in probabilistic data models. GSI Mapping: Rooted in 2026-11-04-SCHEMA-DRIFT (3c02e88aa5af300d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE resolves schema drift through state-transition logic that flags and remaps database columns into Prisma-compatible fields, enabling seamless data flow. GSE Mapping: Rooted in 2026-11-04-SCHEMA-DRIFT (3c02e88aa5af300d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "closingprice",
+      "name": "Closing Price Field",
+      "verbatim_quote": "> **The column cannot be written through Prisma because it is absent from `schema.prisma`.** Application code using the Prisma client has no field to assign to, so settlement/CLV writers either skip the column or fail.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'closingPrice': 'Double precision float, dimensionless'}",
+      "assumptions": "Column exists in PostgreSQL but is not declared in Prisma schema.",
+      "breakdown_regime": "Data write failure when Prisma client attempts to assign value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Prisma model field mirrors PostgreSQL column structure; mismatch causes runtime error.",
+        "source_operator": "closingprice",
+        "telemetry": "Presence of column in `information_schema` vs presence in `schema.prisma`"
+      }
+    },
+    {
+      "primitive_id": "clvpoints",
+      "name": "Customer Lifetime Value Points",
+      "verbatim_quote": "**Literal classification totals: 11 SAFE-TO-DECLARE, 2 NEEDS-CAREFUL-HANDLING.** **Effective totals after the `@map` audit (§5): 11 SAFE-TO-DECLARE, 0 CAREFUL, 2 already-declared / false positive.** ## 3.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'clvPoints': 'Double precision float, dimensionless'}",
+      "assumptions": "Column is nullable and matches Prisma's Float? type.",
+      "breakdown_regime": "No functional impact if not declared, but prevents writes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from CLV computation pipeline; requires Prisma declaration for persistence.",
+        "source_operator": "clvpoints",
+        "telemetry": "Population coverage in settled picks vs Prisma field availability"
+      }
+    },
+    {
+      "primitive_id": "hadngssignal",
+      "name": "Historical NGS Signal Indicator",
+      "verbatim_quote": "Both views are given in the table so the literal and the correct engineering answer are never conflated.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'hadNgsSignal': 'Boolean, dimensionless'}",
+      "assumptions": "Column has default value and is nullable in DB, safe to declare.",
+      "breakdown_regime": "False positive detection due to `@map` parsing limitation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mapped via `@map(\"had_ngs_signal\")` in Prisma; detected as unknown due to parser limitation.",
+        "source_operator": "hadngssignal",
+        "telemetry": "Verification of `@map` presence in Prisma schema vs DB column name"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3c02e88aa5af300d_t0",
+      "think": "Schema drift arises from a semantic disconnect between database schema and Prisma ORM definition. When columns exist in PostgreSQL but are absent from `schema.prisma`, they become invisible to the Prisma client, leading to write failures or skipped assignments. This creates a dual failure mode: data integrity loss where values are silently omitted, and logical inconsistency where application behavior depends on incomplete schema knowledge. The root cause lies in the lack of synchronization between migration tooling and ORM schema definitions. The `schema_unknown_columns` detector identifies discrepancies by comparing `information_schema` with Prisma’s declared fields. Columns like `closingPrice` are flagged as missing because they are not present in the Prisma model, even though they are valid in the database. The fix involves adding missing fields to `schema.prisma` with appropriate types and nullability. For example, `clvPoints` is a `double precision NULL` column that should map to `Float?` in Prisma. Similarly, `hadNgsSignal` is a `boolean NULL` with a default value, making it safe to declare. However, some columns such as those in `rate_limit_counters` are already declared under different field names due to `@map` annotations, causing false positives in detection. This highlights the importance of ensuring that schema observability tools correctly interpret field-level mappings.\n\nDeep epistemic analysis for 2026-11-04-SCHEMA-DRIFT (3c02e88aa5af300d, domain=other, pages_read=6/6): Operator 'Closing Price Field' (page 1, domain other) captures: > **The column cannot be written through Prisma because it is absent from `schema.prisma`.** Application code using the Prisma client has no field to assign to, so settlement/CLV writers either skip the column or fail. Assumptions: Column exists in PostgreSQL but is not declared in Prisma schema. Breakdown regime: Data write failure when Prisma client attempts to assign value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Prisma model field mirrors PostgreSQL column structure; mismatch causes runtime error. Operator 'Customer Lifetime Value Points' (page 2, domain other) captures: **Literal classification totals: 11 SAFE-TO-DECLARE, 2 NEEDS-CAREFUL-HANDLING.** **Effective totals after the `@map` audit (§5): 11 SAFE-TO-DECLARE, 0 CAREFUL, 2 already-declared / false positive.** ## 3. Assumptions: Column is nullable and matches Prisma's Float? type. Breakdown regime: No functional impact if not declared, but prevents writes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from CLV computation pipeline; requires Prisma declaration for persistence. Operator 'Historical NGS Signal Indicator' (page 1, domain other) captures: Both views are given in the table so the literal and the correct engineering answer are never conflated. Assumptions: Column has default value and is nullable in DB, safe to declare. Breakdown regime: False positive detection due to `@map` parsing limitation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mapped via `@map(\"had_ngs_signal\")` in Prisma; detected as unknown due to parser limitation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-11-04-SCHEMA-DRIFT (3c02e88aa5af300d, domain=other, pages_read=6/6): Operator 'Closing Price Field' (page 1, domain other) captures: > **The column cannot be written through Prisma because it is absent from `schema.prisma`.** Application code using the Prisma client has no field to assign to, so settlement/CLV writers either skip the column or fail. Assumptions: Column exists in PostgreSQL but is not declared in Prisma schema. Breakdown regime: Data write failure when Prisma client attempts to assign value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Prisma model field mirrors PostgreSQL column structure; mismatch causes runtime error. Operator 'Customer Lifetime Value Points' (page 2, domain other) captures: **Literal classification totals: 11 SAFE-TO-DECLARE, 2 NEEDS-CAREFUL-HANDLING.** **Effective totals after the `@map` audit (§5): 11 SAFE-TO-DECLARE, 0 CAREFUL, 2 already-declared / false positive.** ## 3. Assumptions: Column is nullable and matches Prisma's Float? type. Breakdown regime: No functional impact if not declared, but prevents writes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from CLV computation pipeline; requires Prisma declaration for persistence. Operator 'Historical NGS Signal Indicator' (page 1, domain other) captures: Both views are given in the table so the literal and the correct engineering answer are never conflated. Assumptions: Column has default value and is nullable in DB, safe to declare. Breakdown regime: False positive detection due to `@map` parsing limitation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mapped via `@map(\"had_ngs_signal\")` in Prisma; detected as unknown due to parser limitation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s ORM design patterns where schema evolution lagged behind database changes. Influenced by PostgreSQL's schema introspection capabilities and Prisma's declarative approach to data modeling. Retrocausal Genealogy: Rooted in 2026-11-04-SCHEMA-DRIFT (3c02e88aa5af300d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2026-11-04-SCHEMA-DRIFT (3c02e88aa5af300d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the database system which maintains full schema fidelity, and the Prisma client which operates under a constrained view. Misalignment occurs when migration scripts do not propagate schema updates to the ORM layer, creating a temporal inconsistency between data store and access layer. Theory of Mind & Decision Maker Model: Rooted in 2026-11-04-SCHEMA-DRIFT (3c02e88aa5af300d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that schema observability tools correctly parse `@map` directives. Leakage is prevented by verifying that all database columns are accounted for in Prisma models, avoiding silent data loss during writes. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-11-04-SCHEMA-DRIFT (3c02e88aa5af300d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

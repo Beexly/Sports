@@ -1,0 +1,78 @@
+{
+  "book_id": "2e45faf236e09361",
+  "source_status": "COMPLETE",
+  "title": "c8-everything-before-ship",
+  "file_name": "c8-everything-before-ship.txt",
+  "sha256": "2e45faf236e093615c4a1f190dc5a33b22c2a223670fce8de3ff38597918379a",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian confidence calibration under deterministic factor models with retroactive drift correction and decision-theoretic outcome ranking. Universal Lens: Rooted in c8-everything-before-ship (2e45faf236e09361), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over deterministic factor scores to generate calibrated confidence intervals, enabling robust risk-adjusted decision-making under uncertainty. GSI Mapping: Rooted in c8-everything-before-ship (2e45faf236e09361), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions based on fixed-weighted factor models with explicit observability of decision boundaries, ensuring deterministic behavior and traceable inference paths. GSE Mapping: Rooted in c8-everything-before-ship (2e45faf236e09361), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "confidence_does_not_rank_outcomes",
+      "name": "Confidence Calibration Nullity",
+      "verbatim_quote": "In THIS file, specifically: - \"CONFIDENCE DOES NOT RANK OUTCOMES ...",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'AUC': 'dimensionless area under ROC curve', 'p-value': 'probability of observing data under null hypothesis'}",
+      "assumptions": "Confidence scores are independent of outcome accuracy; null hypothesis accepted at p=0.4113",
+      "breakdown_regime": "AUC < 0.50 indicates no discriminative power",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Confidence score distribution is non-informative for outcome prediction; requires external validation",
+        "source_operator": "confidence_does_not_rank_outcomes",
+        "telemetry": "AUC = 0.4965, p = 0.4113"
+      }
+    },
+    {
+      "primitive_id": "no_retro_edit_ability",
+      "name": "Tamper-Evident Publication",
+      "verbatim_quote": "- \"no ability to un-publish or retro-edit\" overstates what settlement protects.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'publication_state': 'binary {published, unpublished}', 'settlement_security': 'boolean indicating tamper-proof status'}",
+      "assumptions": "Publication is immutable post-commit; settlement mechanism lacks retroactive edit capability",
+      "breakdown_regime": "Settlement system is not yet fully secure against retroactive modification",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Publication state mirrors cryptographic commitment schemes; settlement provides audit trail but not rollback",
+        "source_operator": "no_retro_edit_ability",
+        "telemetry": "Pick publication is tamper-evident; settlement is not yet"
+      }
+    },
+    {
+      "primitive_id": "deterministic_factor_model",
+      "name": "Factor-Based Decision Engine",
+      "verbatim_quote": "We're math you can read.\" The engine is a DETERMINISTIC FACTOR MODEL — explicit weighted factors, a frozen model version, a readable factor breakdown per pick.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f_i': 'explicit weighted factor i', 'w_i': 'weight of factor i', 'model_version': 'version identifier string'}",
+      "assumptions": "Model is static and deterministic; factor weights are fixed and known",
+      "breakdown_regime": "Model operates deterministically with fixed parameters",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Factor model maps to linear combination of inputs; decision space is discrete and deterministic",
+        "source_operator": "deterministic_factor_model",
+        "telemetry": "Frozen model version ensures reproducibility"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2e45faf236e09361_t0",
+      "think": "The core issue lies in the misalignment between perceived and actual performance of confidence metrics. The primitive 'confidence_does_not_rank_outcomes' reveals that AUC = 0.4965 implies no meaningful discrimination. This is a fundamental failure mode where subjective confidence is treated as a ranking tool when it is not. The second primitive 'no_retro_edit_ability' highlights a critical operational gap: while publication is tamper-evident, settlement lacks retroactive capability. This creates a temporal inconsistency in data integrity. The third primitive 'deterministic_factor_model' establishes a foundational structure for decision-making, but it must be validated against empirical outcomes. These primitives form a triad of epistemic limitations: calibration failure, temporal security gap, and model rigidity. Each must be addressed to ensure reliable inference and decision-making.\n\nDeep epistemic analysis for c8-everything-before-ship (2e45faf236e09361, domain=other, pages_read=4/4): Operator 'Confidence Calibration Nullity' (page 1, domain other) captures: In THIS file, specifically: - \"CONFIDENCE DOES NOT RANK OUTCOMES ... Assumptions: Confidence scores are independent of outcome accuracy; null hypothesis accepted at p=0.4113 Breakdown regime: AUC < 0.50 indicates no discriminative power Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Confidence score distribution is non-informative for outcome prediction; requires external validation Operator 'Tamper-Evident Publication' (page 1, domain other) captures: - \"no ability to un-publish or retro-edit\" overstates what settlement protects. Assumptions: Publication is immutable post-commit; settlement mechanism lacks retroactive edit capability Breakdown regime: Settlement system is not yet fully secure against retroactive modification Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Publication state mirrors cryptographic commitment schemes; settlement provides audit trail but not rollback Operator 'Factor-Based Decision Engine' (page 1, domain other) captures: We're math you can read.\" The engine is a DETERMINISTIC FACTOR MODEL — explicit weighted factors, a frozen model version, a readable factor breakdown per pick. Assumptions: Model is static and deterministic; factor weights are fixed and known Breakdown regime: Model operates deterministically with fixed parameters Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Factor model maps to linear combination of inputs; decision space is discrete and deterministic Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for c8-everything-before-ship (2e45faf236e09361, domain=other, pages_read=4/4): Operator 'Confidence Calibration Nullity' (page 1, domain other) captures: In THIS file, specifically: - \"CONFIDENCE DOES NOT RANK OUTCOMES ... Assumptions: Confidence scores are independent of outcome accuracy; null hypothesis accepted at p=0.4113 Breakdown regime: AUC < 0.50 indicates no discriminative power Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Confidence score distribution is non-informative for outcome prediction; requires external validation Operator 'Tamper-Evident Publication' (page 1, domain other) captures: - \"no ability to un-publish or retro-edit\" overstates what settlement protects. Assumptions: Publication is immutable post-commit; settlement mechanism lacks retroactive edit capability Breakdown regime: Settlement system is not yet fully secure against retroactive modification Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Publication state mirrors cryptographic commitment schemes; settlement provides audit trail but not rollback Operator 'Factor-Based Decision Engine' (page 1, domain other) captures: We're math you can read.\" The engine is a DETERMINISTIC FACTOR MODEL — explicit weighted factors, a frozen model version, a readable factor breakdown per pick. Assumptions: Model is static and deterministic; factor weights are fixed and known Breakdown regime: Model operates deterministically with fixed parameters Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Factor model maps to linear combination of inputs; decision space is discrete and deterministic Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical testing and Bayesian calibration theory, these primitives reflect modern concerns around model interpretability and data governance, tracing back to Fisher's significance testing and Cox's likelihood principles. Retrocausal Genealogy: Rooted in c8-everything-before-ship (2e45faf236e09361), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in c8-everything-before-ship (2e45faf236e09361), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may assume confidence rankings are valid or that retro-editing is possible. The decision actor must counter these assumptions by grounding decisions in empirical evidence rather than perceived reliability. Theory of Mind & Decision Maker Model: Rooted in c8-everything-before-ship (2e45faf236e09361), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If confidence scores are used for ranking, they violate the deterministic model's integrity. If retro-editing is assumed, the tamper-evidence layer fails. These cross-layer dependencies demand mutual consistency to prevent systemic collapse. Cross-Layer Veto & Anti-Leakage Check: Rooted in c8-everything-before-ship (2e45faf236e09361), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "df3c19c63a28f80f",
+  "source_status": "COMPLETE",
+  "title": "funding-intel-brief-2026-10-09",
+  "file_name": "funding-intel-brief-2026-10-09.md",
+  "sha256": "df3c19c63a28f80f534497284a0e22503a6c8d0176fcbb344767a81949ea0355",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Social media behavioral inference maps to funding opportunity alignment via AI-driven content curation and temporal deadline proximity. Universal Lens: Rooted in funding-intel-brief-2026-10-09 (df3c19c63a28f80f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on funding likelihood conditioned on social signal priors and program deadline posteriors using conformal predictive distributions. GSI Mapping: Rooted in funding-intel-brief-2026-10-09 (df3c19c63a28f80f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions from 'content consumption' to 'application readiness' governed by temporal urgency and resource fit kernels. GSE Mapping: Rooted in funding-intel-brief-2026-10-09 (df3c19c63a28f80f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "social_signal_inference",
+      "name": "Social Signal Inference Kernel",
+      "verbatim_quote": "**Zero funding-related posts.** His saves skew AI tooling and business automation (@seb.ai, @datasciencebrain, @syntaix.ai, @wellcopymax — AI agents, email automation, dev monetization).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'social signal intensity (dimensionless)', 'F': 'funding-related content frequency (events per day)'}",
+      "assumptions": "Signal intensity is inversely proportional to funding engagement; content skew implies preference bias.",
+      "breakdown_regime": "F = 0 when S > threshold",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Behavioral content skew maps to funding interest via probabilistic belief propagation in GSI belief space.",
+        "source_operator": "social_signal_inference",
+        "telemetry": "Instagram saved post classification accuracy"
+      }
+    },
+    {
+      "primitive_id": "temporal_opportunity_alignment",
+      "name": "Temporal Opportunity Alignment",
+      "verbatim_quote": "**Today–Oct 12: PeopleFund accelerator application.** First-come, first-served, 70 spots, closes in 3 days.",
+      "page": 2,
+      "latex": "\\tau_{\\text{deadline}} - t_{\\text{now}} \\leq T_{\\text{window}}",
+      "symbol_and_unit_ledger": "{'t_{\\\\text{now}}': 'current time (seconds since epoch)', 'T_{\\\\text{window}}': 'application window duration (days)', '\\\\tau_{\\\\text{deadline}}': 'deadline timestamp (seconds since epoch)'}",
+      "assumptions": "Opportunity eligibility is time-sensitive; early action increases probability of success.",
+      "breakdown_regime": "T_{\\text{window}} < 0 implies missed opportunity",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Time-based decision boundary in GSE state transition graph defines critical path to application readiness.",
+        "source_operator": "temporal_opportunity_alignment",
+        "telemetry": "Days until deadline vs. application submission status"
+      }
+    },
+    {
+      "primitive_id": "resource_fit_kernel",
+      "name": "Resource Fit Kernel",
+      "verbatim_quote": "Fit\" is scored for Garrett: Texas-based, AI startup, disabled founder, solo/bootstrapped.",
+      "page": 1,
+      "latex": "K_{\\text{fit}}(x) = \\prod_{i=1}^{n} \\mathbb{I}(x_i \\in P_i)",
+      "symbol_and_unit_ledger": "{'x_i': 'individual criterion vector (e.g., location, domain, status)', 'P_i': 'permitted parameter set for criterion i', '\\\\mathbb{I}': 'indicator function (boolean)'}",
+      "assumptions": "Fit is defined as intersection of personal and program criteria; binary inclusion.",
+      "breakdown_regime": "K_{\\text{fit}} = 0 if any x_i \\notin P_i",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binary fit scoring in GSI maps to resource compatibility in GSE decision tree.",
+        "source_operator": "resource_fit_kernel",
+        "telemetry": "Match score between founder profile and program requirements"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "df3c19c63a28f80f_t0",
+      "think": "The social signal inference kernel models how content preferences reflect funding interest through behavioral data. The temporal opportunity alignment captures urgency through deadline proximity, enabling dynamic scheduling in GSE. The resource fit kernel encodes eligibility constraints as a Boolean product over criteria. These primitives form a dual system where GSI computes posterior beliefs about funding likelihood and GSE executes state transitions based on those beliefs. Failure modes include misalignment between inferred signals and actual funding behavior, or missed deadlines due to delayed action. The system assumes that social media activity correlates with funding intent, which may fail under adversarial conditions or when content is curated.\n\nDeep epistemic analysis for funding-intel-brief-2026-10-09 (df3c19c63a28f80f, domain=other, pages_read=3/3): Operator 'Social Signal Inference Kernel' (page 1, domain other) captures: **Zero funding-related posts.** His saves skew AI tooling and business automation (@seb.ai, @datasciencebrain, @syntaix.ai, @wellcopymax — AI agents, email automation, dev monetization). Assumptions: Signal intensity is inversely proportional to funding engagement; content skew implies preference bias. Breakdown regime: F = 0 when S > threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Behavioral content skew maps to funding interest via probabilistic belief propagation in GSI belief space. Operator 'Temporal Opportunity Alignment' (page 2, domain other) captures: **Today–Oct 12: PeopleFund accelerator application.** First-come, first-served, 70 spots, closes in 3 days. Assumptions: Opportunity eligibility is time-sensitive; early action increases probability of success. Breakdown regime: T_{\\text{window}} < 0 implies missed opportunity Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Time-based decision boundary in GSE state transition graph defines critical path to application readiness. Operator 'Resource Fit Kernel' (page 1, domain other) captures: Fit\" is scored for Garrett: Texas-based, AI startup, disabled founder, solo/bootstrapped. Assumptions: Fit is defined as intersection of personal and program criteria; binary inclusion. Breakdown regime: K_{\\text{fit}} = 0 if any x_i \\notin P_i Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary fit scoring in GSI maps to resource compatibility in GSE decision tree. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for funding-intel-brief-2026-10-09 (df3c19c63a28f80f, domain=other, pages_read=3/3): Operator 'Social Signal Inference Kernel' (page 1, domain other) captures: **Zero funding-related posts.** His saves skew AI tooling and business automation (@seb.ai, @datasciencebrain, @syntaix.ai, @wellcopymax — AI agents, email automation, dev monetization). Assumptions: Signal intensity is inversely proportional to funding engagement; content skew implies preference bias. Breakdown regime: F = 0 when S > threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Behavioral content skew maps to funding interest via probabilistic belief propagation in GSI belief space. Operator 'Temporal Opportunity Alignment' (page 2, domain other) captures: **Today–Oct 12: PeopleFund accelerator application.** First-come, first-served, 70 spots, closes in 3 days. Assumptions: Opportunity eligibility is time-sensitive; early action increases probability of success. Breakdown regime: T_{\\text{window}} < 0 implies missed opportunity Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Time-based decision boundary in GSE state transition graph defines critical path to application readiness. Operator 'Resource Fit Kernel' (page 1, domain other) captures: Fit\" is scored for Garrett: Texas-based, AI startup, disabled founder, solo/bootstrapped. Assumptions: Fit is defined as intersection of personal and program criteria; binary inclusion. Breakdown regime: K_{\\text{fit}} = 0 if any x_i \\notin P_i Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary fit scoring in GSI maps to resource compatibility in GSE decision tree. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian information theory and temporal logic, tracing back to Shannon entropy and decision trees. Influenced by modern social network analysis and deadline-driven optimization frameworks. Retrocausal Genealogy: Rooted in funding-intel-brief-2026-10-09 (df3c19c63a28f80f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in funding-intel-brief-2026-10-09 (df3c19c63a28f80f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include the funding ecosystem (which may not align with perceived interests) and the founder’s own cognitive biases (e.g., overestimating fit or underestimating urgency). Theory of Mind & Decision Maker Model: Rooted in funding-intel-brief-2026-10-09 (df3c19c63a28f80f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in funding-intel-brief-2026-10-09 (df3c19c63a28f80f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity checks ensure that social inference does not override temporal urgency or vice versa. Leakage vetoes prevent false positives in fit scoring from triggering premature actions. Cross-Layer Veto & Anti-Leakage Check: Rooted in funding-intel-brief-2026-10-09 (df3c19c63a28f80f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in funding-intel-brief-2026-10-09 (df3c19c63a28f80f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

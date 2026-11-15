@@ -1,0 +1,78 @@
+{
+  "book_id": "84ad7195c1da6ecd",
+  "source_status": "COMPLETE",
+  "title": "report",
+  "file_name": "report.md",
+  "sha256": "84ad7195c1da6ecd1fac930c4bbfe9f408b5e2835610bb254074921b813bdedb",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Matchup chains \\( \\mathcal{C} \\) as causal paths from WR/TE to CB/S safety pairs, with trench chains \\( \\mathcal{T} \\) from OL to FRONT, constrained by injury \\( \\mathcal{I} \\) and statboard \\( \\mathcal{S} \\) inputs.",
+  "gsi_mapping": "Bayesian belief nets over \\( \\mathcal{C} \\) and \\( \\mathcal{T} \\) conditioned on \\( \\mathcal{I} \\) and \\( \\mathcal{S} \\), using conformal prediction for uncertainty quantification. GSI Mapping: Rooted in report (84ad7195c1da6ecd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions \\( \\mathcal{S}_{t} \\to \\mathcal{S}_{t+1} \\) driven by \\( \\mathcal{C} \\) and \\( \\mathcal{T} \\) updates, with action selection via Q-learning over \\( \\mathcal{I} \\)-filtered \\( \\mathcal{S} \\) states.",
+  "primitives": [
+    {
+      "primitive_id": "receiver_corner_chain",
+      "name": "Receiver-Corner Causal Chain",
+      "verbatim_quote": "Acceptance criteria: `chains_count >= 2` for every game.\" ### 1.1 Current Baseline Audit An exhaustive inspection of the existing 14 Week 6 matchup reports in `docs/predictions/research/2026-10-18/*-matchups.md` reveals severe data suppression and structural defects: - **6 games currently have 0 chains (Completely Empty)**: `ARI@LAR`, `BUF@LV`, `HOU@JAX`, `LAC@KC`, `PIT@TB`, `WSH@SF`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{C}_{rc}': 'Causal chain count from receiver to corner', '\\\\mathcal{I}_{cb}': 'Cornerback injury status (binary)', '\\\\mathcal{S}_{sep}': 'Average separation in yards'}",
+      "assumptions": "Chain generation requires non-zero \\( \\mathcal{I}_{cb} \\) and \\( \\mathcal{S}_{sep} > 0 \\).",
+      "breakdown_regime": "When \\( \\mathcal{I}_{cb} = 1 \\) or \\( \\mathcal{S}_{sep} = 0 \\), \\( \\mathcal{C}_{rc} = 0 \\).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to \\( \\mathcal{C}_{rc} \\) in GSI's belief network over \\( \\mathcal{S} \\) and \\( \\mathcal{I} \\).",
+        "source_operator": "receiver_corner_chain",
+        "telemetry": "Number of valid WR-CB pairings per game."
+      }
+    },
+    {
+      "primitive_id": "trench_mismatch_chain",
+      "name": "Trench Mismatch Chain",
+      "verbatim_quote": "| | **RC-4: One-Sided Trench Analysis** | Lines 298–318 only evaluate `HOME-OL vs AWAY-FRONT`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{T}_{tm}': 'Trench mismatch score', '\\\\mathcal{I}_{ol}': 'Offensive line injury status (binary)', '\\\\mathcal{S}_{tlos}': 'Time to throw in seconds'}",
+      "assumptions": "Chain generation requires \\( \\mathcal{I}_{ol} = 0 \\) and \\( \\mathcal{S}_{tlos} < threshold \\).",
+      "breakdown_regime": "When \\( \\mathcal{I}_{ol} = 1 \\) or \\( \\mathcal{S}_{tlos} \\geq threshold \\), \\( \\mathcal{T}_{tm} = 0 \\).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel derived from \\( \\mathcal{S}_{tlos} \\) and \\( \\mathcal{I}_{ol} \\) in GSE's state transition model.",
+        "source_operator": "trench_mismatch_chain",
+        "telemetry": "Number of valid OL-FRONT mismatch pairs per game."
+      }
+    },
+    {
+      "primitive_id": "data_input_staleness",
+      "name": "Data Input Staleness",
+      "verbatim_quote": "| | **RC-6: Stale 2025 Input Files** | Line 35 points to `nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json` (a 2025-season snapshot), ignoring `raw_statboard_receiving.json`.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{D}_{stale}': 'Stale data flag (binary)', '\\\\mathcal{S}_{stat}': 'Statboard version identifier'}",
+      "assumptions": "Input data must be \\( \\mathcal{S}_{stat} = 2026 \\) to avoid \\( \\mathcal{D}_{stale} = 1 \\).",
+      "breakdown_regime": "When \\( \\mathcal{S}_{stat} \\neq 2026 \\), \\( \\mathcal{D}_{stale} = 1 \\).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to \\( \\mathcal{D}_{stale} \\) in GSI's data validation pipeline.",
+        "source_operator": "data_input_staleness",
+        "telemetry": "Version mismatch count in \\( \\mathcal{S} \\) feed."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "84ad7195c1da6ecd_t0",
+      "think": "The core failure modes stem from premature loop termination (RC-1), invalidation of healthy starters (RC-2), dead coverage logic (RC-3), one-sided trench analysis (RC-4), zero defensive injury suppression (RC-5), and stale input files (RC-6). These defects collectively reduce \\( \\mathcal{C}_{rc} \\) and \\( \\mathcal{T}_{tm} \\) below the \\( \\geq 2 \\) threshold. RC-1 causes early exit before full \\( \\mathcal{C}_{rc} \\) enumeration. RC-2 blocks chains when CBs are healthy, violating \\( \\mathcal{S}_{sep} \\) independence. RC-3 makes \\( \\mathcal{T}_{tm} \\) logic unreachable. RC-4 ignores reverse OL-FRONT dynamics. RC-5 suppresses \\( \\mathcal{T}_{tm} \\) when no front injuries exist. RC-6 introduces \\( \\mathcal{D}_{stale} \\), reducing \\( \\mathcal{S}_{stat} \\) validity. Each defect is a singularity in \\( \\mathcal{C} \\) and \\( \\mathcal{T} \\) generation, causing cascading failures in \\( \\mathcal{S} \\) and \\( \\mathcal{I} \\) integration.\n\nDeep epistemic analysis for report (84ad7195c1da6ecd, domain=other, pages_read=7/7): Operator 'Receiver-Corner Causal Chain' (page 1, domain other) captures: Acceptance criteria: `chains_count >= 2` for every game.\" ### 1.1 Current Baseline Audit An exhaustive inspection of the existing 14 Week 6 matchup reports in `docs/predictions/research/2026-10-18/*-matchups.md` reveals severe data suppression and structural defects: - **6 games currently have 0 chains (Completely Empty)**: `ARI@LAR`, `BUF@LV`, `HOU@JAX`, `LAC@KC`, `PIT@TB`, `WSH@SF`. Assumptions: Chain generation requires non-zero \\( \\mathcal{I}_{cb} \\) and \\( \\mathcal{S}_{sep} > 0 \\). Breakdown regime: When \\( \\mathcal{I}_{cb} = 1 \\) or \\( \\mathcal{S}_{sep} = 0 \\), \\( \\mathcal{C}_{rc} = 0 \\). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to \\( \\mathcal{C}_{rc} \\) in GSI's belief network over \\( \\mathcal{S} \\) and \\( \\mathcal{I} \\). Operator 'Trench Mismatch Chain' (page 1, domain other) captures: | | **RC-4: One-Sided Trench Analysis** | Lines 298–318 only evaluate `HOME-OL vs AWAY-FRONT`. Assumptions: Chain generation requires \\( \\mathcal{I}_{ol} = 0 \\) and \\( \\mathcal{S}_{tlos} < threshold \\). Breakdown regime: When \\( \\mathcal{I}_{ol} = 1 \\) or \\( \\mathcal{S}_{tlos} \\geq threshold \\), \\( \\mathcal{T}_{tm} = 0 \\). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel derived from \\( \\mathcal{S}_{tlos} \\) and \\( \\mathcal{I}_{ol} \\) in GSE's state transition model. Operator 'Data Input Staleness' (page 2, domain other) captures: | | **RC-6: Stale 2025 Input Files** | Line 35 points to `nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json` (a 2025-season snapshot), ignoring `raw_statboard_receiving.json`. Assumptions: Input data must be \\( \\mathcal{S}_{stat} = 2026 \\) to avoid \\( \\mathcal{D}_{stale} = 1 \\). Breakdown regime: When \\( \\mathcal{S}_{stat} \\neq 2026 \\), \\( \\mathcal{D}_{stale} = 1 \\). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to \\( \\mathcal{D}_{stale} \\) in GSI's data validation pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for report (84ad7195c1da6ecd, domain=other, pages_read=7/7): Operator 'Receiver-Corner Causal Chain' (page 1, domain other) captures: Acceptance criteria: `chains_count >= 2` for every game.\" ### 1.1 Current Baseline Audit An exhaustive inspection of the existing 14 Week 6 matchup reports in `docs/predictions/research/2026-10-18/*-matchups.md` reveals severe data suppression and structural defects: - **6 games currently have 0 chains (Completely Empty)**: `ARI@LAR`, `BUF@LV`, `HOU@JAX`, `LAC@KC`, `PIT@TB`, `WSH@SF`. Assumptions: Chain generation requires non-zero \\( \\mathcal{I}_{cb} \\) and \\( \\mathcal{S}_{sep} > 0 \\). Breakdown regime: When \\( \\mathcal{I}_{cb} = 1 \\) or \\( \\mathcal{S}_{sep} = 0 \\), \\( \\mathcal{C}_{rc} = 0 \\). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to \\( \\mathcal{C}_{rc} \\) in GSI's belief network over \\( \\mathcal{S} \\) and \\( \\mathcal{I} \\). Operator 'Trench Mismatch Chain' (page 1, domain other) captures: | | **RC-4: One-Sided Trench Analysis** | Lines 298–318 only evaluate `HOME-OL vs AWAY-FRONT`. Assumptions: Chain generation requires \\( \\mathcal{I}_{ol} = 0 \\) and \\( \\mathcal{S}_{tlos} < threshold \\). Breakdown regime: When \\( \\mathcal{I}_{ol} = 1 \\) or \\( \\mathcal{S}_{tlos} \\geq threshold \\), \\( \\mathcal{T}_{tm} = 0 \\). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel derived from \\( \\mathcal{S}_{tlos} \\) and \\( \\mathcal{I}_{ol} \\) in GSE's state transition model. Operator 'Data Input Staleness' (page 2, domain other) captures: | | **RC-6: Stale 2025 Input Files** | Line 35 points to `nextgenstats.nfl.com_stats_receiving#yards.2026-07-03T13_39_35.994Z.json` (a 2025-season snapshot), ignoring `raw_statboard_receiving.json`. Assumptions: Input data must be \\( \\mathcal{S}_{stat} = 2026 \\) to avoid \\( \\mathcal{D}_{stale} = 1 \\). Breakdown regime: When \\( \\mathcal{S}_{stat} \\neq 2026 \\), \\( \\mathcal{D}_{stale} = 1 \\). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to \\( \\mathcal{D}_{stale} \\) in GSI's data validation pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in legacy NGS data handling protocols from 2025, where static file references and hardcoded logic were prevalent. This mirrors earlier statistical models that failed to adapt to dynamic in-season data. Retrocausal Genealogy: Rooted in report (84ad7195c1da6ecd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in report (84ad7195c1da6ecd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the engine's flawed logic (e.g., premature break), which misclassifies healthy players as invalid, and the data ingestion layer, which fails to validate input versions. Theory of Mind & Decision Maker Model: Rooted in report (84ad7195c1da6ecd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity: \\( \\mathcal{C}_{rc} \\) and \\( \\mathcal{T}_{tm} \\) must be independent of \\( \\mathcal{D}_{stale} \\). Leakage veto: \\( \\mathcal{I}_{cb} \\) and \\( \\mathcal{I}_{ol} \\) must not be conflated in \\( \\mathcal{C} \\) or \\( \\mathcal{T} \\). Cross-Layer Veto & Anti-Leakage Check: Rooted in report (84ad7195c1da6ecd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

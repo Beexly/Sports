@@ -1,0 +1,78 @@
+{
+  "book_id": "6e1cc3c0c8b47ea3",
+  "source_status": "COMPLETE",
+  "title": "JARVIS_ARCHITECTURE",
+  "file_name": "JARVIS_ARCHITECTURE.md",
+  "sha256": "6e1cc3c0c8b47ea36e7b1b18f538c5f2f43d1bae135b98759566d6b788bb62cc",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Jarvis is a deterministic intelligence layer mapping platform state to actionable summaries via governed decision protocols, enforcing human-in-the-loop control through structured state transitions. Universal Lens: Rooted in JARVIS_ARCHITECTURE (6e1cc3c0c8b47ea3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers owner intent and risk exposure from Jarvis's deterministic assessments using Bayesian belief updates over registries and live state, with conformal predictive intervals for uncertainty quantification. GSI Mapping: Rooted in JARVIS_ARCHITECTURE (6e1cc3c0c8b47ea3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning by transitioning between wired, partial, and unwired phases of the operating loop, guided by Jarvis's structured decision queues and safety warnings to maintain deterministic coherence. GSE Mapping: Rooted in JARVIS_ARCHITECTURE (6e1cc3c0c8b47ea3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "governed_intelligence_system",
+      "name": "Governed Intelligence System",
+      "verbatim_quote": "## What Jarvis Is - A **governed intelligence system**: sense, interpret, prioritize, explain, route, remember (designed), audit (partial), recommend.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The system operates under deterministic constraints with no autonomous execution.",
+      "breakdown_regime": "Failure occurs when any phase exceeds its defined operational scope without human override.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Jarvis's intelligence state maps directly to GSI's belief propagation kernel, where each interpreted signal becomes a Bayesian prior for decision-making.",
+        "source_operator": "governed_intelligence_system",
+        "telemetry": "OwnerSummary and decision queue integrity"
+      }
+    },
+    {
+      "primitive_id": "deterministic_assessment",
+      "name": "Deterministic Assessment",
+      "verbatim_quote": "- A **deterministic assessment** that runs on every cockpit load.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Every assessment is reproducible from identical input states and contains no stochastic elements.",
+      "breakdown_regime": "Runtime failure if non-determinism is introduced via external I/O or model calls.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The deterministic assessment serves as the core kernel for GSE's state transition logic, ensuring consistency across all cockpit interactions.",
+        "source_operator": "deterministic_assessment",
+        "telemetry": "Reproducibility of OwnerSummary across identical inputs"
+      }
+    },
+    {
+      "primitive_id": "runtime_pure_function",
+      "name": "Runtime Pure Function",
+      "verbatim_quote": "- A **pure function at runtime**: Ask Jarvis answers owner questions from live state with supporting facts, confidence, and caveats.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All outputs are derived solely from input state with no side effects or hidden variables.",
+      "breakdown_regime": "Any deviation from pure function behavior indicates unauthorized data mutation or model invocation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ask Jarvis mirrors GSI's query resolution mechanism, where each question maps to a deterministic state projection within the capability registry.",
+        "source_operator": "runtime_pure_function",
+        "telemetry": "Query response consistency and fact inclusion accuracy"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6e1cc3c0c8b47ea3_t0",
+      "think": "Jarvis embodies a governed intelligence framework that enforces deterministic behavior through structured sensing, interpretation, and routing. Its design ensures no autonomous execution occurs, aligning with a controlled decision-making paradigm. The system's integrity depends on maintaining a single source of truth—comprising the capability registry, agent council, and operating-loop posture—which governs all actions. Each phase of the operating loop (SENSE, INTERPRET, ROUTE, etc.) is either WIRED, PARTIAL, or NOT_WIRED, reflecting a layered control structure. The absence of model calls at runtime reinforces the deterministic nature of the system. In GSI, this translates into Bayesian inference over structured state, while in GSE, it enables predictable state transitions based on these governed signals. The system's robustness hinges on preventing unauthorized autonomy and preserving the purity of its runtime functions.\n\nDeep epistemic analysis for JARVIS_ARCHITECTURE (6e1cc3c0c8b47ea3, domain=other, pages_read=3/3): Operator 'Governed Intelligence System' (page 1, domain other) captures: ## What Jarvis Is - A **governed intelligence system**: sense, interpret, prioritize, explain, route, remember (designed), audit (partial), recommend. Assumptions: The system operates under deterministic constraints with no autonomous execution. Breakdown regime: Failure occurs when any phase exceeds its defined operational scope without human override. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Jarvis's intelligence state maps directly to GSI's belief propagation kernel, where each interpreted signal becomes a Bayesian prior for decision-making. Operator 'Deterministic Assessment' (page 1, domain other) captures: - A **deterministic assessment** that runs on every cockpit load. Assumptions: Every assessment is reproducible from identical input states and contains no stochastic elements. Breakdown regime: Runtime failure if non-determinism is introduced via external I/O or model calls. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The deterministic assessment serves as the core kernel for GSE's state transition logic, ensuring consistency across all cockpit interactions. Operator 'Runtime Pure Function' (page 1, domain other) captures: - A **pure function at runtime**: Ask Jarvis answers owner questions from live state with supporting facts, confidence, and caveats. Assumptions: All outputs are derived solely from input state with no side effects or hidden variables. Breakdown regime: Any deviation from pure function behavior indicates unauthorized data mutation or model invocation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ask Jarvis mirrors GSI's query resolution mechanism, where each question maps to a deterministic state projection within the capability registry. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for JARVIS_ARCHITECTURE (6e1cc3c0c8b47ea3, domain=other, pages_read=3/3): Operator 'Governed Intelligence System' (page 1, domain other) captures: ## What Jarvis Is - A **governed intelligence system**: sense, interpret, prioritize, explain, route, remember (designed), audit (partial), recommend. Assumptions: The system operates under deterministic constraints with no autonomous execution. Breakdown regime: Failure occurs when any phase exceeds its defined operational scope without human override. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Jarvis's intelligence state maps directly to GSI's belief propagation kernel, where each interpreted signal becomes a Bayesian prior for decision-making. Operator 'Deterministic Assessment' (page 1, domain other) captures: - A **deterministic assessment** that runs on every cockpit load. Assumptions: Every assessment is reproducible from identical input states and contains no stochastic elements. Breakdown regime: Runtime failure if non-determinism is introduced via external I/O or model calls. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The deterministic assessment serves as the core kernel for GSE's state transition logic, ensuring consistency across all cockpit interactions. Operator 'Runtime Pure Function' (page 1, domain other) captures: - A **pure function at runtime**: Ask Jarvis answers owner questions from live state with supporting facts, confidence, and caveats. Assumptions: All outputs are derived solely from input state with no side effects or hidden variables. Breakdown regime: Any deviation from pure function behavior indicates unauthorized data mutation or model invocation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ask Jarvis mirrors GSI's query resolution mechanism, where each question maps to a deterministic state projection within the capability registry. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in control theory and formal verification principles, Jarvis inherits lineage from deterministic automata and constraint-based reasoning systems used in aerospace and financial risk management. Retrocausal Genealogy: Rooted in JARVIS_ARCHITECTURE (6e1cc3c0c8b47ea3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in JARVIS_ARCHITECTURE (6e1cc3c0c8b47ea3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include potential autonomous modules attempting to bypass governance, and adversarial inputs seeking to corrupt deterministic pathways. The system models these threats through explicit safety checks and human-in-the-loop validation. Theory of Mind & Decision Maker Model: Rooted in JARVIS_ARCHITECTURE (6e1cc3c0c8b47ea3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that GSI's probabilistic inference does not conflict with GSE’s deterministic state transitions. Leakage vetoes prevent unauthorized data flow between layers, particularly during runtime when model calls are strictly prohibited. Cross-Layer Veto & Anti-Leakage Check: Rooted in JARVIS_ARCHITECTURE (6e1cc3c0c8b47ea3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

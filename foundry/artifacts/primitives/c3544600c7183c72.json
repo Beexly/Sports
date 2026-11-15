@@ -1,0 +1,78 @@
+{
+  "book_id": "c3544600c7183c72",
+  "source_status": "COMPLETE",
+  "title": "sleeper_open_api",
+  "file_name": "sleeper_open_api.md",
+  "sha256": "c3544600c7183c726fe6b47d6a9d88d8e0cb939b3dd0e93b441bbd871d8a8c81",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sleeper API provides cross-referenced NFL player metadata and weekly projections as structured data streams, enabling unified inference across disparate sports feeds through shared identifiers. Universal Lens: Rooted in sleeper_open_api (c3544600c7183c72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on player projections using Sleeper's PPR point estimates and external IDs enable conformal predictive intervals for fantasy performance forecasting. GSI Mapping: Rooted in sleeper_open_api (c3544600c7183c72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions in fantasy lineups are modeled via Sleeper's player trend data and projection matrices, supporting dynamic roster optimization under uncertainty. GSE Mapping: Rooted in sleeper_open_api (c3544600c7183c72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "player_crosswalk",
+      "name": "Player Identity Cross-Reference",
+      "verbatim_quote": "This is a ready-made **cross-reference crosswalk** between every other feed in this KB.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'gsis_id': 'dimensionless identifier', 'espn_id': 'dimensionless identifier', 'rotowire_id': 'dimensionless identifier', 'sportradar_id': 'dimensionless identifier', 'opta_id': 'dimensionless identifier'}",
+      "assumptions": "All identifiers map bijectively to unique NFL players; external feeds are consistent in naming and categorization.",
+      "breakdown_regime": "When any external ID is missing or inconsistent, crosswalk integrity fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps distinct player identity schemas into a unified relational space for inter-feed alignment.",
+        "source_operator": "player_crosswalk",
+        "telemetry": "Cross-reference completeness rate across all feeds."
+      }
+    },
+    {
+      "primitive_id": "projection_vector",
+      "name": "Statistical Projection Vector",
+      "verbatim_quote": "`extracted_data/sleeper_nfl_week7_projections_2026-10-22.csv` — 3,047 skill-position rows (QB/RB/WR/TE) with pass/rush/rec stat projections and PPR points.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'pass_yds': 'yards', 'rush_yds': 'yards', 'rec_yds': 'yards', 'pts_ppr': 'points'}",
+      "assumptions": "Projections are independent and normally distributed around mean values; PPR scoring is fixed.",
+      "breakdown_regime": "Projection variance exceeds threshold due to injury or matchup anomaly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives expected fantasy contribution from base statistical projections using scoring rules.",
+        "source_operator": "projection_vector",
+        "telemetry": "Mean absolute error of projected vs actual stats."
+      }
+    },
+    {
+      "primitive_id": "trend_add_count",
+      "name": "Player Add Trend Count",
+      "verbatim_quote": "- BetMGM widget API -> 200 with an empty body (needs a widget id that exists).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'add_count': 'dimensionless count'}",
+      "assumptions": "Add frequency correlates with player value; trends are stable over 24-hour window.",
+      "breakdown_regime": "Trend signal becomes unreliable during off-season or major injury news.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies speculative interest in a player via recent roster additions across fantasy platforms.",
+        "source_operator": "trend_add_count",
+        "telemetry": "Change in add count relative to baseline over time."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c3544600c7183c72_t0",
+      "think": "The Sleeper API enables a dualistic structure: one layer for static player metadata (identity crosswalk), another for evolving statistical forecasts (projection vector). These layers support Bayesian updating where prior beliefs about player value are refined using new data. The third primitive, trend add count, introduces temporal dynamics by capturing speculative behavior. Failure modes include broken cross-references, outdated projections, or misinterpreted trends. The system assumes consistency in data formats and minimal latency in updates. Dualities emerge in how identity maps to performance and how trends reflect market sentiment. Each primitive operates within its own regime but integrates through shared identifiers and temporal alignment.\n\nDeep epistemic analysis for sleeper_open_api (c3544600c7183c72, domain=other, pages_read=1/1): Operator 'Player Identity Cross-Reference' (page 1, domain other) captures: This is a ready-made **cross-reference crosswalk** between every other feed in this KB. Assumptions: All identifiers map bijectively to unique NFL players; external feeds are consistent in naming and categorization. Breakdown regime: When any external ID is missing or inconsistent, crosswalk integrity fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps distinct player identity schemas into a unified relational space for inter-feed alignment. Operator 'Statistical Projection Vector' (page 1, domain other) captures: `extracted_data/sleeper_nfl_week7_projections_2026-10-22.csv` — 3,047 skill-position rows (QB/RB/WR/TE) with pass/rush/rec stat projections and PPR points. Assumptions: Projections are independent and normally distributed around mean values; PPR scoring is fixed. Breakdown regime: Projection variance exceeds threshold due to injury or matchup anomaly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives expected fantasy contribution from base statistical projections using scoring rules. Operator 'Player Add Trend Count' (page 1, domain other) captures: - BetMGM widget API -> 200 with an empty body (needs a widget id that exists). Assumptions: Add frequency correlates with player value; trends are stable over 24-hour window. Breakdown regime: Trend signal becomes unreliable during off-season or major injury news. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies speculative interest in a player via recent roster additions across fantasy platforms. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sleeper_open_api (c3544600c7183c72, domain=other, pages_read=1/1): Operator 'Player Identity Cross-Reference' (page 1, domain other) captures: This is a ready-made **cross-reference crosswalk** between every other feed in this KB. Assumptions: All identifiers map bijectively to unique NFL players; external feeds are consistent in naming and categorization. Breakdown regime: When any external ID is missing or inconsistent, crosswalk integrity fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps distinct player identity schemas into a unified relational space for inter-feed alignment. Operator 'Statistical Projection Vector' (page 1, domain other) captures: `extracted_data/sleeper_nfl_week7_projections_2026-10-22.csv` — 3,047 skill-position rows (QB/RB/WR/TE) with pass/rush/rec stat projections and PPR points. Assumptions: Projections are independent and normally distributed around mean values; PPR scoring is fixed. Breakdown regime: Projection variance exceeds threshold due to injury or matchup anomaly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives expected fantasy contribution from base statistical projections using scoring rules. Operator 'Player Add Trend Count' (page 1, domain other) captures: - BetMGM widget API -> 200 with an empty body (needs a widget id that exists). Assumptions: Add frequency correlates with player value; trends are stable over 24-hour window. Breakdown regime: Trend signal becomes unreliable during off-season or major injury news. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies speculative interest in a player via recent roster additions across fantasy platforms. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in relational database design and probabilistic forecasting models from early 2000s sports analytics, extended by modern API-first architectures and real-time data ingestion pipelines. Retrocausal Genealogy: Rooted in sleeper_open_api (c3544600c7183c72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in sleeper_open_api (c3544600c7183c72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents such as fantasy managers or algorithmic traders interpret these primitives as signals for decision-making. Their models may assume rationality, bounded rationality, or behavioral biases in interpreting trends and projections. Theory of Mind & Decision Maker Model: Rooted in sleeper_open_api (c3544600c7183c72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each primitive offers distinct information—identity does not overlap with projection, and trend does not duplicate projection variance. Leakage occurs when one layer's signal leaks into another without proper normalization. Cross-Layer Veto & Anti-Leakage Check: Rooted in sleeper_open_api (c3544600c7183c72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

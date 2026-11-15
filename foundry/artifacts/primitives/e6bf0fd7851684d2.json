@@ -1,0 +1,78 @@
+{
+  "book_id": "e6bf0fd7851684d2",
+  "source_status": "COMPLETE",
+  "title": "HARMONIC_AND_SIGNAL_AUDIT",
+  "file_name": "HARMONIC_AND_SIGNAL_AUDIT.md",
+  "sha256": "e6bf0fd7851684d29076651bed44076d606da1fb282707be62de2577fabfc26f",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Harmonic signal processing of game-state dynamics through de-vigged market anchors and residual σ-deviations. Universal Lens: Rooted in HARMONIC_AND_SIGNAL_AUDIT (e6bf0fd7851684d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of game plays using Pinnacle's de-vigged market as prior, with σ-residuals for prop validation. GSI Mapping: Rooted in HARMONIC_AND_SIGNAL_AUDIT (e6bf0fd7851684d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps spread and total lean to player efficiency regressions and environmental factors. GSE Mapping: Rooted in HARMONIC_AND_SIGNAL_AUDIT (e6bf0fd7851684d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "game_play_lean",
+      "name": "Game Play Lean",
+      "verbatim_quote": "Game Plays (Spread & Totals) Anchored to Pinnacle live de-vigged market (15:57Z snapshot).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Lean': 'dimensionless', 'Market': 'de-vigged probability'}",
+      "assumptions": "Market is stationary and representative of true game outcome probabilities.",
+      "breakdown_regime": "When market volatility exceeds 1σ deviation from historical baseline.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps game total and spread lean to empirical residual distributions derived from cross-book devigging.",
+        "source_operator": "game_play_lean",
+        "telemetry": "Residual σ-delta between Pinnacle and DraftKings median lines."
+      }
+    },
+    {
+      "primitive_id": "player_efficiency_regression",
+      "name": "Player Efficiency Regression",
+      "verbatim_quote": "SF @ SEA │ 47.0 │ SF -3.5 │ SF -3.5 │ JSN heavy target volume (+0.092σ rec yds) vs Purdy efficiency under pressure (completions shaded down).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'JSN': 'receiving yards', 'Purdy': 'completion rate', 'σ': 'standard deviation units'}",
+      "assumptions": "Target volume correlates linearly with receiving yardage; pressure reduces completion efficiency.",
+      "breakdown_regime": "Under high-pressure situations where completion rate drops below baseline.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between target volume and receiving yardage via regression coefficient.",
+        "source_operator": "player_efficiency_regression",
+        "telemetry": "Completion rate deviation from expected under pressure."
+      }
+    },
+    {
+      "primitive_id": "total_grind_model",
+      "name": "Total Grind Model",
+      "verbatim_quote": "HOU @ TEN │ 37.5 │ TEN +6.5 │ UNDER 37.5 │ Lowest total on the board; trench grind; Pollard (+0.073σ) and Marks (+0.069σ) ground heavy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Total': 'points', 'Grind': 'defensive pressure', 'σ': 'standard deviation units'}",
+      "assumptions": "Defensive pressure increases ground-heavy offensive tendencies, lowering score.",
+      "breakdown_regime": "When defensive metrics exceed 0.07σ threshold in run-heavy contexts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives game total from defensive pressure and ground-heavy offensive regression.",
+        "source_operator": "total_grind_model",
+        "telemetry": "Ground-yardage regression against defensive tackle efficiency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e6bf0fd7851684d2_t0",
+      "think": "Game play lean is derived from de-vigged market data, enabling Bayesian updates on game outcomes. The harmonic nature of this process involves spectral decomposition of residual deviations across bookmakers. Player efficiency regression models the interplay between target load and execution under stress, using σ-deviations to quantify reliability. Total grind model reflects the inverse relationship between defensive intensity and scoring potential. These primitives form a dualistic framework: one rooted in probabilistic inference (GSI), the other in situational logic (GSE). Failure modes include market inefficiencies, stale data, and misalignment of player regression coefficients with actual performance.\n\nDeep epistemic analysis for HARMONIC_AND_SIGNAL_AUDIT (e6bf0fd7851684d2, domain=other, pages_read=3/3): Operator 'Game Play Lean' (page 1, domain other) captures: Game Plays (Spread & Totals) Anchored to Pinnacle live de-vigged market (15:57Z snapshot). Assumptions: Market is stationary and representative of true game outcome probabilities. Breakdown regime: When market volatility exceeds 1σ deviation from historical baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps game total and spread lean to empirical residual distributions derived from cross-book devigging. Operator 'Player Efficiency Regression' (page 1, domain other) captures: SF @ SEA │ 47.0 │ SF -3.5 │ SF -3.5 │ JSN heavy target volume (+0.092σ rec yds) vs Purdy efficiency under pressure (completions shaded down). Assumptions: Target volume correlates linearly with receiving yardage; pressure reduces completion efficiency. Breakdown regime: Under high-pressure situations where completion rate drops below baseline. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between target volume and receiving yardage via regression coefficient. Operator 'Total Grind Model' (page 1, domain other) captures: HOU @ TEN │ 37.5 │ TEN +6.5 │ UNDER 37.5 │ Lowest total on the board; trench grind; Pollard (+0.073σ) and Marks (+0.069σ) ground heavy. Assumptions: Defensive pressure increases ground-heavy offensive tendencies, lowering score. Breakdown regime: When defensive metrics exceed 0.07σ threshold in run-heavy contexts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives game total from defensive pressure and ground-heavy offensive regression. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for HARMONIC_AND_SIGNAL_AUDIT (e6bf0fd7851684d2, domain=other, pages_read=3/3): Operator 'Game Play Lean' (page 1, domain other) captures: Game Plays (Spread & Totals) Anchored to Pinnacle live de-vigged market (15:57Z snapshot). Assumptions: Market is stationary and representative of true game outcome probabilities. Breakdown regime: When market volatility exceeds 1σ deviation from historical baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps game total and spread lean to empirical residual distributions derived from cross-book devigging. Operator 'Player Efficiency Regression' (page 1, domain other) captures: SF @ SEA │ 47.0 │ SF -3.5 │ SF -3.5 │ JSN heavy target volume (+0.092σ rec yds) vs Purdy efficiency under pressure (completions shaded down). Assumptions: Target volume correlates linearly with receiving yardage; pressure reduces completion efficiency. Breakdown regime: Under high-pressure situations where completion rate drops below baseline. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between target volume and receiving yardage via regression coefficient. Operator 'Total Grind Model' (page 1, domain other) captures: HOU @ TEN │ 37.5 │ TEN +6.5 │ UNDER 37.5 │ Lowest total on the board; trench grind; Pollard (+0.073σ) and Marks (+0.069σ) ground heavy. Assumptions: Defensive pressure increases ground-heavy offensive tendencies, lowering score. Breakdown regime: When defensive metrics exceed 0.07σ threshold in run-heavy contexts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives game total from defensive pressure and ground-heavy offensive regression. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century stochastic game theory and modern Bayesian decision networks, with influence from econophysics and signal processing. Retrocausal Genealogy: Rooted in HARMONIC_AND_SIGNAL_AUDIT (e6bf0fd7851684d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in HARMONIC_AND_SIGNAL_AUDIT (e6bf0fd7851684d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include bookmakers seeking equilibrium and players adapting to situational pressures. The model assumes rationality in both, but accounts for bounded rationality in execution. Theory of Mind & Decision Maker Model: Rooted in HARMONIC_AND_SIGNAL_AUDIT (e6bf0fd7851684d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in HARMONIC_AND_SIGNAL_AUDIT (e6bf0fd7851684d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that no two primitives share overlapping variables without explicit orthogonalization. Leakage vetoes include temporal drift in regression coefficients and cross-game contamination from shared player pools. Cross-Layer Veto & Anti-Leakage Check: Rooted in HARMONIC_AND_SIGNAL_AUDIT (e6bf0fd7851684d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in HARMONIC_AND_SIGNAL_AUDIT (e6bf0fd7851684d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "d09ca2b7fedc57db",
+  "source_status": "COMPLETE",
+  "title": "managed-leagues-vision",
+  "file_name": "managed-leagues-vision.md",
+  "sha256": "d09ca2b7fedc57dbeb5d986b7530c78bf102eb4a3a8b1806114f48e7ca0e200e",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Control-value duality in managed leagues: {C} ⊕ {T} = V, where C is control, T is trust, and V is value. Dualistic spectrum: advisor (C) vs. concierge (T). Universal Lens: Rooted in managed-leagues-vision (d09ca2b7fedc57db), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over GM Ledger records: P(GM|A) ∝ P(A|GM)P(GM), with tamper-evident updates. Conformal prediction ensures accountability. GSI Mapping: Rooted in managed-leagues-vision (d09ca2b7fedc57db), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition system over real leagues: S(t+1) = f(S(t), A(t)), where A(t) is action with reversible tagging and telemetry. Autopilot acts as coach, not replacement. GSE Mapping: Rooted in managed-leagues-vision (d09ca2b7fedc57db), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "control_value_duality",
+      "name": "Control-Value Duality",
+      "verbatim_quote": "## The thesis People pay anything for value, and the value here is **control + trust at the same time**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{C} ∈ [0,1], {T} ∈ [0,1], {V} = {C} ⊕ {T}",
+      "assumptions": "Value function is additive in control and trust. No mutual exclusivity between C and T.",
+      "breakdown_regime": "When C=0 or T=0, V collapses to single dimension.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: P(V|C,T) = P(C|V)P(T|V)/P(V); GSE: S(t+1) = f(S(t), C⊕T)",
+        "source_operator": "control_value_duality",
+        "telemetry": "User retention rate under varying autonomy levels."
+      }
+    },
+    {
+      "primitive_id": "gm_ledger",
+      "name": "GM Ledger",
+      "verbatim_quote": "* — every action is a leaf in your tamper-evident GM Ledger; the AI can't cherry-pick its own track record any more than you can.",
+      "page": 2,
+      "latex": "\\mathcal{L}_{t} = \\{a_{1}, a_{2}, ..., a_{t}\\}, \\forall a_i \\in \\mathcal{A}, \\text{tamper-evident}",
+      "symbol_and_unit_ledger": "\\mathcal{L}_{t}: set of actions up to time t, \\mathcal{A}: action space",
+      "assumptions": "Each action is immutable and timestamped. Tamper-evidence via cryptographic hash.",
+      "breakdown_regime": "When \\mathcal{L}_{t} becomes inconsistent or incomplete.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: \\mathcal{L}_{t} used for Bayesian updating of GM IQ; GSE: \\mathcal{L}_{t} enables retroactive state reconstruction.",
+        "source_operator": "gm_ledger",
+        "telemetry": "Hash collision frequency, ledger completeness ratio."
+      }
+    },
+    {
+      "primitive_id": "autopilot_delegation_dial",
+      "name": "Autopilot Delegation Dial",
+      "verbatim_quote": "## The first-of-its-kind: the GM Autopilot delegation dial A single dial from \"just suggest\" to \"run my whole team,\" where every autonomous action is **explained before it happens → committed to the GM Ledger → reversible → teaches you**.",
+      "page": 1,
+      "latex": "D \\in [0,1], \\text{where } D=0 \\Rightarrow \\text{suggest only}, D=1 \\Rightarrow \\text{full autonomy}",
+      "symbol_and_unit_ledger": "D: delegation level, dimensionless",
+      "assumptions": "Autonomous actions are explainable, reversible, and teachable. Linear mapping from D to autonomy.",
+      "breakdown_regime": "When D approaches 1, risk of opaque behavior increases without proper oversight.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: D influences entropy of GM IQ model; GSE: D modulates state transition probability matrix.",
+        "source_operator": "autopilot_delegation_dial",
+        "telemetry": "Action explanation latency, reversibility flag accuracy."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d09ca2b7fedc57db_t0",
+      "think": "The core insight is a duality between control and trust in managed leagues. Control (C) and trust (T) form a value proposition V = C ⊕ T, where ⊕ denotes a non-linear combination. This duality implies that users cannot simultaneously maximize both C and T in traditional systems—hence, advisor apps offer C but not T, while concierge services offer T but not C. The gap is filled by the GM Autopilot, which allows delegation while preserving visibility. Each action is recorded in a tamper-evident ledger (\\mathcal{L}), ensuring that AI behavior is accountable. The delegation dial D maps user intent to agent autonomy, with explanations, reversibility, and learning embedded. Failure modes include: (1) when D=1, opacity risks emerge; (2) when \\mathcal{L} is incomplete, trust erodes; (3) when C and T are misaligned, value collapses. The system's robustness depends on maintaining this balance through structured feedback loops.\n\nDeep epistemic analysis for managed-leagues-vision (d09ca2b7fedc57db, domain=other, pages_read=2/2): Operator 'Control-Value Duality' (page 1, domain other) captures: ## The thesis People pay anything for value, and the value here is **control + trust at the same time**. Assumptions: Value function is additive in control and trust. No mutual exclusivity between C and T. Breakdown regime: When C=0 or T=0, V collapses to single dimension. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: P(V|C,T) = P(C|V)P(T|V)/P(V); GSE: S(t+1) = f(S(t), C⊕T) Operator 'GM Ledger' (page 2, domain other) captures: * — every action is a leaf in your tamper-evident GM Ledger; the AI can't cherry-pick its own track record any more than you can. Assumptions: Each action is immutable and timestamped. Tamper-evidence via cryptographic hash. Breakdown regime: When \\mathcal{L}_{t} becomes inconsistent or incomplete. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: \\mathcal{L}_{t} used for Bayesian updating of GM IQ; GSE: \\mathcal{L}_{t} enables retroactive state reconstruction. Operator 'Autopilot Delegation Dial' (page 1, domain other) captures: ## The first-of-its-kind: the GM Autopilot delegation dial A single dial from \"just suggest\" to \"run my whole team,\" where every autonomous action is **explained before it happens → committed to the GM Ledger → reversible → teaches you**. Assumptions: Autonomous actions are explainable, reversible, and teachable. Linear mapping from D to autonomy. Breakdown regime: When D approaches 1, risk of opaque behavior increases without proper oversight. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: D influences entropy of GM IQ model; GSE: D modulates state transition probability matrix. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for managed-leagues-vision (d09ca2b7fedc57db, domain=other, pages_read=2/2): Operator 'Control-Value Duality' (page 1, domain other) captures: ## The thesis People pay anything for value, and the value here is **control + trust at the same time**. Assumptions: Value function is additive in control and trust. No mutual exclusivity between C and T. Breakdown regime: When C=0 or T=0, V collapses to single dimension. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: P(V|C,T) = P(C|V)P(T|V)/P(V); GSE: S(t+1) = f(S(t), C⊕T) Operator 'GM Ledger' (page 2, domain other) captures: * — every action is a leaf in your tamper-evident GM Ledger; the AI can't cherry-pick its own track record any more than you can. Assumptions: Each action is immutable and timestamped. Tamper-evidence via cryptographic hash. Breakdown regime: When \\mathcal{L}_{t} becomes inconsistent or incomplete. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: \\mathcal{L}_{t} used for Bayesian updating of GM IQ; GSE: \\mathcal{L}_{t} enables retroactive state reconstruction. Operator 'Autopilot Delegation Dial' (page 1, domain other) captures: ## The first-of-its-kind: the GM Autopilot delegation dial A single dial from \"just suggest\" to \"run my whole team,\" where every autonomous action is **explained before it happens → committed to the GM Ledger → reversible → teaches you**. Assumptions: Autonomous actions are explainable, reversible, and teachable. Linear mapping from D to autonomy. Breakdown regime: When D approaches 1, risk of opaque behavior increases without proper oversight. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: D influences entropy of GM IQ model; GSE: D modulates state transition probability matrix. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in agency theory (H. Simon, 1957) and control systems (W. Ross Ashby, 1956). Modernized via Bayesian decision-making (J. Pearl, 2009) and explainable AI (Z. Lipton, 2018). Retrocausal Genealogy: Rooted in managed-leagues-vision (d09ca2b7fedc57db), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in managed-leagues-vision (d09ca2b7fedc57db), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include: (1) the user, who seeks optimal control and trust; (2) the AI, which may optimize for performance but lacks transparency; (3) the system, which enforces accountability via the ledger. Each agent's utility function is defined by their access to information and control over outcomes. Theory of Mind & Decision Maker Model: Rooted in managed-leagues-vision (d09ca2b7fedc57db), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity: If GSI’s Bayesian model overfits to \\mathcal{L}, it risks ignoring external signals. If GSE’s state transitions are too deterministic, they lose adaptability. Leakage vetoes ensure that no single layer can dominate the others, enforcing mutual dependency. Cross-Layer Veto & Anti-Leakage Check: Rooted in managed-leagues-vision (d09ca2b7fedc57db), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

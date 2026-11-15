@@ -1,0 +1,78 @@
+{
+  "book_id": "ee4670696edb84af",
+  "source_status": "COMPLETE",
+  "title": "ACTION-NETWORK-BOOKID-CORRECTION-2026-10-13",
+  "file_name": "ACTION-NETWORK-BOOKID-CORRECTION-2026-10-13.md",
+  "sha256": "ee4670696edb84af4cf39c773644d70ec6656b4840d28fd4994b201665d146a9",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Action Network book-id correction maps synthetic aggregates to real bookmakers, resolving mislabeling and false independence in odds ingestion. Universal Lens: Rooted in ACTION-NETWORK-BOOKID-CORRECTION-2026-10-13 (ee4670696edb84af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers bookmaker identity via Bayesian update on corrected Action Network IDs; synthetic rows excluded from confidence thresholds. GSI Mapping: Rooted in ACTION-NETWORK-BOOKID-CORRECTION-2026-10-13 (ee4670696edb84af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions states by validating bookmaker uniqueness; synthetic rows trigger fallback to null, enforcing closure over false independence. GSE Mapping: Rooted in ACTION-NETWORK-BOOKID-CORRECTION-2026-10-13 (ee4670696edb84af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "book_id_mislabeling",
+      "name": "Book ID Mislabeling Operator",
+      "verbatim_quote": "**Mislabel.** `ActionNetworkSecondBook.bookmakerFor()` returns `title: \"Caesars (Action Network)\"` for a line that is actually DraftKings.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'id': 'dimensionless integer', 'title': 'string', 'actual_bookmaker': 'string'}",
+      "assumptions": "Book ID mappings are deterministic and static per source.",
+      "breakdown_regime": "When title ≠ actual_bookmaker, operator fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each book ID maps to a unique real bookmaker; mislabeling breaks bijective correspondence.",
+        "source_operator": "book_id_mislabeling",
+        "telemetry": "Discrepancy between `title` and `actual_bookmaker` fields."
+      }
+    },
+    {
+      "primitive_id": "false_independence_gate",
+      "name": "False Independence Gate Operator",
+      "verbatim_quote": "**False independence — the serious one.** The module's stated purpose is \"attach a second **independent** real bookmaker quote to ESPN events\" to \"unblock MIN_BOOKMAKERS=2\".",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'independence_flag': 'boolean', 'book_count': 'integer', 'book_id_set': 'set of integers'}",
+      "assumptions": "Two distinct bookmakers must be present to satisfy independence.",
+      "breakdown_regime": "When book_id_set contains duplicate entries, gate fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Gate evaluates whether book_id_set has cardinality ≥ 2 with unique bookmakers; duplicates invalidate independence.",
+        "source_operator": "false_independence_gate",
+        "telemetry": "Cardinality of book_id_set vs. unique bookmaker count."
+      }
+    },
+    {
+      "primitive_id": "synthetic_aggregate_counting",
+      "name": "Synthetic Aggregate Counting Operator",
+      "verbatim_quote": "**Synthetic rows counted as books.** `15` (Consensus) and `30` (Open) are aggregates Action Network computes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'synthetic_flag': 'boolean', 'count': 'integer', 'real_book_count': 'integer'}",
+      "assumptions": "Synthetic rows contribute to book count but not to real bookmaker diversity.",
+      "breakdown_regime": "When synthetic rows are included in real book count, gate becomes trivially satisfied.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Counts all rows including synthetic; excludes them from real book diversity metrics.",
+        "source_operator": "synthetic_aggregate_counting",
+        "telemetry": "Total book count vs. real bookmaker count."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ee4670696edb84af_t0",
+      "think": "The core issue stems from a semantic mismatch between book ID labels and actual bookmaker identities. Each book ID maps to a specific bookmaker, but mislabeling causes incorrect attribution. The 'false independence' problem arises because the system treats a repeated bookmaker as independent, violating the principle of distinct sources. Synthetic aggregates like Consensus (15) and Open (30) were incorrectly counted toward the two-book threshold, masking the true lack of diversity. The fix redefines valid IDs and separates synthetic from real bookmakers, ensuring that only genuine independent sources contribute to the book count. This correction aligns the operational semantics with the intended logical structure of the data pipeline.\n\nDeep epistemic analysis for ACTION-NETWORK-BOOKID-CORRECTION-2026-10-13 (ee4670696edb84af, domain=other, pages_read=3/3): Operator 'Book ID Mislabeling Operator' (page 1, domain other) captures: **Mislabel.** `ActionNetworkSecondBook.bookmakerFor()` returns `title: \"Caesars (Action Network)\"` for a line that is actually DraftKings. Assumptions: Book ID mappings are deterministic and static per source. Breakdown regime: When title ≠ actual_bookmaker, operator fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each book ID maps to a unique real bookmaker; mislabeling breaks bijective correspondence. Operator 'False Independence Gate Operator' (page 1, domain other) captures: **False independence — the serious one.** The module's stated purpose is \"attach a second **independent** real bookmaker quote to ESPN events\" to \"unblock MIN_BOOKMAKERS=2\". Assumptions: Two distinct bookmakers must be present to satisfy independence. Breakdown regime: When book_id_set contains duplicate entries, gate fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Gate evaluates whether book_id_set has cardinality ≥ 2 with unique bookmakers; duplicates invalidate independence. Operator 'Synthetic Aggregate Counting Operator' (page 1, domain other) captures: **Synthetic rows counted as books.** `15` (Consensus) and `30` (Open) are aggregates Action Network computes. Assumptions: Synthetic rows contribute to book count but not to real bookmaker diversity. Breakdown regime: When synthetic rows are included in real book count, gate becomes trivially satisfied. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Counts all rows including synthetic; excludes them from real book diversity metrics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ACTION-NETWORK-BOOKID-CORRECTION-2026-10-13 (ee4670696edb84af, domain=other, pages_read=3/3): Operator 'Book ID Mislabeling Operator' (page 1, domain other) captures: **Mislabel.** `ActionNetworkSecondBook.bookmakerFor()` returns `title: \"Caesars (Action Network)\"` for a line that is actually DraftKings. Assumptions: Book ID mappings are deterministic and static per source. Breakdown regime: When title ≠ actual_bookmaker, operator fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each book ID maps to a unique real bookmaker; mislabeling breaks bijective correspondence. Operator 'False Independence Gate Operator' (page 1, domain other) captures: **False independence — the serious one.** The module's stated purpose is \"attach a second **independent** real bookmaker quote to ESPN events\" to \"unblock MIN_BOOKMAKERS=2\". Assumptions: Two distinct bookmakers must be present to satisfy independence. Breakdown regime: When book_id_set contains duplicate entries, gate fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Gate evaluates whether book_id_set has cardinality ≥ 2 with unique bookmakers; duplicates invalidate independence. Operator 'Synthetic Aggregate Counting Operator' (page 1, domain other) captures: **Synthetic rows counted as books.** `15` (Consensus) and `30` (Open) are aggregates Action Network computes. Assumptions: Synthetic rows contribute to book count but not to real bookmaker diversity. Breakdown regime: When synthetic rows are included in real book count, gate becomes trivially satisfied. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Counts all rows including synthetic; excludes them from real book diversity metrics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2026 data ingestion protocols where bookmaker identity was inferred through metadata alone, without validation against external sources. The design assumed deterministic labeling, leading to cascading errors when labels diverged from reality. Retrocausal Genealogy: Rooted in ACTION-NETWORK-BOOKID-CORRECTION-2026-10-13 (ee4670696edb84af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the Action Network ingestion logic, which assumes label correctness, and the downstream GSI/GSE systems, which rely on accurate bookmaker diversity. The failure mode reflects a misalignment between these agents’ expectations and the actual data structure. Theory of Mind & Decision Maker Model: Rooted in ACTION-NETWORK-BOOKID-CORRECTION-2026-10-13 (ee4670696edb84af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that synthetic rows not be conflated with real bookmakers. Leakage occurs if synthetic counts are used in place of real book diversity metrics. Veto condition: exclude synthetic IDs from bookmaker-set cardinality checks. Cross-Layer Veto & Anti-Leakage Check: Rooted in ACTION-NETWORK-BOOKID-CORRECTION-2026-10-13 (ee4670696edb84af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

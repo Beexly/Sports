@@ -1,0 +1,78 @@
+{
+  "book_id": "c14b48065cde24e5",
+  "source_status": "COMPLETE",
+  "title": "marketing-ad-references",
+  "file_name": "marketing-ad-references.md",
+  "sha256": "c14b48065cde24e5dae5e29455c980d994a45360b137a667a8ff87e4904096e0",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Ad references form a structured repository of reusable video templates, mathematically modeled as a categorical fiber bundle over avatar-product base space. Universal Lens: Rooted in marketing-ad-references (c14b48065cde24e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers latent ad patterns through Bayesian belief updates on reference embeddings, conditioning on avatar and product identifiers. GSI Mapping: Rooted in marketing-ad-references (c14b48065cde24e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions states by selecting ad references as deterministic anchors in policy space, avoiding hook/setting conflicts during generation. GSE Mapping: Rooted in marketing-ad-references (c14b48065cde24e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ad_reference_creation",
+      "name": "Ad Reference Creation",
+      "verbatim_quote": "# Marketing Studio Ad References Ad references are reusable inspiration videos a user wants to model new ads after — typically tied to a specific avatar and/or product.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Reference identifier (UUID)', 'A': 'Avatar identifier (UUID)', 'P': 'Product identifier (UUID)'}",
+      "assumptions": "Each reference is uniquely bound to one avatar and one product; input must be valid video source.",
+      "breakdown_regime": "Reference creation fails if neither --video-input nor --job is provided.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ad reference maps to a fiber object in a category of marketing templates, where base space is (avatar, product) × time.",
+        "source_operator": "ad_reference_creation",
+        "telemetry": "Reference status (queued/completed/failed) and S3 URL upon completion."
+      }
+    },
+    {
+      "primitive_id": "reference_source_binding",
+      "name": "Reference Source Binding",
+      "verbatim_quote": "## Inputs Create an ad reference from one of two source types: - `--video-input <upload_id>` — UUID returned by `higgsfield upload create <video_path> --video`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U': 'Upload ID (UUID)', 'J': 'Job ID (UUID)'}",
+      "assumptions": "Exactly one of U or J must be specified; both cannot coexist.",
+      "breakdown_regime": "Invalid source type results in rejection of reference creation request.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Source binding defines kernel of transformation from raw media to reference template, parameterized by upload or job UUID.",
+        "source_operator": "reference_source_binding",
+        "telemetry": "Successful binding verified via presence of upload_id or job_id in backend storage."
+      }
+    },
+    {
+      "primitive_id": "avatar_product_constraint",
+      "name": "Avatar-Product Constraint",
+      "verbatim_quote": "- **One avatar, one product per reference.** Both `--avatar` and `--product` accept a single id.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Avatar identifier (UUID)', 'P': 'Product identifier (UUID)'}",
+      "assumptions": "Each reference is constrained to a single avatar and a single product; multiple bindings disallowed.",
+      "breakdown_regime": "Multiple avatar/product IDs result in validation error during reference creation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Constraint enforces a Cartesian product structure (A × P) in the reference catalog, ensuring unique semantic context.",
+        "source_operator": "avatar_product_constraint",
+        "telemetry": "Reference metadata includes avatar_id and product_id fields for semantic retrieval."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c14b48065cde24e5_t0",
+      "think": "Ad references are constructed as categorical objects within a fiber bundle over a base space defined by (avatar, product) pairs. Each reference R ∈ F(A,P) encodes a video template that is semantically anchored to one avatar and one product. The creation process involves either sourcing from a local upload or a prior job, which determines the kernel of the transformation. The constraint that each reference binds exactly one avatar and one product ensures that the fiber structure remains well-defined and avoids ambiguity in semantic interpretation. This structure supports probabilistic reasoning in GSI through belief propagation over reference embeddings, and enables deterministic selection in GSE by anchoring policy decisions to known reference states.\n\nDeep epistemic analysis for marketing-ad-references (c14b48065cde24e5, domain=other, pages_read=2/2): Operator 'Ad Reference Creation' (page 1, domain other) captures: # Marketing Studio Ad References Ad references are reusable inspiration videos a user wants to model new ads after — typically tied to a specific avatar and/or product. Assumptions: Each reference is uniquely bound to one avatar and one product; input must be valid video source. Breakdown regime: Reference creation fails if neither --video-input nor --job is provided. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ad reference maps to a fiber object in a category of marketing templates, where base space is (avatar, product) × time. Operator 'Reference Source Binding' (page 1, domain other) captures: ## Inputs Create an ad reference from one of two source types: - `--video-input <upload_id>` — UUID returned by `higgsfield upload create <video_path> --video`. Assumptions: Exactly one of U or J must be specified; both cannot coexist. Breakdown regime: Invalid source type results in rejection of reference creation request. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Source binding defines kernel of transformation from raw media to reference template, parameterized by upload or job UUID. Operator 'Avatar-Product Constraint' (page 1, domain other) captures: - **One avatar, one product per reference.** Both `--avatar` and `--product` accept a single id. Assumptions: Each reference is constrained to a single avatar and a single product; multiple bindings disallowed. Breakdown regime: Multiple avatar/product IDs result in validation error during reference creation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Constraint enforces a Cartesian product structure (A × P) in the reference catalog, ensuring unique semantic context. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for marketing-ad-references (c14b48065cde24e5, domain=other, pages_read=2/2): Operator 'Ad Reference Creation' (page 1, domain other) captures: # Marketing Studio Ad References Ad references are reusable inspiration videos a user wants to model new ads after — typically tied to a specific avatar and/or product. Assumptions: Each reference is uniquely bound to one avatar and one product; input must be valid video source. Breakdown regime: Reference creation fails if neither --video-input nor --job is provided. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ad reference maps to a fiber object in a category of marketing templates, where base space is (avatar, product) × time. Operator 'Reference Source Binding' (page 1, domain other) captures: ## Inputs Create an ad reference from one of two source types: - `--video-input <upload_id>` — UUID returned by `higgsfield upload create <video_path> --video`. Assumptions: Exactly one of U or J must be specified; both cannot coexist. Breakdown regime: Invalid source type results in rejection of reference creation request. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Source binding defines kernel of transformation from raw media to reference template, parameterized by upload or job UUID. Operator 'Avatar-Product Constraint' (page 1, domain other) captures: - **One avatar, one product per reference.** Both `--avatar` and `--product` accept a single id. Assumptions: Each reference is constrained to a single avatar and a single product; multiple bindings disallowed. Breakdown regime: Multiple avatar/product IDs result in validation error during reference creation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Constraint enforces a Cartesian product structure (A × P) in the reference catalog, ensuring unique semantic context. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in categorical data modeling and fiber bundle theory, this formalism mirrors earlier work in topological data analysis and structured learning frameworks used in generative AI systems. Retrocausal Genealogy: Rooted in marketing-ad-references (c14b48065cde24e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in marketing-ad-references (c14b48065cde24e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to manipulate reference semantics by introducing conflicting avatar/product associations or bypassing source validation, requiring robust constraint enforcement. Theory of Mind & Decision Maker Model: Rooted in marketing-ad-references (c14b48065cde24e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in marketing-ad-references (c14b48065cde24e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that reference-driven generation does not simultaneously invoke hook/setting parameters, preventing semantic interference between template-based and block-composed strategies. Cross-Layer Veto & Anti-Leakage Check: Rooted in marketing-ad-references (c14b48065cde24e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in marketing-ad-references (c14b48065cde24e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

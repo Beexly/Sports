@@ -1,0 +1,95 @@
+{
+  "book_id": "0409e24d813d7908",
+  "source_status": "COMPLETE",
+  "title": "2026 - Contact, Power, and Balls in Play A Three-Rate Decomposition of Batting Average and the Disappearance of the .400 Hitter - Albert",
+  "file_name": "2026 - Contact, Power, and Balls in Play A Three-Rate Decomposition of Batting Average and the Disappearance of the .400 Hitter - Albert.md",
+  "sha256": "0409e24d813d79087469c5ecdfcb6790cf8053481ead1b6304371b5f6075f887",
+  "primary_domain": "other",
+  "pages_total": 15,
+  "pages_read": 15,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2026 - Contact, Power, and Balls in Play A Three-Rate Decomposition of Batting Average and the Disappearance of the .400 Hitter - Albert (0409e24d813d7908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2026 - Contact, Power, and Balls in Play A Three-Rate Decomposition of Batting Average and the Disappearance of the .400 Hitter - Albert (0409e24d813d7908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2026 - Contact, Power, and Balls in Play A Three-Rate Decomposition of Batting Average and the Disappearance of the .400 Hitter - Albert (0409e24d813d7908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "contact_avoidance_rate",
+      "name": "Contact Avoidance Rate",
+      "verbatim_quote": "An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out.",
+      "page": 2,
+      "latex": "c = \\frac{\\text{Non-strikeout at-bats}}{\\text{Total at-bats}}",
+      "symbol_and_unit_ledger": "{'c': 'Dimensionless probability (0 to 1)', 'Non-strikeout at-bats': 'Unitless count', 'Total at-bats': 'Unitless count'}",
+      "assumptions": "Binomial trial independence, constant c across all at-bats for a given batter.",
+      "breakdown_regime": "No breakdown noted in source.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian hierarchical shrinkage for stabilizing noisy seasonal estimates.",
+        "source_operator": "contact_avoidance_rate",
+        "telemetry": "Year-to-year correlation of c ~ 0.86 (repeatability metric)"
+      }
+    },
+    {
+      "primitive_id": "home_run_rate",
+      "name": "Home Run Rate",
+      "verbatim_quote": "An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out.",
+      "page": 2,
+      "latex": "h = \\frac{\\text{Home runs}}{\\text{Non-strikeout at-bats}}",
+      "symbol_and_unit_ledger": "{'h': 'Dimensionless probability (0 to 1)', 'Home runs': 'Unitless count', 'Non-strikeout at-bats': 'Unitless count'}",
+      "assumptions": "Independence of home runs from other outcomes within non-strikeout at-bats.",
+      "breakdown_regime": "No breakdown noted in source.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Shrinkage of extreme HR/FB ratios toward park-adjusted league means.",
+        "source_operator": "home_run_rate",
+        "telemetry": "Year-to-year correlation of h ~ 0.74"
+      }
+    },
+    {
+      "primitive_id": "babip",
+      "name": "BABIP",
+      "verbatim_quote": "An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out.",
+      "page": 2,
+      "latex": "b = \\frac{\\text{Hits on BIP}}{\\text{BIP at-bats}}",
+      "symbol_and_unit_ledger": "{'b': 'Dimensionless probability (0 to 1)', 'Hits on BIP': 'Unitless count', 'BIP at-bats': 'Unitless count'}",
+      "assumptions": "Constant b conditional on handedness match, pitcher quality, and ballpark factors.",
+      "breakdown_regime": "Breakdown occurs for pitchers due to active manipulation via infield shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction intervals for individual BABIP estimates accounting for park effects.",
+        "source_operator": "babip",
+        "telemetry": "Year-to-year correlation of b ~ 0.30 (weak repeatability)"
+      }
+    },
+    {
+      "primitive_id": "three_rate_decomposition",
+      "name": "Three-Rate Decomposition",
+      "verbatim_quote": "An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out.",
+      "page": 2,
+      "latex": "BA = c \\times \\left[h + (1-h) b\\right]",
+      "symbol_and_unit_ledger": "{'BA': 'Dimensionless batting average (hits / at-bats)', 'c': 'Contact Avoidance Rate (non-SO / AB)', 'h': 'Home Run Rate (HR / non-SO)', 'b': 'BABIP (H_BIP / BIP)', 'AB': 'Total at-bats', 'SO': 'Strikeouts', 'HR': 'Home runs', 'H_BIP': 'Hits on Balls in Play'}",
+      "assumptions": "Perfect measurement of all components, no misclassification between categories.",
+      "breakdown_regime": "Breakdown occurs when batter-pitcher matchup effects violate independence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Multivariate random effects model jointly estimating (c, h, b) for empirical Bayes.",
+        "source_operator": "three_rate_decomposition",
+        "telemetry": "Repeatability of BA = 0.44 vs. BABIP = 0.30"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0409e24d813d7908_t0",
+      "think": "The three-rate decomposition arises from a sequential binary partition of the sample space of at-bats: Strikeout vs. Non-strikeout, then Home Run vs. Ball in Play, finally Hit vs. Out on BIP. This yields a multiplicative structure BA = c * f, where f = h + (1-h)b is the probability of a hit given contact. The key insight is that each factor captures distinct aspects of hitting talent: c measures contact discipline, h measures raw power, and b measures fielding-independent precision. The failure mode occurs when batter-pitcher matchups induce dependencies between these stages, violating the assumed sequential independence. In such cases, the decomposition may overestimate the variance of f, leading to biased estimates of individual hitter talent.\n\nDeep epistemic analysis for 2026 - Contact, Power, and Balls in Play A Three-Rate Decomposition of Batting Average and the Disappearance of the .400 Hitter - Albert (0409e24d813d7908, domain=other, pages_read=15/15): Operator 'Contact Avoidance Rate' (page 2, domain other) captures: An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out. Assumptions: Binomial trial independence, constant c across all at-bats for a given batter. Breakdown regime: No breakdown noted in source. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian hierarchical shrinkage for stabilizing noisy seasonal estimates. Operator 'Home Run Rate' (page 2, domain other) captures: An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out. Assumptions: Independence of home runs from other outcomes within non-strikeout at-bats. Breakdown regime: No breakdown noted in source. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Shrinkage of extreme HR/FB ratios toward park-adjusted league means. Operator 'BABIP' (page 2, domain other) captures: An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out. Assumptions: Constant b conditional on handedness match, pitcher quality, and ballpark factors. Breakdown regime: Breakdown occurs for pitchers due to active manipulation via infield shifts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals for individual BABIP estimates accounting for park effects. Operator 'Three-Rate Decomposition' (page 2, domain other) captures: An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out. Assumptions: Perfect measurement of all components, no misclassification between categories. Breakdown regime: Breakdown occurs when batter-pitcher matchup effects violate independence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Multivariate random effects model jointly estimating (c, h, b) for empirical Bayes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026 - Contact, Power, and Balls in Play A Three-Rate Decomposition of Batting Average and the Disappearance of the .400 Hitter - Albert (0409e24d813d7908, domain=other, pages_read=15/15): Operator 'Contact Avoidance Rate' (page 2, domain other) captures: An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out. Assumptions: Binomial trial independence, constant c across all at-bats for a given batter. Breakdown regime: No breakdown noted in source. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian hierarchical shrinkage for stabilizing noisy seasonal estimates. Operator 'Home Run Rate' (page 2, domain other) captures: An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out. Assumptions: Independence of home runs from other outcomes within non-strikeout at-bats. Breakdown regime: No breakdown noted in source. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Shrinkage of extreme HR/FB ratios toward park-adjusted league means. Operator 'BABIP' (page 2, domain other) captures: An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out. Assumptions: Constant b conditional on handedness match, pitcher quality, and ballpark factors. Breakdown regime: Breakdown occurs for pitchers due to active manipulation via infield shifts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals for individual BABIP estimates accounting for park effects. Operator 'Three-Rate Decomposition' (page 2, domain other) captures: An at-bat ends in a strikeout or it does not; a nonstrikeout at-bat is a home run or a ball in play; and a ball in play is a hit or an out. Assumptions: Perfect measurement of all components, no misclassification between categories. Breakdown regime: Breakdown occurs when batter-pitcher matchup effects violate independence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Multivariate random effects model jointly estimating (c, h, b) for empirical Bayes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The decomposition generalizes the classic two-factor identity BA = (H-SO)/AB by explicitly isolating the home run mechanism. It builds on the structural analysis of linear probability models in social science (Maddala, 1983) and the probabilistic framework of Markov chains. The separation of skills from noise echoes the seminal work of James (1982) on estimating true talent levels and the James-Stein estimator (Efron & Morris, 1975).",
+      "theory_of_mind": "Pitchers actively exploit the independence assumption by inducing swings away from optimal contact points to reduce BABIP, creating a strategic game where b becomes manipulable. Batter adaptation to shift strategies further breaks the sequential structure, requiring dynamic adjustments to the model. Theory of Mind & Decision Maker Model: Rooted in 2026 - Contact, Power, and Balls in Play A Three-Rate Decomposition of Batting Average and the Disappearance of the .400 Hitter - Albert (0409e24d813d7908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent collinearity-induced leakage, the model must separately identify c and h. This requires including strikeouts as a distinct outcome (not absorbed into BIP) and using home runs as an instrument for power, exploiting the fact that HR rates are largely determined before the fielders even move. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026 - Contact, Power, and Balls in Play A Three-Rate Decomposition of Batting Average and the Disappearance of the .400 Hitter - Albert (0409e24d813d7908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

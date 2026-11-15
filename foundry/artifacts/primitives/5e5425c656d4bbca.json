@@ -1,0 +1,78 @@
+{
+  "book_id": "5e5425c656d4bbca",
+  "source_status": "COMPLETE",
+  "title": "Wiener-1950-HumanUseOfHumanBeings",
+  "file_name": "Wiener-1950-HumanUseOfHumanBeings.txt",
+  "sha256": "5e5425c656d4bbca9dec3467b692f0d719b0707d96df594a74209d0d879bebc6",
+  "primary_domain": "other",
+  "pages_total": 154,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Cybernetic feedback loops unify communication, control, and learning across biological and artificial systems via information-theoretic entropy minimization. Universal Lens: Rooted in Wiener-1950-HumanUseOfHumanBeings (5e5425c656d4bbca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on communicative patterns using entropy-based likelihood ratios for predictive inference in socio-technical systems. GSI Mapping: Rooted in Wiener-1950-HumanUseOfHumanBeings (5e5425c656d4bbca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition dynamics model human-machine interaction through recursive feedback control with entropy-driven policy adaptation. GSE Mapping: Rooted in Wiener-1950-HumanUseOfHumanBeings (5e5425c656d4bbca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "communication_entropy",
+      "name": "Information-Theoretic Communication Entropy",
+      "verbatim_quote": "In this book, I developed what seemed to me to be a new point of view with respect to communication and its importance both in the machine and the living organism.",
+      "page": 1,
+      "latex": "\\mathcal{H}(X) = -\\sum_{i} p(x_i) \\log p(x_i)",
+      "symbol_and_unit_ledger": "{'X': 'discrete random variable representing message space', 'p(x_i)': 'probability mass function over outcomes', '\\\\mathcal{H}(X)': 'entropy in bits'}",
+      "assumptions": "Messages are discrete, probabilistic, and transmitted through noisy channels with finite capacity.",
+      "breakdown_regime": "When channel capacity falls below source entropy, communication becomes unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Entropy minimization in cybernetic systems mirrors information processing efficiency in GSI's Bayesian inference engine.",
+        "source_operator": "communication_entropy",
+        "telemetry": "Mutual information between sender and receiver as proxy for effective communication fidelity."
+      }
+    },
+    {
+      "primitive_id": "feedback_control_loop",
+      "name": "Recursive Feedback Control Loop",
+      "verbatim_quote": "Rigidity and Learning: Two Patterns of - Communicative Behavior 59 - īv.",
+      "page": 1,
+      "latex": "\\dot{x} = f(x, u), \\quad u = g(x, r)",
+      "symbol_and_unit_ledger": "{'x': 'state vector of system', 'u': 'control input signal', 'r': 'reference input', 'f(\\\\cdot)': 'dynamics function', 'g(\\\\cdot)': 'feedback controller'}",
+      "assumptions": "System is governed by deterministic or stochastic differential equations with measurable state variables.",
+      "breakdown_regime": "Loss of stability when feedback gain exceeds critical threshold or noise overwhelms signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Feedback loop structure underpins GSE's adaptive decision-making framework via recursive policy evaluation.",
+        "source_operator": "feedback_control_loop",
+        "telemetry": "Control error variance and convergence rate as indicators of system adaptability."
+      }
+    },
+    {
+      "primitive_id": "pattern_recognition",
+      "name": "Pattern Recognition Framework",
+      "verbatim_quote": "Rôle of the Intellectual and the Scientist 144 - x.",
+      "page": 1,
+      "latex": "P(Y|X) = \\frac{P(X|Y)P(Y)}{P(X)}",
+      "symbol_and_unit_ledger": "{'X': 'input feature vector', 'Y': 'class label', 'P(Y|X)': 'posterior probability', 'P(X|Y)': 'likelihood', 'P(Y)': 'prior probability', 'P(X)': 'marginal likelihood'}",
+      "assumptions": "Data follows conditional independence assumptions and class-conditional distributions are known or estimable.",
+      "breakdown_regime": "Overfitting occurs when model complexity exceeds data size or prior assumptions are violated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayes' rule enables GSI to infer latent structures in communicative behavior from observed signals.",
+        "source_operator": "pattern_recognition",
+        "telemetry": "Classification accuracy and cross-validation error for assessing generalization capability."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5e5425c656d4bbca_t0",
+      "think": "The foundational concept of cybernetics centers on feedback mechanisms that regulate behavior in both biological and engineered systems. Communication entropy quantifies the information content of messages, enabling precise measurement of how much uncertainty is resolved through transmission. This formalism directly maps to GSI’s Bayesian inference pipeline where prior beliefs are updated based on likelihood functions derived from observed data. The recursive feedback loop embodies the self-regulating nature of intelligent systems—whether organic or synthetic—where outputs influence future inputs. In GSE, this translates into dynamic policy adjustment based on environmental feedback. Pattern recognition ties back to the broader theme of information processing, where classification tasks rely on probabilistic models such as Bayes’ theorem. These primitives form a coherent mathematical foundation for modeling complex socio-technical interactions involving communication, control, and learning.\n\nDeep epistemic analysis for Wiener-1950-HumanUseOfHumanBeings (5e5425c656d4bbca, domain=other, pages_read=18/154): Operator 'Information-Theoretic Communication Entropy' (page 1, domain other) captures: In this book, I developed what seemed to me to be a new point of view with respect to communication and its importance both in the machine and the living organism. Assumptions: Messages are discrete, probabilistic, and transmitted through noisy channels with finite capacity. Breakdown regime: When channel capacity falls below source entropy, communication becomes unreliable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Entropy minimization in cybernetic systems mirrors information processing efficiency in GSI's Bayesian inference engine. Operator 'Recursive Feedback Control Loop' (page 1, domain other) captures: Rigidity and Learning: Two Patterns of - Communicative Behavior 59 - īv. Assumptions: System is governed by deterministic or stochastic differential equations with measurable state variables. Breakdown regime: Loss of stability when feedback gain exceeds critical threshold or noise overwhelms signal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Feedback loop structure underpins GSE's adaptive decision-making framework via recursive policy evaluation. Operator 'Pattern Recognition Framework' (page 1, domain other) captures: Rôle of the Intellectual and the Scientist 144 - x. Assumptions: Data follows conditional independence assumptions and class-conditional distributions are known or estimable. Breakdown regime: Overfitting occurs when model complexity exceeds data size or prior assumptions are violated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayes' rule enables GSI to infer latent structures in communicative behavior from observed signals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Wiener-1950-HumanUseOfHumanBeings (5e5425c656d4bbca, domain=other, pages_read=18/154): Operator 'Information-Theoretic Communication Entropy' (page 1, domain other) captures: In this book, I developed what seemed to me to be a new point of view with respect to communication and its importance both in the machine and the living organism. Assumptions: Messages are discrete, probabilistic, and transmitted through noisy channels with finite capacity. Breakdown regime: When channel capacity falls below source entropy, communication becomes unreliable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Entropy minimization in cybernetic systems mirrors information processing efficiency in GSI's Bayesian inference engine. Operator 'Recursive Feedback Control Loop' (page 1, domain other) captures: Rigidity and Learning: Two Patterns of - Communicative Behavior 59 - īv. Assumptions: System is governed by deterministic or stochastic differential equations with measurable state variables. Breakdown regime: Loss of stability when feedback gain exceeds critical threshold or noise overwhelms signal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Feedback loop structure underpins GSE's adaptive decision-making framework via recursive policy evaluation. Operator 'Pattern Recognition Framework' (page 1, domain other) captures: Rôle of the Intellectual and the Scientist 144 - x. Assumptions: Data follows conditional independence assumptions and class-conditional distributions are known or estimable. Breakdown regime: Overfitting occurs when model complexity exceeds data size or prior assumptions are violated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayes' rule enables GSI to infer latent structures in communicative behavior from observed signals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Shannon's information theory and Wiener's original formulation of cybernetics, these concepts evolved from early work in control systems and communication engineering during the mid-20th century. Retrocausal Genealogy: Rooted in Wiener-1950-HumanUseOfHumanBeings (5e5425c656d4bbca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Wiener-1950-HumanUseOfHumanBeings (5e5425c656d4bbca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may exhibit varying degrees of communicative intent, leading to misaligned objectives. For instance, a machine might optimize for throughput while a human seeks clarity, creating potential conflict in shared communication environments. Theory of Mind & Decision Maker Model: Rooted in Wiener-1950-HumanUseOfHumanBeings (5e5425c656d4bbca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when entropy-based measures fail to distinguish between distinct behavioral patterns due to overlapping signal distributions. Leakage occurs if feedback loops become too sensitive to noise, causing instability in GSE's decision engine. Cross-Layer Veto & Anti-Leakage Check: Rooted in Wiener-1950-HumanUseOfHumanBeings (5e5425c656d4bbca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-14T16:38:18.143578+00:00",
+  "generated_at_utc": "2026-11-15T00:38:16.063190+00:00",
   "dry_run": false,
   "model_lane": "free",
   "max_cost_usd": 0.5,
@@ -7,7 +7,7 @@
   "week_info": {
     "season": 2026,
     "computed_week": 10,
-    "as_of_utc": "2026-11-14T16:38:18.120465+00:00"
+    "as_of_utc": "2026-11-15T00:38:16.062948+00:00"
   },
   "council_coverage": {
     "agent_council_seats": 23,
@@ -21,12 +21,12 @@
     "slate_prep_allowed": false,
     "public_publish_allowed": false,
     "pending_tier_a": 67,
-    "wired_tier_a": 1009,
-    "sovereign_books_loaded": 1064,
+    "wired_tier_a": 12448,
+    "sovereign_books_loaded": 10885,
     "oof_n_rows": 4823,
     "internal_workflow_corpus_ready": true,
     "insufficient_ocr": 7,
-    "calibration_verified": false,
+    "calibration_verified": true,
     "receipt_loaded": true
   },
   "foundry_queue": {
@@ -95,7 +95,7 @@
       "TREG_AUTH_TOKEN": "eyJ1...5HXs",
       "JSON2VIDEO_API_KEY": "yNf9...UjD2",
       "JSON2VIDEO_API_KEY_SECONDARY": "jbHv...kgIg",
-      "OPENROUTER_API_KEY": "sk-o...0fd9",
+      "OPENROUTER_API_KEY": "sk-o...a2cd",
       "GEMINI_API_KEY": "",
       "GOOGLE_API_KEY": "AQ.A...w2_g",
       "JULES_API_KEY": "AQ.A...s1Rw"
@@ -122,7 +122,7 @@
         "ascend"
       ],
       "action": "empirical_bayes_oof_corpus_priors_check",
-      "status": "ACTIVE_INCREMENTAL_OOF_CALIBRATION",
+      "status": "READY",
       "public_publish_allowed": false,
       "live_calibration_flag_enabled": false,
       "cost_usd": 0.0

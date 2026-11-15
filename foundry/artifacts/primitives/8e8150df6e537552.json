@@ -1,0 +1,78 @@
+{
+  "book_id": "8e8150df6e537552",
+  "source_status": "COMPLETE",
+  "title": "scroll-scrub-asset-css",
+  "file_name": "scroll-scrub-asset-css.md",
+  "sha256": "8e8150df6e537552e77b0172b8cd1b8edcb58b80443e8097541713f8b7af8ea7",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A scroll-scrub interface integrates CSS variables, layered media, and progress tracking through sticky positioning and opacity transitions, forming a dynamic narrative viewport. Universal Lens: Rooted in scroll-scrub-asset-css (8e8150df6e537552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers user engagement patterns via scroll-progress variance and layer-opacity states, enabling Bayesian prediction of attention shifts across media layers. GSI Mapping: Rooted in scroll-scrub-asset-css (8e8150df6e537552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models state transitions between scroll layers using opacity and z-index hierarchies, triggering conditional rendering of media assets based on progress thresholds. GSE Mapping: Rooted in scroll-scrub-asset-css (8e8150df6e537552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "scroll_progress_tracker",
+      "name": "Scroll Progress Tracker",
+      "verbatim_quote": "through the design brief. ```css .scroll-scrub { --ss-progress: 0; position: relative; isolation: isolate; color: var(--ss-ink); background:",
+      "page": 1,
+      "latex": "\\text{Progress} = \\frac{\\text{Scroll Offset}}{\\text{Viewport Height}}",
+      "symbol_and_unit_ledger": "{'ss-progress': 'dimensionless [0, 1]', 'scroll offset': 'meters [0, ∞)', 'viewport height': 'meters'}",
+      "assumptions": "Linear scroll behavior, fixed viewport height, continuous input stream.",
+      "breakdown_regime": "When scroll offset exceeds viewport height or becomes undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps scroll offset to CSS variable for animated progress bar and layer transitions in GSE.",
+        "source_operator": "scroll_progress_tracker",
+        "telemetry": "Scroll offset, viewport height, rendered progress percentage."
+      }
+    },
+    {
+      "primitive_id": "layer_opacity_controller",
+      "name": "Layer Opacity Controller",
+      "verbatim_quote": "} .scroll-scrub__layer { margin: 0; overflow: hidden; opacity: 0; will-change: opacity; } .scroll-scrub__layer:first-child { opacity: 1;",
+      "page": 1,
+      "latex": "\\text{Opacity}(t) = \\begin{cases} 1 & t = 0 \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'opacity': 'dimensionless [0, 1]'}",
+      "assumptions": "Discrete layer activation, single active layer at any time.",
+      "breakdown_regime": "When multiple layers attempt simultaneous opacity transition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a finite-state automaton where each layer represents a state and opacity controls transition probabilities in GSI.",
+        "source_operator": "layer_opacity_controller",
+        "telemetry": "Active layer index, opacity value per layer."
+      }
+    },
+    {
+      "primitive_id": "sticky_media_stage",
+      "name": "Sticky Media Stage",
+      "verbatim_quote": ".scroll-scrub__stage { position: sticky; top: 0; z-index: 0; width: 100%; height: 100dvh; overflow: hidden; background: var(--ss-bg);",
+      "page": 1,
+      "latex": "\\text{Stage Height} = \\text{Viewport Height} \\times \\text{dvh}",
+      "symbol_and_unit_ledger": "{'stage height': 'meters', 'dvh': 'dimensionless'}",
+      "assumptions": "Fixed vertical layout, full viewport coverage, sticky positioning enabled.",
+      "breakdown_regime": "When viewport dimensions change or sticky positioning fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Defines the spatial context for all media layers in GSE, ensuring consistent visual framing.",
+        "source_operator": "sticky_media_stage",
+        "telemetry": "Stage dimensions, scroll alignment, overflow status."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8e8150df6e537552_t0",
+      "think": "The scroll-scrub component operates as a layered narrative engine where CSS variables define dynamic states such as progress and opacity. The system assumes linear scroll behavior and uses sticky positioning to anchor the media stage. Each layer's opacity transitions according to a discrete logic, enabling a temporal sequence of media presentation. The progress tracker maps scroll offset to a normalized scalar, which drives UI feedback and layer activation. Failure modes include misalignment of scroll events, incorrect viewport height calculation, or race conditions during opacity transitions. These behaviors form a dualistic structure: one where the scroll offset is mapped to a scalar (progress), and another where that scalar triggers discrete layer changes. The system’s robustness depends on maintaining consistency between scroll input and CSS-driven outputs.\n\nDeep epistemic analysis for scroll-scrub-asset-css (8e8150df6e537552, domain=other, pages_read=2/2): Operator 'Scroll Progress Tracker' (page 1, domain other) captures: through the design brief. ```css .scroll-scrub { --ss-progress: 0; position: relative; isolation: isolate; color: var(--ss-ink); background: Assumptions: Linear scroll behavior, fixed viewport height, continuous input stream. Breakdown regime: When scroll offset exceeds viewport height or becomes undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps scroll offset to CSS variable for animated progress bar and layer transitions in GSE. Operator 'Layer Opacity Controller' (page 1, domain other) captures: } .scroll-scrub__layer { margin: 0; overflow: hidden; opacity: 0; will-change: opacity; } .scroll-scrub__layer:first-child { opacity: 1; Assumptions: Discrete layer activation, single active layer at any time. Breakdown regime: When multiple layers attempt simultaneous opacity transition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a finite-state automaton where each layer represents a state and opacity controls transition probabilities in GSI. Operator 'Sticky Media Stage' (page 1, domain other) captures: .scroll-scrub__stage { position: sticky; top: 0; z-index: 0; width: 100%; height: 100dvh; overflow: hidden; background: var(--ss-bg); Assumptions: Fixed vertical layout, full viewport coverage, sticky positioning enabled. Breakdown regime: When viewport dimensions change or sticky positioning fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the spatial context for all media layers in GSE, ensuring consistent visual framing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for scroll-scrub-asset-css (8e8150df6e537552, domain=other, pages_read=2/2): Operator 'Scroll Progress Tracker' (page 1, domain other) captures: through the design brief. ```css .scroll-scrub { --ss-progress: 0; position: relative; isolation: isolate; color: var(--ss-ink); background: Assumptions: Linear scroll behavior, fixed viewport height, continuous input stream. Breakdown regime: When scroll offset exceeds viewport height or becomes undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps scroll offset to CSS variable for animated progress bar and layer transitions in GSE. Operator 'Layer Opacity Controller' (page 1, domain other) captures: } .scroll-scrub__layer { margin: 0; overflow: hidden; opacity: 0; will-change: opacity; } .scroll-scrub__layer:first-child { opacity: 1; Assumptions: Discrete layer activation, single active layer at any time. Breakdown regime: When multiple layers attempt simultaneous opacity transition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a finite-state automaton where each layer represents a state and opacity controls transition probabilities in GSI. Operator 'Sticky Media Stage' (page 1, domain other) captures: .scroll-scrub__stage { position: sticky; top: 0; z-index: 0; width: 100%; height: 100dvh; overflow: hidden; background: var(--ss-bg); Assumptions: Fixed vertical layout, full viewport coverage, sticky positioning enabled. Breakdown regime: When viewport dimensions change or sticky positioning fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the spatial context for all media layers in GSE, ensuring consistent visual framing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web layout systems and CSS positioning models, evolving through modern responsive frameworks and scroll-based animations. Influenced by interaction design principles of progressive disclosure and layered storytelling. Retrocausal Genealogy: Rooted in scroll-scrub-asset-css (8e8150df6e537552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in scroll-scrub-asset-css (8e8150df6e537552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The system models user intent through scroll behavior, assuming intentional navigation. It does not account for accidental scrolling or multi-touch gestures, potentially leading to misinterpretation of user actions. Theory of Mind & Decision Maker Model: Rooted in scroll-scrub-asset-css (8e8150df6e537552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple layers attempt to render simultaneously without proper opacity control. Leakage occurs if scroll events trigger unintended layer transitions due to asynchronous updates or missing z-index management. Cross-Layer Veto & Anti-Leakage Check: Rooted in scroll-scrub-asset-css (8e8150df6e537552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

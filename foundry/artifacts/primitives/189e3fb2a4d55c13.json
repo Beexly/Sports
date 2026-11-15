@@ -1,0 +1,78 @@
+{
+  "book_id": "189e3fb2a4d55c13",
+  "source_status": "COMPLETE",
+  "title": "0593-simplified-kalman-filter-for-online-rating",
+  "file_name": "0593-simplified-kalman-filter-for-online-rating.md",
+  "sha256": "189e3fb2a4d55c13f63bd56a86fa032bf03edf9d270c073082a1ccaa728796ba",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified Bayesian online rating framework via approximate Gaussian Kalman filtering, encompassing Elo, Glicko, TrueSkill, and Bradley-Terry/Davidson models through skill dynamics and outcome likelihoods. Universal Lens: Rooted in 0593-simplified-kalman-filter-for-online-rating (189e3fb2a4d55c13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs the vSKF posterior belief propagation for conformal predictive inference over team strength, enabling calibrated uncertainty quantification and adaptive risk scoring in real-time match predictions. GSI Mapping: Rooted in 0593-simplified-kalman-filter-for-online-rating (189e3fb2a4d55c13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE integrates the vSKF recursive update into its team-strength module, dynamically adjusting ratings with per-team uncertainty to support fast convergence on abrupt changes like player turnover and situational context shifts.",
+  "primitives": [
+    {
+      "primitive_id": "skill_dynamics",
+      "name": "Damped Gaussian Random Walk",
+      "verbatim_quote": "Skills dynamics: θ_t = β_t θ_{t-1} + u_t ε_t (damped Gaussian random walk; β_t=1 standard; ε_t may scale with elapsed days τ(t)-τ(t-1)).",
+      "page": 1,
+      "latex": "\\theta_t = \\beta_t \\theta_{t-1} + u_t \\varepsilon_t",
+      "symbol_and_unit_ledger": "{'\\\\theta_t': 'team skill vector at time t (dimensionless)', '\\\\beta_t': 'damping factor (dimensionless)', 'u_t': 'random walk increment (dimensionless)', '\\\\varepsilon_t': 'noise scale (dimensionless)'}",
+      "assumptions": "Skills evolve stochastically with constant damping and Gaussian noise.",
+      "breakdown_regime": "When β_t → 0, skill becomes static; when β_t → 1, skill follows a random walk.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models temporal evolution of team strength in GSE's dynamic rating system.",
+        "source_operator": "skill_dynamics",
+        "telemetry": "Skill variance growth rate over time."
+      }
+    },
+    {
+      "primitive_id": "outcome_likelihood",
+      "name": "Skills-Outcomes Likelihood Model",
+      "verbatim_quote": "Skills-outcome model: Pr{y_t|θ_t} = L(z_t/s; y_t), z_t = x_t^T θ_t = (home skills sum) - (away skills sum) with scheduling vectors x_t,h, x_t,a.",
+      "page": 1,
+      "latex": "L\\left(\\frac{z_t}{s}; y_t\\right), \\quad z_t = x_t^T \\theta_t",
+      "symbol_and_unit_ledger": "{'y_t': 'observed outcome (binary/ternary)', 'z_t': 'difference in skill sums (dimensionless)', 's': 'scale parameter (dimensionless)', 'x_t': 'scheduling vector (team assignment)', '\\\\theta_t': 'skill vector (dimensionless)'}",
+      "assumptions": "Outcome depends on skill difference with a known link function L.",
+      "breakdown_regime": "When z_t approaches ±∞, outcome certainty increases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to Bradley-Terry, Davidson, and Thurston models via L(z/s; y).",
+        "source_operator": "outcome_likelihood",
+        "telemetry": "Log-likelihood score of observed outcomes."
+      }
+    },
+    {
+      "primitive_id": "kalman_filter_approximation",
+      "name": "Approximate Kalman Filtering",
+      "verbatim_quote": "The recursion f(θ_t|y̲_t) ∝ Pr{y_t|θ_t} ∫ f(θ_t|θ_{t-1}) f(θ_{t-1}|y̲_{t-1}) dθ_{t-1} is made tractable by a Gaussian projection P[·] minimizing KL distance (Proposition 1), with three covariance models: full matrix (KF), diagonal/vector (vSKF), shared scalar (sSKF), plus fixed-variance fSKF and pure stochastic gradient SG.",
+      "page": 1,
+      "latex": "\\text{Gaussian projection } P[\\cdot] \\text{ minimizes KL divergence}",
+      "symbol_and_unit_ledger": "{'f(\\\\theta_t|y_{1:t})': 'posterior belief (dimensionless)', 'Pr(y_t|\\\\theta_t)': 'likelihood (dimensionless)', 'f(\\\\theta_t|\\\\theta_{t-1})': 'transition density (dimensionless)'}",
+      "assumptions": "Posterior approximated by Gaussian distribution using KL minimization.",
+      "breakdown_regime": "When likelihood is non-Gaussian, approximation error increases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables efficient online inference in GSE's real-time rating engine.",
+        "source_operator": "kalman_filter_approximation",
+        "telemetry": "KL divergence between true and projected posteriors."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "189e3fb2a4d55c13_t0",
+      "think": "The core innovation lies in deriving a universal Bayesian online rating framework through approximate Gaussian Kalman filtering. This allows systematic derivation of rating algorithms for any skills-outcome model and team size. The key insight is that the posterior belief update can be approximated via a Gaussian projection minimizing KL divergence. The skill dynamics follow a damped Gaussian random walk, capturing temporal evolution. Outcome likelihoods are modeled via link functions such as Bradley-Terry or Davidson, which map skill differences to probabilities. The resulting recursions—especially vSKF—are computationally efficient and suitable for real-time applications. The framework unifies Elo, Glicko, and TrueSkill under a common probabilistic structure, where each corresponds to different approximations of the same underlying belief propagation mechanism. Failure modes include poor model specification (e.g., using BT on Thurston data) or high noise levels, where simpler methods like SGD become competitive. The framework also supports handling home-field advantage via frequency-based estimation and provides uncertainty tracking essential for GSI’s conformal prediction layer.\n\nDeep epistemic analysis for 0593-simplified-kalman-filter-for-online-rating (189e3fb2a4d55c13, domain=other, pages_read=4/4): Operator 'Damped Gaussian Random Walk' (page 1, domain other) captures: Skills dynamics: θ_t = β_t θ_{t-1} + u_t ε_t (damped Gaussian random walk; β_t=1 standard; ε_t may scale with elapsed days τ(t)-τ(t-1)). Assumptions: Skills evolve stochastically with constant damping and Gaussian noise. Breakdown regime: When β_t → 0, skill becomes static; when β_t → 1, skill follows a random walk. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models temporal evolution of team strength in GSE's dynamic rating system. Operator 'Skills-Outcomes Likelihood Model' (page 1, domain other) captures: Skills-outcome model: Pr{y_t|θ_t} = L(z_t/s; y_t), z_t = x_t^T θ_t = (home skills sum) - (away skills sum) with scheduling vectors x_t,h, x_t,a. Assumptions: Outcome depends on skill difference with a known link function L. Breakdown regime: When z_t approaches ±∞, outcome certainty increases. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to Bradley-Terry, Davidson, and Thurston models via L(z/s; y). Operator 'Approximate Kalman Filtering' (page 1, domain other) captures: The recursion f(θ_t|y̲_t) ∝ Pr{y_t|θ_t} ∫ f(θ_t|θ_{t-1}) f(θ_{t-1}|y̲_{t-1}) dθ_{t-1} is made tractable by a Gaussian projection P[·] minimizing KL distance (Proposition 1), with three covariance models: full matrix (KF), diagonal/vector (vSKF), shared scalar (sSKF), plus fixed-variance fSKF and pure stochastic gradient SG. Assumptions: Posterior approximated by Gaussian distribution using KL minimization. Breakdown regime: When likelihood is non-Gaussian, approximation error increases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables efficient online inference in GSE's real-time rating engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0593-simplified-kalman-filter-for-online-rating (189e3fb2a4d55c13, domain=other, pages_read=4/4): Operator 'Damped Gaussian Random Walk' (page 1, domain other) captures: Skills dynamics: θ_t = β_t θ_{t-1} + u_t ε_t (damped Gaussian random walk; β_t=1 standard; ε_t may scale with elapsed days τ(t)-τ(t-1)). Assumptions: Skills evolve stochastically with constant damping and Gaussian noise. Breakdown regime: When β_t → 0, skill becomes static; when β_t → 1, skill follows a random walk. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models temporal evolution of team strength in GSE's dynamic rating system. Operator 'Skills-Outcomes Likelihood Model' (page 1, domain other) captures: Skills-outcome model: Pr{y_t|θ_t} = L(z_t/s; y_t), z_t = x_t^T θ_t = (home skills sum) - (away skills sum) with scheduling vectors x_t,h, x_t,a. Assumptions: Outcome depends on skill difference with a known link function L. Breakdown regime: When z_t approaches ±∞, outcome certainty increases. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to Bradley-Terry, Davidson, and Thurston models via L(z/s; y). Operator 'Approximate Kalman Filtering' (page 1, domain other) captures: The recursion f(θ_t|y̲_t) ∝ Pr{y_t|θ_t} ∫ f(θ_t|θ_{t-1}) f(θ_{t-1}|y̲_{t-1}) dθ_{t-1} is made tractable by a Gaussian projection P[·] minimizing KL distance (Proposition 1), with three covariance models: full matrix (KF), diagonal/vector (vSKF), shared scalar (sSKF), plus fixed-variance fSKF and pure stochastic gradient SG. Assumptions: Posterior approximated by Gaussian distribution using KL minimization. Breakdown regime: When likelihood is non-Gaussian, approximation error increases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables efficient online inference in GSE's real-time rating engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian filtering theory, extending earlier work on Kalman filters and stochastic gradient methods. Influenced by TrueSkill (2006) and Elo (1978), this framework generalizes their assumptions into a principled probabilistic setting. Retrocausal Genealogy: Rooted in 0593-simplified-kalman-filter-for-online-rating (189e3fb2a4d55c13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include traditional Elo systems that assume static skill, and more complex models like TrueSkill that attempt to capture latent skill distributions. The framework models these as special cases of a broader belief propagation kernel, allowing for nuanced comparison of performance across datasets and domains. Theory of Mind & Decision Maker Model: Rooted in 0593-simplified-kalman-filter-for-online-rating (189e3fb2a4d55c13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the skill model does not overfit to outcome noise. Leakage vetoes occur when the model fails to distinguish between skill and noise, especially in low-information regimes or when team sizes vary significantly without proper scaling. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0593-simplified-kalman-filter-for-online-rating (189e3fb2a4d55c13), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

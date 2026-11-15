@@ -1,0 +1,78 @@
+{
+  "book_id": "1dac0340248d40c4",
+  "source_status": "COMPLETE",
+  "title": "0487-forecasting-the-winner-of-a-live",
+  "file_name": "0487-forecasting-the-winner-of-a-live.md",
+  "sha256": "1dac0340248d40c49b0cd73f7743112b4e013d1e59f372496bd90bc364198c50",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Hybrid Markov-Elo-Bayesian-GBoost framework integrates pre-match player strength with live score and serve dynamics via recursive probability updates, shrinkage priors, and stacked gradient models. Universal Lens: Rooted in 0487-forecasting-the-winner-of-a-live (1dac0340248d40c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian shrinkage of live serve rates toward Elo priors, enabling calibrated probabilistic inference over tennis match states using trace-based win probability models. GSI Mapping: Rooted in 0487-forecasting-the-winner-of-a-live (1dac0340248d40c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies trace architecture to football by modeling live game states through recursive score transitions, Elo-based team strength, and gradient-boosted feature stacking with shrinkage. GSE Mapping: Rooted in 0487-forecasting-the-winner-of-a-live (1dac0340248d40c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "markov_recursion",
+      "name": "Markov Recursion",
+      "verbatim_quote": "Method / model - **Markov score recursion (backbone):** from point-serve probabilities p1, p2, per-point win prob q = p1 (p1 serves) or 1-p2 (p2 serves) (eq.",
+      "page": 1,
+      "latex": "\\mathbb{P}(\\text{winner}|s) = \\sum_{i=1}^{n} \\mathbb{P}(\\text{point}_i|s) \\cdot \\mathbb{P}(\\text{winner}|s_i)",
+      "symbol_and_unit_ledger": "{'q': 'probability of winning next point, dimensionless', 'p1, p2': 'serve success probabilities for players 1 and 2, dimensionless', 's': 'match state vector, dimensionless'}",
+      "assumptions": "Point outcomes are conditionally independent given current score and serve probabilities.",
+      "breakdown_regime": "When serve probabilities become deterministic or match state stabilizes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Recursive probability propagation from point-level to match-level win probabilities.",
+        "source_operator": "markov_recursion",
+        "telemetry": "Match win probability accuracy at various progress points."
+      }
+    },
+    {
+      "primitive_id": "elo_asymmetric_markov",
+      "name": "Elo Asymmetric Markov",
+      "verbatim_quote": "- **Elo-asymmetric Markov:** Elo from ATP/WTA results, start 1500, expected prob **q_{i,t} = 1/(1+10^{(R",
+      "page": 1,
+      "latex": "q_{i,t} = \\frac{1}{1 + 10^{(R_{j,t} - R_{i,t})/400}}",
+      "symbol_and_unit_ledger": "{'q_{i,t}': 'expected win probability for player i at time t, dimensionless', 'R_{i,t}': 'Elo rating of player i at time t, dimensionless', 'R_{j,t}': 'Elo rating of opponent j at time t, dimensionless'}",
+      "assumptions": "Player strength is captured by Elo ratings and evolves according to match outcomes.",
+      "breakdown_regime": "When Elo ratings are stale or mismatched with current form.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Elo ratings provide asymmetric baseline probabilities for Markov recursion.",
+        "source_operator": "elo_asymmetric_markov",
+        "telemetry": "Accuracy of predicted match outcomes vs actual results."
+      }
+    },
+    {
+      "primitive_id": "bayesian_shrinkage_serve",
+      "name": "Bayesian Shrinkage Serve",
+      "verbatim_quote": "- **Serve-shrink Markov:** Bayesian shrinkage of live serve rate toward Elo prior: **θ̂ = (n/(n+κ))θ̂_live + (κ/(n+κ))θ_prior** (eq.",
+      "page": 2,
+      "latex": "\\hat{\\theta} = \\left(\\frac{n}{n + \\kappa}\\right)\\hat{\\theta}_{\\text{live}} + \\left(\\frac{\\kappa}{n + \\kappa}\\right)\\theta_{\\text{prior}}",
+      "symbol_and_unit_ledger": "{'\\\\hat{\\\\theta}': 'shrunken serve rate estimate, dimensionless', '\\\\hat{\\\\theta}_{\\\\text{live}}': 'observed live serve rate, dimensionless', '\\\\theta_{\\\\text{prior}}': 'Elo-derived prior serve rate, dimensionless', 'n': 'number of observed serves, dimensionless', '\\\\kappa': 'shrinkage parameter, dimensionless'}",
+      "assumptions": "Live serve statistics are noisy and should be regularized toward prior expectations.",
+      "breakdown_regime": "When sample size n is small or prior is highly informative.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Regularizes live serve estimates using Elo-derived priors to reduce variance.",
+        "source_operator": "bayesian_shrinkage_serve",
+        "telemetry": "Reduction in log-loss due to shrinkage regularization."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1dac0340248d40c4_t0",
+      "think": "The core insight of the paper lies in combining structural recursion (Markovian point-to-match transition) with statistical priors (Elo ratings) and adaptive Bayesian updates (serve rate shrinkage). The hybrid 'Trace' architecture stacks these components into a gradient-boosted ensemble, which improves both accuracy and calibration. The recursive nature of the Markov model allows for dynamic updates at each point, while the Elo component anchors predictions in pre-match strength. Bayesian shrinkage ensures that live statistics do not overfit to short-term noise. The stacking approach leverages the strengths of each model type—structural recursion for temporal coherence, Elo for strength estimation, and gradient boosting for non-linear feature interaction. Failure modes include overfitting to early match dynamics or underweighting recent performance trends. The method's robustness stems from its modular design, where each layer contributes distinct signal without redundancy.\n\nDeep epistemic analysis for 0487-forecasting-the-winner-of-a-live (1dac0340248d40c4, domain=other, pages_read=5/5): Operator 'Markov Recursion' (page 1, domain other) captures: Method / model - **Markov score recursion (backbone):** from point-serve probabilities p1, p2, per-point win prob q = p1 (p1 serves) or 1-p2 (p2 serves) (eq. Assumptions: Point outcomes are conditionally independent given current score and serve probabilities. Breakdown regime: When serve probabilities become deterministic or match state stabilizes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Recursive probability propagation from point-level to match-level win probabilities. Operator 'Elo Asymmetric Markov' (page 1, domain other) captures: - **Elo-asymmetric Markov:** Elo from ATP/WTA results, start 1500, expected prob **q_{i,t} = 1/(1+10^{(R Assumptions: Player strength is captured by Elo ratings and evolves according to match outcomes. Breakdown regime: When Elo ratings are stale or mismatched with current form. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Elo ratings provide asymmetric baseline probabilities for Markov recursion. Operator 'Bayesian Shrinkage Serve' (page 2, domain other) captures: - **Serve-shrink Markov:** Bayesian shrinkage of live serve rate toward Elo prior: **θ̂ = (n/(n+κ))θ̂_live + (κ/(n+κ))θ_prior** (eq. Assumptions: Live serve statistics are noisy and should be regularized toward prior expectations. Breakdown regime: When sample size n is small or prior is highly informative. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Regularizes live serve estimates using Elo-derived priors to reduce variance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0487-forecasting-the-winner-of-a-live (1dac0340248d40c4, domain=other, pages_read=5/5): Operator 'Markov Recursion' (page 1, domain other) captures: Method / model - **Markov score recursion (backbone):** from point-serve probabilities p1, p2, per-point win prob q = p1 (p1 serves) or 1-p2 (p2 serves) (eq. Assumptions: Point outcomes are conditionally independent given current score and serve probabilities. Breakdown regime: When serve probabilities become deterministic or match state stabilizes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Recursive probability propagation from point-level to match-level win probabilities. Operator 'Elo Asymmetric Markov' (page 1, domain other) captures: - **Elo-asymmetric Markov:** Elo from ATP/WTA results, start 1500, expected prob **q_{i,t} = 1/(1+10^{(R Assumptions: Player strength is captured by Elo ratings and evolves according to match outcomes. Breakdown regime: When Elo ratings are stale or mismatched with current form. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Elo ratings provide asymmetric baseline probabilities for Markov recursion. Operator 'Bayesian Shrinkage Serve' (page 2, domain other) captures: - **Serve-shrink Markov:** Bayesian shrinkage of live serve rate toward Elo prior: **θ̂ = (n/(n+κ))θ̂_live + (κ/(n+κ))θ_prior** (eq. Assumptions: Live serve statistics are noisy and should be regularized toward prior expectations. Breakdown regime: When sample size n is small or prior is highly informative. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Regularizes live serve estimates using Elo-derived priors to reduce variance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical Markov chain theory, Bayesian inference, and modern machine learning ensembling techniques. Influenced by earlier work in sports analytics such as Elo systems and conformal prediction methods. Retrocausal Genealogy: Rooted in 0487-forecasting-the-winner-of-a-live (1dac0340248d40c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 0487-forecasting-the-winner-of-a-live (1dac0340248d40c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include players whose behavior may deviate from historical averages, and external factors like weather or injuries that affect serve performance. The model must balance predictive fidelity with adaptability to changing conditions. Theory of Mind & Decision Maker Model: Rooted in 0487-forecasting-the-winner-of-a-live (1dac0340248d40c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that each primitive contributes unique information: Markov handles temporal transitions, Elo provides static strength, and shrinkage adds regularization. Leakage occurs if live stats are used twice in different layers without proper conditioning. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0487-forecasting-the-winner-of-a-live (1dac0340248d40c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

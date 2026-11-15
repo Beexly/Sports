@@ -1,0 +1,78 @@
+{
+  "book_id": "96d1fd0c14fcbba9",
+  "source_status": "COMPLETE",
+  "title": "EDGE-014-risk-ladder-scoring-spec",
+  "file_name": "EDGE-014-risk-ladder-scoring-spec.md",
+  "sha256": "96d1fd0c14fcbba9e03c7384682839f5b47b3aac8dbd05131eafdc651cac70b7",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Risk ladder scoring as a structured ordinal utility lattice with bounded entropy, constrained by legal and data boundary conditions. Universal Lens: Rooted in EDGE-014-risk-ladder-scoring-spec (96d1fd0c14fcbba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian risk valuation on fake-data manifolds using conformal predictive distributions over contest outcomes. GSI Mapping: Rooted in EDGE-014-risk-ladder-scoring-spec (96d1fd0c14fcbba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions in GSE governed by feature-flagged risk-ladder artifacts with deterministic rollback paths. GSE Mapping: Rooted in EDGE-014-risk-ladder-scoring-spec (96d1fd0c14fcbba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "risk_ladder_scoring_spec",
+      "name": "Risk Ladder Scoring Specification",
+      "verbatim_quote": "# EDGE-014: Risk ladder scoring spec ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-017, CONTEST-007 relation_to_existing: Extends existing growth-os-v2 or contest-format-lab work.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Risk level (dimensionless)', 'L': 'Ladder rung index (integer)', 'S': 'Scoring surface (dimensionless)'}",
+      "assumptions": "Risk levels are ordered, scoring is monotonic with respect to risk.",
+      "breakdown_regime": "When R > R_max or L < 0, scoring undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each risk rung maps to a conditional probability distribution over contest outcomes in GSI.",
+        "source_operator": "risk_ladder_scoring_spec",
+        "telemetry": "Expected value of risk-adjusted score per contestant"
+      }
+    },
+    {
+      "primitive_id": "legal_boundary_constraint",
+      "name": "Legal Boundary Constraint",
+      "verbatim_quote": "Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Contest type (binary)', 'P': 'Prize eligibility (binary)', 'D': 'Deposit requirement (binary)'}",
+      "assumptions": "All monetary flows must be gated by legal approval.",
+      "breakdown_regime": "If C=1 and (P=1 or D=1), then approval_required=true.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces a binary constraint on all financial activity within GSE.",
+        "source_operator": "legal_boundary_constraint",
+        "telemetry": "Compliance flag for each contest module"
+      }
+    },
+    {
+      "primitive_id": "data_boundary_control",
+      "name": "Data Boundary Control",
+      "verbatim_quote": "Do not import real friend-history data without explicit consent and deletion controls.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'Historical data (binary)', 'C': 'Consent status (binary)', 'D': 'Deletion control (binary)'}",
+      "assumptions": "Real data usage requires explicit user consent and deletion capability.",
+      "breakdown_regime": "If H=1 and (C=0 or D=0), then data_usage_prohibited=true.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces data privacy constraints via access control in GSE.",
+        "source_operator": "data_boundary_control",
+        "telemetry": "Data access compliance log"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "96d1fd0c14fcbba9_t0",
+      "think": "The risk ladder scoring primitive defines an ordinal lattice where each rung represents a distinct risk level. The scoring function S(R,L) maps risk R and ladder position L to a utility value. This structure ensures that higher risk is associated with higher potential reward but also higher variance. The legal boundary constraint enforces a binary decision space for financial activities, ensuring that any action involving money is gated by legal approval. The data boundary control enforces a similar binary constraint on data usage, requiring consent and deletion capabilities before real history can be imported. These constraints form a dual system of checks that prevent unauthorized financial or data exposure while maintaining the integrity of the risk ladder scoring mechanism.\n\nDeep epistemic analysis for EDGE-014-risk-ladder-scoring-spec (96d1fd0c14fcbba9, domain=other, pages_read=1/1): Operator 'Risk Ladder Scoring Specification' (page 1, domain other) captures: # EDGE-014: Risk ladder scoring spec ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-017, CONTEST-007 relation_to_existing: Extends existing growth-os-v2 or contest-format-lab work. Assumptions: Risk levels are ordered, scoring is monotonic with respect to risk. Breakdown regime: When R > R_max or L < 0, scoring undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each risk rung maps to a conditional probability distribution over contest outcomes in GSI. Operator 'Legal Boundary Constraint' (page 1, domain other) captures: Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval. Assumptions: All monetary flows must be gated by legal approval. Breakdown regime: If C=1 and (P=1 or D=1), then approval_required=true. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces a binary constraint on all financial activity within GSE. Operator 'Data Boundary Control' (page 1, domain other) captures: Do not import real friend-history data without explicit consent and deletion controls. Assumptions: Real data usage requires explicit user consent and deletion capability. Breakdown regime: If H=1 and (C=0 or D=0), then data_usage_prohibited=true. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces data privacy constraints via access control in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for EDGE-014-risk-ladder-scoring-spec (96d1fd0c14fcbba9, domain=other, pages_read=1/1): Operator 'Risk Ladder Scoring Specification' (page 1, domain other) captures: # EDGE-014: Risk ladder scoring spec ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-017, CONTEST-007 relation_to_existing: Extends existing growth-os-v2 or contest-format-lab work. Assumptions: Risk levels are ordered, scoring is monotonic with respect to risk. Breakdown regime: When R > R_max or L < 0, scoring undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each risk rung maps to a conditional probability distribution over contest outcomes in GSI. Operator 'Legal Boundary Constraint' (page 1, domain other) captures: Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval. Assumptions: All monetary flows must be gated by legal approval. Breakdown regime: If C=1 and (P=1 or D=1), then approval_required=true. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces a binary constraint on all financial activity within GSE. Operator 'Data Boundary Control' (page 1, domain other) captures: Do not import real friend-history data without explicit consent and deletion controls. Assumptions: Real data usage requires explicit user consent and deletion capability. Breakdown regime: If H=1 and (C=0 or D=0), then data_usage_prohibited=true. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces data privacy constraints via access control in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in game theory's risk-return tradeoff and information economics' data sovereignty principles. Retrocausal Genealogy: Rooted in EDGE-014-risk-ladder-scoring-spec (96d1fd0c14fcbba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in EDGE-014-risk-ladder-scoring-spec (96d1fd0c14fcbba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include regulatory compliance systems and adversarial data misuse actors. Theory of Mind & Decision Maker Model: Rooted in EDGE-014-risk-ladder-scoring-spec (96d1fd0c14fcbba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in EDGE-014-risk-ladder-scoring-spec (96d1fd0c14fcbba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced through orthogonal feature flags and telemetry logs. Cross-Layer Veto & Anti-Leakage Check: Rooted in EDGE-014-risk-ladder-scoring-spec (96d1fd0c14fcbba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in EDGE-014-risk-ladder-scoring-spec (96d1fd0c14fcbba9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

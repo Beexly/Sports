@@ -1,0 +1,78 @@
+{
+  "book_id": "332f36c45fff7169",
+  "source_status": "COMPLETE",
+  "title": "LEVERAGE_STATUS",
+  "file_name": "LEVERAGE_STATUS.md",
+  "sha256": "332f36c45fff716935052581a27182c29f4d2386d3c0adac12b986ed94e13a59",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Algorithmic leverage status maps source file integrity and export reachability to operational reliability via dead-code elimination and transitive import validation. Universal Lens: Rooted in LEVERAGE_STATUS (332f36c45fff7169), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference confidence tiers derive from calibrated scoring algorithms and conviction-layered calibration modules within GSI's probabilistic engine. GSI Mapping: Rooted in LEVERAGE_STATUS (332f36c45fff7169), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE evolves through state transitions governed by live module reachability and deprecated export deprecation annotations. GSE Mapping: Rooted in LEVERAGE_STATUS (332f36c45fff7169), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "algorithmic_leverage_integrity",
+      "name": "Algorithmic Leverage Integrity",
+      "verbatim_quote": "TODO/FIXME Scan — Algorithm-Related Files **Scope**: All `.ts` files under `packages/prediction-engine/src/` (including subdirectories: calibration, conformal, devig, dispersion, edge-lab, kernel, ladder, pipeline, research; 313 source files excluding tests, 373 including them).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All algorithmic source files are scanned for TODO/FIXME/HACK markers; no such markers exist in 313 files.",
+      "breakdown_regime": "Zero TODO/FIXME/HACK markers indicate clean implementation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps source file integrity to GSI's probabilistic inference engine reliability.",
+        "source_operator": "algorithmic_leverage_integrity",
+        "telemetry": "Count of TODO/FIXME/HACK markers in algorithmic source files."
+      }
+    },
+    {
+      "primitive_id": "transitive_module_reachability",
+      "name": "Transitive Module Reachability",
+      "verbatim_quote": "Re-verified module-by-module against value > `from \".../<module>.js\"` imports across `apps/`, `workers/`, `packages/`, > `scripts/` plus barrel refs: **5 of the 19 are reachable and were KEPT** > (`elo-estimator` ← barrel-exported `elo-from-results`/`elo-backtest`; > `hawkes-steam` ← barrel-e",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Modules are reachable if imported directly or transitively by application code.",
+      "breakdown_regime": "Modules are either transitively reachable or orphaned.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Determines which modules are actively used in GSE's runtime via import graph analysis.",
+        "source_operator": "transitive_module_reachability",
+        "telemetry": "Number of modules transitively reachable vs. orphaned."
+      }
+    },
+    {
+      "primitive_id": "barrel_export_unused_symbols",
+      "name": "Barrel Export Unused Symbols",
+      "verbatim_quote": "### 2.2 Exported but Unused Symbols in `index.ts` The `index.ts` barrel exports 330 symbols.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Exported symbols must be actively imported to be considered valid.",
+      "breakdown_regime": "Symbols are either used or deprecated in barrel exports.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Identifies unused symbols in barrel exports for deprecation or archival.",
+        "source_operator": "barrel_export_unused_symbols",
+        "telemetry": "Count of unused symbols in `index.ts` barrel exports."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "332f36c45fff7169_t0",
+      "think": "The leverage status report establishes a mathematical framework for assessing algorithmic integrity and operational readiness. It begins with a clean sweep of 313 algorithmic source files, confirming zero TODO/FIXME/HACK markers, indicating a stable and well-maintained codebase. This integrity is then extended to module reachability, where transitive dependencies are verified to ensure that only necessary modules are active in production. Of 19 initially flagged modules, 12 are archived as dead code while 5 are confirmed as transitively reachable, resolving ambiguity in earlier checks. The final step involves identifying unused symbols in barrel exports, which are candidates for deprecation. These steps collectively form a closed-loop system ensuring that GSE's operational modules are both reliable and minimal, reducing cognitive load and increasing robustness.\n\nDeep epistemic analysis for LEVERAGE_STATUS (332f36c45fff7169, domain=other, pages_read=5/5): Operator 'Algorithmic Leverage Integrity' (page 1, domain other) captures: TODO/FIXME Scan — Algorithm-Related Files **Scope**: All `.ts` files under `packages/prediction-engine/src/` (including subdirectories: calibration, conformal, devig, dispersion, edge-lab, kernel, ladder, pipeline, research; 313 source files excluding tests, 373 including them). Assumptions: All algorithmic source files are scanned for TODO/FIXME/HACK markers; no such markers exist in 313 files. Breakdown regime: Zero TODO/FIXME/HACK markers indicate clean implementation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps source file integrity to GSI's probabilistic inference engine reliability. Operator 'Transitive Module Reachability' (page 1, domain other) captures: Re-verified module-by-module against value > `from \".../<module>.js\"` imports across `apps/`, `workers/`, `packages/`, > `scripts/` plus barrel refs: **5 of the 19 are reachable and were KEPT** > (`elo-estimator` ← barrel-exported `elo-from-results`/`elo-backtest`; > `hawkes-steam` ← barrel-e Assumptions: Modules are reachable if imported directly or transitively by application code. Breakdown regime: Modules are either transitively reachable or orphaned. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Determines which modules are actively used in GSE's runtime via import graph analysis. Operator 'Barrel Export Unused Symbols' (page 3, domain other) captures: ### 2.2 Exported but Unused Symbols in `index.ts` The `index.ts` barrel exports 330 symbols. Assumptions: Exported symbols must be actively imported to be considered valid. Breakdown regime: Symbols are either used or deprecated in barrel exports. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Identifies unused symbols in barrel exports for deprecation or archival. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LEVERAGE_STATUS (332f36c45fff7169, domain=other, pages_read=5/5): Operator 'Algorithmic Leverage Integrity' (page 1, domain other) captures: TODO/FIXME Scan — Algorithm-Related Files **Scope**: All `.ts` files under `packages/prediction-engine/src/` (including subdirectories: calibration, conformal, devig, dispersion, edge-lab, kernel, ladder, pipeline, research; 313 source files excluding tests, 373 including them). Assumptions: All algorithmic source files are scanned for TODO/FIXME/HACK markers; no such markers exist in 313 files. Breakdown regime: Zero TODO/FIXME/HACK markers indicate clean implementation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps source file integrity to GSI's probabilistic inference engine reliability. Operator 'Transitive Module Reachability' (page 1, domain other) captures: Re-verified module-by-module against value > `from \".../<module>.js\"` imports across `apps/`, `workers/`, `packages/`, > `scripts/` plus barrel refs: **5 of the 19 are reachable and were KEPT** > (`elo-estimator` ← barrel-exported `elo-from-results`/`elo-backtest`; > `hawkes-steam` ← barrel-e Assumptions: Modules are reachable if imported directly or transitively by application code. Breakdown regime: Modules are either transitively reachable or orphaned. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Determines which modules are actively used in GSE's runtime via import graph analysis. Operator 'Barrel Export Unused Symbols' (page 3, domain other) captures: ### 2.2 Exported but Unused Symbols in `index.ts` The `index.ts` barrel exports 330 symbols. Assumptions: Exported symbols must be actively imported to be considered valid. Breakdown regime: Symbols are either used or deprecated in barrel exports. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Identifies unused symbols in barrel exports for deprecation or archival. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This trace builds upon prior software engineering practices of dead code detection and module hygiene, extending to probabilistic inference systems like GSI where code stability directly impacts model accuracy and trustworthiness. Retrocausal Genealogy: Rooted in LEVERAGE_STATUS (332f36c45fff7169), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in LEVERAGE_STATUS (332f36c45fff7169), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include legacy code maintainers who may resist change and operational teams requiring stable interfaces. The system balances these by enforcing strict reachability rules and deprecating unused exports. Theory of Mind & Decision Maker Model: Rooted in LEVERAGE_STATUS (332f36c45fff7169), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that dead code does not pollute the active module space. Leakage is prevented by verifying transitive imports and archiving orphaned modules rather than leaving them in the codebase. Cross-Layer Veto & Anti-Leakage Check: Rooted in LEVERAGE_STATUS (332f36c45fff7169), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

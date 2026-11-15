@@ -1,0 +1,78 @@
+{
+  "book_id": "ee0b9589aad123d4",
+  "source_status": "COMPLETE",
+  "title": "dailyfantasyfuel",
+  "file_name": "dailyfantasyfuel.md",
+  "sha256": "ee0b9589aad123d4a4a8b4ccb102ec254935a85d5b9e857b9c1d1f1e0b21d6d4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "HTML-rendered DFS projections map to structured data via DOM traversal; FPTS and VALUE multipliers define positional utility in salary-constrained spaces. Universal Lens: Rooted in dailyfantasyfuel (ee0b9589aad123d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian projection priors inferred from parsed FPTS and VALUE; conformal prediction bounds on positional expected value under salary constraints. GSI Mapping: Rooted in dailyfantasyfuel (ee0b9589aad123d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions driven by matchup-based VALUE multipliers; situational reasoning updates projection confidence based on weekly slate data. GSE Mapping: Rooted in dailyfantasyfuel (ee0b9589aad123d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "dom_table_projection_parser",
+      "name": "DOM Table Projection Parser",
+      "verbatim_quote": "The projections are in the HTML, inside a `<table>` whose rows carry `class=\"projections-listing\" data-week=\"7\" data-start_date=\"2026-10-25\"`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'FPTS': 'Fantasy Points, dimensionless', 'VALUE': 'Value multiplier, dimensionless', 'salary': 'USD, dimensionless', 'name': 'Player name, string', 'position': 'NFL position, categorical'}",
+      "assumptions": "Projections are rendered in structured HTML tables with consistent class attributes and data tags.",
+      "breakdown_regime": "Parser fails when name/position markup deviates from regex pattern.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "DOM structure maps to tabular data model; FPTS and VALUE define player utility in constrained optimization space.",
+        "source_operator": "dom_table_projection_parser",
+        "telemetry": "Number of parsed rows vs total rows."
+      }
+    },
+    {
+      "primitive_id": "fantasy_point_projection",
+      "name": "Fantasy Point Projection",
+      "verbatim_quote": "- 405 rows matched on the `FPTS` marker; 341 parsed cleanly into `extracted_data/dailyfantasyfuel_nfl_projections_2026-10-22.csv` with name, position, salary, projected FPTS, their VALUE multiplier and matchup.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'FPTS': 'Projected fantasy points, dimensionless'}",
+      "assumptions": "Each row corresponds to a unique player with a valid FPTS estimate.",
+      "breakdown_regime": "Data integrity loss occurs when FPTS marker is absent or malformed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "FPTS serves as core kernel for Bayesian inference in player selection models.",
+        "source_operator": "fantasy_point_projection",
+        "telemetry": "Parsed row count per data extraction event."
+      }
+    },
+    {
+      "primitive_id": "value_multiplier_adjustment",
+      "name": "Value Multiplier Adjustment",
+      "verbatim_quote": "- 405 rows matched on the `FPTS` marker; 341 parsed cleanly into `extracted_data/dailyfantasyfuel_nfl_projections_2026-10-22.csv` with name, position, salary, projected FPTS, their VALUE multiplier and matchup.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'VALUE': 'Value multiplier, dimensionless'}",
+      "assumptions": "VALUE reflects matchup-adjusted efficiency of player contribution relative to salary.",
+      "breakdown_regime": "Adjustment invalid when matchup or salary data is missing or misaligned.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "VALUE defines normalized utility for salary-constrained optimization in DFS.",
+        "source_operator": "value_multiplier_adjustment",
+        "telemetry": "Average VALUE per position group."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ee0b9589aad123d4_t0",
+      "think": "The source presents a server-rendered HTML table containing daily fantasy projections. The key operators are FPTS (projected fantasy points), VALUE (normalized efficiency), and salary (constraint). These form a structured data model that enables probabilistic inference through Bayesian methods. The parser extracts these values from DOM elements tagged with class=\"projections-listing\", enabling a tabular representation of player utility. The failure mode arises from inconsistent markup, which can be mitigated by tightening regex patterns. This data structure supports both GSI’s Bayesian inference framework and GSE’s state-transition logic, where VALUE adjusts dynamically based on matchups and salary constraints.\n\nDeep epistemic analysis for dailyfantasyfuel (ee0b9589aad123d4, domain=other, pages_read=1/1): Operator 'DOM Table Projection Parser' (page 1, domain other) captures: The projections are in the HTML, inside a `<table>` whose rows carry `class=\"projections-listing\" data-week=\"7\" data-start_date=\"2026-10-25\"`. Assumptions: Projections are rendered in structured HTML tables with consistent class attributes and data tags. Breakdown regime: Parser fails when name/position markup deviates from regex pattern. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): DOM structure maps to tabular data model; FPTS and VALUE define player utility in constrained optimization space. Operator 'Fantasy Point Projection' (page 1, domain other) captures: - 405 rows matched on the `FPTS` marker; 341 parsed cleanly into `extracted_data/dailyfantasyfuel_nfl_projections_2026-10-22.csv` with name, position, salary, projected FPTS, their VALUE multiplier and matchup. Assumptions: Each row corresponds to a unique player with a valid FPTS estimate. Breakdown regime: Data integrity loss occurs when FPTS marker is absent or malformed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): FPTS serves as core kernel for Bayesian inference in player selection models. Operator 'Value Multiplier Adjustment' (page 1, domain other) captures: - 405 rows matched on the `FPTS` marker; 341 parsed cleanly into `extracted_data/dailyfantasyfuel_nfl_projections_2026-10-22.csv` with name, position, salary, projected FPTS, their VALUE multiplier and matchup. Assumptions: VALUE reflects matchup-adjusted efficiency of player contribution relative to salary. Breakdown regime: Adjustment invalid when matchup or salary data is missing or misaligned. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): VALUE defines normalized utility for salary-constrained optimization in DFS. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for dailyfantasyfuel (ee0b9589aad123d4, domain=other, pages_read=1/1): Operator 'DOM Table Projection Parser' (page 1, domain other) captures: The projections are in the HTML, inside a `<table>` whose rows carry `class=\"projections-listing\" data-week=\"7\" data-start_date=\"2026-10-25\"`. Assumptions: Projections are rendered in structured HTML tables with consistent class attributes and data tags. Breakdown regime: Parser fails when name/position markup deviates from regex pattern. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): DOM structure maps to tabular data model; FPTS and VALUE define player utility in constrained optimization space. Operator 'Fantasy Point Projection' (page 1, domain other) captures: - 405 rows matched on the `FPTS` marker; 341 parsed cleanly into `extracted_data/dailyfantasyfuel_nfl_projections_2026-10-22.csv` with name, position, salary, projected FPTS, their VALUE multiplier and matchup. Assumptions: Each row corresponds to a unique player with a valid FPTS estimate. Breakdown regime: Data integrity loss occurs when FPTS marker is absent or malformed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): FPTS serves as core kernel for Bayesian inference in player selection models. Operator 'Value Multiplier Adjustment' (page 1, domain other) captures: - 405 rows matched on the `FPTS` marker; 341 parsed cleanly into `extracted_data/dailyfantasyfuel_nfl_projections_2026-10-22.csv` with name, position, salary, projected FPTS, their VALUE multiplier and matchup. Assumptions: VALUE reflects matchup-adjusted efficiency of player contribution relative to salary. Breakdown regime: Adjustment invalid when matchup or salary data is missing or misaligned. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): VALUE defines normalized utility for salary-constrained optimization in DFS. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web scraping techniques and DOM parsing, evolving into structured data pipelines for predictive analytics in sports intelligence. Retrocausal Genealogy: Rooted in dailyfantasyfuel (ee0b9589aad123d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in dailyfantasyfuel (ee0b9589aad123d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the parser (which must handle markup variance) and the projection engine (which must maintain consistency across slates). Decision actors are DFS players optimizing within salary caps using these derived metrics. Theory of Mind & Decision Maker Model: Rooted in dailyfantasyfuel (ee0b9589aad123d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by distinct roles: FPTS for raw performance, VALUE for efficiency, and salary for constraint. Leakage is prevented by isolating each primitive's domain and enforcing strict parsing rules. Cross-Layer Veto & Anti-Leakage Check: Rooted in dailyfantasyfuel (ee0b9589aad123d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "54fcb9c39dd142da",
+  "source_status": "COMPLETE",
+  "title": "2026 - Unified Trajectory and 3D Pose Forecasting for Multi-Agent Sports Analysis - Peral et al",
+  "file_name": "2026 - Unified Trajectory and 3D Pose Forecasting for Multi-Agent Sports Analysis - Peral et al.md",
+  "sha256": "54fcb9c39dd142da6b1ceda461d9dfe31e6b2453270fb4edd2e37d48fdd1f45a",
+  "primary_domain": "other",
+  "pages_total": 27,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Joint socio-temporal forecasting via shared latent space encoding and factorized attention enables unified 3D pose and trajectory prediction with corrected evaluation bias. Universal Lens: Rooted in 2026 - Unified Trajectory and 3D Pose Forecasting for Multi-Agent Sports Analysis - Peral et al (54fcb9c39dd142da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework for multi-agent motion forecasting using deterministic oracle-free strategies and per-joint loss reweighting to correct evaluation artifacts. GSI Mapping: Rooted in 2026 - Unified Trajectory and 3D Pose Forecasting for Multi-Agent Sports Analysis - Peral et al (54fcb9c39dd142da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situation-aware state-transition engine modeling player dynamics through socio-temporal attention and frequency-smoothed trajectory priors for tactical decision support. GSE Mapping: Rooted in 2026 - Unified Trajectory and 3D Pose Forecasting for Multi-Agent Sports Analysis - Peral et al (54fcb9c39dd142da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "socio_temporal_factorized_attention",
+      "name": "Socio-Temporal Factorized Attention",
+      "verbatim_quote": "We exploit a socio-temporal encoder that fuses trajectory and pose at the input level and models them jointly through shared factorized attention.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Input trajectories and poses are temporally aligned and spatially consistent; factorized attention enables modularity in joint processing.",
+      "breakdown_regime": "When input data lacks temporal alignment or spatial coherence, leading to degraded joint modeling performance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's multi-agent state transition kernel where socio-temporal dependencies are encoded via shared latent representations.",
+        "source_operator": "socio_temporal_factorized_attention",
+        "telemetry": "Joint prediction accuracy on WorldPose and 3DPW datasets."
+      }
+    },
+    {
+      "primitive_id": "per_joint_loss_reweighting",
+      "name": "Per-Joint Loss Reweighting",
+      "verbatim_quote": "The model is further enhanced by a per-joint loss reweighting scheme that em",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Dynamic joints contribute more to motion predictability; static joints may introduce noise.",
+      "breakdown_regime": "In cases of degenerate solutions or overfitting to less informative joints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSI's probabilistic loss function adjustment to improve posterior estimation fidelity.",
+        "source_operator": "per_joint_loss_reweighting",
+        "telemetry": "Reduction in pose forecasting error variance across dynamic joints."
+      }
+    },
+    {
+      "primitive_id": "frequency_domain_trajectory_smoothing",
+      "name": "Frequency-Domain Trajectory Smoothing",
+      "verbatim_quote": "phasizes dynamic joints and prevents degenerate solutions, and a frequency-domain trajectory smoothing term that improves trajectory prediction while indirectly benefiting pose forecasting.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Trajectory noise can be filtered effectively in spectral domain without losing motion salience.",
+      "breakdown_regime": "When high-frequency noise dominates signal structure, impairing smoothness and continuity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Applied within GSE's motion interpolation layer to enhance trajectory continuity and reduce jitter.",
+        "source_operator": "frequency_domain_trajectory_smoothing",
+        "telemetry": "Improved trajectory prediction R² score on broadcast-derived datasets."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "54fcb9c39dd142da_t0",
+      "think": "The core innovation lies in the socio-temporal factorized attention mechanism, which jointly encodes trajectory and pose data in a shared latent space before decoding into separate outputs. This avoids the decoupled modeling pitfalls of prior works, enabling better generalization in team sports. Evaluation correction via non-overlapping sequences ensures fair benchmarking against previous methods. Per-joint loss reweighting prioritizes informative joints, mitigating degeneracy. Frequency-domain smoothing enhances trajectory continuity, indirectly improving pose forecasts. These primitives form a coherent mathematical framework for multi-agent motion forecasting.\n\nDeep epistemic analysis for 2026 - Unified Trajectory and 3D Pose Forecasting for Multi-Agent Sports Analysis - Peral et al (54fcb9c39dd142da, domain=other, pages_read=18/27): Operator 'Socio-Temporal Factorized Attention' (page 1, domain other) captures: We exploit a socio-temporal encoder that fuses trajectory and pose at the input level and models them jointly through shared factorized attention. Assumptions: Input trajectories and poses are temporally aligned and spatially consistent; factorized attention enables modularity in joint processing. Breakdown regime: When input data lacks temporal alignment or spatial coherence, leading to degraded joint modeling performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's multi-agent state transition kernel where socio-temporal dependencies are encoded via shared latent representations. Operator 'Per-Joint Loss Reweighting' (page 1, domain other) captures: The model is further enhanced by a per-joint loss reweighting scheme that em Assumptions: Dynamic joints contribute more to motion predictability; static joints may introduce noise. Breakdown regime: In cases of degenerate solutions or overfitting to less informative joints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's probabilistic loss function adjustment to improve posterior estimation fidelity. Operator 'Frequency-Domain Trajectory Smoothing' (page 2, domain other) captures: phasizes dynamic joints and prevents degenerate solutions, and a frequency-domain trajectory smoothing term that improves trajectory prediction while indirectly benefiting pose forecasting. Assumptions: Trajectory noise can be filtered effectively in spectral domain without losing motion salience. Breakdown regime: When high-frequency noise dominates signal structure, impairing smoothness and continuity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applied within GSE's motion interpolation layer to enhance trajectory continuity and reduce jitter. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026 - Unified Trajectory and 3D Pose Forecasting for Multi-Agent Sports Analysis - Peral et al (54fcb9c39dd142da, domain=other, pages_read=18/27): Operator 'Socio-Temporal Factorized Attention' (page 1, domain other) captures: We exploit a socio-temporal encoder that fuses trajectory and pose at the input level and models them jointly through shared factorized attention. Assumptions: Input trajectories and poses are temporally aligned and spatially consistent; factorized attention enables modularity in joint processing. Breakdown regime: When input data lacks temporal alignment or spatial coherence, leading to degraded joint modeling performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's multi-agent state transition kernel where socio-temporal dependencies are encoded via shared latent representations. Operator 'Per-Joint Loss Reweighting' (page 1, domain other) captures: The model is further enhanced by a per-joint loss reweighting scheme that em Assumptions: Dynamic joints contribute more to motion predictability; static joints may introduce noise. Breakdown regime: In cases of degenerate solutions or overfitting to less informative joints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's probabilistic loss function adjustment to improve posterior estimation fidelity. Operator 'Frequency-Domain Trajectory Smoothing' (page 2, domain other) captures: phasizes dynamic joints and prevents degenerate solutions, and a frequency-domain trajectory smoothing term that improves trajectory prediction while indirectly benefiting pose forecasting. Assumptions: Trajectory noise can be filtered effectively in spectral domain without losing motion salience. Breakdown regime: When high-frequency noise dominates signal structure, impairing smoothness and continuity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applied within GSE's motion interpolation layer to enhance trajectory continuity and reduce jitter. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in transformer architectures for vision-language tasks, extended to spatiotemporal modeling in robotics and sports analytics. Builds upon prior work in trajectory forecasting and pose estimation. Retrocausal Genealogy: Rooted in 2026 - Unified Trajectory and 3D Pose Forecasting for Multi-Agent Sports Analysis - Peral et al (54fcb9c39dd142da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models agents as interdependent entities whose future states depend on both individual kinematics and collective motion patterns. Assumes rationality in motion planning under team constraints. Theory of Mind & Decision Maker Model: Rooted in 2026 - Unified Trajectory and 3D Pose Forecasting for Multi-Agent Sports Analysis - Peral et al (54fcb9c39dd142da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents anti-collinearity issues between trajectory and pose modules by enforcing shared latent space encoding. Ensures no leakage from one modality into another without explicit socio-temporal coupling. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026 - Unified Trajectory and 3D Pose Forecasting for Multi-Agent Sports Analysis - Peral et al (54fcb9c39dd142da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

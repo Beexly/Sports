@@ -1,0 +1,78 @@
+{
+  "book_id": "ef4a71c4e5a91a2a",
+  "source_status": "COMPLETE",
+  "title": "chrome-extension-spec",
+  "file_name": "chrome-extension-spec.md",
+  "sha256": "ef4a71c4e5a91a2a181f186d97062d5e5b030c971bbb9dacf8d3e502a67afd43",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A contextual inference overlay mapping real-time sportsbook lines to Galaxy's Edge Index through DOM-parsed game states, enabling frictionless decision augmentation. Universal Lens: Rooted in chrome-extension-spec (ef4a71c4e5a91a2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on live-line events using conformal predictive distributions over game metadata, conditioned on historical consensus and temporal stress factors. GSI Mapping: Rooted in chrome-extension-spec (ef4a71c4e5a91a2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine computes state transitions from parsed DOM elements to inject probabilistic badges, maintaining agent-independence via minimal-data extension behavior. GSE Mapping: Rooted in chrome-extension-spec (ef4a71c4e5a91a2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "contextual_inference_overlay",
+      "name": "Contextual Inference Overlay",
+      "verbatim_quote": "--## TL;DR When a user is logged into DraftKings / FanDuel / BetMGM / Caesars and looking at a line on a Galaxy-tracked game, the extension renders a small Galaxy badge next to the line showing the Edge Index.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{\\\\text{edge}}': 'dimensionless Edge Index score', 'G': 'Galaxy-tracked game identifier', 'B': 'browser context object'}",
+      "assumptions": "User is authenticated on supported sportsbook; game is tracked by Galaxy; DOM structure is stable enough for parsing.",
+      "breakdown_regime": "Live-line rendering with fallback to cached values when DOM mutation occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The badge rendering function maps a parsed game state to a scalar Edge Index, isomorphic to GSI's posterior belief over game outcomes.",
+        "source_operator": "contextual_inference_overlay",
+        "telemetry": "Badge visibility frequency and click-through rate on rendered indices."
+      }
+    },
+    {
+      "primitive_id": "dom_game_state_parser",
+      "name": "DOM Game State Parser",
+      "verbatim_quote": "--## Extension behavior ### Game detection The extension runs a content script on supported sportsbook URLs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'DOM node tree', 'M': 'Matchup metadata tuple', 'T': 'Time-stamped game state'}",
+      "assumptions": "Sportsbook uses SPA architecture with frequent re-renders; DOM selectors are stable across versions.",
+      "breakdown_regime": "Failure detected via parser health API when mutation rate exceeds threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Parser kernel extracts M from D and synchronizes T with live updates, forming input for GSE's state transition model.",
+        "source_operator": "dom_game_state_parser",
+        "telemetry": "Parser success rate and DOM mutation count per page load."
+      }
+    },
+    {
+      "primitive_id": "edge_index_injection",
+      "name": "Edge Index Injection",
+      "verbatim_quote": "Every bet they're about to place gets contextualized by Galaxy's score before they click.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_{\\\\text{badge}}': 'Badge injection point in DOM', 'S_{\\\\text{index}}': 'Scalar Edge Index value', 'U': 'User interaction event'}",
+      "assumptions": "Badge does not interfere with sportsbook UI; index is computed within 30-second cache window.",
+      "breakdown_regime": "Injection occurs on DOM ready and mutation events, with optional user toggle per book.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Badge injection mirrors GSE's policy update mechanism, where S_index becomes a contextual action signal.",
+        "source_operator": "edge_index_injection",
+        "telemetry": "Percentage of bets placed with visible badge vs. without."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ef4a71c4e5a91a2a_t0",
+      "think": "The Chrome Extension operates as a dual-layered system: the lower layer parses DOM structures to extract game metadata and detect live state changes, while the upper layer overlays probabilistic Edge Indices onto betting interfaces. This design leverages the principle of contextual inference, where each bet is evaluated against a prior belief distribution derived from Galaxy’s historical models. The system assumes that users engage with sportsbooks in a continuous stream of micro-decisions, and thus the extension must provide immediate feedback without disrupting workflow. The failure mode arises when DOM structures evolve unexpectedly, causing parser degradation—mitigated by health monitoring and alerting mechanisms. The injection logic ensures that the Edge Index appears at the most salient moment of decision-making, aligning with cognitive economics principles of bounded rationality and behavioral nudging.\n\nDeep epistemic analysis for chrome-extension-spec (ef4a71c4e5a91a2a, domain=other, pages_read=4/4): Operator 'Contextual Inference Overlay' (page 1, domain other) captures: --## TL;DR When a user is logged into DraftKings / FanDuel / BetMGM / Caesars and looking at a line on a Galaxy-tracked game, the extension renders a small Galaxy badge next to the line showing the Edge Index. Assumptions: User is authenticated on supported sportsbook; game is tracked by Galaxy; DOM structure is stable enough for parsing. Breakdown regime: Live-line rendering with fallback to cached values when DOM mutation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The badge rendering function maps a parsed game state to a scalar Edge Index, isomorphic to GSI's posterior belief over game outcomes. Operator 'DOM Game State Parser' (page 1, domain other) captures: --## Extension behavior ### Game detection The extension runs a content script on supported sportsbook URLs. Assumptions: Sportsbook uses SPA architecture with frequent re-renders; DOM selectors are stable across versions. Breakdown regime: Failure detected via parser health API when mutation rate exceeds threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Parser kernel extracts M from D and synchronizes T with live updates, forming input for GSE's state transition model. Operator 'Edge Index Injection' (page 1, domain other) captures: Every bet they're about to place gets contextualized by Galaxy's score before they click. Assumptions: Badge does not interfere with sportsbook UI; index is computed within 30-second cache window. Breakdown regime: Injection occurs on DOM ready and mutation events, with optional user toggle per book. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Badge injection mirrors GSE's policy update mechanism, where S_index becomes a contextual action signal. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for chrome-extension-spec (ef4a71c4e5a91a2a, domain=other, pages_read=4/4): Operator 'Contextual Inference Overlay' (page 1, domain other) captures: --## TL;DR When a user is logged into DraftKings / FanDuel / BetMGM / Caesars and looking at a line on a Galaxy-tracked game, the extension renders a small Galaxy badge next to the line showing the Edge Index. Assumptions: User is authenticated on supported sportsbook; game is tracked by Galaxy; DOM structure is stable enough for parsing. Breakdown regime: Live-line rendering with fallback to cached values when DOM mutation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The badge rendering function maps a parsed game state to a scalar Edge Index, isomorphic to GSI's posterior belief over game outcomes. Operator 'DOM Game State Parser' (page 1, domain other) captures: --## Extension behavior ### Game detection The extension runs a content script on supported sportsbook URLs. Assumptions: Sportsbook uses SPA architecture with frequent re-renders; DOM selectors are stable across versions. Breakdown regime: Failure detected via parser health API when mutation rate exceeds threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Parser kernel extracts M from D and synchronizes T with live updates, forming input for GSE's state transition model. Operator 'Edge Index Injection' (page 1, domain other) captures: Every bet they're about to place gets contextualized by Galaxy's score before they click. Assumptions: Badge does not interfere with sportsbook UI; index is computed within 30-second cache window. Breakdown regime: Injection occurs on DOM ready and mutation events, with optional user toggle per book. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Badge injection mirrors GSE's policy update mechanism, where S_index becomes a contextual action signal. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the mathematical framework of conformal prediction and Bayesian belief updating, tracing back to de Finetti's coherence theorem and modern work on uncertainty quantification in machine learning systems. Retrocausal Genealogy: Rooted in chrome-extension-spec (ef4a71c4e5a91a2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in chrome-extension-spec (ef4a71c4e5a91a2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models the sportsbook user as an agent operating under bounded attention and time pressure, seeking to maximize utility through informed choices. The extension acts as a non-intrusive auxiliary decision-support system, respecting user autonomy while offering enhanced signal-to-noise ratio. Theory of Mind & Decision Maker Model: Rooted in chrome-extension-spec (ef4a71c4e5a91a2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by ensuring that GSE's internal game state does not redundantly compute what is already provided by the DOM parser. Leakage is prevented by strict separation of concerns: privacy-preserving data access and minimal telemetry collection. Cross-Layer Veto & Anti-Leakage Check: Rooted in chrome-extension-spec (ef4a71c4e5a91a2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

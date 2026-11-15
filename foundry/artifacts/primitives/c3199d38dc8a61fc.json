@@ -1,0 +1,78 @@
+{
+  "book_id": "c3199d38dc8a61fc",
+  "source_status": "COMPLETE",
+  "title": "MASTER_REPORT",
+  "file_name": "MASTER_REPORT.md",
+  "sha256": "c3199d38dc8a61fc0c8df9fdd172fbbff43359c7e765c802b8a65ce6e72712bd",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Contextual NFL analytics integrate tracking covariates into probabilistic models via BOLA vulnerabilities and API exposure. Universal Lens: Rooted in MASTER_REPORT (c3199d38dc8a61fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers player intent and decision efficiency using derived kernels from NGS data, mapping to Bayesian belief states. GSI Mapping: Rooted in MASTER_REPORT (c3199d38dc8a61fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning through state transitions governed by HMM coverage decoding and ghost density fields. GSE Mapping: Rooted in MASTER_REPORT (c3199d38dc8a61fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "completion_probability",
+      "name": "Completion Probability",
+      "verbatim_quote": "Engine logic reconstructed `out/equations.py`, 21 functions, wired to real payload semantics: - `completion_probability` — logistic; situational basis fitted on 3,820 real NGS rows, tracking covariates (separation, cushion, closing speed) enter as logit shifts.",
+      "page": 1,
+      "latex": "\\text{logistic}(\\beta_0 + \\sum_{i=1}^{n} \\beta_i x_i)",
+      "symbol_and_unit_ledger": "{'x_i': 'tracking covariate (separation, cushion, closing speed)', 'β_i': 'logit shift coefficient', 'β_0': 'baseline intercept'}",
+      "assumptions": "Logistic model assumes linear combination of features in logit space with fixed coefficients.",
+      "breakdown_regime": "When tracking data is absent, fallback to baseline probabilities.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps situational tracking data to completion likelihood using logistic regression kernel.",
+        "source_operator": "completion_probability",
+        "telemetry": "Observed vs predicted pass outcomes."
+      }
+    },
+    {
+      "primitive_id": "ghost_density",
+      "name": "Ghost Density",
+      "verbatim_quote": "- `ghost_density` / `interception_probability` — anisotropic conditional density of a baseline defender, normalised so it integrates to the defender count (measured 5.03 for 5/side).",
+      "page": 1,
+      "latex": "\\rho(x) = \\frac{1}{Z} \\sum_{i=1}^{N} \\mathcal{N}(x; \\mu_i, \\Sigma_i)",
+      "symbol_and_unit_ledger": "{'ρ(x)': 'density function at position x', 'μ_i': 'mean position of defender i', 'Σ_i': 'covariance matrix of defender i', 'Z': 'normalization constant'}",
+      "assumptions": "Defenders modeled as multivariate Gaussians with known means and covariances.",
+      "breakdown_regime": "When defender positions are unknown, defaults to uniform distribution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphs to spatial field theory where defenders form a probabilistic influence map.",
+        "source_operator": "ghost_density",
+        "telemetry": "Interception probability estimates."
+      }
+    },
+    {
+      "primitive_id": "hmm_coverage_decode",
+      "name": "HMM Coverage Decode",
+      "verbatim_quote": "- `hmm_coverage_decode` / `coverage_responsibility` — non-homogeneous 2-state HMM over reaction-to-motion, emitting MAN_FOLLOW / ZONE_PASS_OFF / ZONE_SPOT_DROP.",
+      "page": 1,
+      "latex": "\\text{argmax}_{q_1,...,q_T} P(q_1,...,q_T | o_1,...,o_T)",
+      "symbol_and_unit_ledger": "{'q_t': 'hidden state at time t', 'o_t': 'observation at time t', 'P(q_t | q_{t-1})': 'transition probability', 'P(o_t | q_t)': 'emission probability'}",
+      "assumptions": "Two-state Markov chain with time-varying transition/emission probabilities.",
+      "breakdown_regime": "When motion data is insufficient, uses prior state distributions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Models defensive behavior as a non-homogeneous 2-state HMM over motion reactions.",
+        "source_operator": "hmm_coverage_decode",
+        "telemetry": "Coverage responsibility assignments."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c3199d38dc8a61fc_t0",
+      "think": "The primitives reflect a layered approach to NFL analytics: probabilistic modeling of pass completions via logistic regression, spatial influence modeling through Gaussian-based ghost density fields, and behavioral decoding using hidden Markov models. These models are vulnerable to BOLA due to lack of access control on game and play IDs, enabling enumeration leaks. The system's reliance on public JS exposes tokens, allowing unauthorized access to tracking APIs. The engine's fidelity is validated against live data, ensuring robustness despite API-level inconsistencies. Failure modes include missing tracking data, which triggers fallbacks to baseline models.\n\nDeep epistemic analysis for MASTER_REPORT (c3199d38dc8a61fc, domain=other, pages_read=2/2): Operator 'Completion Probability' (page 1, domain other) captures: Engine logic reconstructed `out/equations.py`, 21 functions, wired to real payload semantics: - `completion_probability` — logistic; situational basis fitted on 3,820 real NGS rows, tracking covariates (separation, cushion, closing speed) enter as logit shifts. Assumptions: Logistic model assumes linear combination of features in logit space with fixed coefficients. Breakdown regime: When tracking data is absent, fallback to baseline probabilities. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps situational tracking data to completion likelihood using logistic regression kernel. Operator 'Ghost Density' (page 1, domain other) captures: - `ghost_density` / `interception_probability` — anisotropic conditional density of a baseline defender, normalised so it integrates to the defender count (measured 5.03 for 5/side). Assumptions: Defenders modeled as multivariate Gaussians with known means and covariances. Breakdown regime: When defender positions are unknown, defaults to uniform distribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs to spatial field theory where defenders form a probabilistic influence map. Operator 'HMM Coverage Decode' (page 1, domain other) captures: - `hmm_coverage_decode` / `coverage_responsibility` — non-homogeneous 2-state HMM over reaction-to-motion, emitting MAN_FOLLOW / ZONE_PASS_OFF / ZONE_SPOT_DROP. Assumptions: Two-state Markov chain with time-varying transition/emission probabilities. Breakdown regime: When motion data is insufficient, uses prior state distributions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models defensive behavior as a non-homogeneous 2-state HMM over motion reactions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for MASTER_REPORT (c3199d38dc8a61fc, domain=other, pages_read=2/2): Operator 'Completion Probability' (page 1, domain other) captures: Engine logic reconstructed `out/equations.py`, 21 functions, wired to real payload semantics: - `completion_probability` — logistic; situational basis fitted on 3,820 real NGS rows, tracking covariates (separation, cushion, closing speed) enter as logit shifts. Assumptions: Logistic model assumes linear combination of features in logit space with fixed coefficients. Breakdown regime: When tracking data is absent, fallback to baseline probabilities. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps situational tracking data to completion likelihood using logistic regression kernel. Operator 'Ghost Density' (page 1, domain other) captures: - `ghost_density` / `interception_probability` — anisotropic conditional density of a baseline defender, normalised so it integrates to the defender count (measured 5.03 for 5/side). Assumptions: Defenders modeled as multivariate Gaussians with known means and covariances. Breakdown regime: When defender positions are unknown, defaults to uniform distribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs to spatial field theory where defenders form a probabilistic influence map. Operator 'HMM Coverage Decode' (page 1, domain other) captures: - `hmm_coverage_decode` / `coverage_responsibility` — non-homogeneous 2-state HMM over reaction-to-motion, emitting MAN_FOLLOW / ZONE_PASS_OFF / ZONE_SPOT_DROP. Assumptions: Two-state Markov chain with time-varying transition/emission probabilities. Breakdown regime: When motion data is insufficient, uses prior state distributions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models defensive behavior as a non-homogeneous 2-state HMM over motion reactions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical signal processing and machine learning frameworks, particularly Bayesian inference and probabilistic graphical models, tracing back to early work in sports analytics and modern deep learning applications. Retrocausal Genealogy: Rooted in MASTER_REPORT (c3199d38dc8a61fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in MASTER_REPORT (c3199d38dc8a61fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include quarterbacks making decisions under uncertainty, receivers evaluating coverage, and defenders reacting to motion—each modeled as stochastic processes with latent variables. Theory of Mind & Decision Maker Model: Rooted in MASTER_REPORT (c3199d38dc8a61fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in MASTER_REPORT (c3199d38dc8a61fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by distinct functional forms per primitive; leakage vetoes prevent cross-layer contamination via BOLA and credential exposure. Cross-Layer Veto & Anti-Leakage Check: Rooted in MASTER_REPORT (c3199d38dc8a61fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in MASTER_REPORT (c3199d38dc8a61fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

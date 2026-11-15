@@ -1,0 +1,78 @@
+{
+  "book_id": "c1a0a84f0b2c04d7",
+  "source_status": "COMPLETE",
+  "title": "CALIBRATION_MAP_APPLY_MATRIX",
+  "file_name": "CALIBRATION_MAP_APPLY_MATRIX.md",
+  "sha256": "c1a0a84f0b2c04d7b5417a3509f15e64ddb4e8d37a9dec5e961cc812d1c5bec1",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "Calibration maps form a hierarchical manifold of probability transformations, mapping raw logits to empirical frequencies. The structural unification relies on piecewise monotonic operators (PAVA) and parametric shrinkage (EB-τ), constrained by strict holdout floors to prevent overfitting the noise in high-dimensional tail regimes.",
+  "gsi_mapping": "GSI employs conformal inference and bootstrap resampling to construct rigorous uncertainty bands around recalibrated probabilities. By treating calibration adjustments as Bayesian posterior updates constrained by frequentist eligibility, GSI ensures that internal confidence intervals reflect true epistemic variance rather than spurious market edges.",
+  "gse_mapping": "GSE treats calibration as a state-transition gate: raw model outputs transition to actionable engine states only after passing Brier/ECE thresholds. Resolution metrics dictate situational reasoning depth, ensuring the engine does not execute on artificially inflated confidence derived from post-hoc isotonic smoothing.",
+  "primitives": [
+    {
+      "primitive_id": "isotonic_pava_calibration",
+      "name": "Isotonic PAVA Recalibration",
+      "verbatim_quote": "Isotonic PAVA | recommended on tails | **OFF** | | Hierarchical EB-τ | optional | **OFF**",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "p_raw: dimensionless raw probability; p_cal: dimensionless calibrated probability; n: integer sample count per bin",
+      "assumptions": "Monotonic relationship between raw score and true outcome frequency; sufficient data density in bins.",
+      "breakdown_regime": "Sparse tail regimes where block sizes n approach zero, leading to high-variance step functions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE situational gating, preventing execution on uncalibrated tail events.",
+        "source_operator": "isotonic_pava_calibration",
+        "telemetry": "ECE ≤ 0.05"
+      }
+    },
+    {
+      "primitive_id": "bootstrap_uncertainty_band",
+      "name": "Bootstrap Resampling CI",
+      "verbatim_quote": "of p_cal(s) — more honest | | Conformal on top | Coverage sets ≠ CI on",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "B: integer number of bootstrap iterations; s: dimensionless score; p_cal(s): dimensionless calibrated probability",
+      "assumptions": "Training data is an IID sample from the underlying generative distribution.",
+      "breakdown_regime": "Highly non-stationary environments where historical resampling fails to capture future regime shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates GSI conformal coverage sets, explicitly separating epistemic uncertainty from aleatoric noise.",
+        "source_operator": "bootstrap_uncertainty_band",
+        "telemetry": "Conformal coverage rate"
+      }
+    },
+    {
+      "primitive_id": "bakeoff_eligibility_floor",
+      "name": "Bake-off Eligibility Floor",
+      "verbatim_quote": "Bake-off metrics (required columns) | Metric | Role | |--------|------| | Brier | Primary floor (≤0.22)",
+      "page": 1,
+      "latex": "L_{Brier} = \\frac{1}{N} \\sum_{i=1}^{N} (p_i - y_i)^2",
+      "symbol_and_unit_ledger": "L_Brier: dimensionless loss metric; p_i: dimensionless predicted probability; y_i: binary outcome indicator",
+      "assumptions": "Proper scoring rules accurately reflect predictive utility; outcomes are strictly binary.",
+      "breakdown_regime": "Extreme class imbalance where base-rate variance dominates resolution, masking poor calibration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Acts as the foundational GSE state-transition veto, blocking low-quality maps from entering the live engine.",
+        "source_operator": "bakeoff_eligibility_floor",
+        "telemetry": "Brier Score ≤ 0.22"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c1a0a84f0b2c04d7_t0",
+      "think": "The calibration map apply matrix establishes a rigorous hierarchy for transforming raw model outputs into reliable probabilistic forecasts. The core mathematical operator is the Pool Adjacent Violators Algorithm (PAVA), which enforces monotonicity by minimizing squared error subject to order constraints. This piecewise constant mapping is particularly critical in the tails of the distribution, where parametric assumptions often fail. However, applying such maps introduces a secondary layer of complexity: the estimation of uncertainty around the recalibrated probabilities. Simple binomial or Beta approximations per PAVA block ignore the data-driven nature of the block boundaries, leading to overconfident intervals. Consequently, bootstrap resampling—resampling the training set, refitting the map, and extracting percentile bands of p_cal(s)—provides a more honest assessment of epistemic variance. This process is tightly coupled with a bake-off protocol. Raw models must first pass strict frequentist floors, specifically a Brier score ≤ 0.22 and Expected Calibration Error (ECE) ≤ 0.05. Only after these primary floors are met can `CALIBRATION_ADJUSTMENTS` be applied. The Murphy decomposition further dissects reliability into resolution and uncertainty, highlighting that low resolution implies recalibration cannot unlock proven edge. Crucially, conformal coverage sets generated atop these maps are distinct from standard confidence intervals and must never be marketed as verified ROI, preserving the integrity of the internal uncertainty quantification.\n\nDeep epistemic analysis for CALIBRATION_MAP_APPLY_MATRIX (c1a0a84f0b2c04d7, domain=other, pages_read=1/1): Operator 'Isotonic PAVA Recalibration' (page 1, domain other) captures: Isotonic PAVA | recommended on tails | **OFF** | | Hierarchical EB-τ | optional | **OFF** Assumptions: Monotonic relationship between raw score and true outcome frequency; sufficient data density in bins. Breakdown regime: Sparse tail regimes where block sizes n approach zero, leading to high-variance step functions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE situational gating, preventing execution on uncalibrated tail events. Operator 'Bootstrap Resampling CI' (page 1, domain other) captures: of p_cal(s) — more honest | | Conformal on top | Coverage sets ≠ CI on Assumptions: Training data is an IID sample from the underlying generative distribution. Breakdown regime: Highly non-stationary environments where historical resampling fails to capture future regime shifts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates GSI conformal coverage sets, explicitly separating epistemic uncertainty from aleatoric noise. Operator 'Bake-off Eligibility Floor' (page 1, domain other) captures: Bake-off metrics (required columns) | Metric | Role | |--------|------| | Brier | Primary floor (≤0.22) Assumptions: Proper scoring rules accurately reflect predictive utility; outcomes are strictly binary. Breakdown regime: Extreme class imbalance where base-rate variance dominates resolution, masking poor calibration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Acts as the foundational GSE state-transition veto, blocking low-quality maps from entering the live engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CALIBRATION_MAP_APPLY_MATRIX (c1a0a84f0b2c04d7, domain=other, pages_read=1/1): Operator 'Isotonic PAVA Recalibration' (page 1, domain other) captures: Isotonic PAVA | recommended on tails | **OFF** | | Hierarchical EB-τ | optional | **OFF** Assumptions: Monotonic relationship between raw score and true outcome frequency; sufficient data density in bins. Breakdown regime: Sparse tail regimes where block sizes n approach zero, leading to high-variance step functions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE situational gating, preventing execution on uncalibrated tail events. Operator 'Bootstrap Resampling CI' (page 1, domain other) captures: of p_cal(s) — more honest | | Conformal on top | Coverage sets ≠ CI on Assumptions: Training data is an IID sample from the underlying generative distribution. Breakdown regime: Highly non-stationary environments where historical resampling fails to capture future regime shifts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates GSI conformal coverage sets, explicitly separating epistemic uncertainty from aleatoric noise. Operator 'Bake-off Eligibility Floor' (page 1, domain other) captures: Bake-off metrics (required columns) | Metric | Role | |--------|------| | Brier | Primary floor (≤0.22) Assumptions: Proper scoring rules accurately reflect predictive utility; outcomes are strictly binary. Breakdown regime: Extreme class imbalance where base-rate variance dominates resolution, masking poor calibration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Acts as the foundational GSE state-transition veto, blocking low-quality maps from entering the live engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The lineage traces back to Platt scaling (logistic regression on outputs) and isotonic regression (PAVA) introduced by Pool and Vanderbei. The integration of bootstrap methods for calibration uncertainty reflects Efron's resampling revolution, while the strict adherence to proper scoring rules like Brier and log loss anchors the framework in classical decision theory and information geometry. Retrocausal Genealogy: Rooted in CALIBRATION_MAP_APPLY_MATRIX (c1a0a84f0b2c04d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The system models the decision actor as a rational agent who might otherwise exploit post-hoc calibration to manufacture false confidence. By enforcing 'default OFF' and strict holdout floors, the framework anticipates adversarial overfitting. It assumes the opposing agent (the market or the environment) will punish any discrepancy between stated probability and realized frequency, necessitating a conservative, verification-first approach to probability emission.",
+      "cross_layer_veto": "Anti-collinearity is enforced by decoupling the raw model's resolution from the calibration map's flexibility. If a map exhibits high resolution but fails the Brier/ECE floors, it is vetoed, preventing leakage of noise into the final state. Furthermore, the explicit prohibition against marketing conformal intervals as ROI acts as a cognitive veto, ensuring that internal epistemic bounds do not corrupt external strategic positioning or create self-fulfilling prophecies based on artificial precision."
+    }
+  ]
+}

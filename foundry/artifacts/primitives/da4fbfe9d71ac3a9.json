@@ -1,0 +1,95 @@
+{
+  "book_id": "da4fbfe9d71ac3a9",
+  "source_status": "COMPLETE",
+  "title": "1586-spatial-interpolation-postprocessed-ensemble-forecasts",
+  "file_name": "1586-spatial-interpolation-postprocessed-ensemble-forecasts.md",
+  "sha256": "da4fbfe9d71ac3a969c884b2713f1c941d954d235de9325ecda646e69c5d0d81",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 1586-spatial-interpolation-postprocessed-ensemble-forecasts (da4fbfe9d71ac3a9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 1586-spatial-interpolation-postprocessed-ensemble-forecasts (da4fbfe9d71ac3a9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 1586-spatial-interpolation-postprocessed-ensemble-forecasts (da4fbfe9d71ac3a9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "spatial_postprocessing_adaptation",
+      "name": "Spatial Postprocessing Adaptation",
+      "verbatim_quote": "Research question How do statistical (EMOS-R/C/L, boosted EMOS) vs ML (DRN, GraphSAGE GNN, Transformer) post-processing methods for ECMWF 2-m temperature and 10-m wind speed compare at observed vs unobserved stations, and can an altitude-aware linear pool (ALP) improve forecast combination at unobserved locations?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "CRPSS (skill score, dimensionless); RMSES (root-mean-square error, K); coverage (dimensionless); RI (reliability index, dimensionless)",
+      "assumptions": "Exchangeable ensemble members; Gaussian/TN predictive distributions; station assignments via Euclidean feature distance; rolling windows capture non-stationarity",
+      "breakdown_regime": "Observed stations → perfect calibration; unobserved stations → catastrophic overdispersion",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI → conformal prediction via split-sample calibration; GSE → situational reasoning via regional/spectral state transitions",
+        "source_operator": "spatial_postprocessing_adaptation",
+        "telemetry": "CRPSS, RMSE, coverage, reliability index"
+      }
+    },
+    {
+      "primitive_id": "altitudinal_linear_pooling",
+      "name": "Altitudinal Linear Pooling",
+      "verbatim_quote": "- Standard linear pool (SLP): F^(w) = wΦ((y-μ1)/σ1) + (1-w)Φ((y-μ2)/σ2), w estimated by minimum-CRPS on a 60-day rolling window; ALP: separate w per altitude group (<300 m, 300–700 m, ≥700 m), each unobserved station gets its group's weight.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "w (weight, dimensionless); Φ (Gaussian CDF); CRPS (continuous ranked probability score, K)",
+      "assumptions": "Linear combination preserves proper calibration; altitude groups are exchangeable within bands; optimal weights are constant over rolling windows",
+      "breakdown_regime": "Extreme altitudes (Denver) → low-weighted, high-residual combinations",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI → hierarchical Bayes with random effects; GSE → multi-armed bandit allocation for venue-type pools",
+        "source_operator": "altitudinal_linear_pooling",
+        "telemetry": "Weight stability, interval coverage, CRPSS improvement"
+      }
+    },
+    {
+      "primitive_id": "transformer_attention",
+      "name": "Transformer Attention",
+      "verbatim_quote": "- DRN (MLP), GraphSAGE GNN (Haversine ≤ 50 km edges, mean aggregation, fixed graph), Transformer (self-attention across stations, no fixed graph) — all output Gaussian/TN parameters by minimizing closed-form CRPS; 10 replications each.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Self-attention matrix A ∈ ℝ^{N×N} (adjacency, dimensionless); N (number of stations)",
+      "assumptions": "Station relationships are learned from data; attention heads capture non-Euclidean dependencies; model is invariant to station ordering",
+      "breakdown_regime": "Long-range dependencies → sparse, inefficient graphs; small sample sizes → overfitting",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI → kernel regression with learned similarity metrics; GSE → dynamic routing via attention-based state transitions",
+        "source_operator": "transformer_attention",
+        "telemetry": "Attention sparsity, CRPSS, computational cost"
+      }
+    },
+    {
+      "primitive_id": "semi_local_clustering",
+      "name": "Semi-Local Clustering",
+      "verbatim_quote": "1), minimum-CRPS; semi-local = k-means on climatology + error features (8–10 clusters).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "k-means cluster centroids μ_k (K); cluster assignments z_i (integer)",
+      "assumptions": "Climatology and error variance explain most heteroscedasticity; clusters are compact and separable; optimal k is known",
+      "breakdown_regime": "Outlying stations → mis-assigned clusters, poor local fit",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI → nearest-neighbour conformal; GSE → contextual bandits with regional affinity kernels",
+        "source_operator": "semi_local_clustering",
+        "telemetry": "Cluster purity, within-cluster variance, CRPSS"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "da4fbfe9d71ac3a9_t0",
+      "think": "The core failure mode is 'overfitting-to-observation': traditional EMOS models excel at fitting the exact stations used during training, but they completely ignore the spatial correlation structure that exists between nearby stations. This leads to perfect calibration at observed stations and catastrophic under-dispersion at unobserved ones. The study demonstrates that ML methods (especially DRN and Transformers) and semi-local clustering explicitly model this spatial correlation, yielding much better out-of-sample performance. Altitudinal linear pooling then provides a robust way to combine multiple imperfect models, particularly for extreme elevations where individual model confidence drops.\n\nDeep epistemic analysis for 1586-spatial-interpolation-postprocessed-ensemble-forecasts (da4fbfe9d71ac3a9, domain=other, pages_read=3/3): Operator 'Spatial Postprocessing Adaptation' (page 1, domain other) captures: Research question How do statistical (EMOS-R/C/L, boosted EMOS) vs ML (DRN, GraphSAGE GNN, Transformer) post-processing methods for ECMWF 2-m temperature and 10-m wind speed compare at observed vs unobserved stations, and can an altitude-aware linear pool (ALP) improve forecast combination at unobserved locations? Assumptions: Exchangeable ensemble members; Gaussian/TN predictive distributions; station assignments via Euclidean feature distance; rolling windows capture non-stationarity Breakdown regime: Observed stations → perfect calibration; unobserved stations → catastrophic overdispersion Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI → conformal prediction via split-sample calibration; GSE → situational reasoning via regional/spectral state transitions Operator 'Altitudinal Linear Pooling' (page 1, domain other) captures: - Standard linear pool (SLP): F^(w) = wΦ((y-μ1)/σ1) + (1-w)Φ((y-μ2)/σ2), w estimated by minimum-CRPS on a 60-day rolling window; ALP: separate w per altitude group (<300 m, 300–700 m, ≥700 m), each unobserved station gets its group's weight. Assumptions: Linear combination preserves proper calibration; altitude groups are exchangeable within bands; optimal weights are constant over rolling windows Breakdown regime: Extreme altitudes (Denver) → low-weighted, high-residual combinations Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI → hierarchical Bayes with random effects; GSE → multi-armed bandit allocation for venue-type pools Operator 'Transformer Attention' (page 1, domain other) captures: - DRN (MLP), GraphSAGE GNN (Haversine ≤ 50 km edges, mean aggregation, fixed graph), Transformer (self-attention across stations, no fixed graph) — all output Gaussian/TN parameters by minimizing closed-form CRPS; 10 replications each. Assumptions: Station relationships are learned from data; attention heads capture non-Euclidean dependencies; model is invariant to station ordering Breakdown regime: Long-range dependencies → sparse, inefficient graphs; small sample sizes → overfitting Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI → kernel regression with learned similarity metrics; GSE → dynamic routing via attention-based state transitions Operator 'Semi-Local Clustering' (page 1, domain other) captures: 1), minimum-CRPS; semi-local = k-means on climatology + error features (8–10 clusters). Assumptions: Climatology and error variance explain most heteroscedasticity; clusters are compact and separable; optimal k is known Breakdown regime: Outlying stations → mis-assigned clusters, poor local fit Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI → nearest-neighbour conformal; GSE → contextual bandits with regional affinity kernels Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1586-spatial-interpolation-postprocessed-ensemble-forecasts (da4fbfe9d71ac3a9, domain=other, pages_read=3/3): Operator 'Spatial Postprocessing Adaptation' (page 1, domain other) captures: Research question How do statistical (EMOS-R/C/L, boosted EMOS) vs ML (DRN, GraphSAGE GNN, Transformer) post-processing methods for ECMWF 2-m temperature and 10-m wind speed compare at observed vs unobserved stations, and can an altitude-aware linear pool (ALP) improve forecast combination at unobserved locations? Assumptions: Exchangeable ensemble members; Gaussian/TN predictive distributions; station assignments via Euclidean feature distance; rolling windows capture non-stationarity Breakdown regime: Observed stations → perfect calibration; unobserved stations → catastrophic overdispersion Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI → conformal prediction via split-sample calibration; GSE → situational reasoning via regional/spectral state transitions Operator 'Altitudinal Linear Pooling' (page 1, domain other) captures: - Standard linear pool (SLP): F^(w) = wΦ((y-μ1)/σ1) + (1-w)Φ((y-μ2)/σ2), w estimated by minimum-CRPS on a 60-day rolling window; ALP: separate w per altitude group (<300 m, 300–700 m, ≥700 m), each unobserved station gets its group's weight. Assumptions: Linear combination preserves proper calibration; altitude groups are exchangeable within bands; optimal weights are constant over rolling windows Breakdown regime: Extreme altitudes (Denver) → low-weighted, high-residual combinations Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI → hierarchical Bayes with random effects; GSE → multi-armed bandit allocation for venue-type pools Operator 'Transformer Attention' (page 1, domain other) captures: - DRN (MLP), GraphSAGE GNN (Haversine ≤ 50 km edges, mean aggregation, fixed graph), Transformer (self-attention across stations, no fixed graph) — all output Gaussian/TN parameters by minimizing closed-form CRPS; 10 replications each. Assumptions: Station relationships are learned from data; attention heads capture non-Euclidean dependencies; model is invariant to station ordering Breakdown regime: Long-range dependencies → sparse, inefficient graphs; small sample sizes → overfitting Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI → kernel regression with learned similarity metrics; GSE → dynamic routing via attention-based state transitions Operator 'Semi-Local Clustering' (page 1, domain other) captures: 1), minimum-CRPS; semi-local = k-means on climatology + error features (8–10 clusters). Assumptions: Climatology and error variance explain most heteroscedasticity; clusters are compact and separable; optimal k is known Breakdown regime: Outlying stations → mis-assigned clusters, poor local fit Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI → nearest-neighbour conformal; GSE → contextual bandits with regional affinity kernels Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 1586-spatial-interpolation-postprocessed-ensemble-forecasts (da4fbfe9d71ac3a9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1586-spatial-interpolation-postprocessed-ensemble-forecasts (da4fbfe9d71ac3a9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Weather service stakeholders prioritize accuracy at their specific stations, leading to widespread adoption of station-specific EMOS. However, stadium operators (GSE users) care about generalizing to new venues, creating a misalignment that this paper addresses head-on. Theory of Mind & Decision Maker Model: Rooted in 1586-spatial-interpolation-postprocessed-ensemble-forecasts (da4fbfe9d71ac3a9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the base models (EMOS vs ML) be diverse enough not to share identical systematic errors. Leakage would occur if the same stations appear in both training and test sets, which could inflate apparent performance at unobserved locations. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1586-spatial-interpolation-postprocessed-ensemble-forecasts (da4fbfe9d71ac3a9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

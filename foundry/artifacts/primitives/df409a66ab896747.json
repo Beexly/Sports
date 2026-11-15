@@ -1,0 +1,78 @@
+{
+  "book_id": "df409a66ab896747",
+  "source_status": "COMPLETE",
+  "title": "prompt-snapgap-fledge",
+  "file_name": "prompt-snapgap-fledge.md",
+  "sha256": "df409a66ab896747c3788e0228aec97f666243cc5984c33d90b9b900d906bcf5",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Snapshot vs live worktree divergence analysis via set-theoretic inclusion and material difference kernels. Universal Lens: Rooted in prompt-snapgap-fledge (df409a66ab896747), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on source file divergence using conformal predictive sets for uncertainty quantification. GSI Mapping: Rooted in prompt-snapgap-fledge (df409a66ab896747), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine employs state-transition graphs over file divergence to infer mechanism integrity. GSE Mapping: Rooted in prompt-snapgap-fledge (df409a66ab896747), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "snapshot_only_file_classification",
+      "name": "Snapshot-Only File Classifier",
+      "verbatim_quote": "Produce two lists: a) SNAPSHOT-ONLY: source files present in the zip but ABSENT from the live worktree — with a one-line read of what each does (read the file; do not guess from the name).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{\\\\text{snap}}': 'set of source files in snapshot', 'F_{\\\\text{live}}': 'set of source files in live worktree', 'F_{\\\\text{diff}}': 'set of files in F_{\\\\text{snap}} \\\\setminus F_{\\\\text{live}}'}",
+      "assumptions": "Files are uniquely identified by path; material difference implies non-trivial content change.",
+      "breakdown_regime": "When |F_{\\text{diff}}| > 0, classification logic activates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps file existence differences to mechanism readiness states in GSE's live branch.",
+        "source_operator": "snapshot_only_file_classification",
+        "telemetry": "File count in F_{\\text{diff}}, classification verdicts (WIRE-CANDIDATE, STALE, JUNK)"
+      }
+    },
+    {
+      "primitive_id": "diverged_file_analyzer",
+      "name": "Diverged File Analyzer",
+      "verbatim_quote": "b) DIVERGED: files present in both but materially different (not whitespace) — with the one-line substance of the difference.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{\\\\text{both}}': 'set of files in both snapshot and live', 'D_{\\\\text{diff}}': 'set of files in F_{\\\\text{both}} with material content difference'}",
+      "assumptions": "Material difference is defined as non-whitespace content variance.",
+      "breakdown_regime": "When |D_{\\text{diff}}| > 0, divergence analysis is triggered.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives semantic drift in mechanisms through content comparison.",
+        "source_operator": "diverged_file_analyzer",
+        "telemetry": "Number of diverged files, per-file difference summary"
+      }
+    },
+    {
+      "primitive_id": "wire_candidate_verdict",
+      "name": "Wire-Candidate Verdict Engine",
+      "verbatim_quote": "Mark each SNAPSHOT-ONLY file: WIRE-CANDIDATE (would add a real mechanism to the live branch), STALE (superseded — name the live replacement), or JUNK (fixtures/one-off scripts).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_{\\\\text{verdict}}': 'classification verdict set {WIRE-CANDIDATE, STALE, JUNK}', 'F_{\\\\text{snap-only}}': 'set of snapshot-only files'}",
+      "assumptions": "Verdicts are derived from file content and known mechanism mappings.",
+      "breakdown_regime": "For all F \\in F_{\\text{snap-only}}, apply classification logic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps snapshot-only files to GSE mechanism insertion points or obsolescence.",
+        "source_operator": "wire_candidate_verdict",
+        "telemetry": "Verdict distribution across F_{\\text{snap-only}}, replacement mechanism names"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "df409a66ab896747_t0",
+      "think": "The core task involves comparing a zipped snapshot against a live worktree to identify divergence. The set difference F_{\\text{diff}} = F_{\\text{snap}} \\setminus F_{\\text{live}} defines snapshot-only files. Material divergence D_{\\text{diff}} ⊆ F_{\\text{both}} is determined by content comparison. Classification V_{\\text{verdict}} maps these into actionable categories. This forms a dual kernel of file-state and mechanism-state tracking. Failure modes include misclassification due to incomplete file reading or incorrect assumption of mechanism identity. The system must maintain consistency between snapshot and live paths to avoid false positives.\n\nDeep epistemic analysis for prompt-snapgap-fledge (df409a66ab896747, domain=other, pages_read=1/1): Operator 'Snapshot-Only File Classifier' (page 1, domain other) captures: Produce two lists: a) SNAPSHOT-ONLY: source files present in the zip but ABSENT from the live worktree — with a one-line read of what each does (read the file; do not guess from the name). Assumptions: Files are uniquely identified by path; material difference implies non-trivial content change. Breakdown regime: When |F_{\\text{diff}}| > 0, classification logic activates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps file existence differences to mechanism readiness states in GSE's live branch. Operator 'Diverged File Analyzer' (page 1, domain other) captures: b) DIVERGED: files present in both but materially different (not whitespace) — with the one-line substance of the difference. Assumptions: Material difference is defined as non-whitespace content variance. Breakdown regime: When |D_{\\text{diff}}| > 0, divergence analysis is triggered. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives semantic drift in mechanisms through content comparison. Operator 'Wire-Candidate Verdict Engine' (page 1, domain other) captures: Mark each SNAPSHOT-ONLY file: WIRE-CANDIDATE (would add a real mechanism to the live branch), STALE (superseded — name the live replacement), or JUNK (fixtures/one-off scripts). Assumptions: Verdicts are derived from file content and known mechanism mappings. Breakdown regime: For all F \\in F_{\\text{snap-only}}, apply classification logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps snapshot-only files to GSE mechanism insertion points or obsolescence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prompt-snapgap-fledge (df409a66ab896747, domain=other, pages_read=1/1): Operator 'Snapshot-Only File Classifier' (page 1, domain other) captures: Produce two lists: a) SNAPSHOT-ONLY: source files present in the zip but ABSENT from the live worktree — with a one-line read of what each does (read the file; do not guess from the name). Assumptions: Files are uniquely identified by path; material difference implies non-trivial content change. Breakdown regime: When |F_{\\text{diff}}| > 0, classification logic activates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps file existence differences to mechanism readiness states in GSE's live branch. Operator 'Diverged File Analyzer' (page 1, domain other) captures: b) DIVERGED: files present in both but materially different (not whitespace) — with the one-line substance of the difference. Assumptions: Material difference is defined as non-whitespace content variance. Breakdown regime: When |D_{\\text{diff}}| > 0, divergence analysis is triggered. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives semantic drift in mechanisms through content comparison. Operator 'Wire-Candidate Verdict Engine' (page 1, domain other) captures: Mark each SNAPSHOT-ONLY file: WIRE-CANDIDATE (would add a real mechanism to the live branch), STALE (superseded — name the live replacement), or JUNK (fixtures/one-off scripts). Assumptions: Verdicts are derived from file content and known mechanism mappings. Breakdown regime: For all F \\in F_{\\text{snap-only}}, apply classification logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps snapshot-only files to GSE mechanism insertion points or obsolescence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory's set-difference and entropy-based divergence metrics, extended to software artifact semantics. Retrocausal Genealogy: Rooted in prompt-snapgap-fledge (df409a66ab896747), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in prompt-snapgap-fledge (df409a66ab896747), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the snapshot archive (static reference) and the live worktree (dynamic evolution). The system models their interaction through file-set operations and semantic drift. Theory of Mind & Decision Maker Model: Rooted in prompt-snapgap-fledge (df409a66ab896747), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in prompt-snapgap-fledge (df409a66ab896747), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that divergence analysis does not overlap with existing mechanism validation layers. Leakage vetoes occur when file content is unreadable or ambiguous. Cross-Layer Veto & Anti-Leakage Check: Rooted in prompt-snapgap-fledge (df409a66ab896747), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in prompt-snapgap-fledge (df409a66ab896747), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

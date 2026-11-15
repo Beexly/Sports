@@ -1,0 +1,78 @@
+{
+  "book_id": "2cceb2f2a1b4d585",
+  "source_status": "COMPLETE",
+  "title": "0978-bookmakers-mispricing-home-advantage",
+  "file_name": "0978-bookmakers-mispricing-home-advantage.md",
+  "sha256": "2cceb2f2a1b4d585cff9117df221675c5a219e26148621a9fb218e3e45c9cabd",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bookmaker mispricing of home advantage under regime shift: logistic regression of betting efficiency with COVID-19 dummy and interaction terms. Universal Lens: Rooted in 0978-bookmakers-mispricing-home-advantage (2cceb2f2a1b4d585), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on home advantage using implied probabilities and ROI tracking; conformal prediction bounds on betting efficiency. GSI Mapping: Rooted in 0978-bookmakers-mispricing-home-advantage (2cceb2f2a1b4d585), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models state transitions between spectator and no-spectator regimes; state-space transition matrices encode betting strategy shifts. GSE Mapping: Rooted in 0978-bookmakers-mispricing-home-advantage (2cceb2f2a1b4d585), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "implied_probability_calculation",
+      "name": "Implied Probability Calculation",
+      "verbatim_quote": "## Equations / math / assumptions - Implied probability: **π̂_i = (1/O_i) / (1/O_h + 1/O_d + 1/O_a)**, i ∈ {h, d, a}, O_i = average odds.",
+      "page": 1,
+      "latex": "\\hat{\\pi}_i = \\frac{1/O_i}{1/O_h + 1/O_d + 1/O_a}, \\quad i \\in \\{h, d, a\\}, \\quad O_i = \\text{average odds}",
+      "symbol_and_unit_ledger": "{'π̂_i': 'implied probability of outcome i (dimensionless)', 'O_i': 'average odds for outcome i (dimensionless)'}",
+      "assumptions": "Odds are normalized such that sum of inverse odds equals one plus margin.",
+      "breakdown_regime": "Pre-COVID vs post-COVID match environments with varying spectator presence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE's odds normalization pipeline to compute fair probabilities from bookmaker odds.",
+        "source_operator": "implied_probability_calculation",
+        "telemetry": "Normalized probability distribution across outcomes"
+      }
+    },
+    {
+      "primitive_id": "bookmaker_margin_computation",
+      "name": "Bookmaker Margin Computation",
+      "verbatim_quote": "- Bookmaker margin per match: **margin_m = Σ_i O_{m,i}^{-1} - 1**.",
+      "page": 1,
+      "latex": "\\text{margin}_m = \\sum_i O_{m,i}^{-1} - 1",
+      "symbol_and_unit_ledger": "{'margin_m': 'bookmaker margin per match (dimensionless)', 'O_{m,i}': 'odds for outcome i in match m (dimensionless)'}",
+      "assumptions": "Margins computed from inverse odds summing to more than unity.",
+      "breakdown_regime": "Consistent across all matches but unaffected by spectator presence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Integrated into GSE's margin adjustment module to detect inefficiencies.",
+        "source_operator": "bookmaker_margin_computation",
+        "telemetry": "Margin deviation from baseline across regimes"
+      }
+    },
+    {
+      "primitive_id": "covid_interaction_efficiency_model",
+      "name": "COVID Interaction Efficiency Model",
+      "verbatim_quote": "- Efficiency logit model: **logit(Pr(Won_i = 1)) = β_0 + β_1·ImpliedProbability_i + β_2·Away_i + β_3·BettingAfterRound25_i + β_4·COVID_i + β_5·(Away_i·COVID_i) + β_6·RoundAfterRound25_i + β_7·(RoundAfterRound25_i·COVID_i)**, fit by MLE via R glm().",
+      "page": 1,
+      "latex": "\\text{logit}(\\mathbb{P}(\\text{Won}_i = 1)) = \\beta_0 + \\beta_1 \\cdot \\text{ImpliedProbability}_i + \\beta_2 \\cdot \\text{Away}_i + \\beta_3 \\cdot \\text{BettingAfterRound25}_i + \\beta_4 \\cdot \\text{COVID}_i + \\beta_5 \\cdot (\\text{Away}_i \\cdot \\text{COVID}_i) + \\beta_6 \\cdot \\text{RoundAfterRound25}_i + \\beta_7 \\cdot (\\text{RoundAfterRound25}_i \\cdot \\text{COVID}_i)",
+      "symbol_and_unit_ledger": "{'β_0...β_7': 'regression coefficients (dimensionless)', 'ImpliedProbability_i': 'implied probability of winning outcome i (dimensionless)', 'Away_i': 'dummy variable for away bet (0 or 1)', 'BettingAfterRound25_i': 'dummy for betting after round 25 (0 or 1)', 'COVID_i': 'dummy for no-spectator period (0 or 1)', 'RoundAfterRound25_i': 'time trend since round 25 (integer)'}",
+      "assumptions": "Model assumes linear additive effects with interaction terms for regime change detection.",
+      "breakdown_regime": "Post-COVID period with no spectators vs pre-COVID normal conditions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI’s efficiency testing framework for detecting mispricing in betting markets.",
+        "source_operator": "covid_interaction_efficiency_model",
+        "telemetry": "Coefficient β_5 (Away × COVID) significance and magnitude"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2cceb2f2a1b4d585_t0",
+      "think": "The core insight emerges from comparing pre- and post-COVID home advantage performance through statistical lens. The logistic regression model isolates how bookmakers fail to adjust odds when the home field advantage disappears due to lack of spectators. The key term β_5 · (Away_i · COVID_i) captures this mispricing, showing a significant positive effect (+1.136) indicating that away teams were systematically undervalued during closed-door matches. This translates into a 14.71% ROI for away bets, contrasting sharply with negative returns for home bets (-33.84%). The implied probability calculation π̂_i = (1/O_i)/(Σ_j 1/O_j) ensures consistent normalization of odds into probabilities, while the margin computation margin_m = Σ_i O_{m,i}^{-1} - 1 reveals that bookmakers maintained margins despite changing dynamics. These primitives form a coherent system where the breakdown occurs not in marginal adjustments but in fundamental misalignment between perceived and actual probabilities during regime transitions.\n\nDeep epistemic analysis for 0978-bookmakers-mispricing-home-advantage (2cceb2f2a1b4d585, domain=other, pages_read=3/3): Operator 'Implied Probability Calculation' (page 1, domain other) captures: ## Equations / math / assumptions - Implied probability: **π̂_i = (1/O_i) / (1/O_h + 1/O_d + 1/O_a)**, i ∈ {h, d, a}, O_i = average odds. Assumptions: Odds are normalized such that sum of inverse odds equals one plus margin. Breakdown regime: Pre-COVID vs post-COVID match environments with varying spectator presence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE's odds normalization pipeline to compute fair probabilities from bookmaker odds. Operator 'Bookmaker Margin Computation' (page 1, domain other) captures: - Bookmaker margin per match: **margin_m = Σ_i O_{m,i}^{-1} - 1**. Assumptions: Margins computed from inverse odds summing to more than unity. Breakdown regime: Consistent across all matches but unaffected by spectator presence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Integrated into GSE's margin adjustment module to detect inefficiencies. Operator 'COVID Interaction Efficiency Model' (page 1, domain other) captures: - Efficiency logit model: **logit(Pr(Won_i = 1)) = β_0 + β_1·ImpliedProbability_i + β_2·Away_i + β_3·BettingAfterRound25_i + β_4·COVID_i + β_5·(Away_i·COVID_i) + β_6·RoundAfterRound25_i + β_7·(RoundAfterRound25_i·COVID_i)**, fit by MLE via R glm(). Assumptions: Model assumes linear additive effects with interaction terms for regime change detection. Breakdown regime: Post-COVID period with no spectators vs pre-COVID normal conditions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s efficiency testing framework for detecting mispricing in betting markets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0978-bookmakers-mispricing-home-advantage (2cceb2f2a1b4d585, domain=other, pages_read=3/3): Operator 'Implied Probability Calculation' (page 1, domain other) captures: ## Equations / math / assumptions - Implied probability: **π̂_i = (1/O_i) / (1/O_h + 1/O_d + 1/O_a)**, i ∈ {h, d, a}, O_i = average odds. Assumptions: Odds are normalized such that sum of inverse odds equals one plus margin. Breakdown regime: Pre-COVID vs post-COVID match environments with varying spectator presence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE's odds normalization pipeline to compute fair probabilities from bookmaker odds. Operator 'Bookmaker Margin Computation' (page 1, domain other) captures: - Bookmaker margin per match: **margin_m = Σ_i O_{m,i}^{-1} - 1**. Assumptions: Margins computed from inverse odds summing to more than unity. Breakdown regime: Consistent across all matches but unaffected by spectator presence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Integrated into GSE's margin adjustment module to detect inefficiencies. Operator 'COVID Interaction Efficiency Model' (page 1, domain other) captures: - Efficiency logit model: **logit(Pr(Won_i = 1)) = β_0 + β_1·ImpliedProbability_i + β_2·Away_i + β_3·BettingAfterRound25_i + β_4·COVID_i + β_5·(Away_i·COVID_i) + β_6·RoundAfterRound25_i + β_7·(RoundAfterRound25_i·COVID_i)**, fit by MLE via R glm(). Assumptions: Model assumes linear additive effects with interaction terms for regime change detection. Breakdown regime: Post-COVID period with no spectators vs pre-COVID normal conditions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s efficiency testing framework for detecting mispricing in betting markets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in econometrics and behavioral finance literature tracing back to early work on market efficiency and mispricing by Fama (1970), extending to modern studies on sports betting inefficiencies by Forrest & Simmons (2008) and Franck et al. Retrocausal Genealogy: Rooted in 0978-bookmakers-mispricing-home-advantage (2cceb2f2a1b4d585), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents—bookmakers—fail to update beliefs about home advantage in response to exogenous shock (COVID-19). Their models remain anchored to historical patterns, creating exploitable inefficiencies for informed bettors. Theory of Mind & Decision Maker Model: Rooted in 0978-bookmakers-mispricing-home-advantage (2cceb2f2a1b4d585), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity checks ensure β_5 does not coalesce with other variables like β_3 or β_6, which could obscure true interaction effects. Leakage vetoes prevent spurious correlations between time trends and pandemic indicators. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0978-bookmakers-mispricing-home-advantage (2cceb2f2a1b4d585), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

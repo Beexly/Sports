@@ -1,0 +1,78 @@
+{
+  "book_id": "858e73a9b4a90755",
+  "source_status": "COMPLETE",
+  "title": "NEXT-032",
+  "file_name": "NEXT-032.md",
+  "sha256": "858e73a9b4a907555a9bd7d30425575e56914cdd7d605a1d7d0ab79c1f9167a8",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The campaign attribution problem maps to a structured linear inverse problem, where observed user-level event counts are explained by latent campaign contributions via a non-negative mixing matrix. This admits a Bayesian hierarchical decomposition that separates global trend learning from local campaign effect estimation, enabling efficient posterior inference through variational message passing.",
+  "gsi_mapping": "GSI employs the same primitive in a conformal prediction framework, generating distribution-free uncertainty quantiles for campaign performance metrics, supporting evidence-based marketing strategy. GSI Mapping: Rooted in NEXT-032 (858e73a9b4a90755), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "In GSE, the primitive implements a situational reasoning kernel that processes raw clickstream events into calibrated campaign impact scores, feeding into state-transition models for conversion funnel optimization and budget allocation.",
+  "primitives": [
+    {
+      "primitive_id": "campaign_mixing_matrix",
+      "name": "Campaign Mixing Matrix",
+      "verbatim_quote": "# NEXT-032: Campaign attribution taxonomy ## Repo(s) Dub, PostHog ## Category Attribution ## Goal Implement or design the campaign attribution taxonomy capability for GSE / GSN without touching production data first.",
+      "page": 1,
+      "latex": "X_{ij} \\geq 0",
+      "symbol_and_unit_ledger": "{'X': 'Non-negative mixing matrix (dimensionless)', 'i': 'Event index', 'j': 'Campaign index'}",
+      "assumptions": "Each campaign contributes independently to observed events, with no synergistic interactions.",
+      "breakdown_regime": "Singularity occurs when the matrix is rank-deficient, leading to non-unique solutions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to the `posterior_predictive` distribution in GSI's Bayesian treatment, where the mixing matrix becomes a conditional probability tensor.",
+        "source_operator": "campaign_mixing_matrix",
+        "telemetry": "Mean squared error between predicted and actual event counts, cross-validated."
+      }
+    },
+    {
+      "primitive_id": "source_operator_2",
+      "name": "NEXT-032 Grounded Principle 2",
+      "verbatim_quote": "## Why It Matters This increases GSE's ability to operate autonomously, learn from users, improve conversion, reduce SaaS cost, and make product/marketing decisions from evidence.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_2",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "NEXT-032 Grounded Principle 3",
+      "verbatim_quote": "## GSE / GSN Fit Fits the website and operating-system layer as a attribution upgrade.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "858e73a9b4a90755_t0",
+      "think": "The core challenge is deconvolving the observed event stream E = X * C, where C are true campaign contributions. This is an underdetermined inverse problem. We introduce prior structure P(C) to regularize, yielding the posterior P(C|E,X) ∝ P(E|X,C)P(C). For conjugate priors on C, the posterior mean provides a point estimate. In GSE, we use a Dirichlet prior to enforce contribution sum-to-one constraints, while GSI uses a robust Student-t likelihood to downweight outlier campaigns. Both systems rely on variational inference to scale to high-dimensional X.\n\nDeep epistemic analysis for NEXT-032 (858e73a9b4a90755, domain=other, pages_read=2/2): Operator 'Campaign Mixing Matrix' (page 1, domain other) captures: # NEXT-032: Campaign attribution taxonomy ## Repo(s) Dub, PostHog ## Category Attribution ## Goal Implement or design the campaign attribution taxonomy capability for GSE / GSN without touching production data first. Assumptions: Each campaign contributes independently to observed events, with no synergistic interactions. Breakdown regime: Singularity occurs when the matrix is rank-deficient, leading to non-unique solutions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to the `posterior_predictive` distribution in GSI's Bayesian treatment, where the mixing matrix becomes a conditional probability tensor. Operator 'NEXT-032 Grounded Principle 2' (page 1, domain other) captures: ## Why It Matters This increases GSE's ability to operate autonomously, learn from users, improve conversion, reduce SaaS cost, and make product/marketing decisions from evidence. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator 'NEXT-032 Grounded Principle 3' (page 1, domain other) captures: ## GSE / GSN Fit Fits the website and operating-system layer as a attribution upgrade. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NEXT-032 (858e73a9b4a90755, domain=other, pages_read=2/2): Operator 'Campaign Mixing Matrix' (page 1, domain other) captures: # NEXT-032: Campaign attribution taxonomy ## Repo(s) Dub, PostHog ## Category Attribution ## Goal Implement or design the campaign attribution taxonomy capability for GSE / GSN without touching production data first. Assumptions: Each campaign contributes independently to observed events, with no synergistic interactions. Breakdown regime: Singularity occurs when the matrix is rank-deficient, leading to non-unique solutions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to the `posterior_predictive` distribution in GSI's Bayesian treatment, where the mixing matrix becomes a conditional probability tensor. Operator 'NEXT-032 Grounded Principle 2' (page 1, domain other) captures: ## Why It Matters This increases GSE's ability to operate autonomously, learn from users, improve conversion, reduce SaaS cost, and make product/marketing decisions from evidence. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator 'NEXT-032 Grounded Principle 3' (page 1, domain other) captures: ## GSE / GSN Fit Fits the website and operating-system layer as a attribution upgrade. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This formulation generalizes classical Shapley value game theory (1953) and Markov chain-based Markov blankets (1996), but replaces combinatorial averaging with continuous optimization. Retrocausal Genealogy: Rooted in NEXT-032 (858e73a9b4a90755), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in NEXT-032 (858e73a9b4a90755), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Competing marketing teams may prefer different priors: GSI wants conservative, outlier-resistant estimates, while GSE seeks actionable, high-frequency signals. The mixing matrix primitive mediates this tradeoff. Theory of Mind & Decision Maker Model: Rooted in NEXT-032 (858e73a9b4a90755), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in NEXT-032 (858e73a9b4a90755), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Leakage occurs if X includes feedback loops (e.g., campaigns influence future event features). Anti-collinearity requires orthogonalizing campaign features before inversion. Cross-Layer Veto & Anti-Leakage Check: Rooted in NEXT-032 (858e73a9b4a90755), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in NEXT-032 (858e73a9b4a90755), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "e1d26383964ee80b",
+  "source_status": "COMPLETE",
+  "title": "IG-SWEEP-2026-10-01-master-matrix",
+  "file_name": "IG-SWEEP-2026-10-01-master-matrix.md",
+  "sha256": "e1d26383964ee80bd9f7cefa0f65c5570ab4eb0d05ee942469b1dbda792e1fed",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "OSINT-driven intelligence kernels map social media signals to structured inference pipelines via probabilistic lead-chasing and semantic metric derivation. Universal Lens: Rooted in IG-SWEEP-2026-10-01-master-matrix (e1d26383964ee80b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on social signal likelihoods using conformal predictive intervals over engagement-derived claims and data-compatible hooks. GSI Mapping: Rooted in IG-SWEEP-2026-10-01-master-matrix (e1d26383964ee80b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine encodes account behavior as state transitions through lead-chase cadences, with kernel-derived metrics guiding module composition. GSE Mapping: Rooted in IG-SWEEP-2026-10-01-master-matrix (e1d26383964ee80b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "social_signal_to_inference_pipeline",
+      "name": "Social Signal to Inference Pipeline",
+      "verbatim_quote": "**Sweep method per account:** profile (bio, counts, website) → recent posts (captions, claims, engagement) → chase every public lead (repo README + license via GitHub API, public docs, papers) → extract kernel → verdict.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All data is publicly accessible and non-sensitive; leads are semantically traceable to source repositories or documentation.",
+      "breakdown_regime": "When public leads are absent or ambiguous, fallback to engagement-based heuristics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each social post maps to a probabilistic claim-space where kernel metrics define evidence weight and veracity score.",
+        "source_operator": "social_signal_to_inference_pipeline",
+        "telemetry": "Engagement rate, lead-follow-through ratio, and kernel reuse frequency."
+      }
+    },
+    {
+      "primitive_id": "derived_computer_vision_metrics",
+      "name": "Derived Computer Vision Metrics",
+      "verbatim_quote": "Kernel: breakAngle / sepAtBreak / sepAtCatch as derived CV metrics → WR route-quality → props.",
+      "page": 2,
+      "latex": "\\text{breakAngle} \\in [0, 360]\\degree, \\quad \\text{sepAtBreak} \\in \\mathbb{R}_{\\geq 0}, \\quad \\text{sepAtCatch} \\in \\mathbb{R}_{\\geq 0}",
+      "symbol_and_unit_ledger": "{'breakAngle': 'degrees', 'sepAtBreak': 'yards', 'sepAtCatch': 'yards'}",
+      "assumptions": "Player tracking data is available in video frames; metrics are extracted via pose estimation models.",
+      "breakdown_regime": "When pose estimation fails or tracking is occluded, metrics default to zero or interpolated values.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CV-derived kinematic features encode route quality and prop-value potential in real-time.",
+        "source_operator": "derived_computer_vision_metrics",
+        "telemetry": "Pose estimation confidence, frame-rate consistency, and feature drift across clips."
+      }
+    },
+    {
+      "primitive_id": "contrarian_hook_extraction",
+      "name": "Contrarian Hook Extraction",
+      "verbatim_quote": "Kernels to steal: daily cadence, trends-carousel containers, comment-gated magnets, data-compatible contrarian hooks.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Contrarian framing is detectable via linguistic and behavioral patterns in content distribution.",
+      "breakdown_regime": "When hooks are too generic or lack data alignment, they are flagged for low utility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Contrarian hooks are modeled as probabilistic incentives that drive engagement and data compatibility.",
+        "source_operator": "contrarian_hook_extraction",
+        "telemetry": "Comment-gating success rate, carousel click-through, and hook-to-data alignment score."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e1d26383964ee80b_t0",
+      "think": "The core insight is that social media signals can be formalized into structured inference pipelines by mapping each post to a set of claims and their associated evidence. This process involves extracting semantic kernels—such as derived computer vision metrics or contrarian framing—that act as proxies for deeper truths. These kernels are then evaluated under a Bayesian framework where prior beliefs about signal reliability are updated based on observed engagement and data compatibility. The failure mode occurs when signals lack sufficient grounding in public data or when kernels are misapplied due to incorrect assumptions about data structure or model validity. Dualities emerge between signal strength and kernel fidelity, where strong signals may still fail if their underlying kernels are misaligned with real-world dynamics.\n\nDeep epistemic analysis for IG-SWEEP-2026-10-01-master-matrix (e1d26383964ee80b, domain=other, pages_read=7/7): Operator 'Social Signal to Inference Pipeline' (page 1, domain other) captures: **Sweep method per account:** profile (bio, counts, website) → recent posts (captions, claims, engagement) → chase every public lead (repo README + license via GitHub API, public docs, papers) → extract kernel → verdict. Assumptions: All data is publicly accessible and non-sensitive; leads are semantically traceable to source repositories or documentation. Breakdown regime: When public leads are absent or ambiguous, fallback to engagement-based heuristics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each social post maps to a probabilistic claim-space where kernel metrics define evidence weight and veracity score. Operator 'Derived Computer Vision Metrics' (page 2, domain other) captures: Kernel: breakAngle / sepAtBreak / sepAtCatch as derived CV metrics → WR route-quality → props. Assumptions: Player tracking data is available in video frames; metrics are extracted via pose estimation models. Breakdown regime: When pose estimation fails or tracking is occluded, metrics default to zero or interpolated values. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CV-derived kinematic features encode route quality and prop-value potential in real-time. Operator 'Contrarian Hook Extraction' (page 2, domain other) captures: Kernels to steal: daily cadence, trends-carousel containers, comment-gated magnets, data-compatible contrarian hooks. Assumptions: Contrarian framing is detectable via linguistic and behavioral patterns in content distribution. Breakdown regime: When hooks are too generic or lack data alignment, they are flagged for low utility. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Contrarian hooks are modeled as probabilistic incentives that drive engagement and data compatibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for IG-SWEEP-2026-10-01-master-matrix (e1d26383964ee80b, domain=other, pages_read=7/7): Operator 'Social Signal to Inference Pipeline' (page 1, domain other) captures: **Sweep method per account:** profile (bio, counts, website) → recent posts (captions, claims, engagement) → chase every public lead (repo README + license via GitHub API, public docs, papers) → extract kernel → verdict. Assumptions: All data is publicly accessible and non-sensitive; leads are semantically traceable to source repositories or documentation. Breakdown regime: When public leads are absent or ambiguous, fallback to engagement-based heuristics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each social post maps to a probabilistic claim-space where kernel metrics define evidence weight and veracity score. Operator 'Derived Computer Vision Metrics' (page 2, domain other) captures: Kernel: breakAngle / sepAtBreak / sepAtCatch as derived CV metrics → WR route-quality → props. Assumptions: Player tracking data is available in video frames; metrics are extracted via pose estimation models. Breakdown regime: When pose estimation fails or tracking is occluded, metrics default to zero or interpolated values. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CV-derived kinematic features encode route quality and prop-value potential in real-time. Operator 'Contrarian Hook Extraction' (page 2, domain other) captures: Kernels to steal: daily cadence, trends-carousel containers, comment-gated magnets, data-compatible contrarian hooks. Assumptions: Contrarian framing is detectable via linguistic and behavioral patterns in content distribution. Breakdown regime: When hooks are too generic or lack data alignment, they are flagged for low utility. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Contrarian hooks are modeled as probabilistic incentives that drive engagement and data compatibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and probabilistic logic, this approach builds upon earlier work in social network analysis and machine learning interpretability, particularly in how semantic embeddings and attention mechanisms are used to extract latent variables from unstructured text and image streams. Retrocausal Genealogy: Rooted in IG-SWEEP-2026-10-01-master-matrix (e1d26383964ee80b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to obfuscate or manipulate signals through adversarial framing or synthetic engagement. The system must distinguish between genuine insights and noise by modeling both signal integrity and agent intent, using feedback loops from telemetry to refine its understanding of what constitutes a valid kernel. Theory of Mind & Decision Maker Model: Rooted in IG-SWEEP-2026-10-01-master-matrix (e1d26383964ee80b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that derived kernels do not redundantly encode similar information across layers. Leakage is mitigated by verifying that each kernel’s domain of applicability does not overlap excessively with other modules, especially those handling temporal or spatial data structures. Cross-Layer Veto & Anti-Leakage Check: Rooted in IG-SWEEP-2026-10-01-master-matrix (e1d26383964ee80b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

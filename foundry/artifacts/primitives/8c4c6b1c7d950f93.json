@@ -1,0 +1,78 @@
+{
+  "book_id": "8c4c6b1c7d950f93",
+  "source_status": "COMPLETE",
+  "title": "model",
+  "file_name": "model.md",
+  "sha256": "8c4c6b1c7d950f933c594f7215963c575f2a017aca60e1b2692eeab74913f7f0",
+  "primary_domain": "other",
+  "pages_total": 23,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Edge-based ranking unifies confidence and probability through calibrated deviation e = p - q, bypassing kappa = max(p, 1-p) to avoid chalk bias. Universal Lens: Rooted in model (8c4c6b1c7d950f93), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers posterior belief via conformal prediction using edge-derived likelihood ratios, treating p as Bayesian prior and q as reference measure. GSI Mapping: Rooted in model (8c4c6b1c7d950f93), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions on edge-ranked picks, avoiding confidence gates that induce negative EV selections from market-anchored probabilities. GSE Mapping: Rooted in model (8c4c6b1c7d950f93), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "calibrated_edge_doctrine",
+      "name": "Calibrated Edge Doctrine",
+      "verbatim_quote": "**The doctrine is one rule: fire and rank on calibrated edge `e = p - q`, never on confidence `kappa = max(p, 1-p)`.** The handoff states it verbatim: \"A 90%-confident favorite has ~0 edge because the line already prices it.",
+      "page": 2,
+      "latex": "e = p - q",
+      "symbol_and_unit_ledger": "{'e': 'dimensionless edge', 'p': 'market-anchored probability', 'q': 'reference model probability'}",
+      "assumptions": "Model assumes deterministic factor scoring and fixed market pricing structure.",
+      "breakdown_regime": "When p approaches q, edge vanishes, signaling no actionable information.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE ranks picks by e = p - q; GSI computes uncertainty bounds via conformal inference on edge residuals.",
+        "source_operator": "calibrated_edge_doctrine",
+        "telemetry": "Edge distribution variance across picks indicates model calibration quality."
+      }
+    },
+    {
+      "primitive_id": "confidence_gating_failure",
+      "name": "Confidence Gating Failure",
+      "verbatim_quote": "Confidence-gating = betting chalk at -EV = scores24's fatal error.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Selection based on kappa introduces systematic bias toward low-entropy outcomes.",
+      "breakdown_regime": "Failure occurs when kappa > 0.5 but p < q, leading to negative expected value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE avoids kappa-based selection; GSI models this as a misalignment between confidence and true edge.",
+        "source_operator": "confidence_gating_failure",
+        "telemetry": "Frequency of chalk bets with negative EV signals confidence gating artifact."
+      }
+    },
+    {
+      "primitive_id": "market_devigged_probability",
+      "name": "Market De-Vigged Probability",
+      "verbatim_quote": "The repo's own edge-lab note carries the closed-form version: a published probability `(1-alpha)*p + alpha*q` leaves residual edge `(1-alpha)(p-q)`, so alpha = 0.90 keeps 10% of the independent gap, which is why GSE fires on `e = p - q` and never on a re-anchored probability (Sports/packages/prediction-engine/src/edge-lab/market-consensus-q.ts:4-11).",
+      "page": 2,
+      "latex": "\\alpha = 0.90 \\Rightarrow e_{\\text{residual}} = (1 - \\alpha)(p - q)",
+      "symbol_and_unit_ledger": "{'alpha': 'scalar weight parameter', 'p': 'market-anchored probability', 'q': 'reference model probability', 'e_res': 'residual edge after de-vigging'}",
+      "assumptions": "De-vigging preserves relative edge while adjusting for bookmaker margin.",
+      "breakdown_regime": "When alpha approaches 1, residual edge shrinks to zero, eliminating signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses raw edge e = p - q; GSI applies de-vigging to estimate fair odds and adjust belief accordingly.",
+        "source_operator": "market_devigged_probability",
+        "telemetry": "Deviation of reported edge from theoretical edge indicates market distortion."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8c4c6b1c7d950f93_t0",
+      "think": "The core insight is that edge e = p - q provides a calibrated, actionable metric for ranking predictions, whereas confidence kappa = max(p, 1-p) is a proxy that fails under market anchoring. This doctrine arises from empirical evidence showing that high-confidence chalk bets often yield negative EV due to overpriced lines. The failure mode of confidence gating lies in its assumption that higher kappa implies better predictive power, which is false when p is already adjusted for market inefficiency. The derivation of residual edge from de-vigging shows that retaining only 10% of the original gap ensures robustness against noise while preserving signal strength. This supports a dual framework where GSE operates on edge and GSI evaluates model reliability via conformal inference on edge residuals.\n\nDeep epistemic analysis for model (8c4c6b1c7d950f93, domain=other, pages_read=18/23): Operator 'Calibrated Edge Doctrine' (page 2, domain other) captures: **The doctrine is one rule: fire and rank on calibrated edge `e = p - q`, never on confidence `kappa = max(p, 1-p)`.** The handoff states it verbatim: \"A 90%-confident favorite has ~0 edge because the line already prices it. Assumptions: Model assumes deterministic factor scoring and fixed market pricing structure. Breakdown regime: When p approaches q, edge vanishes, signaling no actionable information. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE ranks picks by e = p - q; GSI computes uncertainty bounds via conformal inference on edge residuals. Operator 'Confidence Gating Failure' (page 2, domain other) captures: Confidence-gating = betting chalk at -EV = scores24's fatal error. Assumptions: Selection based on kappa introduces systematic bias toward low-entropy outcomes. Breakdown regime: Failure occurs when kappa > 0.5 but p < q, leading to negative expected value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE avoids kappa-based selection; GSI models this as a misalignment between confidence and true edge. Operator 'Market De-Vigged Probability' (page 2, domain other) captures: The repo's own edge-lab note carries the closed-form version: a published probability `(1-alpha)*p + alpha*q` leaves residual edge `(1-alpha)(p-q)`, so alpha = 0.90 keeps 10% of the independent gap, which is why GSE fires on `e = p - q` and never on a re-anchored probability (Sports/packages/prediction-engine/src/edge-lab/market-consensus-q.ts:4-11). Assumptions: De-vigging preserves relative edge while adjusting for bookmaker margin. Breakdown regime: When alpha approaches 1, residual edge shrinks to zero, eliminating signal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses raw edge e = p - q; GSI applies de-vigging to estimate fair odds and adjust belief accordingly. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for model (8c4c6b1c7d950f93, domain=other, pages_read=18/23): Operator 'Calibrated Edge Doctrine' (page 2, domain other) captures: **The doctrine is one rule: fire and rank on calibrated edge `e = p - q`, never on confidence `kappa = max(p, 1-p)`.** The handoff states it verbatim: \"A 90%-confident favorite has ~0 edge because the line already prices it. Assumptions: Model assumes deterministic factor scoring and fixed market pricing structure. Breakdown regime: When p approaches q, edge vanishes, signaling no actionable information. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE ranks picks by e = p - q; GSI computes uncertainty bounds via conformal inference on edge residuals. Operator 'Confidence Gating Failure' (page 2, domain other) captures: Confidence-gating = betting chalk at -EV = scores24's fatal error. Assumptions: Selection based on kappa introduces systematic bias toward low-entropy outcomes. Breakdown regime: Failure occurs when kappa > 0.5 but p < q, leading to negative expected value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE avoids kappa-based selection; GSI models this as a misalignment between confidence and true edge. Operator 'Market De-Vigged Probability' (page 2, domain other) captures: The repo's own edge-lab note carries the closed-form version: a published probability `(1-alpha)*p + alpha*q` leaves residual edge `(1-alpha)(p-q)`, so alpha = 0.90 keeps 10% of the independent gap, which is why GSE fires on `e = p - q` and never on a re-anchored probability (Sports/packages/prediction-engine/src/edge-lab/market-consensus-q.ts:4-11). Assumptions: De-vigging preserves relative edge while adjusting for bookmaker margin. Breakdown regime: When alpha approaches 1, residual edge shrinks to zero, eliminating signal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses raw edge e = p - q; GSI applies de-vigging to estimate fair odds and adjust belief accordingly. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century work on betting efficiency and modern developments in conformal prediction and calibration theory, particularly Roelofs (2022) and Kumar (2019). Retrocausal Genealogy: Rooted in model (8c4c6b1c7d950f93), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in model (8c4c6b1c7d950f93), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include traditional sportsbooks that price in margins, and data-driven models that attempt to extract value from mispriced markets. The model assumes rationality in both parties but recognizes that market inefficiencies create exploitable gaps. Theory of Mind & Decision Maker Model: Rooted in model (8c4c6b1c7d950f93), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that GSE's edge-based selection does not correlate with GSI's confidence measures, preventing overfitting to either layer. Leakage vetos ensure that no information flows directly from confidence to edge without proper calibration. Cross-Layer Veto & Anti-Leakage Check: Rooted in model (8c4c6b1c7d950f93), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

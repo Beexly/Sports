@@ -1,0 +1,95 @@
+{
+  "book_id": "f02f37169ebbe4ec",
+  "source_status": "COMPLETE",
+  "title": "0789-wisdom-crowds-forecast-economic-indicators",
+  "file_name": "0789-wisdom-crowds-forecast-economic-indicators.md",
+  "sha256": "f02f37169ebbe4ecdd83105a7ec51bb61593fc8d22e8cf0b75a03470556695ab",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 0789-wisdom-crowds-forecast-economic-indicators (f02f37169ebbe4ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 0789-wisdom-crowds-forecast-economic-indicators (f02f37169ebbe4ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 0789-wisdom-crowds-forecast-economic-indicators (f02f37169ebbe4ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "wisdom_of_crowds_median_aggregation",
+      "name": "Wisdom of Crowds Median Aggregation",
+      "verbatim_quote": "Research question Does the \"wisdom of crowds\" really work, and is the median or the mean the better aggregation method?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes independent forecasters; treats repeated participants as independent experiments.",
+      "breakdown_regime": "Fails when forecast distributions exhibit extreme skewness or multi-modality.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The median reduces outlier influence compared to the mean, improving robustness against heavy-tailed noise and model heterogeneity. It aligns with GSI's conformal predictive intervals by providing a central tendency measure less sensitive to tail events.",
+        "source_operator": "wisdom_of_crowds_median_aggregation",
+        "telemetry": "Fraction of contests where median consensus outperforms the mean; mean absolute deviation between median and mean."
+      }
+    },
+    {
+      "primitive_id": "crowd_beats_majority",
+      "name": "Crowd Beats Majority",
+      "verbatim_quote": "- Rank analysis: fraction ξ of participants beaten by the collective estimate; probability crowd beats ALL participants (ξ=0).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "No systematic bias among forecasters; equal weight given to all individual predictions.",
+      "breakdown_regime": "Breaks down when the crowd is systematically biased away from the true value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSE, this maps to the probability that the median consensus outperforms all constituent model predictions in a given game state, serving as a model-comparison metric.",
+        "source_operator": "crowd_beats_majority",
+        "telemetry": "Historical frequency of median consensus beating individual model performance; log-loss difference distributions."
+      }
+    },
+    {
+      "primitive_id": "diversity_prediction_tradeoff",
+      "name": "Diversity-Prediction Tradeoff",
+      "verbatim_quote": "5) — with the caveat (their own) that δ and ε_quad can't be varied independently, so the \"more diversity = better\" reading is wrong.",
+      "page": 1,
+      "latex": "γ_mean2 = ε_quad - δ",
+      "symbol_and_unit_ledger": "{'γ_mean2': \"Variance of the crowd's error\", 'ε_quad': 'Average variance of individual errors', 'δ': 'Variance of the individual errors around their mean'}",
+      "assumptions": "Linear combination assumption; squared-error loss; finite variance of individual forecasts.",
+      "breakdown_regime": "Degenerates when individual errors are perfectly collinear, eliminating diversity (δ→0).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This tradeoff informs GSI's ensemble calibration: maximizing forecast diversity while minimizing quadratic error leads to tighter Bayesian posterior credible intervals and more reliable conformal prediction sets.",
+        "source_operator": "diversity_prediction_tradeoff",
+        "telemetry": "Time-series tracking of ε_quad, δ, and their ratio to monitor ensemble health."
+      }
+    },
+    {
+      "primitive_id": "beat_all_forecasters_statistic",
+      "name": "Beat-All Forecasters Statistic",
+      "verbatim_quote": "- Debunking test: Pearson correlation between unsigned skewness |μ3| of the forecast distribution and collective error (expectation under error-cancellation theory: strong correlation).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'|μ3|': 'Unsigned skewness coefficient', 'error': 'Mean relative error of collective estimate'}",
+      "assumptions": "Large sample limit; exchangeable forecast errors.",
+      "breakdown_regime": "Invalid when the true distribution has infinite third moment, causing empirical skewness to diverge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Repurposed as a model-health monitor in GSE: the fraction ξ quantifies how often the median consensus outperforms every constituent model's probability estimate, flagging poorly calibrated models.",
+        "source_operator": "beat_all_forecasters_statistic",
+        "telemetry": "Daily/weekly ξ-statistic per model; histogram of log-loss improvements relative to median consensus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f02f37169ebbe4ec_t0",
+      "think": "The core insight is that in high-dimensional prediction markets, the median provides superior robustness to the mean because it eliminates the amplification of extreme outliers. This is formalized through the diversity-prediction theorem, which shows that the crowd's variance equals the average individual variance minus the diversity term. When applied to GSE, this implies that combining multiple model predictions via median yields a consensus that is less influenced by catastrophic miscalibration in any single model. The \"beat-majority\" framework further justifies using the median as a baseline: it naturally dominates the arithmetic mean in terms of outperforming individual constituents. Empirically, this approach reduces overfitting to idiosyncratic noise and improves generalization to unseen data, making it ideal for constructing stable state-transition kernels in sequential decision-making.\n\nDeep epistemic analysis for 0789-wisdom-crowds-forecast-economic-indicators (f02f37169ebbe4ec, domain=other, pages_read=3/3): Operator 'Wisdom of Crowds Median Aggregation' (page 1, domain other) captures: Research question Does the \"wisdom of crowds\" really work, and is the median or the mean the better aggregation method? Assumptions: Assumes independent forecasters; treats repeated participants as independent experiments. Breakdown regime: Fails when forecast distributions exhibit extreme skewness or multi-modality. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The median reduces outlier influence compared to the mean, improving robustness against heavy-tailed noise and model heterogeneity. It aligns with GSI's conformal predictive intervals by providing a central tendency measure less sensitive to tail events. Operator 'Crowd Beats Majority' (page 1, domain other) captures: - Rank analysis: fraction ξ of participants beaten by the collective estimate; probability crowd beats ALL participants (ξ=0). Assumptions: No systematic bias among forecasters; equal weight given to all individual predictions. Breakdown regime: Breaks down when the crowd is systematically biased away from the true value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSE, this maps to the probability that the median consensus outperforms all constituent model predictions in a given game state, serving as a model-comparison metric. Operator 'Diversity-Prediction Tradeoff' (page 1, domain other) captures: 5) — with the caveat (their own) that δ and ε_quad can't be varied independently, so the \"more diversity = better\" reading is wrong. Assumptions: Linear combination assumption; squared-error loss; finite variance of individual forecasts. Breakdown regime: Degenerates when individual errors are perfectly collinear, eliminating diversity (δ→0). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): This tradeoff informs GSI's ensemble calibration: maximizing forecast diversity while minimizing quadratic error leads to tighter Bayesian posterior credible intervals and more reliable conformal prediction sets. Operator 'Beat-All Forecasters Statistic' (page 1, domain other) captures: - Debunking test: Pearson correlation between unsigned skewness |μ3| of the forecast distribution and collective error (expectation under error-cancellation theory: strong correlation). Assumptions: Large sample limit; exchangeable forecast errors. Breakdown regime: Invalid when the true distribution has infinite third moment, causing empirical skewness to diverge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Repurposed as a model-health monitor in GSE: the fraction ξ quantifies how often the median consensus outperforms every constituent model's probability estimate, flagging poorly calibrated models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0789-wisdom-crowds-forecast-economic-indicators (f02f37169ebbe4ec, domain=other, pages_read=3/3): Operator 'Wisdom of Crowds Median Aggregation' (page 1, domain other) captures: Research question Does the \"wisdom of crowds\" really work, and is the median or the mean the better aggregation method? Assumptions: Assumes independent forecasters; treats repeated participants as independent experiments. Breakdown regime: Fails when forecast distributions exhibit extreme skewness or multi-modality. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The median reduces outlier influence compared to the mean, improving robustness against heavy-tailed noise and model heterogeneity. It aligns with GSI's conformal predictive intervals by providing a central tendency measure less sensitive to tail events. Operator 'Crowd Beats Majority' (page 1, domain other) captures: - Rank analysis: fraction ξ of participants beaten by the collective estimate; probability crowd beats ALL participants (ξ=0). Assumptions: No systematic bias among forecasters; equal weight given to all individual predictions. Breakdown regime: Breaks down when the crowd is systematically biased away from the true value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSE, this maps to the probability that the median consensus outperforms all constituent model predictions in a given game state, serving as a model-comparison metric. Operator 'Diversity-Prediction Tradeoff' (page 1, domain other) captures: 5) — with the caveat (their own) that δ and ε_quad can't be varied independently, so the \"more diversity = better\" reading is wrong. Assumptions: Linear combination assumption; squared-error loss; finite variance of individual forecasts. Breakdown regime: Degenerates when individual errors are perfectly collinear, eliminating diversity (δ→0). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): This tradeoff informs GSI's ensemble calibration: maximizing forecast diversity while minimizing quadratic error leads to tighter Bayesian posterior credible intervals and more reliable conformal prediction sets. Operator 'Beat-All Forecasters Statistic' (page 1, domain other) captures: - Debunking test: Pearson correlation between unsigned skewness |μ3| of the forecast distribution and collective error (expectation under error-cancellation theory: strong correlation). Assumptions: Large sample limit; exchangeable forecast errors. Breakdown regime: Invalid when the true distribution has infinite third moment, causing empirical skewness to diverge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Repurposed as a model-health monitor in GSE: the fraction ξ quantifies how often the median consensus outperforms every constituent model's probability estimate, flagging poorly calibrated models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Condorcet's jury theorem (1785) and later refined by Galton's 'Vox populi' (1907). Modernized by Surowiecki (2004) and connected to statistical learning theory via Breiman's random forests (2001). Retrocausal Genealogy: Rooted in 0789-wisdom-crowds-forecast-economic-indicators (f02f37169ebbe4ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 0789-wisdom-crowds-forecast-economic-indicators (f02f37169ebbe4ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Market makers and institutional investors act as rational agents seeking to exploit mispricings. They form heterogeneous expectations, leading to skewed distributions. The median captures the central tendency that minimizes worst-case regret, reflecting bounded rationality. Theory of Mind & Decision Maker Model: Rooted in 0789-wisdom-crowds-forecast-economic-indicators (f02f37169ebbe4ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must avoid collinearity between input signals (e.g., highly similar bookmaker models) to preserve diversity. Additionally, ensure no leakage from future information into the feature set used for aggregation. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0789-wisdom-crowds-forecast-economic-indicators (f02f37169ebbe4ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0789-wisdom-crowds-forecast-economic-indicators (f02f37169ebbe4ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -57,14 +57,15 @@ describe("pricing never advertises a surface the app does not serve", () => {
     expect(haystack).not.toContain("paper contest");
   });
 
-  it("the free tier still describes what a free visitor actually gets", () => {
+  it("the storefront still describes what a visitor actually gets", () => {
+    // Stale-test repair: 5725cddbb rebuilt /pricing as a one-time storefront
+    // (monthly plans under construction), retiring the tiered Free/Pro/Elite
+    // bullets. The honesty invariant survives: the page must truthfully describe
+    // the one-time, zero-recurring-billing offer it actually serves.
     const src = readFileSync(PRICING_PAGE, "utf8");
     const haystack = viewerStrings(src).join("\n");
-    expect(haystack).toContain("Free calculators");
-    expect(haystack).toContain("Academy");
-    // Free's honesty depends on showing what it does NOT get, not only what
-    // it does.
-    expect(haystack).toContain("The full daily board, every signal (Pro)");
-    expect(haystack).toContain("Graded-pick alerts (Elite)");
+    expect(haystack).toContain("No monthly subscription needed right now");
+    expect(haystack).toContain("One-time Week 9 NFL packs");
+    expect(haystack).toContain("ONE-TIME PACK");
   });
 });

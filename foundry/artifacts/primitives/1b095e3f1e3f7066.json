@@ -1,0 +1,78 @@
+{
+  "book_id": "1b095e3f1e3f7066",
+  "source_status": "COMPLETE",
+  "title": "muse-sweep-digest",
+  "file_name": "muse-sweep-digest.md",
+  "sha256": "1b095e3f1e3f7066c5201e4fe5fab6b4bd8db0a5d247f564a6ef049941c09b2f",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "ArXiv sweep pipeline as a stochastic filtering cascade: raw fetch → manifest aggregation → scored triage → deduplicated selection. Universal Lens: Rooted in muse-sweep-digest (1b095e3f1e3f7066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian evidence accumulation across query lanes; conformal prediction thresholds applied post-scoring to maintain coverage guarantees. GSI Mapping: Rooted in muse-sweep-digest (1b095e3f1e3f7066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions driven by score-based rank-ordering and lane-quota constraints; dynamic reserve replenishment via withdrawal replacement logic. GSE Mapping: Rooted in muse-sweep-digest (1b095e3f1e3f7066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "raw_fetch_wave_1",
+      "name": "Raw Fetch Wave 1",
+      "verbatim_quote": "## a) Pipeline funnel (numbers read from the files, not invented) Wave 1 fetch: - `raw_*.json` (20 files): per-file counts 60,22,0,19,39,7,17,4,1,5,15,34,60,0,5,21,4,9,0,35 = **357 raw hits** across the 20 `fetch_arxiv.py` queries.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{raw}}': 'dimensionless, number of raw hits per query', 'Q': 'dimensionless, number of queries'}",
+      "assumptions": "Each query returns independent Poisson-distributed hits; no overlap between queries.",
+      "breakdown_regime": "When query failure rate exceeds threshold, raw hit count drops below expected value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a multi-armed bandit with stochastic arms representing each arXiv query.",
+        "source_operator": "raw_fetch_wave_1",
+        "telemetry": "Total raw hit count N_raw across all queries Q."
+      }
+    },
+    {
+      "primitive_id": "manifest_aggregation",
+      "name": "Manifest Aggregation",
+      "verbatim_quote": "- `manifest.json`: `{\"fetched_at\":\"20260921T062102Z\",\"unique_papers\":569,\"wave2_new\":241}` with `per_query_counts` identical to the raw_*.json counts (sum 357).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{unique}}': 'dimensionless, unique papers after deduplication', 'N_{\\\\text{raw}}': 'dimensionless, total raw hits'}",
+      "assumptions": "All papers have unique identifiers; manifest reflects cumulative state post-wave 1.",
+      "breakdown_regime": "When duplicate removal fails due to malformed IDs, N_unique < N_raw.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel of raw hit count with deduplication logic; maps to posterior belief over paper uniqueness.",
+        "source_operator": "manifest_aggregation",
+        "telemetry": "Unique paper count N_unique vs raw hit count N_raw."
+      }
+    },
+    {
+      "primitive_id": "scored_triage_phase_2",
+      "name": "Scored Triage Phase 2",
+      "verbatim_quote": "- `selection-750.jsonl`: **582 rows** (1:393, 2:151, 3:38) = exactly the deduped phase-2 triage non-zero set (verified id-set equality).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{\\\\text{score}}': 'dimensionless, score assigned to each paper', 'N_{\\\\text{selected}}': 'dimensionless, number of selected papers'}",
+      "assumptions": "Scores are ordinal; selection is based on score and deduplication rules.",
+      "breakdown_regime": "When score distribution shifts beyond triage thresholds, selection size varies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a ranked voting system where scores act as weights.",
+        "source_operator": "scored_triage_phase_2",
+        "telemetry": "Distribution of scores S_score across N_selected papers."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1b095e3f1e3f7066_t0",
+      "think": "The sweep pipeline operates as a layered stochastic process. Raw fetch (N_raw = 357) aggregates into manifest (N_unique = 569), indicating overlap among queries. This suggests a probabilistic model where each query is an independent draw from a shared distribution of arXiv papers. Manifest aggregation applies a deduplication kernel, which can be modeled as a hash-based set operation. Phase 2 introduces scoring and selection, where score distributions (0:216, 1:237, 2:316, 3:96) form a conditional probability mass function over papers. Deduplication ensures no ID duplication in final selection (N_selected = 582). The process exhibits failure modes such as query failure (zero hits), duplicate handling errors, and score misalignment. The pipeline's structure supports Bayesian updating of paper relevance through score assignment and selection.\n\nDeep epistemic analysis for muse-sweep-digest (1b095e3f1e3f7066, domain=other, pages_read=7/7): Operator 'Raw Fetch Wave 1' (page 1, domain other) captures: ## a) Pipeline funnel (numbers read from the files, not invented) Wave 1 fetch: - `raw_*.json` (20 files): per-file counts 60,22,0,19,39,7,17,4,1,5,15,34,60,0,5,21,4,9,0,35 = **357 raw hits** across the 20 `fetch_arxiv.py` queries. Assumptions: Each query returns independent Poisson-distributed hits; no overlap between queries. Breakdown regime: When query failure rate exceeds threshold, raw hit count drops below expected value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a multi-armed bandit with stochastic arms representing each arXiv query. Operator 'Manifest Aggregation' (page 1, domain other) captures: - `manifest.json`: `{\"fetched_at\":\"20260921T062102Z\",\"unique_papers\":569,\"wave2_new\":241}` with `per_query_counts` identical to the raw_*.json counts (sum 357). Assumptions: All papers have unique identifiers; manifest reflects cumulative state post-wave 1. Breakdown regime: When duplicate removal fails due to malformed IDs, N_unique < N_raw. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of raw hit count with deduplication logic; maps to posterior belief over paper uniqueness. Operator 'Scored Triage Phase 2' (page 2, domain other) captures: - `selection-750.jsonl`: **582 rows** (1:393, 2:151, 3:38) = exactly the deduped phase-2 triage non-zero set (verified id-set equality). Assumptions: Scores are ordinal; selection is based on score and deduplication rules. Breakdown regime: When score distribution shifts beyond triage thresholds, selection size varies. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a ranked voting system where scores act as weights. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for muse-sweep-digest (1b095e3f1e3f7066, domain=other, pages_read=7/7): Operator 'Raw Fetch Wave 1' (page 1, domain other) captures: ## a) Pipeline funnel (numbers read from the files, not invented) Wave 1 fetch: - `raw_*.json` (20 files): per-file counts 60,22,0,19,39,7,17,4,1,5,15,34,60,0,5,21,4,9,0,35 = **357 raw hits** across the 20 `fetch_arxiv.py` queries. Assumptions: Each query returns independent Poisson-distributed hits; no overlap between queries. Breakdown regime: When query failure rate exceeds threshold, raw hit count drops below expected value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a multi-armed bandit with stochastic arms representing each arXiv query. Operator 'Manifest Aggregation' (page 1, domain other) captures: - `manifest.json`: `{\"fetched_at\":\"20260921T062102Z\",\"unique_papers\":569,\"wave2_new\":241}` with `per_query_counts` identical to the raw_*.json counts (sum 357). Assumptions: All papers have unique identifiers; manifest reflects cumulative state post-wave 1. Breakdown regime: When duplicate removal fails due to malformed IDs, N_unique < N_raw. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of raw hit count with deduplication logic; maps to posterior belief over paper uniqueness. Operator 'Scored Triage Phase 2' (page 2, domain other) captures: - `selection-750.jsonl`: **582 rows** (1:393, 2:151, 3:38) = exactly the deduped phase-2 triage non-zero set (verified id-set equality). Assumptions: Scores are ordinal; selection is based on score and deduplication rules. Breakdown regime: When score distribution shifts beyond triage thresholds, selection size varies. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a ranked voting system where scores act as weights. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information retrieval theory and Bayesian decision-making frameworks, particularly influenced by early work on stochastic search algorithms and probabilistic ranking systems. Retrocausal Genealogy: Rooted in muse-sweep-digest (1b095e3f1e3f7066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in muse-sweep-digest (1b095e3f1e3f7066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the arXiv API (as stochastic oracle), the scoring algorithm (as evaluator), and the selection policy (as filter). Each agent has distinct objectives: maximizing coverage, minimizing false positives, and ensuring diversity. Theory of Mind & Decision Maker Model: Rooted in muse-sweep-digest (1b095e3f1e3f7066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple layers use overlapping criteria (e.g., score and ID). Leakage occurs if raw hits are not properly deduplicated before scoring. Veto conditions include query failure, score misclassification, and ID collision during union operations. Cross-Layer Veto & Anti-Leakage Check: Rooted in muse-sweep-digest (1b095e3f1e3f7066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

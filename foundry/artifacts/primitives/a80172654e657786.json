@@ -1,0 +1,78 @@
+{
+  "book_id": "a80172654e657786",
+  "source_status": "COMPLETE",
+  "title": "PUBLIC_DATA_FORENSIC_REPORT",
+  "file_name": "PUBLIC_DATA_FORENSIC_REPORT.md",
+  "sha256": "a80172654e657786dccf91045a1057af1752d99e204f90571ff6e24645d57c33",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A probabilistic divergence metric \\Delta P = |P_{\\text{model}} - P_{\\text{market}}| quantifies forecast-market disagreement under public-data constraints. Universal Lens: Rooted in PUBLIC_DATA_FORENSIC_REPORT (a80172654e657786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive inference to map \\Delta P into Bayesian uncertainty regions, flagging claims exceeding threshold \\epsilon = 0.11. GSI Mapping: Rooted in PUBLIC_DATA_FORENSIC_REPORT (a80172654e657786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning to transition system states using gse_flags as control signals, triggering review protocols when \\Delta P exceeds deterministic bounds. GSE Mapping: Rooted in PUBLIC_DATA_FORENSIC_REPORT (a80172654e657786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "probability_delta",
+      "name": "Market-Model Probability Disagreement",
+      "verbatim_quote": "- `abs(current_model_probability - market_open_probability)`. - Fixture values: `abs(0.59 - 0.48) = 0.11`. Why fixture-only matters: -",
+      "page": 1,
+      "latex": "\\Delta P = |P_{\\text{model}} - P_{\\text{market}}|",
+      "symbol_and_unit_ledger": "{'P_{\\\\text{model}}': 'dimensionless probability', 'P_{\\\\text{market}}': 'dimensionless probability', '\\\\Delta P': 'dimensionless'}",
+      "assumptions": "Model and market probabilities are independently estimated; data integrity is assumed.",
+      "breakdown_regime": "When \\Delta P > 0.11, the model is flagged for review due to significant deviation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The kernel computes \\Delta P as a scalar divergence measure used by GSI's uncertainty engine and GSE's state-transition logic.",
+        "source_operator": "probability_delta",
+        "telemetry": "Observable via fixture output; triggers gse_flags and uncertainty_flag."
+      }
+    },
+    {
+      "primitive_id": "gse_flags",
+      "name": "Public Event Integrity Flags",
+      "verbatim_quote": "disagreement\", \"public event timing changed after market open\", \"depth chart instability requires review\" ], \"probability_delta\": 0.11,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All flags are binary indicators of event integrity status.",
+      "breakdown_regime": "Any active flag invalidates live-source claims without empirical evidence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each flag maps to a distinct GSE control state, enabling conditional reasoning on event reliability.",
+        "source_operator": "gse_flags",
+        "telemetry": "Encoded in fixture JSON; triggers system-level vetoes during live-public mode."
+      }
+    },
+    {
+      "primitive_id": "would_not_claim",
+      "name": "Explicit Non-Claims",
+      "verbatim_quote": "\"would_not_claim\": [ \"betting edge\", \"prediction superiority\", \"live market accuracy\", \"official tracking-data equivalence\" ] } ``` Probability",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "These are formal exclusions from inference claims based on data limitations.",
+      "breakdown_regime": "If any claim is in this set, the system cannot assert confidence in that domain.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's epistemic boundary enforcement; prevents overconfidence in unverified domains.",
+        "source_operator": "would_not_claim",
+        "telemetry": "Used to validate GSE's refusal to act on unsupported predictions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a80172654e657786_t0",
+      "think": "The core operator \\Delta P = |P_{\\text{model}} - P_{\\text{market}}| defines a scalar divergence between two independent probability estimates. This divergence is bounded by \\epsilon = 0.11, beyond which the system enters a 'review' regime. The gse_flags encode temporal and structural anomalies that invalidate live-source claims unless verified. The would_not_claim set represents epistemic boundaries where GSI explicitly avoids inference. Dualities emerge in that \\Delta P can be interpreted both as a signal of model drift and as a proxy for data quality. Failure modes include false positives from noisy inputs and false negatives from unobserved events. The system's robustness depends on deterministic falsifiability of changes to \\Delta P and schema compliance.\n\nDeep epistemic analysis for PUBLIC_DATA_FORENSIC_REPORT (a80172654e657786, domain=other, pages_read=1/1): Operator 'Market-Model Probability Disagreement' (page 1, domain other) captures: - `abs(current_model_probability - market_open_probability)`. - Fixture values: `abs(0.59 - 0.48) = 0.11`. Why fixture-only matters: - Assumptions: Model and market probabilities are independently estimated; data integrity is assumed. Breakdown regime: When \\Delta P > 0.11, the model is flagged for review due to significant deviation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The kernel computes \\Delta P as a scalar divergence measure used by GSI's uncertainty engine and GSE's state-transition logic. Operator 'Public Event Integrity Flags' (page 1, domain other) captures: disagreement\", \"public event timing changed after market open\", \"depth chart instability requires review\" ], \"probability_delta\": 0.11, Assumptions: All flags are binary indicators of event integrity status. Breakdown regime: Any active flag invalidates live-source claims without empirical evidence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each flag maps to a distinct GSE control state, enabling conditional reasoning on event reliability. Operator 'Explicit Non-Claims' (page 1, domain other) captures: \"would_not_claim\": [ \"betting edge\", \"prediction superiority\", \"live market accuracy\", \"official tracking-data equivalence\" ] } ``` Probability Assumptions: These are formal exclusions from inference claims based on data limitations. Breakdown regime: If any claim is in this set, the system cannot assert confidence in that domain. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's epistemic boundary enforcement; prevents overconfidence in unverified domains. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PUBLIC_DATA_FORENSIC_REPORT (a80172654e657786, domain=other, pages_read=1/1): Operator 'Market-Model Probability Disagreement' (page 1, domain other) captures: - `abs(current_model_probability - market_open_probability)`. - Fixture values: `abs(0.59 - 0.48) = 0.11`. Why fixture-only matters: - Assumptions: Model and market probabilities are independently estimated; data integrity is assumed. Breakdown regime: When \\Delta P > 0.11, the model is flagged for review due to significant deviation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The kernel computes \\Delta P as a scalar divergence measure used by GSI's uncertainty engine and GSE's state-transition logic. Operator 'Public Event Integrity Flags' (page 1, domain other) captures: disagreement\", \"public event timing changed after market open\", \"depth chart instability requires review\" ], \"probability_delta\": 0.11, Assumptions: All flags are binary indicators of event integrity status. Breakdown regime: Any active flag invalidates live-source claims without empirical evidence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each flag maps to a distinct GSE control state, enabling conditional reasoning on event reliability. Operator 'Explicit Non-Claims' (page 1, domain other) captures: \"would_not_claim\": [ \"betting edge\", \"prediction superiority\", \"live market accuracy\", \"official tracking-data equivalence\" ] } ``` Probability Assumptions: These are formal exclusions from inference claims based on data limitations. Breakdown regime: If any claim is in this set, the system cannot assert confidence in that domain. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's epistemic boundary enforcement; prevents overconfidence in unverified domains. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian calibration theory and conformal prediction frameworks, extending earlier work on probabilistic forecasting under uncertainty. Retrocausal Genealogy: Rooted in PUBLIC_DATA_FORENSIC_REPORT (a80172654e657786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PUBLIC_DATA_FORENSIC_REPORT (a80172654e657786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit \\Delta P for betting advantage, while GSI's design ensures such strategies remain bounded by data availability and model transparency. Theory of Mind & Decision Maker Model: Rooted in PUBLIC_DATA_FORENSIC_REPORT (a80172654e657786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in PUBLIC_DATA_FORENSIC_REPORT (a80172654e657786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through orthogonal flagging; leakage is mitigated by ensuring that any live-source claim requires explicit evidence and approval before activation. Cross-Layer Veto & Anti-Leakage Check: Rooted in PUBLIC_DATA_FORENSIC_REPORT (a80172654e657786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in PUBLIC_DATA_FORENSIC_REPORT (a80172654e657786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

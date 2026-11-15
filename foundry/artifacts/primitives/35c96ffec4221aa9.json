@@ -1,78 +1,16 @@
 {
   "book_id": "35c96ffec4221aa9",
-  "source_status": "COMPLETE",
-  "title": "FOUNDING_CLIENT_SALES_PACKET",
-  "file_name": "FOUNDING_CLIENT_SALES_PACKET.pdf",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_35c96ffec4221aa9",
+  "file_name": "35c96ffec4221aa9.quarantined",
   "sha256": "35c96ffec4221aa93b1e550159263c81132900680ccf980e4d1dd7e8acb718b7",
   "primary_domain": "other",
-  "pages_total": 3,
-  "pages_read": 3,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "A structured content delivery pipeline integrating fact-gathering, rights-validation, and owner-controlled production with deterministic time-to-delivery and no performance guarantees. Universal Lens: Rooted in FOUNDING_CLIENT_SALES_PACKET (35c96ffec4221aa9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian belief updates over client-provided facts and rights, conditioned on manual review and provenance checks, with conformal prediction bounds on delivery timelines. GSI Mapping: Rooted in FOUNDING_CLIENT_SALES_PACKET (35c96ffec4221aa9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situational reasoning engine models client input as state transitions through a finite automaton: intake → validation → production → QA → delivery, with explicit veto on auto-publishing. GSE Mapping: Rooted in FOUNDING_CLIENT_SALES_PACKET (35c96ffec4221aa9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "content_delivery_pipeline",
-      "name": "Content Delivery Pipeline",
-      "verbatim_quote": "How it moves Facts + rights → Brief + scripts → Local production → QA + policy → Owner delivery Nothing is auto-posted, auto-sent, or publicly published.",
-      "page": 2,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'F': 'Fact set (dimensionless)', 'R': 'Rights validation (binary)', 'B': 'Brief and script (dimensionless)', 'P': 'Production stage (time unit)', 'Q': 'Quality assurance (binary)', 'O': 'Owner delivery (binary)'}",
-      "assumptions": "All stages are sequential, no automation occurs without owner approval, and all inputs are validated before proceeding.",
-      "breakdown_regime": "When any stage fails validation, pipeline halts until resolution.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Pipeline stages map to GSI's Bayesian update sequence and GSE's state transition graph.",
-        "source_operator": "content_delivery_pipeline",
-        "telemetry": "Delivery time, revision count, and approval flags."
-      }
-    },
-    {
-      "primitive_id": "rights_and_provenance_control",
-      "name": "Rights and Provenance Control",
-      "verbatim_quote": "Client responsibilities Provide accurate business, audience, offer, and prohibited-claim facts.",
-      "page": 2,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'C': 'Client-provided data (dimensionless)', 'R_c': 'Rights confirmation (binary)', 'P_c': 'Provenance check (binary)'}",
-      "assumptions": "All client data must be verified and rights confirmed prior to production.",
-      "breakdown_regime": "If R_c = 0 or P_c = 0, pipeline blocks.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Kernel of trust in client data integrity drives GSI's probabilistic model and GSE's access control logic.",
-        "source_operator": "rights_and_provenance_control",
-        "telemetry": "Rights verification status, provenance audit trail."
-      }
-    },
-    {
-      "primitive_id": "manual_owner_action_required",
-      "name": "Manual Owner Action Required",
-      "verbatim_quote": "Five business days after a complete intake and usable source material are received., assuming timely inputs.",
-      "page": 3,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'T_d': 'Delivery time (business day)', 'I': 'Intake completeness (binary)', 'M': 'Manual owner action (binary)'}",
-      "assumptions": "Delivery is contingent upon owner confirmation and timely input.",
-      "breakdown_regime": "If M = 0 or I = 0, T_d is undefined.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Owner action maps to GSI's decision node and GSE's conditional execution path.",
-        "source_operator": "manual_owner_action_required",
-        "telemetry": "Time elapsed since intake, owner approval flag."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "35c96ffec4221aa9_t0",
-      "think": "The foundational operators define a deterministic, owner-controlled content lifecycle. The 'Content Delivery Pipeline' enforces a sequential workflow where each stage depends on prior validation. The 'Rights and Provenance Control' ensures data integrity by requiring explicit client confirmation of ownership and legal compliance. The 'Manual Owner Action Required' primitive introduces a temporal constraint and decision point, aligning with the principle that no automated publishing occurs. These primitives form a closed-loop system where GSI applies Bayesian inference to validate inputs and GSE executes state transitions based on owner approval. Failure modes include missing inputs, unverified rights, or delayed owner actions, which halt progression. The system avoids performance guarantees by design, ensuring no false causality between inputs and outputs.\n\nDeep epistemic analysis for FOUNDING_CLIENT_SALES_PACKET (35c96ffec4221aa9, domain=other, pages_read=3/3): Operator 'Content Delivery Pipeline' (page 2, domain other) captures: How it moves Facts + rights → Brief + scripts → Local production → QA + policy → Owner delivery Nothing is auto-posted, auto-sent, or publicly published. Assumptions: All stages are sequential, no automation occurs without owner approval, and all inputs are validated before proceeding. Breakdown regime: When any stage fails validation, pipeline halts until resolution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Pipeline stages map to GSI's Bayesian update sequence and GSE's state transition graph. Operator 'Rights and Provenance Control' (page 2, domain other) captures: Client responsibilities Provide accurate business, audience, offer, and prohibited-claim facts. Assumptions: All client data must be verified and rights confirmed prior to production. Breakdown regime: If R_c = 0 or P_c = 0, pipeline blocks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of trust in client data integrity drives GSI's probabilistic model and GSE's access control logic. Operator 'Manual Owner Action Required' (page 3, domain other) captures: Five business days after a complete intake and usable source material are received., assuming timely inputs. Assumptions: Delivery is contingent upon owner confirmation and timely input. Breakdown regime: If M = 0 or I = 0, T_d is undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Owner action maps to GSI's decision node and GSE's conditional execution path. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FOUNDING_CLIENT_SALES_PACKET (35c96ffec4221aa9, domain=other, pages_read=3/3): Operator 'Content Delivery Pipeline' (page 2, domain other) captures: How it moves Facts + rights → Brief + scripts → Local production → QA + policy → Owner delivery Nothing is auto-posted, auto-sent, or publicly published. Assumptions: All stages are sequential, no automation occurs without owner approval, and all inputs are validated before proceeding. Breakdown regime: When any stage fails validation, pipeline halts until resolution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Pipeline stages map to GSI's Bayesian update sequence and GSE's state transition graph. Operator 'Rights and Provenance Control' (page 2, domain other) captures: Client responsibilities Provide accurate business, audience, offer, and prohibited-claim facts. Assumptions: All client data must be verified and rights confirmed prior to production. Breakdown regime: If R_c = 0 or P_c = 0, pipeline blocks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of trust in client data integrity drives GSI's probabilistic model and GSE's access control logic. Operator 'Manual Owner Action Required' (page 3, domain other) captures: Five business days after a complete intake and usable source material are received., assuming timely inputs. Assumptions: Delivery is contingent upon owner confirmation and timely input. Breakdown regime: If M = 0 or I = 0, T_d is undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Owner action maps to GSI's decision node and GSE's conditional execution path. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in information theory and control systems, these primitives echo Shannon's communication model and von Neumann's automata theory, adapted for digital content governance. Retrocausal Genealogy: Rooted in FOUNDING_CLIENT_SALES_PACKET (35c96ffec4221aa9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in FOUNDING_CLIENT_SALES_PACKET (35c96ffec4221aa9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Opposing agents include the client (seeking efficiency), the system (enforcing compliance), and the owner (acting as gatekeeper). Each agent's behavior is modeled via decision trees and belief propagation. Theory of Mind & Decision Maker Model: Rooted in FOUNDING_CLIENT_SALES_PACKET (35c96ffec4221aa9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity is enforced by separating GSI's probabilistic inference from GSE's deterministic execution. Leakage is prevented by isolating rights-checks from production logic, ensuring no unauthorized data flows. Cross-Layer Veto & Anti-Leakage Check: Rooted in FOUNDING_CLIENT_SALES_PACKET (35c96ffec4221aa9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in FOUNDING_CLIENT_SALES_PACKET (35c96ffec4221aa9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

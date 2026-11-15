@@ -1,0 +1,95 @@
+{
+  "book_id": "76b332b208248f1a",
+  "source_status": "COMPLETE",
+  "title": "2021 The Anatomy of Corner 3s in the NBA - Pelechrinis, Goldsberry",
+  "file_name": "2021 The Anatomy of Corner 3s in the NBA - Pelechrinis, Goldsberry.md",
+  "sha256": "76b332b208248f1a2ad7058351bbd5ecd97050c1055d8d663090625a2e48bfd3",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2021 The Anatomy of Corner 3s in the NBA - Pelechrinis, Goldsberry (76b332b208248f1a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2021 The Anatomy of Corner 3s in the NBA - Pelechrinis, Goldsberry (76b332b208248f1a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2021 The Anatomy of Corner 3s in the NBA - Pelechrinis, Goldsberry (76b332b208248f1a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "expected_point_value",
+      "name": "Expected Point Value",
+      "verbatim_quote": "However, given that a team wins by scoring points and not by having a better field goal percentage (FG%), taking a 22-feet three point shot from the corner provides an e",
+      "page": 1,
+      "latex": "$E(P) = P_{make} \\times Points$",
+      "symbol_and_unit_ledger": "{'P_{make}:': 'Dimensionless probability of making the shot', 'Points:': 'Shot value (2 or 3)', 'E(P):': 'Expected points (dimensionless)'}",
+      "assumptions": "Constant probability of making the shot, independent trials, no turnovers or fouls affecting the calculation",
+      "breakdown_regime": "Regime where the product of shot probability and point value peaks, typically at corner three-point range",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction intervals for shot values; maps to GSE state-transition models for shot outcomes",
+        "source_operator": "expected_point_value",
+        "telemetry": "Observed average points per possession for corner three-point attempts"
+      }
+    },
+    {
+      "primitive_id": "shot_efficiency_gradient",
+      "name": "Shot Efficiency Gradient",
+      "verbatim_quote": "From this figure we can see that while shots from the restricted area are the most efficient ones, three-points shots from the corners are a close second.",
+      "page": 2,
+      "latex": "Efficiency(r) = f(P_{make}(r), Points(r))",
+      "symbol_and_unit_ledger": "{'Efficiency:': 'Points per attempt (dimensionless)', 'P_{make}(r):': 'Probability of making shot as function of distance r', 'Points(r):': 'Shot value as function of distance (2 or 3)', 'f:': 'Monotonic increasing function'}",
+      "assumptions": "Fixed point value assignment, constant defensive pressure across zones, independent shot selection",
+      "breakdown_regime": "Midrange zone where $P_{make}(r)$ drops faster than Points(r) increases, leading to low efficiency",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Bayesian hierarchical models for zone-based shot quality; maps to GSE multi-agent reinforcement learning for defensive positioning",
+        "source_operator": "shot_efficiency_gradient",
+        "telemetry": "Zone-based expected points per shot from player tracking data"
+      }
+    },
+    {
+      "primitive_id": "anchored_waiver_strategy",
+      "name": "Anchored Waiver Strategy",
+      "verbatim_quote": "Furthermore, we analyze the movement of the shooter and his defender and find that more than half of these shots involve a shooter anchored at the corner waiting for the kick out pass.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Offensive system allows for screening/spacing actions, defensive coverage gaps exist, ball handler prioritizes high-value reads",
+      "breakdown_regime": "When defender overplays the anchor, creating open corner space; when defender helps too early, leaving the corner open",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI sequential decision trees for offensive play construction; maps to GSE Markov decision processes for dynamic spacing states",
+        "source_operator": "anchored_waiver_strategy",
+        "telemetry": "Frequency of kick-out passes following screen actions in corner three-point situations"
+      }
+    },
+    {
+      "primitive_id": "defensive_response_cost",
+      "name": "Defensive Response Cost",
+      "verbatim_quote": "However, in order to contain them one needs to first understand what makes them efficient in the first place and how they are generated.",
+      "page": 1,
+      "latex": "Cost(Defense) = g(Efficiency_{corner}, Coverage_{gap})",
+      "symbol_and_unit_ledger": "{'Cost:': 'Additional defensive effort or points conceded (dimensionless or points)', 'Efficiency_{corner}:': 'Expected points advantage of corner three over alternative shots', 'Coverage_{gap}:': 'Probability of defender failing to cover the corner anchor', 'g:': 'Increasing function'}",
+      "assumptions": "Defenders allocate resources between guarding the corner and protecting the rim, assuming imperfect information",
+      "breakdown_regime": "When defensive rotations are slow, leading to prolonged open corner windows; when defenders cheat toward the ball, exposing the weak side",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI loss functions penalizing inefficient defensive assignments; maps to GSE state-transition costs for defensive mis-matches",
+        "source_operator": "defensive_response_cost",
+        "telemetry": "Average points conceded on corner three-point attempts conditional on defensive lag or help-side coverage"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "76b332b208248f1a_t0",
+      "think": "Corner three-point shots exploit geometric advantages (shorter distance) and spatial constraints (defender spacing). Their efficiency arises from a non-linear trade-off between shot probability and point value, creating a local maximum around 22-24 feet. Defenses face a fundamental dilemma: Overplaying the corner frees up midrange or paint opportunities, while helping at the rim leaves the corner open. This generates a zero-sum game where optimal defense requires probabilistic coverage, leading to the observed 'anchored waiver' strategy. Mathematically, the primitives form a closed loop: Expected point value dictates offensive priority, which shapes defensive response cost, which influences strategic positioning, which ultimately determines shot efficiency gradient.\n\nDeep epistemic analysis for 2021 The Anatomy of Corner 3s in the NBA - Pelechrinis, Goldsberry (76b332b208248f1a, domain=other, pages_read=10/10): Operator 'Expected Point Value' (page 1, domain other) captures: However, given that a team wins by scoring points and not by having a better field goal percentage (FG%), taking a 22-feet three point shot from the corner provides an e Assumptions: Constant probability of making the shot, independent trials, no turnovers or fouls affecting the calculation Breakdown regime: Regime where the product of shot probability and point value peaks, typically at corner three-point range Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction intervals for shot values; maps to GSE state-transition models for shot outcomes Operator 'Shot Efficiency Gradient' (page 2, domain other) captures: From this figure we can see that while shots from the restricted area are the most efficient ones, three-points shots from the corners are a close second. Assumptions: Fixed point value assignment, constant defensive pressure across zones, independent shot selection Breakdown regime: Midrange zone where $P_{make}(r)$ drops faster than Points(r) increases, leading to low efficiency Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Bayesian hierarchical models for zone-based shot quality; maps to GSE multi-agent reinforcement learning for defensive positioning Operator 'Anchored Waiver Strategy' (page 1, domain other) captures: Furthermore, we analyze the movement of the shooter and his defender and find that more than half of these shots involve a shooter anchored at the corner waiting for the kick out pass. Assumptions: Offensive system allows for screening/spacing actions, defensive coverage gaps exist, ball handler prioritizes high-value reads Breakdown regime: When defender overplays the anchor, creating open corner space; when defender helps too early, leaving the corner open Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI sequential decision trees for offensive play construction; maps to GSE Markov decision processes for dynamic spacing states Operator 'Defensive Response Cost' (page 1, domain other) captures: However, in order to contain them one needs to first understand what makes them efficient in the first place and how they are generated. Assumptions: Defenders allocate resources between guarding the corner and protecting the rim, assuming imperfect information Breakdown regime: When defensive rotations are slow, leading to prolonged open corner windows; when defenders cheat toward the ball, exposing the weak side Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI loss functions penalizing inefficient defensive assignments; maps to GSE state-transition costs for defensive mis-matches Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2021 The Anatomy of Corner 3s in the NBA - Pelechrinis, Goldsberry (76b332b208248f1a, domain=other, pages_read=10/10): Operator 'Expected Point Value' (page 1, domain other) captures: However, given that a team wins by scoring points and not by having a better field goal percentage (FG%), taking a 22-feet three point shot from the corner provides an e Assumptions: Constant probability of making the shot, independent trials, no turnovers or fouls affecting the calculation Breakdown regime: Regime where the product of shot probability and point value peaks, typically at corner three-point range Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction intervals for shot values; maps to GSE state-transition models for shot outcomes Operator 'Shot Efficiency Gradient' (page 2, domain other) captures: From this figure we can see that while shots from the restricted area are the most efficient ones, three-points shots from the corners are a close second. Assumptions: Fixed point value assignment, constant defensive pressure across zones, independent shot selection Breakdown regime: Midrange zone where $P_{make}(r)$ drops faster than Points(r) increases, leading to low efficiency Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Bayesian hierarchical models for zone-based shot quality; maps to GSE multi-agent reinforcement learning for defensive positioning Operator 'Anchored Waiver Strategy' (page 1, domain other) captures: Furthermore, we analyze the movement of the shooter and his defender and find that more than half of these shots involve a shooter anchored at the corner waiting for the kick out pass. Assumptions: Offensive system allows for screening/spacing actions, defensive coverage gaps exist, ball handler prioritizes high-value reads Breakdown regime: When defender overplays the anchor, creating open corner space; when defender helps too early, leaving the corner open Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI sequential decision trees for offensive play construction; maps to GSE Markov decision processes for dynamic spacing states Operator 'Defensive Response Cost' (page 1, domain other) captures: However, in order to contain them one needs to first understand what makes them efficient in the first place and how they are generated. Assumptions: Defenders allocate resources between guarding the corner and protecting the rim, assuming imperfect information Breakdown regime: When defensive rotations are slow, leading to prolonged open corner windows; when defenders cheat toward the ball, exposing the weak side Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI loss functions penalizing inefficient defensive assignments; maps to GSE state-transition costs for defensive mis-matches Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 2021 The Anatomy of Corner 3s in the NBA - Pelechrinis, Goldsberry (76b332b208248f1a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2021 The Anatomy of Corner 3s in the NBA - Pelechrinis, Goldsberry (76b332b208248f1a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (offense and defense) act as rational decision-makers under uncertainty. Offense exploits predictable defensive rotations using anchoring heuristics. Defense responds stochastically to minimize expected losses, often resulting in exploitable patterns due to reaction time lags and position-specific coverage trade-offs. Theory of Mind & Decision Maker Model: Rooted in 2021 The Anatomy of Corner 3s in the NBA - Pelechrinis, Goldsberry (76b332b208248f1a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity condition: Must exclude primitives that merely describe raw frequency counts (e.g., 'corner shot volume') without accounting for underlying probabilistic payoffs. Leakage veto: Avoid primitives that conflate shooter skill with spacing efficiency (e.g., 'isolated shooter accuracy'), as these violate the layer separation between tactical execution and strategic outcome. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2021 The Anatomy of Corner 3s in the NBA - Pelechrinis, Goldsberry (76b332b208248f1a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

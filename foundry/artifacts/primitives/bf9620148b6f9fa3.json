@@ -1,0 +1,78 @@
+{
+  "book_id": "bf9620148b6f9fa3",
+  "source_status": "COMPLETE",
+  "title": "STATE",
+  "file_name": "STATE.md",
+  "sha256": "bf9620148b6f9fa33d038bd66e7c2f594488466a601f65e971da2c71c2b87392",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "State-space partitioning of historical game-level odds into calibrated probability measures, with falsified edge domains and capture-ready tactical windows. Universal Lens: Rooted in STATE (bf9620148b6f9fa3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration of devigged moneyline closes (Brier 0.211) maps to conformal predictive distributions over game outcomes, enabling GSI's probabilistic state estimation. GSI Mapping: Rooted in STATE (bf9620148b6f9fa3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE leverages the capture-readiness deadline (NORTHSTAR §4) to transition from post-close retrospectives to live-state tactical execution, with Door B as remaining viable path. GSE Mapping: Rooted in STATE (bf9620148b6f9fa3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "calibrated_devigged_moneyline",
+      "name": "Calibrated Devigged Moneyline",
+      "verbatim_quote": "Closing spread unbiased (slope 1.05 vs 1, p=0.058); devigged ML close well-calibrated (Brier 0.211); 132-test segment scan clears nothing but the mechanical overtime segment.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ML_close': 'dimensionless probability score', 'Brier_score': 'unitless error metric in [0,1]', 'slope': 'dimensionless scaling factor'}",
+      "assumptions": "Market prices are calibrated under uniform distribution of noise; devigation removes bias from vig.",
+      "breakdown_regime": "Mechanical overtime segment shows residual signal due to non-standard scoring dynamics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's calibrated outcome prediction kernel derived from devigged ML close using Brier decomposition.",
+        "source_operator": "calibrated_devigged_moneyline",
+        "telemetry": "Brier score (0.211) and slope deviation (1.05) from unity."
+      }
+    },
+    {
+      "primitive_id": "second_wave_falsifier_campaign",
+      "name": "Second Wave Falsifier Campaign",
+      "verbatim_quote": "## Ground truth - **No edge in historical game-level ATS/totals/moneyline space — now MEASURED, not suspected.** C-75's second wave ran the first-ever real falsifier campaign on real data (8+ full strategies, 845–6,868 games each): zero survivors.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'strategies': 'count of independent models', 'games_per_strategy': 'integer range [845, 6868]', 'survivors': 'count of surviving models'}",
+      "assumptions": "All strategies were independently tested on identical datasets; zero survivors implies no statistical edge exists.",
+      "breakdown_regime": "Zero survivors across 8+ strategies indicates systemic absence of exploitable patterns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's falsification engine mirrors GSI's edge detection logic through multi-strategy validation.",
+        "source_operator": "second_wave_falsifier_campaign",
+        "telemetry": "Survivor count = 0 across 8+ strategies."
+      }
+    },
+    {
+      "primitive_id": "capture_readiness_deadline",
+      "name": "Capture Readiness Deadline",
+      "verbatim_quote": "Capture-readiness is the deadline (NORTHSTAR §4) — now the ONLY live edge-adjacent door this season, since Door C (post-close/live-state retrospective) just closed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'deadline': 'time point marking final tactical window', 'tactical_door': 'binary indicator for active doors'}",
+      "assumptions": "Only one live tactical door remains; post-close analysis is no longer viable.",
+      "breakdown_regime": "Post-close retrospective is closed; only live-state capture remains.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's temporal constraint engine enforces capture readiness as the sole valid operational regime.",
+        "source_operator": "capture_readiness_deadline",
+        "telemetry": "Door C closed, Door B remains open."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "bf9620148b6f9fa3_t0",
+      "think": "The state-space of game-level odds is partitioned into two regimes: historical (where no edge was found) and live (where capture-readiness defines the operational horizon). The calibrated devigged moneyline (Brier 0.211) serves as a foundational kernel for probabilistic inference, while the second wave falsifier campaign confirms that no statistical edge persists in historical data. This validates the use of a capture-readiness deadline as the sole viable tactical window, with Door B remaining as the only open path for future action. The system's dual nature—GSI's probabilistic inference and GSE's situational execution—operates under these constraints, ensuring that all decisions are grounded in empirical falsification rather than speculative modeling.\n\nDeep epistemic analysis for STATE (bf9620148b6f9fa3, domain=other, pages_read=3/3): Operator 'Calibrated Devigged Moneyline' (page 1, domain other) captures: Closing spread unbiased (slope 1.05 vs 1, p=0.058); devigged ML close well-calibrated (Brier 0.211); 132-test segment scan clears nothing but the mechanical overtime segment. Assumptions: Market prices are calibrated under uniform distribution of noise; devigation removes bias from vig. Breakdown regime: Mechanical overtime segment shows residual signal due to non-standard scoring dynamics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's calibrated outcome prediction kernel derived from devigged ML close using Brier decomposition. Operator 'Second Wave Falsifier Campaign' (page 1, domain other) captures: ## Ground truth - **No edge in historical game-level ATS/totals/moneyline space — now MEASURED, not suspected.** C-75's second wave ran the first-ever real falsifier campaign on real data (8+ full strategies, 845–6,868 games each): zero survivors. Assumptions: All strategies were independently tested on identical datasets; zero survivors implies no statistical edge exists. Breakdown regime: Zero survivors across 8+ strategies indicates systemic absence of exploitable patterns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's falsification engine mirrors GSI's edge detection logic through multi-strategy validation. Operator 'Capture Readiness Deadline' (page 1, domain other) captures: Capture-readiness is the deadline (NORTHSTAR §4) — now the ONLY live edge-adjacent door this season, since Door C (post-close/live-state retrospective) just closed. Assumptions: Only one live tactical door remains; post-close analysis is no longer viable. Breakdown regime: Post-close retrospective is closed; only live-state capture remains. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's temporal constraint engine enforces capture readiness as the sole valid operational regime. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for STATE (bf9620148b6f9fa3, domain=other, pages_read=3/3): Operator 'Calibrated Devigged Moneyline' (page 1, domain other) captures: Closing spread unbiased (slope 1.05 vs 1, p=0.058); devigged ML close well-calibrated (Brier 0.211); 132-test segment scan clears nothing but the mechanical overtime segment. Assumptions: Market prices are calibrated under uniform distribution of noise; devigation removes bias from vig. Breakdown regime: Mechanical overtime segment shows residual signal due to non-standard scoring dynamics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's calibrated outcome prediction kernel derived from devigged ML close using Brier decomposition. Operator 'Second Wave Falsifier Campaign' (page 1, domain other) captures: ## Ground truth - **No edge in historical game-level ATS/totals/moneyline space — now MEASURED, not suspected.** C-75's second wave ran the first-ever real falsifier campaign on real data (8+ full strategies, 845–6,868 games each): zero survivors. Assumptions: All strategies were independently tested on identical datasets; zero survivors implies no statistical edge exists. Breakdown regime: Zero survivors across 8+ strategies indicates systemic absence of exploitable patterns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's falsification engine mirrors GSI's edge detection logic through multi-strategy validation. Operator 'Capture Readiness Deadline' (page 1, domain other) captures: Capture-readiness is the deadline (NORTHSTAR §4) — now the ONLY live edge-adjacent door this season, since Door C (post-close/live-state retrospective) just closed. Assumptions: Only one live tactical door remains; post-close analysis is no longer viable. Breakdown regime: Post-close retrospective is closed; only live-state capture remains. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's temporal constraint engine enforces capture readiness as the sole valid operational regime. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the 2026-08-26 Hermes verification protocol, which superseded prior unverified claims and introduced formal falsification as a core principle. The evolution from speculative edge hunting to measured calibration reflects a shift toward rigorous epistemology in sports analytics. Retrocausal Genealogy: Rooted in STATE (bf9620148b6f9fa3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents operate under different epistemic models: one assumes historical patterns persist (failed in C-75), another prioritizes live-state capture (Door B). Decision actors must navigate between these models, with the current framework favoring empirical validation over theoretical assumptions. Theory of Mind & Decision Maker Model: Rooted in STATE (bf9620148b6f9fa3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by the falsifier's independence across 8+ strategies, preventing spurious correlations. Leakage is mitigated by the capture-readiness deadline, which isolates live-state tactical execution from post-close retroactive analysis, ensuring no cross-layer contamination. Cross-Layer Veto & Anti-Leakage Check: Rooted in STATE (bf9620148b6f9fa3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

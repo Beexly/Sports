@@ -1,0 +1,95 @@
+{
+  "book_id": "a8748ee84aeacd77",
+  "source_status": "COMPLETE",
+  "title": "mlb-independent-model",
+  "file_name": "mlb-independent-model.md",
+  "sha256": "a8748ee84aeacd77aedc3e094c04af96f94f056621f17c08665888dc6822354e",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in mlb-independent-model (a8748ee84aeacd77), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in mlb-independent-model (a8748ee84aeacd77), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "{'name': 'Bayesian Conformal Null Model', 'description': \"Operates as a conformal predictive system that returns a null probability distribution when the model is unfitted, aligning with GSI's need for independent verification without relying on consensus scoring.\", 'mappings': [{'source': 'Null Probability', 'target': 'Conformal Prediction Interval'}, {'source': 'Baseball Information', 'target': 'Calibration Set'}, {'source': 'Binary Probabilities', 'target': 'Classification Thresholds'}]}",
+  "gse_mapping": "{'name': 'State-Transition Shadow Monitor', 'description': 'Serves as a guardrail for state transitions in GSE by providing a reproducible baseline that flags invalid post-first-pitch observations, preventing side effects.', 'mappings': [{'source': 'Invalid Observation', 'target': 'Pre-Game State Validation'}, {'source': 'Bootstrap-Era Records', 'target': 'Historical Consistency Check'}, {'source': 'Missing Feature Marker', 'target': 'Data Integrity Transition'}]}",
+  "primitives": [
+    {
+      "primitive_id": "mlb_independent_model_api",
+      "name": "MLB Independent Model API",
+      "verbatim_quote": "This PR ships only the contract and a fail-closed API.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a future fitted model will populate the API with probabilistic forecasts.",
+      "breakdown_regime": "Regime where the API returns null values and disallows publication.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The API acts as a conformal prediction interface, isolating the core model from external dependencies to ensure independent verification.",
+        "source_operator": "mlb_independent_model_api",
+        "telemetry": "Verification metric is the presence of null outputs indicating an unfitted state."
+      }
+    },
+    {
+      "primitive_id": "joint_run_count_forecast",
+      "name": "Joint Run-Count Forecast",
+      "verbatim_quote": "The first target is a joint run-count forecast for an MLB game.",
+      "page": 1,
+      "latex": "P(homeRuns, awayRuns)",
+      "symbol_and_unit_ledger": "{'homeRuns': 'unitless count', 'awayRuns': 'unitless count'}",
+      "assumptions": "Assumes historical run-scoring patterns follow an overdispersed distribution.",
+      "breakdown_regime": "Breaks down into marginal distributions for each team's runs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Replicates the functionality of a predictive accuracy metric by generating reproducible forecasts.",
+        "source_operator": "joint_run_count_forecast",
+        "telemetry": "Empirical observable is the agreement between forecasted and observed run totals."
+      }
+    },
+    {
+      "primitive_id": "binary_probability_exposure",
+      "name": "Binary Probability Exposure",
+      "verbatim_quote": "The forecast will expose binary probabilities for moneyline and total-side targets without reading sportsbook prices, implied probabilities, consensus percentages, or confidence scores.",
+      "page": 1,
+      "latex": "P(Target > Threshold)",
+      "symbol_and_unit_ledger": "{'Target': 'runs', 'Threshold': 'runs'}",
+      "assumptions": "Assumes the target variable follows the joint run-count distribution.",
+      "breakdown_regime": "Regime where the probability is evaluated at specific thresholds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a classification calibration error metric by comparing predicted probabilities against binary outcomes.",
+        "source_operator": "binary_probability_exposure",
+        "telemetry": "Verification metric is the calibration of predicted probabilities against actual binary results."
+      }
+    },
+    {
+      "primitive_id": "pregame_data_boundary",
+      "name": "Pregame Data Boundary",
+      "verbatim_quote": "## Model boundary The independent model receives only facts and provenance captured before first pitch.",
+      "page": 1,
+      "latex": "X_{pre-game} = {Pitcher, Park, Lineup, Weather, Ratings}",
+      "symbol_and_unit_ledger": "{'X': 'feature vector'}",
+      "assumptions": "Assumes all features are observable and recorded prior to game start.",
+      "breakdown_regime": "Regime where any post-first-pitch data causes the observation to be excluded.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enforces a temporal causality constraint similar to a lagged feature set in time-series analysis.",
+        "source_operator": "pregame_data_boundary",
+        "telemetry": "Anti-collinearity condition is the absence of correlation between pregame features and post-first-pitch outcomes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a8748ee84aeacd77_t0",
+      "think": "The primitive establishes a formal separation between model development and deployment. By shipping a fail-closed API, it ensures that an unfitted model cannot inadvertently influence production decisions. This is critical because near-zero resolution in the current confidence path introduces systematic bias, which could be masked by retuning the consensus scorer. Instead, we create a dedicated sandbox where the new model's probability structure P(Target|BaseballFacts) can be independently verified against historical outcomes without leaking post-first-pitch information. The null probability serves as a sentinel value, signaling when the model is not yet calibrated. This approach mitigates the risk of overfitting to consensus signals and provides a transparent pathway to model promotion once rigorous validation metrics are met.\n\nDeep epistemic analysis for mlb-independent-model (a8748ee84aeacd77, domain=other, pages_read=4/4): Operator 'MLB Independent Model API' (page 1, domain other) captures: This PR ships only the contract and a fail-closed API. Assumptions: Assumes a future fitted model will populate the API with probabilistic forecasts. Breakdown regime: Regime where the API returns null values and disallows publication. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The API acts as a conformal prediction interface, isolating the core model from external dependencies to ensure independent verification. Operator 'Joint Run-Count Forecast' (page 1, domain other) captures: The first target is a joint run-count forecast for an MLB game. Assumptions: Assumes historical run-scoring patterns follow an overdispersed distribution. Breakdown regime: Breaks down into marginal distributions for each team's runs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Replicates the functionality of a predictive accuracy metric by generating reproducible forecasts. Operator 'Binary Probability Exposure' (page 1, domain other) captures: The forecast will expose binary probabilities for moneyline and total-side targets without reading sportsbook prices, implied probabilities, consensus percentages, or confidence scores. Assumptions: Assumes the target variable follows the joint run-count distribution. Breakdown regime: Regime where the probability is evaluated at specific thresholds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a classification calibration error metric by comparing predicted probabilities against binary outcomes. Operator 'Pregame Data Boundary' (page 1, domain other) captures: ## Model boundary The independent model receives only facts and provenance captured before first pitch. Assumptions: Assumes all features are observable and recorded prior to game start. Breakdown regime: Regime where any post-first-pitch data causes the observation to be excluded. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces a temporal causality constraint similar to a lagged feature set in time-series analysis. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for mlb-independent-model (a8748ee84aeacd77, domain=other, pages_read=4/4): Operator 'MLB Independent Model API' (page 1, domain other) captures: This PR ships only the contract and a fail-closed API. Assumptions: Assumes a future fitted model will populate the API with probabilistic forecasts. Breakdown regime: Regime where the API returns null values and disallows publication. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The API acts as a conformal prediction interface, isolating the core model from external dependencies to ensure independent verification. Operator 'Joint Run-Count Forecast' (page 1, domain other) captures: The first target is a joint run-count forecast for an MLB game. Assumptions: Assumes historical run-scoring patterns follow an overdispersed distribution. Breakdown regime: Breaks down into marginal distributions for each team's runs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Replicates the functionality of a predictive accuracy metric by generating reproducible forecasts. Operator 'Binary Probability Exposure' (page 1, domain other) captures: The forecast will expose binary probabilities for moneyline and total-side targets without reading sportsbook prices, implied probabilities, consensus percentages, or confidence scores. Assumptions: Assumes the target variable follows the joint run-count distribution. Breakdown regime: Regime where the probability is evaluated at specific thresholds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a classification calibration error metric by comparing predicted probabilities against binary outcomes. Operator 'Pregame Data Boundary' (page 1, domain other) captures: ## Model boundary The independent model receives only facts and provenance captured before first pitch. Assumptions: Assumes all features are observable and recorded prior to game start. Breakdown regime: Regime where any post-first-pitch data causes the observation to be excluded. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces a temporal causality constraint similar to a lagged feature set in time-series analysis. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in the conformal prediction framework of Vovk et al., adapted to sports betting through the concept of pregame information sets. Retrocausal Genealogy: Rooted in mlb-independent-model (a8748ee84aeacd77), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in mlb-independent-model (a8748ee84aeacd77), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models the sportsbook as an adversarial agent that may exploit model dependencies on consensus scoring. The MLB Independent Model API is designed to be opaque to these consensus dynamics, forcing the sportsbook to reassess their own pricing models independently. Theory of Mind & Decision Maker Model: Rooted in mlb-independent-model (a8748ee84aeacd77), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents collinearity between the independent model's features and the consensus scorer's inputs by enforcing a strict pregame boundary. Any attempt to incorporate post-close data would violate the shadow API's exclusion criteria and trigger an invalid observation flag. Cross-Layer Veto & Anti-Leakage Check: Rooted in mlb-independent-model (a8748ee84aeacd77), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

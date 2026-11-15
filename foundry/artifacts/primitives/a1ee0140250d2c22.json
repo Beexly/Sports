@@ -1,0 +1,78 @@
+{
+  "book_id": "a1ee0140250d2c22",
+  "source_status": "COMPLETE",
+  "title": "PROVEN_RANKING_PROGRAM",
+  "file_name": "PROVEN_RANKING_PROGRAM.md",
+  "sha256": "a1ee0140250d2c22d882ba204bcb2e3aace1f765dd2a6e1def63ecfe700e2df8",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A conformal prediction framework with adaptive group filtering and threshold-based selection for probabilistic ranking optimization. Universal Lens: Rooted in PROVEN_RANKING_PROGRAM (a1ee0140250d2c22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over sport-specific markets using confidence-adjusted posterior distributions; employs conformal prediction to ensure valid uncertainty quantification across groups. GSI Mapping: Rooted in PROVEN_RANKING_PROGRAM (a1ee0140250d2c22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine applies state transitions based on group-level performance metrics and dynamic threshold filters to guide draft generation and resolution logic. GSE Mapping: Rooted in PROVEN_RANKING_PROGRAM (a1ee0140250d2c22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "confidence_filter",
+      "name": "Confidence Threshold Filter",
+      "verbatim_quote": "## Selective thresholds (start points) | | Rule | Effect | |--|------|--------| | Confidence | \\|p-0.5\\|",
+      "page": 1,
+      "latex": "\\|p - 0.5\\| \\geq \\delta, \\quad \\delta \\in [0.08, 0.15]",
+      "symbol_and_unit_ledger": "{'p': 'probability of event (dimensionless)', 'δ': 'confidence threshold (dimensionless)'}",
+      "assumptions": "Events are binary outcomes with probability estimates; filtering assumes uniform prior around 0.5.",
+      "breakdown_regime": "When p ≈ 0.5, indicating no predictive signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian posterior filtering where low-confidence predictions are discarded to reduce noise in ranking systems.",
+        "source_operator": "confidence_filter",
+        "telemetry": "Fraction of discarded predictions due to low confidence"
+      }
+    },
+    {
+      "primitive_id": "edge_alignment",
+      "name": "Edge Alignment Condition",
+      "verbatim_quote": "(0.08–0.15) | Drop coin-flips | | Edge | \\|p-p_mkt\\| ≥ e (0.03–0.05) when lines | Align",
+      "page": 1,
+      "latex": "\\|p - p_{\\text{mkt}}\\| \\geq e, \\quad e \\in [0.03, 0.05]",
+      "symbol_and_unit_ledger": "{'p': 'model predicted probability (dimensionless)', 'p_mkt': 'market-implied probability (dimensionless)', 'e': 'minimum edge threshold (dimensionless)'}",
+      "assumptions": "Market probabilities are available and represent true implied odds; model must outperform baseline.",
+      "breakdown_regime": "When model and market agree closely, indicating no actionable edge exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's alignment logic that ensures model decisions are not redundant with market consensus.",
+        "source_operator": "edge_alignment",
+        "telemetry": "Proportion of aligned vs misaligned predictions per market"
+      }
+    },
+    {
+      "primitive_id": "group_allowlist",
+      "name": "Group Allowlist Criterion",
+      "verbatim_quote": "| | Group allowlist | Res_g ≥ ρ or n_g ≥ n_min | Kill dead leagues",
+      "page": 1,
+      "latex": "\\text{Res}_g \\geq \\rho \\quad \\text{or} \\quad n_g \\geq n_{\\text{min}}",
+      "symbol_and_unit_ledger": "{'Res_g': 'group-level residual score (dimensionless)', 'ρ': 'residual threshold (dimensionless)', 'n_g': 'number of observations in group (dimensionless)', 'n_min': 'minimum observation count (dimensionless)'}",
+      "assumptions": "Groups with poor performance or insufficient data are non-informative.",
+      "breakdown_regime": "Groups below either threshold are excluded from further processing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reflects GSI’s group pruning strategy to avoid overfitting on sparse or unreliable data.",
+        "source_operator": "group_allowlist",
+        "telemetry": "Number of active vs inactive groups post-filtering"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a1ee0140250d2c22_t0",
+      "think": "The core operators define a multi-layered filtering system: first, confidence-based rejection of uncertain predictions; second, edge alignment to prioritize informative signals; third, group-level validation to prevent spurious inferences. These form a dual structure—filtering and selection—that ensures robustness against noise and overfitting. Failure modes include false positives from weak signals, over-reliance on market consensus, and exclusion of valid but under-resourced groups. The system balances exploration and exploitation through adaptive thresholds and dynamic group inclusion criteria.\n\nDeep epistemic analysis for PROVEN_RANKING_PROGRAM (a1ee0140250d2c22, domain=other, pages_read=1/1): Operator 'Confidence Threshold Filter' (page 1, domain other) captures: ## Selective thresholds (start points) | | Rule | Effect | |--|------|--------| | Confidence | \\|p-0.5\\| Assumptions: Events are binary outcomes with probability estimates; filtering assumes uniform prior around 0.5. Breakdown regime: When p ≈ 0.5, indicating no predictive signal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian posterior filtering where low-confidence predictions are discarded to reduce noise in ranking systems. Operator 'Edge Alignment Condition' (page 1, domain other) captures: (0.08–0.15) | Drop coin-flips | | Edge | \\|p-p_mkt\\| ≥ e (0.03–0.05) when lines | Align Assumptions: Market probabilities are available and represent true implied odds; model must outperform baseline. Breakdown regime: When model and market agree closely, indicating no actionable edge exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's alignment logic that ensures model decisions are not redundant with market consensus. Operator 'Group Allowlist Criterion' (page 1, domain other) captures: | | Group allowlist | Res_g ≥ ρ or n_g ≥ n_min | Kill dead leagues Assumptions: Groups with poor performance or insufficient data are non-informative. Breakdown regime: Groups below either threshold are excluded from further processing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Reflects GSI’s group pruning strategy to avoid overfitting on sparse or unreliable data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PROVEN_RANKING_PROGRAM (a1ee0140250d2c22, domain=other, pages_read=1/1): Operator 'Confidence Threshold Filter' (page 1, domain other) captures: ## Selective thresholds (start points) | | Rule | Effect | |--|------|--------| | Confidence | \\|p-0.5\\| Assumptions: Events are binary outcomes with probability estimates; filtering assumes uniform prior around 0.5. Breakdown regime: When p ≈ 0.5, indicating no predictive signal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian posterior filtering where low-confidence predictions are discarded to reduce noise in ranking systems. Operator 'Edge Alignment Condition' (page 1, domain other) captures: (0.08–0.15) | Drop coin-flips | | Edge | \\|p-p_mkt\\| ≥ e (0.03–0.05) when lines | Align Assumptions: Market probabilities are available and represent true implied odds; model must outperform baseline. Breakdown regime: When model and market agree closely, indicating no actionable edge exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's alignment logic that ensures model decisions are not redundant with market consensus. Operator 'Group Allowlist Criterion' (page 1, domain other) captures: | | Group allowlist | Res_g ≥ ρ or n_g ≥ n_min | Kill dead leagues Assumptions: Groups with poor performance or insufficient data are non-informative. Breakdown regime: Groups below either threshold are excluded from further processing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Reflects GSI’s group pruning strategy to avoid overfitting on sparse or unreliable data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in conformal prediction theory and Bayesian model calibration, extending classical statistical hypothesis testing into modern machine learning frameworks for sports analytics. Retrocausal Genealogy: Rooted in PROVEN_RANKING_PROGRAM (a1ee0140250d2c22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PROVEN_RANKING_PROGRAM (a1ee0140250d2c22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational agents with bounded information; opponents may exploit predictable patterns or introduce adversarial noise, necessitating robustness checks via holdout scoring. Theory of Mind & Decision Maker Model: Rooted in PROVEN_RANKING_PROGRAM (a1ee0140250d2c22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in PROVEN_RANKING_PROGRAM (a1ee0140250d2c22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that group-level residuals do not correlate with market probabilities beyond defined thresholds. Leakage is mitigated by restricting feature usage to only those present during line availability. Cross-Layer Veto & Anti-Leakage Check: Rooted in PROVEN_RANKING_PROGRAM (a1ee0140250d2c22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

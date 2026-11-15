@@ -1,0 +1,78 @@
+{
+  "book_id": "660bca5a4c56f6ae",
+  "source_status": "COMPLETE",
+  "title": "2122-timesfm-decoder-only-foundation-model",
+  "file_name": "2122-timesfm-decoder-only-foundation-model.md",
+  "sha256": "660bca5a4c56f6ae92a62b1556c05fee02fa4d92d80299a6275022e472d9a9be",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A decoder-only transformer with patch-based input and autoregressive output forecasting, mapping time-series segments to probabilistic predictions via causal attention and residual blocks. Universal Lens: Rooted in 2122-timesfm-decoder-only-foundation-model (660bca5a4c56f6ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework for sports outcomes using GSE-generated temporal patches as evidence; employs conformal prediction to derive uncertainty bands around point forecasts. GSI Mapping: Rooted in 2122-timesfm-decoder-only-foundation-model (660bca5a4c56f6ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine processes sequential game data as patch tokens; transitions between states via causal attention over historical sequences, enabling dynamic risk assessment and strategic planning. GSE Mapping: Rooted in 2122-timesfm-decoder-only-foundation-model (660bca5a4c56f6ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "patch_forecast_map",
+      "name": "Patch Forecast Map",
+      "verbatim_quote": "Equations & assumptions - Forecast map: f: y_{1:L} → ŷ_{L+1:L+H} (Eq.",
+      "page": 2,
+      "latex": "f: y_{1:L} \\rightarrow \\hat{y}_{L+1:L+H}",
+      "symbol_and_unit_ledger": "{'y_{1:L}': 'Univariate time series of length L', 'ŷ_{L+1:L+H}': 'Predicted future values of length H'}",
+      "assumptions": "Univariate time series, fixed horizon H, no external covariates.",
+      "breakdown_regime": "When L < 512 or H > 128 due to patch constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps temporal sequence patches to predictive distributions via transformer attention.",
+        "source_operator": "patch_forecast_map",
+        "telemetry": "Mean CRPS of margin distribution vs seasonal baseline."
+      }
+    },
+    {
+      "primitive_id": "input_token_generation",
+      "name": "Input Token Generation",
+      "verbatim_quote": "- Input token: t_j = InputResidualBlock(ỹ_j ⊙ (1-m̃_j)) + PE_j (Eq.",
+      "page": 2,
+      "latex": "t_j = \\text{InputResidualBlock}(\\tilde{y}_j \\odot (1-\\tilde{m}_j)) + PE_j",
+      "symbol_and_unit_ledger": "{'ỹ_j': 'Patched segment of time series', 'm̃_j': 'Mask indicator vector', 'PE_j': 'Positional encoding'}",
+      "assumptions": "Patches are exchangeable, masked regions are handled via binary mask.",
+      "breakdown_regime": "When patch size exceeds 32 or masking strategy fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes contextual information from raw time-series patches into transformer-ready tokens.",
+        "source_operator": "input_token_generation",
+        "telemetry": "Accuracy of masked token reconstruction during training."
+      }
+    },
+    {
+      "primitive_id": "output_prediction_block",
+      "name": "Output Prediction Block",
+      "verbatim_quote": "An OutputResidualBlock maps each output token o_j to a prediction of the next `output_patch_len` h=128 points: ŷ_{pj+1:pj+h} = OutputResidualBlock(o_j).",
+      "page": 1,
+      "latex": "\\hat{y}_{pj+1:pj+h} = \\text{OutputResidualBlock}(o_j)",
+      "symbol_and_unit_ledger": "{'o_j': 'Output token from transformer stack', 'h': 'Output patch length (128)'}",
+      "assumptions": "Point forecasting only, deterministic output block.",
+      "breakdown_regime": "When output patch length exceeds 128 or token context is insufficient.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates forecasted value segments from transformer output tokens.",
+        "source_operator": "output_prediction_block",
+        "telemetry": "Mean Squared Error between predicted and actual output patches."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "660bca5a4c56f6ae_t0",
+      "think": "The TimesFM architecture defines a foundational mapping from time-series segments to forecasts using a decoder-only transformer. It operates by breaking input sequences into overlapping patches of fixed size (p=32), which are then processed through an MLP-based residual block and positional encoding before entering a stacked causal transformer. Each output token is generated sequentially based on previous tokens, producing a forecast for the next patch length (h=128). The model uses random patch masking during training to simulate varying context lengths up to 512 points. This structure enables zero-shot forecasting across diverse domains but lacks probabilistic outputs and covariate support. In GSI, this framework supports Bayesian inference by treating each patch as evidence for posterior updates. In GSE, it enables state transitions through temporal reasoning over game sequences, though requires extension for uncertainty quantification and domain-specific inputs.\n\nDeep epistemic analysis for 2122-timesfm-decoder-only-foundation-model (660bca5a4c56f6ae, domain=other, pages_read=4/4): Operator 'Patch Forecast Map' (page 2, domain other) captures: Equations & assumptions - Forecast map: f: y_{1:L} → ŷ_{L+1:L+H} (Eq. Assumptions: Univariate time series, fixed horizon H, no external covariates. Breakdown regime: When L < 512 or H > 128 due to patch constraints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps temporal sequence patches to predictive distributions via transformer attention. Operator 'Input Token Generation' (page 2, domain other) captures: - Input token: t_j = InputResidualBlock(ỹ_j ⊙ (1-m̃_j)) + PE_j (Eq. Assumptions: Patches are exchangeable, masked regions are handled via binary mask. Breakdown regime: When patch size exceeds 32 or masking strategy fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes contextual information from raw time-series patches into transformer-ready tokens. Operator 'Output Prediction Block' (page 1, domain other) captures: An OutputResidualBlock maps each output token o_j to a prediction of the next `output_patch_len` h=128 points: ŷ_{pj+1:pj+h} = OutputResidualBlock(o_j). Assumptions: Point forecasting only, deterministic output block. Breakdown regime: When output patch length exceeds 128 or token context is insufficient. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates forecasted value segments from transformer output tokens. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2122-timesfm-decoder-only-foundation-model (660bca5a4c56f6ae, domain=other, pages_read=4/4): Operator 'Patch Forecast Map' (page 2, domain other) captures: Equations & assumptions - Forecast map: f: y_{1:L} → ŷ_{L+1:L+H} (Eq. Assumptions: Univariate time series, fixed horizon H, no external covariates. Breakdown regime: When L < 512 or H > 128 due to patch constraints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps temporal sequence patches to predictive distributions via transformer attention. Operator 'Input Token Generation' (page 2, domain other) captures: - Input token: t_j = InputResidualBlock(ỹ_j ⊙ (1-m̃_j)) + PE_j (Eq. Assumptions: Patches are exchangeable, masked regions are handled via binary mask. Breakdown regime: When patch size exceeds 32 or masking strategy fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes contextual information from raw time-series patches into transformer-ready tokens. Operator 'Output Prediction Block' (page 1, domain other) captures: An OutputResidualBlock maps each output token o_j to a prediction of the next `output_patch_len` h=128 points: ŷ_{pj+1:pj+h} = OutputResidualBlock(o_j). Assumptions: Point forecasting only, deterministic output block. Breakdown regime: When output patch length exceeds 128 or token context is insufficient. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates forecasted value segments from transformer output tokens. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in autoregressive transformers (Vaswani et al., 2017) and patch-based architectures (Dosovskiy et al., 2021), adapted for time-series forecasting with causal attention and residual connections. Retrocausal Genealogy: Rooted in 2122-timesfm-decoder-only-foundation-model (660bca5a4c56f6ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2122-timesfm-decoder-only-foundation-model (660bca5a4c56f6ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the model’s deterministic nature versus the stochastic reality of sports outcomes; the model assumes exchangeability of patches while sports involve non-stationary dynamics and unpredictable events. Theory of Mind & Decision Maker Model: Rooted in 2122-timesfm-decoder-only-foundation-model (660bca5a4c56f6ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If any pretraining data includes future game outcomes or if the model's coverage does not span sufficient historical games, the system rejects adoption due to leakage risk. Additionally, if the probabilistic head is not implemented, the model cannot meet GSE's requirement for calibrated uncertainty. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2122-timesfm-decoder-only-foundation-model (660bca5a4c56f6ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

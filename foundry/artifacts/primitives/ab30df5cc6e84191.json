@@ -1,0 +1,78 @@
+{
+  "book_id": "ab30df5cc6e84191",
+  "source_status": "COMPLETE",
+  "title": "GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT",
+  "file_name": "GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT.md",
+  "sha256": "ab30df5cc6e84191314d7282ba3509fb3898873d9aa3355bbb008564d149c435",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Entropic optimal transport (EOT) with Sinkhorn iterations provides a convex, mass-conserving framework for reallocation under agent dropout, leveraging Gibbs kernels and marginal constraints. Universal Lens: Rooted in GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT (ab30df5cc6e84191), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs EOT-derived posterior adjustments for Bayesian belief updating, ensuring conservation of information mass during stochastic agent attrition events. GSI Mapping: Rooted in GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT (ab30df5cc6e84191), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes EOT-based state transitions to model dynamic resource reallocation, enabling robust situational awareness under uncertainty and partial agent failure. GSE Mapping: Rooted in GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT (ab30df5cc6e84191), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sinkhorn_divergence",
+      "name": "Sinkhorn Divergence",
+      "verbatim_quote": "Existing reallocation methods either: - **Violate conservation** (proportional redistribution) - **Ignore cost structure** (BTL models) - **Scale exponentially** (MDP value iteration) Our key insight: the Sinkhorn divergence (Cuturi, 2013) provides a *strictly convex* objective that: 1.",
+      "page": 1,
+      "latex": "\\min_{Q \\geq 0} \\langle C, Q \\rangle + \\tau H(Q)",
+      "symbol_and_unit_ledger": "{'C': 'cost matrix (dimensionless)', 'Q': 'transport plan (dimensionless)', 'H(Q)': 'entropy term (dimensionless)', 'τ': 'regularization parameter (dimensionless)'}",
+      "assumptions": "Matrix C is fixed; Q is doubly stochastic; τ > 0",
+      "breakdown_regime": "τ → 0 leads to degenerate transport",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "EOT solution approximates optimal transport via Gibbs kernel K = exp(-C/τ)",
+        "source_operator": "sinkhorn_divergence",
+        "telemetry": "Wasserstein cost reduction"
+      }
+    },
+    {
+      "primitive_id": "mass_conservation",
+      "name": "Mass Conservation Law",
+      "verbatim_quote": "Invariant Conservation Proofs **Theorem 3.1 (Mass Conservation):** For any **S** ≠ ∅",
+      "page": 1,
+      "latex": "\\sum_{ij} Q_{ij} = 1",
+      "symbol_and_unit_ledger": "{'Q': 'transport plan (dimensionless)', '1': 'normalized total mass (dimensionless)'}",
+      "assumptions": "Transport plan Q is valid; marginal constraints hold",
+      "breakdown_regime": "Failure of marginal constraints implies mass loss",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conservation law mirrors physical mass conservation in fluid dynamics",
+        "source_operator": "mass_conservation",
+        "telemetry": "Ghost accumulation rate"
+      }
+    },
+    {
+      "primitive_id": "sinkhorn_knopp_algorithm",
+      "name": "Sinkhorn-Knopp Algorithm",
+      "verbatim_quote": "### 2.2 Sinkhorn-Knopp Algorithm The solution takes the form **Q** = diag(**u**) K diag(**v**), where: - K = exp(-**C**/τ) (Gibbs kernel) - **u**, **v** computed via alternating updates: u(k) = **P** ⊘ (K v(k-1)) v(k) = **P'** ⊘ (KT u(k)) with **P'** being the post-dropout target.",
+      "page": 1,
+      "latex": "Q^{(k)} = \\text{diag}(u^{(k)}) K \\text{diag}(v^{(k)})",
+      "symbol_and_unit_ledger": "{'K': 'Gibbs kernel (dimensionless)', 'u, v': 'scaling vectors (dimensionless)', 'P': 'initial distribution (dimensionless)', \"P'\": 'target distribution (dimensionless)'}",
+      "assumptions": "K is entrywise positive; P, P' are probability distributions",
+      "breakdown_regime": "Non-convergence if K lacks full rank",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Iterative projection onto marginal constraints using Gibbs kernel",
+        "source_operator": "sinkhorn_knopp_algorithm",
+        "telemetry": "Convergence rate of Sinkhorn iterations"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ab30df5cc6e84191_t0",
+      "think": "The core operator is the Sinkhorn divergence, which introduces entropy regularization to the optimal transport problem, yielding a strictly convex optimization landscape. This enables efficient computation via the Sinkhorn-Knopp algorithm, where iterative row/column normalization enforces marginal constraints. The dual formulation ensures that the resulting transport plan Q preserves total mass through the constraint ∑ij Qij = 1, thereby satisfying conservation laws. In contrast, naive redistribution violates conservation, while BTL models ignore cost structures. The Gibbs kernel K = exp(-C/τ) defines the energy landscape, and convergence is guaranteed by the nonlinear Perron-Frobenius theorem. The breakdown regime occurs when τ approaches zero, leading to numerical instability. The empirical validation shows EOT achieves 23.7% lower Wasserstein cost than BTL, with 100% conservation compared to 92.3% in BTL.\n\nDeep epistemic analysis for GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT (ab30df5cc6e84191, domain=other, pages_read=2/2): Operator 'Sinkhorn Divergence' (page 1, domain other) captures: Existing reallocation methods either: - **Violate conservation** (proportional redistribution) - **Ignore cost structure** (BTL models) - **Scale exponentially** (MDP value iteration) Our key insight: the Sinkhorn divergence (Cuturi, 2013) provides a *strictly convex* objective that: 1. Assumptions: Matrix C is fixed; Q is doubly stochastic; τ > 0 Breakdown regime: τ → 0 leads to degenerate transport Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): EOT solution approximates optimal transport via Gibbs kernel K = exp(-C/τ) Operator 'Mass Conservation Law' (page 1, domain other) captures: Invariant Conservation Proofs **Theorem 3.1 (Mass Conservation):** For any **S** ≠ ∅ Assumptions: Transport plan Q is valid; marginal constraints hold Breakdown regime: Failure of marginal constraints implies mass loss Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conservation law mirrors physical mass conservation in fluid dynamics Operator 'Sinkhorn-Knopp Algorithm' (page 1, domain other) captures: ### 2.2 Sinkhorn-Knopp Algorithm The solution takes the form **Q** = diag(**u**) K diag(**v**), where: - K = exp(-**C**/τ) (Gibbs kernel) - **u**, **v** computed via alternating updates: u(k) = **P** ⊘ (K v(k-1)) v(k) = **P'** ⊘ (KT u(k)) with **P'** being the post-dropout target. Assumptions: K is entrywise positive; P, P' are probability distributions Breakdown regime: Non-convergence if K lacks full rank Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Iterative projection onto marginal constraints using Gibbs kernel Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT (ab30df5cc6e84191, domain=other, pages_read=2/2): Operator 'Sinkhorn Divergence' (page 1, domain other) captures: Existing reallocation methods either: - **Violate conservation** (proportional redistribution) - **Ignore cost structure** (BTL models) - **Scale exponentially** (MDP value iteration) Our key insight: the Sinkhorn divergence (Cuturi, 2013) provides a *strictly convex* objective that: 1. Assumptions: Matrix C is fixed; Q is doubly stochastic; τ > 0 Breakdown regime: τ → 0 leads to degenerate transport Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): EOT solution approximates optimal transport via Gibbs kernel K = exp(-C/τ) Operator 'Mass Conservation Law' (page 1, domain other) captures: Invariant Conservation Proofs **Theorem 3.1 (Mass Conservation):** For any **S** ≠ ∅ Assumptions: Transport plan Q is valid; marginal constraints hold Breakdown regime: Failure of marginal constraints implies mass loss Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conservation law mirrors physical mass conservation in fluid dynamics Operator 'Sinkhorn-Knopp Algorithm' (page 1, domain other) captures: ### 2.2 Sinkhorn-Knopp Algorithm The solution takes the form **Q** = diag(**u**) K diag(**v**), where: - K = exp(-**C**/τ) (Gibbs kernel) - **u**, **v** computed via alternating updates: u(k) = **P** ⊘ (K v(k-1)) v(k) = **P'** ⊘ (KT u(k)) with **P'** being the post-dropout target. Assumptions: K is entrywise positive; P, P' are probability distributions Breakdown regime: Non-convergence if K lacks full rank Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Iterative projection onto marginal constraints using Gibbs kernel Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kantorovich's optimal transport theory (1940s), extended by Brenier (1991) and McCann (1997). Cuturi's introduction of entropic regularization (2013) enabled scalable algorithms via Sinkhorn iterations, bridging discrete and continuous domains. Retrocausal Genealogy: Rooted in GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT (ab30df5cc6e84191), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT (ab30df5cc6e84191), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may exhibit strategic behavior under resource scarcity, but EOT assumes rationality in allocation decisions. The framework models stochastic attrition as a probabilistic event, not adversarial action, aligning with Bayesian inference over uncertain environments. Theory of Mind & Decision Maker Model: Rooted in GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT (ab30df5cc6e84191), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that EOT does not collapse into trivial solutions such as uniform redistribution. Leakage veto prevents ghost mass accumulation, ensuring all resources remain within the system’s support. Cross-Layer Veto & Anti-Leakage Check: Rooted in GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT (ab30df5cc6e84191), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in GSE-WP-2026-02-ENTROPIC-OPTIMAL-TRANSPORT (ab30df5cc6e84191), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

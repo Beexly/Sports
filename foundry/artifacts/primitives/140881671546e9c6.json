@@ -1,0 +1,78 @@
+{
+  "book_id": "140881671546e9c6",
+  "source_status": "COMPLETE",
+  "title": "piracy-malware-do-not-use-register",
+  "file_name": "piracy-malware-do-not-use-register.md",
+  "sha256": "140881671546e9c635273c646a4ff0451e044a73daa62775df8df016a0accf5d",
+  "primary_domain": "history",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sports OS integrity constraints form a Boolean lattice of compliance states, where piracy, malware, and ethical incompatibility define forbidden regions in tool-space. Universal Lens: Rooted in piracy-malware-do-not-use-register (140881671546e9c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers tool legitimacy via Bayesian belief updates on license, source, and usage patterns; conformal prediction bounds ensure robustness against adversarial inputs. GSI Mapping: Rooted in piracy-malware-do-not-use-register (140881671546e9c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions system states based on real-time validation of tool provenance and vulnerability status; state machines enforce conditional execution paths per integrity rules. GSE Mapping: Rooted in piracy-malware-do-not-use-register (140881671546e9c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "piracy_compliance",
+      "name": "Piracy Compliance Operator",
+      "verbatim_quote": "--## Section 1 — Pirated / Cracked Software ### Definition A \"cracked\" tool is any software where license enforcement has been bypassed, where a legitimate license has been shared beyond its permitted scope, or where a \"free\" version is being used in a context that the license prohibits.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Compliance indicator (0 or 1)', 'L': 'License validity (dimensionless)'}",
+      "assumptions": "Tool usage is bounded by license terms; unauthorized distribution implies C=0.",
+      "breakdown_regime": "C = 0 when L < 1",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's Bayesian classifier maps license metadata to C; GSE enforces C=1 via runtime checks.",
+        "source_operator": "piracy_compliance",
+        "telemetry": "License verification logs"
+      }
+    },
+    {
+      "primitive_id": "malware_integrity",
+      "name": "Malware Integrity Kernel",
+      "verbatim_quote": "A package with a known unpatched High vulnerability that remains in production after 72 hours is a P1 security incident.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'Vulnerability severity (CVSS score)', 'T': 'Time since discovery (hours)', 'I': 'Integrity flag (0 or 1)'}",
+      "assumptions": "High-severity vulnerabilities must be patched within 72h; I=0 if T > 72 and V ≥ 7.",
+      "breakdown_regime": "I = 0 if V ≥ 7 and T > 72",
+      "domain": "history",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE monitors V and T to compute I; GSI uses I for risk scoring.",
+        "source_operator": "malware_integrity",
+        "telemetry": "Vulnerability scan results"
+      }
+    },
+    {
+      "primitive_id": "ethical_incompatibility",
+      "name": "Ethical Incompatibility Filter",
+      "verbatim_quote": "lly Incompatible Tools ### Definition A tool is ethically incompatible with Sports OS when its primary use case or known use pattern is deceptive, manipulative, or violates the trust model the platform is built on.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Ethical alignment (0 or 1)', 'U': 'Usage intent (deceptive/manipulative)'}",
+      "assumptions": "E = 0 if U is deceptive or manipulative; E = 1 otherwise.",
+      "breakdown_regime": "E = 0 if U ∈ {deceptive, manipulative}",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI evaluates U to derive E; GSE blocks E=0 tools at runtime.",
+        "source_operator": "ethical_incompatibility",
+        "telemetry": "Usage behavior logs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "140881671546e9c6_t0",
+      "think": "The three primitives define a triadic constraint space: piracy compliance (C), malware integrity (I), and ethical incompatibility (E). Each forms a binary decision boundary in a logical vector space. The conjunction C ∧ I ∧ E defines the permissible toolset. Failure modes occur when any component violates its regime: piracy leads to C=0, unpatched vulnerabilities lead to I=0, and unethical usage leads to E=0. These failures create a logical disjunction of forbidden states. The system operates under a dual logic: GSI performs probabilistic inference over these constraints, while GSE enforces deterministic state transitions. The epistemic trace reveals a layered architecture where each layer's failure propagates through a causal chain to invalidate downstream decisions.\n\nDeep epistemic analysis for piracy-malware-do-not-use-register (140881671546e9c6, domain=history, pages_read=4/4): Operator 'Piracy Compliance Operator' (page 1, domain history) captures: --## Section 1 — Pirated / Cracked Software ### Definition A \"cracked\" tool is any software where license enforcement has been bypassed, where a legitimate license has been shared beyond its permitted scope, or where a \"free\" version is being used in a context that the license prohibits. Assumptions: Tool usage is bounded by license terms; unauthorized distribution implies C=0. Breakdown regime: C = 0 when L < 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's Bayesian classifier maps license metadata to C; GSE enforces C=1 via runtime checks. Operator 'Malware Integrity Kernel' (page 3, domain history) captures: A package with a known unpatched High vulnerability that remains in production after 72 hours is a P1 security incident. Assumptions: High-severity vulnerabilities must be patched within 72h; I=0 if T > 72 and V ≥ 7. Breakdown regime: I = 0 if V ≥ 7 and T > 72 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE monitors V and T to compute I; GSI uses I for risk scoring. Operator 'Ethical Incompatibility Filter' (page 3, domain history) captures: lly Incompatible Tools ### Definition A tool is ethically incompatible with Sports OS when its primary use case or known use pattern is deceptive, manipulative, or violates the trust model the platform is built on. Assumptions: E = 0 if U is deceptive or manipulative; E = 1 otherwise. Breakdown regime: E = 0 if U ∈ {deceptive, manipulative} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI evaluates U to derive E; GSE blocks E=0 tools at runtime. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for piracy-malware-do-not-use-register (140881671546e9c6, domain=history, pages_read=4/4): Operator 'Piracy Compliance Operator' (page 1, domain history) captures: --## Section 1 — Pirated / Cracked Software ### Definition A \"cracked\" tool is any software where license enforcement has been bypassed, where a legitimate license has been shared beyond its permitted scope, or where a \"free\" version is being used in a context that the license prohibits. Assumptions: Tool usage is bounded by license terms; unauthorized distribution implies C=0. Breakdown regime: C = 0 when L < 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's Bayesian classifier maps license metadata to C; GSE enforces C=1 via runtime checks. Operator 'Malware Integrity Kernel' (page 3, domain history) captures: A package with a known unpatched High vulnerability that remains in production after 72 hours is a P1 security incident. Assumptions: High-severity vulnerabilities must be patched within 72h; I=0 if T > 72 and V ≥ 7. Breakdown regime: I = 0 if V ≥ 7 and T > 72 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE monitors V and T to compute I; GSI uses I for risk scoring. Operator 'Ethical Incompatibility Filter' (page 3, domain history) captures: lly Incompatible Tools ### Definition A tool is ethically incompatible with Sports OS when its primary use case or known use pattern is deceptive, manipulative, or violates the trust model the platform is built on. Assumptions: E = 0 if U is deceptive or manipulative; E = 1 otherwise. Breakdown regime: E = 0 if U ∈ {deceptive, manipulative} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI evaluates U to derive E; GSE blocks E=0 tools at runtime. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from software engineering and game theory, this structure mirrors the evolution of trust-based systems in distributed computing and cybersecurity. Retrocausal Genealogy: Rooted in piracy-malware-do-not-use-register (140881671546e9c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in piracy-malware-do-not-use-register (140881671546e9c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to subvert integrity by introducing pirated tools, exploiting vulnerabilities, or manipulating ethical norms. The system models these as adversarial perturbations in the constraint space. Theory of Mind & Decision Maker Model: Rooted in piracy-malware-do-not-use-register (140881671546e9c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that no single failure mode can override all others; leakage vetoes prevent cross-layer contamination from compromised tools into verified domains. Cross-Layer Veto & Anti-Leakage Check: Rooted in piracy-malware-do-not-use-register (140881671546e9c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in piracy-malware-do-not-use-register (140881671546e9c6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

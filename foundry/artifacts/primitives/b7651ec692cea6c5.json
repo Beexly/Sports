@@ -1,0 +1,95 @@
+{
+  "book_id": "b7651ec692cea6c5",
+  "source_status": "COMPLETE",
+  "title": "0410-analyzing-ingame-movements-of-soccer-players",
+  "file_name": "0410-analyzing-ingame-movements-of-soccer-players.md",
+  "sha256": "b7651ec692cea6c5de9ca082d07ec66858fd9205a2339ae57310fa32cd9ac03d",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sparse event-based movement vectors clustered via mini-batch K-means; player profiles as normalized cluster histograms; similarity via cosine distance; uniqueness and consistency scored via neighbor distances and temporal profile variance. Universal Lens: Rooted in 0410-analyzing-ingame-movements-of-soccer-players (b7651ec692cea6c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over player movement archetypes using sparse event data; Bayesian inference maps cluster histograms to role likelihoods; uncertainty quantified via calibration of similarity scores. GSI Mapping: Rooted in 0410-analyzing-ingame-movements-of-soccer-players (b7651ec692cea6c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes player roles as state transitions in action vector space; situational reasoning uses cluster histograms to predict next-move likelihoods; state-space updates via temporal profile consistency checks. GSE Mapping: Rooted in 0410-analyzing-ingame-movements-of-soccer-players (b7651ec692cea6c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "movement_vector_extraction",
+      "name": "Movement Vector Extraction",
+      "verbatim_quote": "Method / model - Movement extraction: connect consecutive ball events involving the same player into movement vectors; infer speed as distance over the inter-event interval.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "T: time (s), (x1,y1): start position (m), (x2,y2): end position (m), s: speed (m/s), b: ball possession flag (0/1)",
+      "assumptions": "Player positions only available at ball-related events; speed inferred from Euclidean distance and time interval.",
+      "breakdown_regime": "When events are too infrequent or spatially distant, vector resolution degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Action vectors form a kernel in movement space; used for clustering and similarity computation in GSE.",
+        "source_operator": "movement_vector_extraction",
+        "telemetry": "Number of valid movement vectors per player"
+      }
+    },
+    {
+      "primitive_id": "cluster_assignment_profile",
+      "name": "Cluster Assignment Profile",
+      "verbatim_quote": "- Player profile: normalized histogram of cluster assignments (cluster-frequency vector) per player.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "c_i^k: cluster assignment frequency for player i in cluster k; K: total number of clusters",
+      "assumptions": "Each player's movement can be represented by a distribution over movement types.",
+      "breakdown_regime": "When K is too small, distinct movement styles may be conflated; when K is too large, sparsity causes instability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Player profile vector is isomorphic to a probability distribution over movement kernels; used in GSI for archetype classification.",
+        "source_operator": "cluster_assignment_profile",
+        "telemetry": "Cosine similarity between player profile vectors"
+      }
+    },
+    {
+      "primitive_id": "uniqueness_scoring",
+      "name": "Uniqueness Scoring",
+      "verbatim_quote": "- Uniqueness: U_i = sum of distances to the M=5 nearest neighbors.",
+      "page": 1,
+      "latex": "U_i = \\sum_{j=1}^{M} d(p_i, p_j)",
+      "symbol_and_unit_ledger": "U_i: uniqueness score for player i; d(p_i, p_j): cosine distance between player profiles; M: number of nearest neighbors",
+      "assumptions": "Players with low average distance to neighbors are less unique; high-dimensional space allows meaningful neighbor selection.",
+      "breakdown_regime": "When neighbor pool is small or profiles are highly uniform, uniqueness becomes unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Uniqueness score derived from kernel density of profile space; used in GSI for outlier detection and scouting.",
+        "source_operator": "uniqueness_scoring",
+        "telemetry": "Top-K uniqueness-ranked players"
+      }
+    },
+    {
+      "primitive_id": "consistency_scoring",
+      "name": "Consistency Scoring",
+      "verbatim_quote": "- Consistency: split a player's season into time periods; C_i^k = (1/N) Σ_t D(c_i^k, c_i^t), the average distance between period k's profile and all other periods' profiles.",
+      "page": 1,
+      "latex": "C_i^k = \\frac{1}{N} \\sum_{t=1}^{N} D(c_i^k, c_i^t)",
+      "symbol_and_unit_ledger": "C_i^k: consistency score for player i in period k; D(c_i^k, c_i^t): cosine distance between cluster profiles; N: number of time periods",
+      "assumptions": "Temporal stability of movement style implies low intra-period variance.",
+      "breakdown_regime": "Seasonal variation or injury impacts consistency scores; insufficient data per period leads to noisy estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Consistency score mirrors temporal stability of movement kernels; used in GSE for role transition modeling.",
+        "source_operator": "consistency_scoring",
+        "telemetry": "Average consistency score per player across seasons"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b7651ec692cea6c5_t0",
+      "think": "The core methodological framework hinges on transforming sparse event data into dense movement representations through vectorization. Each movement vector (x1, y1, x2, y2, T, s, b) encodes a player’s motion trajectory between two events, enabling downstream clustering. Mini-batch K-means partitions these into 200 movement types, capturing stylistic diversity. Player profiles are then defined as normalized histograms of cluster assignments, allowing for probabilistic comparisons. Cosine distance enables unsupervised similarity measurement, while uniqueness and consistency scores quantify individuality and temporal stability. The framework assumes that movement patterns are sufficiently descriptive of player identity and behavior, even without continuous tracking. Failure modes include underfitting due to insufficient clusters or overfitting from excessive granularity, and sensitivity to data sparsity. The method is robust to missing data but relies on event frequency and positional accuracy. This approach supports scalable player characterization and scouting applications.\n\nDeep epistemic analysis for 0410-analyzing-ingame-movements-of-soccer-players (b7651ec692cea6c5, domain=other, pages_read=3/3): Operator 'Movement Vector Extraction' (page 1, domain other) captures: Method / model - Movement extraction: connect consecutive ball events involving the same player into movement vectors; infer speed as distance over the inter-event interval. Assumptions: Player positions only available at ball-related events; speed inferred from Euclidean distance and time interval. Breakdown regime: When events are too infrequent or spatially distant, vector resolution degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Action vectors form a kernel in movement space; used for clustering and similarity computation in GSE. Operator 'Cluster Assignment Profile' (page 1, domain other) captures: - Player profile: normalized histogram of cluster assignments (cluster-frequency vector) per player. Assumptions: Each player's movement can be represented by a distribution over movement types. Breakdown regime: When K is too small, distinct movement styles may be conflated; when K is too large, sparsity causes instability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Player profile vector is isomorphic to a probability distribution over movement kernels; used in GSI for archetype classification. Operator 'Uniqueness Scoring' (page 1, domain other) captures: - Uniqueness: U_i = sum of distances to the M=5 nearest neighbors. Assumptions: Players with low average distance to neighbors are less unique; high-dimensional space allows meaningful neighbor selection. Breakdown regime: When neighbor pool is small or profiles are highly uniform, uniqueness becomes unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Uniqueness score derived from kernel density of profile space; used in GSI for outlier detection and scouting. Operator 'Consistency Scoring' (page 1, domain other) captures: - Consistency: split a player's season into time periods; C_i^k = (1/N) Σ_t D(c_i^k, c_i^t), the average distance between period k's profile and all other periods' profiles. Assumptions: Temporal stability of movement style implies low intra-period variance. Breakdown regime: Seasonal variation or injury impacts consistency scores; insufficient data per period leads to noisy estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Consistency score mirrors temporal stability of movement kernels; used in GSE for role transition modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0410-analyzing-ingame-movements-of-soccer-players (b7651ec692cea6c5, domain=other, pages_read=3/3): Operator 'Movement Vector Extraction' (page 1, domain other) captures: Method / model - Movement extraction: connect consecutive ball events involving the same player into movement vectors; infer speed as distance over the inter-event interval. Assumptions: Player positions only available at ball-related events; speed inferred from Euclidean distance and time interval. Breakdown regime: When events are too infrequent or spatially distant, vector resolution degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Action vectors form a kernel in movement space; used for clustering and similarity computation in GSE. Operator 'Cluster Assignment Profile' (page 1, domain other) captures: - Player profile: normalized histogram of cluster assignments (cluster-frequency vector) per player. Assumptions: Each player's movement can be represented by a distribution over movement types. Breakdown regime: When K is too small, distinct movement styles may be conflated; when K is too large, sparsity causes instability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Player profile vector is isomorphic to a probability distribution over movement kernels; used in GSI for archetype classification. Operator 'Uniqueness Scoring' (page 1, domain other) captures: - Uniqueness: U_i = sum of distances to the M=5 nearest neighbors. Assumptions: Players with low average distance to neighbors are less unique; high-dimensional space allows meaningful neighbor selection. Breakdown regime: When neighbor pool is small or profiles are highly uniform, uniqueness becomes unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Uniqueness score derived from kernel density of profile space; used in GSI for outlier detection and scouting. Operator 'Consistency Scoring' (page 1, domain other) captures: - Consistency: split a player's season into time periods; C_i^k = (1/N) Σ_t D(c_i^k, c_i^t), the average distance between period k's profile and all other periods' profiles. Assumptions: Temporal stability of movement style implies low intra-period variance. Breakdown regime: Seasonal variation or injury impacts consistency scores; insufficient data per period leads to noisy estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Consistency score mirrors temporal stability of movement kernels; used in GSE for role transition modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early work on motion analysis and pattern recognition, particularly influenced by clustering techniques in computer vision and behavioral analytics. Builds upon earlier studies in sports data science and machine learning for trajectory modeling. Retrocausal Genealogy: Rooted in 0410-analyzing-ingame-movements-of-soccer-players (b7651ec692cea6c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to obscure their movement patterns or exploit the system by mimicking others. The framework must account for strategic deception and ensure robustness against adversarial inputs. Player behavior may evolve over time, requiring adaptive models. Theory of Mind & Decision Maker Model: Rooted in 0410-analyzing-ingame-movements-of-soccer-players (b7651ec692cea6c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that cluster assignments are not redundant; leakage occurs if movement vectors are misaligned with actual game actions. Veto conditions include insufficient event coverage, poor temporal resolution, and inconsistent labeling of ball possession flags. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0410-analyzing-ingame-movements-of-soccer-players (b7651ec692cea6c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

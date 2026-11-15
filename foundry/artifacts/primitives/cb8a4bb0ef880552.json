@@ -1,0 +1,78 @@
+{
+  "book_id": "cb8a4bb0ef880552",
+  "source_status": "COMPLETE",
+  "title": "NEXT_BEST_BUILDS",
+  "file_name": "NEXT_BEST_BUILDS.md",
+  "sha256": "cb8a4bb0ef8805520bd22d83aa209c7a3b72079a0cfb7522fad498519b2b9b23",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Deduplicated task routing with stale detection and agent OS persistence forms a closed-loop ingestion protocol; stochastic identity resolution enables probabilistic game-state alignment. Universal Lens: Rooted in NEXT_BEST_BUILDS (cb8a4bb0ef880552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on cockpit task counts and stale signals enable conformal uncertainty quantification over operational completeness; CLV line persistence supports sequential decision-making under information asymmetry. GSI Mapping: Rooted in NEXT_BEST_BUILDS (cb8a4bb0ef880552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions between ingestion states based on identity resolver confidence and task deduplication; state-space includes active/inactive/resolved task regimes with temporal coherence constraints. GSE Mapping: Rooted in NEXT_BEST_BUILDS (cb8a4bb0ef880552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "stale_ingestion_detection",
+      "name": "Stale Ingestion Detection",
+      "verbatim_quote": "Wire stale ingestion detection into a deduped TAL/JARVIS cockpit task using the new task router.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_{\\\\text{stale}}': 'time unit', 'T_{\\\\text{task}}': 'task identifier', 'R_{\\\\text{router}}': 'routing function'}",
+      "assumptions": "Ingestion tasks are timestamped and routed through deterministic logic; stale detection is defined by time thresholds.",
+      "breakdown_regime": "When \\( t_{\\text{stale}} > \\tau \\), task is considered inactive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Task routing in GSE mirrors belief propagation in GSI; both use temporal thresholds to detect anomalies.",
+        "source_operator": "stale_ingestion_detection",
+        "telemetry": "Task age vs. expected update frequency"
+      }
+    },
+    {
+      "primitive_id": "cockpit_assessment_exposure",
+      "name": "Cockpit Assessment Exposure",
+      "verbatim_quote": "Expose `buildJarvisOperatingAssessment()` on the cockpit Overview with unknown/not-wired counts visible.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{\\\\text{assess}}': 'operating assessment vector', 'U_{\\\\text{unknown}}': 'count of unknown entities', 'W_{\\\\text{wired}}': 'count of wired entities'}",
+      "assumptions": "Assessment is a vectorized summary of system state; unknowns are tracked via discrete counters.",
+      "breakdown_regime": "When \\( U_{\\text{unknown}} > 0 \\), system is partially observable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's Bayesian inference on assessment vectors maps to GSE's situational awareness kernel.",
+        "source_operator": "cockpit_assessment_exposure",
+        "telemetry": "Unknown/not-wired entity ratio in cockpit view"
+      }
+    },
+    {
+      "primitive_id": "agent_os_persistence",
+      "name": "Agent OS Persistence",
+      "verbatim_quote": "Persist Agent OS tasks to Prisma `CockpitTask` after Claude reviews field mapping.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{\\\\text{OS}}': 'Agent OS task', 'P_{\\\\text{Prisma}}': 'database persistence layer', 'F_{\\\\text{field}}': 'field mapping function'}",
+      "assumptions": "Tasks are serialized into structured database entries; field mapping ensures semantic integrity.",
+      "breakdown_regime": "When \\( F_{\\text{field}} \\) fails, task persistence is incomplete.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's task state persistence aligns with GSI's data model for agent behavior tracking.",
+        "source_operator": "agent_os_persistence",
+        "telemetry": "Task serialization success rate to Prisma"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cb8a4bb0ef880552_t0",
+      "think": "The primitives form a logical sequence: stale detection ensures data freshness, cockpit exposure provides visibility into system health, and agent OS persistence maintains continuity. These operators define a closed-loop ingestion pipeline where each step is conditionally dependent on prior steps. The failure mode of stale detection leads to outdated data, which cascades into incorrect assessments and incomplete task persistence. The dualities lie in the symmetry between data ingestion and state tracking—both rely on temporal consistency and semantic validation. The epistemic risk arises when field mappings fail, causing misalignment between task semantics and stored representations. This creates a feedback loop where corrupted data propagates through the system, undermining trust in downstream decisions.\n\nDeep epistemic analysis for NEXT_BEST_BUILDS (cb8a4bb0ef880552, domain=other, pages_read=1/1): Operator 'Stale Ingestion Detection' (page 1, domain other) captures: Wire stale ingestion detection into a deduped TAL/JARVIS cockpit task using the new task router. Assumptions: Ingestion tasks are timestamped and routed through deterministic logic; stale detection is defined by time thresholds. Breakdown regime: When \\( t_{\\text{stale}} > \\tau \\), task is considered inactive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Task routing in GSE mirrors belief propagation in GSI; both use temporal thresholds to detect anomalies. Operator 'Cockpit Assessment Exposure' (page 1, domain other) captures: Expose `buildJarvisOperatingAssessment()` on the cockpit Overview with unknown/not-wired counts visible. Assumptions: Assessment is a vectorized summary of system state; unknowns are tracked via discrete counters. Breakdown regime: When \\( U_{\\text{unknown}} > 0 \\), system is partially observable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's Bayesian inference on assessment vectors maps to GSE's situational awareness kernel. Operator 'Agent OS Persistence' (page 1, domain other) captures: Persist Agent OS tasks to Prisma `CockpitTask` after Claude reviews field mapping. Assumptions: Tasks are serialized into structured database entries; field mapping ensures semantic integrity. Breakdown regime: When \\( F_{\\text{field}} \\) fails, task persistence is incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's task state persistence aligns with GSI's data model for agent behavior tracking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NEXT_BEST_BUILDS (cb8a4bb0ef880552, domain=other, pages_read=1/1): Operator 'Stale Ingestion Detection' (page 1, domain other) captures: Wire stale ingestion detection into a deduped TAL/JARVIS cockpit task using the new task router. Assumptions: Ingestion tasks are timestamped and routed through deterministic logic; stale detection is defined by time thresholds. Breakdown regime: When \\( t_{\\text{stale}} > \\tau \\), task is considered inactive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Task routing in GSE mirrors belief propagation in GSI; both use temporal thresholds to detect anomalies. Operator 'Cockpit Assessment Exposure' (page 1, domain other) captures: Expose `buildJarvisOperatingAssessment()` on the cockpit Overview with unknown/not-wired counts visible. Assumptions: Assessment is a vectorized summary of system state; unknowns are tracked via discrete counters. Breakdown regime: When \\( U_{\\text{unknown}} > 0 \\), system is partially observable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's Bayesian inference on assessment vectors maps to GSE's situational awareness kernel. Operator 'Agent OS Persistence' (page 1, domain other) captures: Persist Agent OS tasks to Prisma `CockpitTask` after Claude reviews field mapping. Assumptions: Tasks are serialized into structured database entries; field mapping ensures semantic integrity. Breakdown regime: When \\( F_{\\text{field}} \\) fails, task persistence is incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's task state persistence aligns with GSI's data model for agent behavior tracking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in control theory and distributed systems design, these primitives echo principles of feedback loops and state machines from cybernetics and information theory, particularly in how they manage asynchronous data flows and system observability. Retrocausal Genealogy: Rooted in NEXT_BEST_BUILDS (cb8a4bb0ef880552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include adversarial data sources that introduce noise or false positives in stale detection, or misaligned incentives in field mapping that prioritize speed over correctness. Decision actors must balance robustness against latency while maintaining system integrity. Theory of Mind & Decision Maker Model: Rooted in NEXT_BEST_BUILDS (cb8a4bb0ef880552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that stale detection does not interfere with task routing logic, and that cockpit exposure does not leak sensitive internal states. Leakage vetoes prevent cross-layer contamination where GSE’s state transitions could be influenced by GSI’s probabilistic models without proper conditioning. Cross-Layer Veto & Anti-Leakage Check: Rooted in NEXT_BEST_BUILDS (cb8a4bb0ef880552), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

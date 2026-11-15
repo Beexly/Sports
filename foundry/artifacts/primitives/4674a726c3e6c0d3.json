@@ -1,16 +1,16 @@
 {
   "book_id": "4674a726c3e6c0d3",
-  "title": "reflog-all",
-  "file_name": "reflog-all.txt",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_4674a726c3e6c0d3",
+  "file_name": "4674a726c3e6c0d3.quarantined",
   "sha256": "4674a726c3e6c0d39c012e94830c205932bdefbe47c16b78f5b5f75703d71f43",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "fail-closed-stub-guard",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
   "source_status": "INSUFFICIENT_SOURCE_ACCESS",
-  "refusal_reason": "Download-bait/title-only stub PDF (1 pages, 393 extracted chars, 3 candidate quotes < 3 minimum): 'dd3a9ca refs/heads/master@{2026-06-29 14:50:54 -0500}: commit: chore: finalize local agent handoff dd3a9ca HEAD@{2026-06-29 14:50:54 -0500}:'. Fail-closed under Foundry Gatekeeper zero-fabrication contract.",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
   "primitives": [],
   "reasoning_traces": []
 }

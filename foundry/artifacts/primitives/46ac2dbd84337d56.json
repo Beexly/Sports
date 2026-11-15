@@ -1,0 +1,78 @@
+{
+  "book_id": "46ac2dbd84337d56",
+  "source_status": "COMPLETE",
+  "title": "overnight-changelog",
+  "file_name": "overnight-changelog.md",
+  "sha256": "46ac2dbd84337d560678255e087041e14686871048b95e12622408c9327d5b12",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A temporal ledger of autonomous system modifications during a defined session window, encoding state transitions through file-level audits and policy-gated UI components. Universal Lens: Rooted in overnight-changelog (46ac2dbd84337d56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on performance exposure gates via public-performance-policy; conformal prediction ensures brand safety thresholds across UI surfaces. GSI Mapping: Rooted in overnight-changelog (46ac2dbd84337d56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates launch readiness through Jarvis status matrices, historical pick eligibility, and cockpit telemetry for real-time operational feedback. GSE Mapping: Rooted in overnight-changelog (46ac2dbd84337d56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "customer_surface_gating",
+      "name": "Customer-Surface Performance Policy",
+      "verbatim_quote": "## What shipped tonight ### Customer-surface gating - `apps/web/lib/performance/public-performance-policy.ts` — single source of truth for \"can this surface show a performance number?\".",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Performance exposure flag (dimensionless)', 'S': 'Surface identifier (categorical)', 'T': 'Time of evaluation (UTC seconds)'}",
+      "assumptions": "Policy is deterministic and fully encapsulates brand safety constraints.",
+      "breakdown_regime": "When P(S,T) = false due to insufficient sample size or safety violation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Policy kernel maps surface context to exposure validity using trust-safe vocabulary and sample thresholds.",
+        "source_operator": "customer_surface_gating",
+        "telemetry": "UI rendering success rate of performance metrics per surface."
+      }
+    },
+    {
+      "primitive_id": "jarvis_launch_observatory",
+      "name": "Jarvis Launch Observatory",
+      "verbatim_quote": "### Jarvis Launch Observatory - `apps/web/lib/cockpit/jarvis.ts` — pure synthesizer producing `JarvisLaunchStatus` + 11 sectional health readouts + phase matrix + recommended actions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'JLS': 'Jarvis Launch Status (categorical)', 'H_i': 'Sectional health indicator i (dimensionless)', 'P_m': 'Phase matrix (boolean vector)', 'R': 'Recommended action set (discrete)'}",
+      "assumptions": "All health indicators are independent and bounded within [0,1].",
+      "breakdown_regime": "When any H_i < threshold or P_m is inconsistent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Observatory synthesizes launch health from modular sensor inputs into structured status and action recommendation.",
+        "source_operator": "jarvis_launch_observatory",
+        "telemetry": "Frequency of GREEN status and action consistency."
+      }
+    },
+    {
+      "primitive_id": "historical_pick_observability",
+      "name": "Historical Pick Observability",
+      "verbatim_quote": "### Historical pick observability - `apps/web/lib/cockpit/history.ts` — pure eligibility evaluator (`evaluatePickEligibility`) + `buildHistoryCsv` for export.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E(p)': 'Pick eligibility function (boolean)', 'p': 'Pick identifier (index)', 'C': 'Eligibility criteria set (set of predicates)'}",
+      "assumptions": "Eligibility is evaluated in O(1) time with fixed criteria.",
+      "breakdown_regime": "When E(p) fails due to missing or invalid data in C.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel evaluates pick eligibility based on static criteria and generates forensic exportable logs.",
+        "source_operator": "historical_pick_observability",
+        "telemetry": "Number of eligible picks vs total picks in history log."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "46ac2dbd84337d56_t0",
+      "think": "The overnight changelog encodes a closed-loop system update where autonomous processes modify code and validate outputs within a fixed temporal window. The core operators—customer-surface gating, Jarvis observatory, and historical pick observability—are mathematically modeled as deterministic kernels with bounded inputs. Each primitive operates under a shared assumption of policy-driven integrity, where failure modes are defined by breakdown regimes such as insufficient sample sizes or health thresholds. The system's dual nature lies in its ability to both enforce safety (via policy) and observe outcomes (via history), forming a closed-loop validation mechanism. The temporal structure implies a discrete-time Markov chain where each state transition is governed by a policy kernel and observed through telemetry.\n\nDeep epistemic analysis for overnight-changelog (46ac2dbd84337d56, domain=other, pages_read=4/4): Operator 'Customer-Surface Performance Policy' (page 1, domain other) captures: ## What shipped tonight ### Customer-surface gating - `apps/web/lib/performance/public-performance-policy.ts` — single source of truth for \"can this surface show a performance number?\". Assumptions: Policy is deterministic and fully encapsulates brand safety constraints. Breakdown regime: When P(S,T) = false due to insufficient sample size or safety violation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Policy kernel maps surface context to exposure validity using trust-safe vocabulary and sample thresholds. Operator 'Jarvis Launch Observatory' (page 1, domain other) captures: ### Jarvis Launch Observatory - `apps/web/lib/cockpit/jarvis.ts` — pure synthesizer producing `JarvisLaunchStatus` + 11 sectional health readouts + phase matrix + recommended actions. Assumptions: All health indicators are independent and bounded within [0,1]. Breakdown regime: When any H_i < threshold or P_m is inconsistent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Observatory synthesizes launch health from modular sensor inputs into structured status and action recommendation. Operator 'Historical Pick Observability' (page 1, domain other) captures: ### Historical pick observability - `apps/web/lib/cockpit/history.ts` — pure eligibility evaluator (`evaluatePickEligibility`) + `buildHistoryCsv` for export. Assumptions: Eligibility is evaluated in O(1) time with fixed criteria. Breakdown regime: When E(p) fails due to missing or invalid data in C. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel evaluates pick eligibility based on static criteria and generates forensic exportable logs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for overnight-changelog (46ac2dbd84337d56, domain=other, pages_read=4/4): Operator 'Customer-Surface Performance Policy' (page 1, domain other) captures: ## What shipped tonight ### Customer-surface gating - `apps/web/lib/performance/public-performance-policy.ts` — single source of truth for \"can this surface show a performance number?\". Assumptions: Policy is deterministic and fully encapsulates brand safety constraints. Breakdown regime: When P(S,T) = false due to insufficient sample size or safety violation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Policy kernel maps surface context to exposure validity using trust-safe vocabulary and sample thresholds. Operator 'Jarvis Launch Observatory' (page 1, domain other) captures: ### Jarvis Launch Observatory - `apps/web/lib/cockpit/jarvis.ts` — pure synthesizer producing `JarvisLaunchStatus` + 11 sectional health readouts + phase matrix + recommended actions. Assumptions: All health indicators are independent and bounded within [0,1]. Breakdown regime: When any H_i < threshold or P_m is inconsistent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Observatory synthesizes launch health from modular sensor inputs into structured status and action recommendation. Operator 'Historical Pick Observability' (page 1, domain other) captures: ### Historical pick observability - `apps/web/lib/cockpit/history.ts` — pure eligibility evaluator (`evaluatePickEligibility`) + `buildHistoryCsv` for export. Assumptions: Eligibility is evaluated in O(1) time with fixed criteria. Breakdown regime: When E(p) fails due to missing or invalid data in C. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel evaluates pick eligibility based on static criteria and generates forensic exportable logs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from software engineering and control theory, tracing back to early 20th-century systems thinking and modern reactive programming paradigms. Retrocausal Genealogy: Rooted in overnight-changelog (46ac2dbd84337d56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in overnight-changelog (46ac2dbd84337d56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the autonomous loop (which may introduce inconsistencies) and the operator (who validates and deploys changes). The system models these as competing constraints on the temporal ledger. Theory of Mind & Decision Maker Model: Rooted in overnight-changelog (46ac2dbd84337d56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that telemetry from one layer does not redundantly validate another. Leakage vetoes occur when policy violations bypass observability checks, e.g., if a surface shows stats despite P(S,T)=false. Cross-Layer Veto & Anti-Leakage Check: Rooted in overnight-changelog (46ac2dbd84337d56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

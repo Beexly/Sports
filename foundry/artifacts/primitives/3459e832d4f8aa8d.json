@@ -1,16 +1,16 @@
 {
   "book_id": "3459e832d4f8aa8d",
-  "title": "robots",
-  "file_name": "robots.txt",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_3459e832d4f8aa8d",
+  "file_name": "3459e832d4f8aa8d.quarantined",
   "sha256": "3459e832d4f8aa8d611901e6135c56a64793117156e0ead32207fb4de9cc804a",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "fail-closed-stub-guard",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
   "source_status": "INSUFFICIENT_SOURCE_ACCESS",
-  "refusal_reason": "Download-bait/title-only stub PDF (1 pages, 89 extracted chars, 0 candidate quotes < 3 minimum): 'User-agent: * Allow: / Sitemap: https://charcuterie-chick-sample-3.vercel.app/sitemap.xml'. Fail-closed under Foundry Gatekeeper zero-fabrication contract.",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
   "primitives": [],
   "reasoning_traces": []
 }

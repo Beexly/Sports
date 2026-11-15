@@ -1,0 +1,95 @@
+{
+  "book_id": "f5d925b3f2946135",
+  "source_status": "COMPLETE",
+  "title": "xcomp_cpoe",
+  "file_name": "xcomp_cpoe.md",
+  "sha256": "f5d925b3f2946135821047cd77537a82dab4889453fc3ac079279dcdde5a4e9d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in xcomp_cpoe (f5d925b3f2946135), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in xcomp_cpoe (f5d925b3f2946135), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in xcomp_cpoe (f5d925b3f2946135), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "separation_coefficient",
+      "name": "Separation Coefficient",
+      "verbatim_quote": "## What is genuinely reusable The xComp function itself, and the separation coefficient sign/magnitude as a sanity anchor (+0.29 log-odds per yard of separation).",
+      "page": 1,
+      "latex": "$\\beta_{sep} = +0.290 \\frac{log-odds}}{yard}$",
+      "symbol_and_unit_ledger": "{'\\\\beta_{sep}': 'Separation coefficient, dimensionless', 'log-odds': 'Log-odds of completion', 'yard': 'Distance in yards'}",
+      "assumptions": "Binary logistic regression on completed/failed pass outcomes, NGS-based separation at the throw instant, fixed-effects for down, distance-to-go, and field position.",
+      "breakdown_regime": "High-separation regime ($>5$ yards) where the linear relationship saturates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Expected Points (EP) gain calculations, where separation $s$ contributes additively to the EP state value $V(s, down, ytg)$.",
+        "source_operator": "separation_coefficient",
+        "telemetry": "Residual completion probability after controlling for throw difficulty metrics (e.g., pressure, throw velocity)."
+      }
+    },
+    {
+      "primitive_id": "cpoe_residual",
+      "name": "CPOE Residual",
+      "verbatim_quote": "sd of play-level CPOE is **0.433** on a mean of 0.000 — large, as expected for a binary outcome residual on 9.5k plays.",
+      "page": 1,
+      "latex": "CPOE \\sim \\mathcal{N}(0, 0.433^2)",
+      "symbol_and_unit_ledger": "{'CPOE': 'Completion Probability Outcome Error, dimensionless', '0.433': 'Standard deviation of CPOE residuals, dimensionless'}",
+      "assumptions": "Derived from a logistic model trained on 9,575 pass attempts, with separation, pass length, down, distance, and field position as covariates.",
+      "breakdown_regime": "Across all game situations, especially high-variance scenarios like third downs or deep throws.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE situational reasoning as a measure of 'receiver execution error' relative to the throw's difficulty, informing state-transition uncertainty.",
+        "source_operator": "cpoe_residual",
+        "telemetry": "The difference between observed completion and model-predicted completion, standardized by the model's variance estimate."
+      }
+    },
+    {
+      "primitive_id": "circularity_caveat",
+      "name": "Selection-Conditional Circularité",
+      "verbatim_quote": "## Caveats that limit how far this can be pushed - `target` is itself an outcome (the QB chose him), so CPOE here is selection-conditional.",
+      "page": 1,
+      "latex": "CPOE^{sel} = P(complete|sep, target) - E[P(complete|sep, target)]",
+      "symbol_and_unit_ledger": "{'CPOE^{sel}': 'Selection-conditioned CPOE, dimensionless', 'target': 'Receiver selected by the quarterback, categorical variable'}",
+      "assumptions": "The receiver is chosen *after* the throw difficulty is measured, introducing endogeneity bias into the separation coefficient.",
+      "breakdown_regime": "When the quarterback actively seeks out receivers who are already open, inflating apparent separation effectiveness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Underpins GSI's 'QB Decision Quality' framework, where selection-biased CPOE is adjusted using instrumental variables (e.g., defender proximity at snap).",
+        "source_operator": "circularity_caveat",
+        "telemetry": "Correlation between target choice and subsequent separation improvement, controlling for pre-snap reads."
+      }
+    },
+    {
+      "primitive_id": "ngt_requirement",
+      "name": "NGS Tracking Requirement",
+      "verbatim_quote": "Everything downstream needs pre-throw separation (NGS tracking) rather than the at-the-pass field to become forecast-grade.",
+      "page": 1,
+      "latex": "sep_{forecast} = sep(t_0) - v_{rec} \\cdot \\Delta t",
+      "symbol_and_unit_ledger": "{'sep_{forecast}': 'Pre-throw separation at snap time, yards', 'sep(t_0)': 'Measured separation at the throw instant, yards', 'v_{rec}': 'Receiver speed from NGS, yards/second', '\\\\Delta t': 'Time from snap to throw, seconds'}",
+      "assumptions": "Linear receiver motion between snap and throw, perfect NGS tracking of receiver position and velocity.",
+      "breakdown_regime": "For short throws ($\\Delta t < 0.5s$) where separation changes rapidly, requiring high-frequency NGS data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Serves as the input feature for GSE's real-time play-state transition models, updating receiver readiness based on evolving field geometry.",
+        "source_operator": "ngt_requirement",
+        "telemetry": "Mean absolute error in predicting pre-throw separation from NGS trajectories, compared to BDB-reported separation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f5d925b3f2946135_t0",
+      "think": "The core challenge is separating 'throw quality' from 'receiver execution'. Standard logistic regression on completed passes yields a strong separation coefficient (+0.29 log-odds/yd), but this suffers from severe selection bias: the quarterback chooses receivers who are already open. This circularity turns outcome decomposition into a biased estimator of pre-snap decision efficiency. To address this, we treat the separation at the throw instant as a proxy for the throw's inherent difficulty, while acknowledging that the receiver's presence is endogenous. The 0.433 standard deviation of CPOE reflects the noise in receiver performance after accounting for throw difficulty, but it does not capture the quarterback's ability to create separation through presnap reads or scramble. For forecast-grade analysis, we must retroactively estimate separation at snap time using NGS data, transforming the static field measurement into a dynamic, pre-throw state variable. This enables rigorous causal inference in both GSI's value-add frameworks and GSE's real-time situational reasoning.\n\nDeep epistemic analysis for xcomp_cpoe (f5d925b3f2946135, domain=other, pages_read=1/1): Operator 'Separation Coefficient' (page 1, domain other) captures: ## What is genuinely reusable The xComp function itself, and the separation coefficient sign/magnitude as a sanity anchor (+0.29 log-odds per yard of separation). Assumptions: Binary logistic regression on completed/failed pass outcomes, NGS-based separation at the throw instant, fixed-effects for down, distance-to-go, and field position. Breakdown regime: High-separation regime ($>5$ yards) where the linear relationship saturates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Expected Points (EP) gain calculations, where separation $s$ contributes additively to the EP state value $V(s, down, ytg)$. Operator 'CPOE Residual' (page 1, domain other) captures: sd of play-level CPOE is **0.433** on a mean of 0.000 — large, as expected for a binary outcome residual on 9.5k plays. Assumptions: Derived from a logistic model trained on 9,575 pass attempts, with separation, pass length, down, distance, and field position as covariates. Breakdown regime: Across all game situations, especially high-variance scenarios like third downs or deep throws. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE situational reasoning as a measure of 'receiver execution error' relative to the throw's difficulty, informing state-transition uncertainty. Operator 'Selection-Conditional Circularité' (page 1, domain other) captures: ## Caveats that limit how far this can be pushed - `target` is itself an outcome (the QB chose him), so CPOE here is selection-conditional. Assumptions: The receiver is chosen *after* the throw difficulty is measured, introducing endogeneity bias into the separation coefficient. Breakdown regime: When the quarterback actively seeks out receivers who are already open, inflating apparent separation effectiveness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Underpins GSI's 'QB Decision Quality' framework, where selection-biased CPOE is adjusted using instrumental variables (e.g., defender proximity at snap). Operator 'NGS Tracking Requirement' (page 1, domain other) captures: Everything downstream needs pre-throw separation (NGS tracking) rather than the at-the-pass field to become forecast-grade. Assumptions: Linear receiver motion between snap and throw, perfect NGS tracking of receiver position and velocity. Breakdown regime: For short throws ($\\Delta t < 0.5s$) where separation changes rapidly, requiring high-frequency NGS data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as the input feature for GSE's real-time play-state transition models, updating receiver readiness based on evolving field geometry. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for xcomp_cpoe (f5d925b3f2946135, domain=other, pages_read=1/1): Operator 'Separation Coefficient' (page 1, domain other) captures: ## What is genuinely reusable The xComp function itself, and the separation coefficient sign/magnitude as a sanity anchor (+0.29 log-odds per yard of separation). Assumptions: Binary logistic regression on completed/failed pass outcomes, NGS-based separation at the throw instant, fixed-effects for down, distance-to-go, and field position. Breakdown regime: High-separation regime ($>5$ yards) where the linear relationship saturates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Expected Points (EP) gain calculations, where separation $s$ contributes additively to the EP state value $V(s, down, ytg)$. Operator 'CPOE Residual' (page 1, domain other) captures: sd of play-level CPOE is **0.433** on a mean of 0.000 — large, as expected for a binary outcome residual on 9.5k plays. Assumptions: Derived from a logistic model trained on 9,575 pass attempts, with separation, pass length, down, distance, and field position as covariates. Breakdown regime: Across all game situations, especially high-variance scenarios like third downs or deep throws. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE situational reasoning as a measure of 'receiver execution error' relative to the throw's difficulty, informing state-transition uncertainty. Operator 'Selection-Conditional Circularité' (page 1, domain other) captures: ## Caveats that limit how far this can be pushed - `target` is itself an outcome (the QB chose him), so CPOE here is selection-conditional. Assumptions: The receiver is chosen *after* the throw difficulty is measured, introducing endogeneity bias into the separation coefficient. Breakdown regime: When the quarterback actively seeks out receivers who are already open, inflating apparent separation effectiveness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Underpins GSI's 'QB Decision Quality' framework, where selection-biased CPOE is adjusted using instrumental variables (e.g., defender proximity at snap). Operator 'NGS Tracking Requirement' (page 1, domain other) captures: Everything downstream needs pre-throw separation (NGS tracking) rather than the at-the-pass field to become forecast-grade. Assumptions: Linear receiver motion between snap and throw, perfect NGS tracking of receiver position and velocity. Breakdown regime: For short throws ($\\Delta t < 0.5s$) where separation changes rapidly, requiring high-frequency NGS data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as the input feature for GSE's real-time play-state transition models, updating receiver readiness based on evolving field geometry. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in xcomp_cpoe (f5d925b3f2946135), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in xcomp_cpoe (f5d925b3f2946135), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Quarterbacks exhibit strategic foresight, selecting receivers who maximize their completion chances given the defensive alignment. However, this selection process introduces systematic bias: quarterbacks may choose easier-looking targets (e.g., receivers with slight separation advantage) even when those mismatches are fragile. An analyst must model the quarterback's decision-making as a two-stage process: first, evaluate the defense; second, pick a receiver conditional on the perceived matchup. The separation coefficient then measures the average marginal benefit of choosing a more open receiver, holding the quarterback's strategy constant.",
+      "cross_layer_veto": "To prevent anti-collinearity and leakage, the separation variable must be measured at the exact throw time, not estimated from presnap geometry. If presnap features (e.g., defender depth) are used as proxies for throw-time separation, the model will absorb throw difficulty into the presnap read, leading to overfitting. Additionally, the CPOE residual must be standardized by the model's predicted variance to avoid heteroskedasticity. Finally, the NGS data must be clean (no missing tracks, no mislabeled trajectories) to ensure that the retrojected separation accurately reflects the quarterback's pre-snap assessment."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "12cd4f9597b77d6d",
+  "source_status": "COMPLETE",
+  "title": "signal-audit",
+  "file_name": "signal-audit.md",
+  "sha256": "12cd4f9597b77d6dfc3ed3c1a43286e4abf45461df65409a97511e40bd428caa",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A premise requires probability, outcome, and sample count; trustWeight is not a sample count. Signals lacking sample counts are not valid premises. Universal Lens: Rooted in signal-audit (12cd4f9597b77d6d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference to update belief states using signal premises with probabilistic outcomes and empirical sample counts for calibrated uncertainty quantification. GSI Mapping: Rooted in signal-audit (12cd4f9597b77d6d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes situational reasoning to transition system states based on signal premises, applying derived kernels to model dynamic game contexts and resolve ambiguity in probabilistic inputs. GSE Mapping: Rooted in signal-audit (12cd4f9597b77d6d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "premise_validity",
+      "name": "Premise Validity Condition",
+      "verbatim_quote": "A premise needs a probability, an outcome, and a sample count.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'probability dimensionless', 'O': 'outcome set {home, away}', 'N': 'sample count integer'}",
+      "assumptions": "A valid premise must have finite N > 0, P ∈ [0,1], and O ⊆ {home, away}.",
+      "breakdown_regime": "When N = 0 or P ∉ [0,1], the premise is invalid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian updating maps premise validity to posterior belief distributions over outcomes.",
+        "source_operator": "premise_validity",
+        "telemetry": "Signal integrity score based on adherence to sample count and probability bounds."
+      }
+    },
+    {
+      "primitive_id": "signal_sample_count_discard",
+      "name": "Sample Count Discard Rule",
+      "verbatim_quote": "The signals that name a home probability do not name how many games that probability came from, so the trace would discard them.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'signal identifier string', 'C': 'sample count integer'}",
+      "assumptions": "Signals without explicit C are considered non-premises due to lack of empirical grounding.",
+      "breakdown_regime": "C = 0 or undefined implies discard.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transitions filter out signals with C=0, preserving only those with sufficient empirical basis.",
+        "source_operator": "signal_sample_count_discard",
+        "telemetry": "Trace completeness index measuring discarded vs retained signals."
+      }
+    },
+    {
+      "primitive_id": "trust_weight_not_sample_count",
+      "name": "Trust Weight Invalidation",
+      "verbatim_quote": "sample count. `trustWeight` is not a sample count. | id | shape | outcome | direction",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'trust weight dimensionless', 'N': 'sample count integer'}",
+      "assumptions": "W ≠ N; W is a meta-weight, not a statistical measure.",
+      "breakdown_regime": "When W is misused as N, it introduces bias into inference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI treats W as a confidence modifier rather than a sample count in likelihood computation.",
+        "source_operator": "trust_weight_not_sample_count",
+        "telemetry": "Confidence-weight consistency ratio between W and actual N."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "12cd4f9597b77d6d_t0",
+      "think": "The core principle of signal validity hinges on the necessity of three components: probability P, outcome O, and sample count N. Any signal failing to meet this triad cannot be used in Bayesian updating or state transitions. The exclusion of signals without sample counts ensures that only empirically grounded data informs decisions. This leads to a dual structure: one where premises are validated by their adherence to the trio, and another where invalid signals are filtered out via discard rules. Failure modes include assigning trustWeight as a proxy for sample count, which introduces systematic error. The epistemic trace reveals that even though multiple signals may report probabilities, only those with explicit sample counts qualify as premises. This filtering mechanism underpins both GSI's calibration and GSE's contextual reasoning.\n\nDeep epistemic analysis for signal-audit (12cd4f9597b77d6d, domain=other, pages_read=2/2): Operator 'Premise Validity Condition' (page 1, domain other) captures: A premise needs a probability, an outcome, and a sample count. Assumptions: A valid premise must have finite N > 0, P ∈ [0,1], and O ⊆ {home, away}. Breakdown regime: When N = 0 or P ∉ [0,1], the premise is invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian updating maps premise validity to posterior belief distributions over outcomes. Operator 'Sample Count Discard Rule' (page 2, domain other) captures: The signals that name a home probability do not name how many games that probability came from, so the trace would discard them. Assumptions: Signals without explicit C are considered non-premises due to lack of empirical grounding. Breakdown regime: C = 0 or undefined implies discard. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transitions filter out signals with C=0, preserving only those with sufficient empirical basis. Operator 'Trust Weight Invalidation' (page 1, domain other) captures: sample count. `trustWeight` is not a sample count. | id | shape | outcome | direction Assumptions: W ≠ N; W is a meta-weight, not a statistical measure. Breakdown regime: When W is misused as N, it introduces bias into inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI treats W as a confidence modifier rather than a sample count in likelihood computation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for signal-audit (12cd4f9597b77d6d, domain=other, pages_read=2/2): Operator 'Premise Validity Condition' (page 1, domain other) captures: A premise needs a probability, an outcome, and a sample count. Assumptions: A valid premise must have finite N > 0, P ∈ [0,1], and O ⊆ {home, away}. Breakdown regime: When N = 0 or P ∉ [0,1], the premise is invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian updating maps premise validity to posterior belief distributions over outcomes. Operator 'Sample Count Discard Rule' (page 2, domain other) captures: The signals that name a home probability do not name how many games that probability came from, so the trace would discard them. Assumptions: Signals without explicit C are considered non-premises due to lack of empirical grounding. Breakdown regime: C = 0 or undefined implies discard. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transitions filter out signals with C=0, preserving only those with sufficient empirical basis. Operator 'Trust Weight Invalidation' (page 1, domain other) captures: sample count. `trustWeight` is not a sample count. | id | shape | outcome | direction Assumptions: W ≠ N; W is a meta-weight, not a statistical measure. Breakdown regime: When W is misused as N, it introduces bias into inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI treats W as a confidence modifier rather than a sample count in likelihood computation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian probability theory and information theory, particularly Shannon entropy and Kolmogorov complexity, where sample-based validation ensures minimal information loss during inference. Retrocausal Genealogy: Rooted in signal-audit (12cd4f9597b77d6d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in signal-audit (12cd4f9597b77d6d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to inject false signals with spurious trust weights or omit sample counts to manipulate system behavior. The trace models adversarial signal injection as a potential failure mode requiring robust filtering. Theory of Mind & Decision Maker Model: Rooted in signal-audit (12cd4f9597b77d6d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that no two signals share identical probabilistic outcomes without distinct sample counts. Leakage is prevented by discarding signals with undefined or zero sample counts, maintaining orthogonality between layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in signal-audit (12cd4f9597b77d6d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

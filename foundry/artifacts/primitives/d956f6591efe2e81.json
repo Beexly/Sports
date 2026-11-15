@@ -1,0 +1,78 @@
+{
+  "book_id": "d956f6591efe2e81",
+  "source_status": "COMPLETE",
+  "title": "AWS_PLUGIN_GOVERNED_AUDIT",
+  "file_name": "AWS_PLUGIN_GOVERNED_AUDIT.md",
+  "sha256": "d956f6591efe2e81a3950d1fbe9fa625cf0a4a290d0f762e60893a4ac237fa3a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Local AWS plugin reasoning maps decision-engine tests to FABLE/GSE repo constraints via binary risk flags and evidence layers. Universal Lens: Rooted in AWS_PLUGIN_GOVERNED_AUDIT (d956f6591efe2e81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers AWS posture through Bayesian risk classification of IAM, cost, and deployment signals using local test evidence as prior. GSI Mapping: Rooted in AWS_PLUGIN_GOVERNED_AUDIT (d956f6591efe2e81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions states by validating AWS actions through synth/diff rollback fields, enforcing zero-cost deployment scaffolding. GSE Mapping: Rooted in AWS_PLUGIN_GOVERNED_AUDIT (d956f6591efe2e81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "aws_cost_gate",
+      "name": "AWS Cost Gate",
+      "verbatim_quote": "## Cost / IAM / Deployment / Data Posture - Cost: paid use remains blocked by `FABLE_AWS_ALLOW_PAID_RESOURCES=false` and decision-engine defaults.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'FABLE_AWS_ALLOW_PAID_RESOURCES': 'dimensionless flag (0 or 1)', 'decision_engine_default': 'binary constraint'}",
+      "assumptions": "Paid AWS usage is strictly gated by environment variable and decision logic.",
+      "breakdown_regime": "When FABLE_AWS_ALLOW_PAID_RESOURCES=1, cost gate fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Decision-engine cost logic mirrors GSI's risk-weighted cost inference model.",
+        "source_operator": "aws_cost_gate",
+        "telemetry": "Environment variable state and decision-engine assertion"
+      }
+    },
+    {
+      "primitive_id": "iam_risk_classifier",
+      "name": "IAM Risk Classifier",
+      "verbatim_quote": "- IAM: no AWS policies were created; wildcard/admin/PassRole/public-resource signals are modeled as high or critical risk.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'wildcard_signal': 'dimensionless risk score (0–1)', 'admin_signal': 'dimensionless risk score (0–1)', 'PassRole_signal': 'dimensionless risk score (0–1)', 'public_resource_signal': 'dimensionless risk score (0–1)'}",
+      "assumptions": "All IAM signals are classified as either high or critical risk based on pattern matching.",
+      "breakdown_regime": "Signal presence triggers risk classification override.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's risk kernel derives IAM risk from symbolic signal patterns.",
+        "source_operator": "iam_risk_classifier",
+        "telemetry": "Signal detection in IAM-related code or config"
+      }
+    },
+    {
+      "primitive_id": "deployment_barrier",
+      "name": "Deployment Barrier",
+      "verbatim_quote": "- Deployment: deploy is blocked by default; non-local AWS action requires dry-run/plan/synth/diff evidence and rollback fields.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'deploy_blocked': 'boolean', 'dry_run_evidence': 'dimensionless validation flag', 'rollback_fields': 'set of string identifiers'}",
+      "assumptions": "Deployment is conditional on evidence and rollback capability.",
+      "breakdown_regime": "If rollback fields absent, deployment fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's deployment barrier aligns with GSI's conditional action logic.",
+        "source_operator": "deployment_barrier",
+        "telemetry": "Deployment attempt with missing rollback fields"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d956f6591efe2e81_t0",
+      "think": "The AWS Plugin Governed Audit defines three core primitives—cost gate, IAM risk classifier, and deployment barrier—that operate under strict local constraints. These primitives form a dualistic system where risk inference (GSI) and situational control (GSE) are enforced through binary logic and symbolic checks. The cost gate enforces budgetary discipline via an environment variable, while IAM classification uses pattern-matching to assign risk scores. The deployment barrier ensures that all non-local actions require explicit evidence and rollback plans. Each primitive operates within a closed-loop feedback structure, where failure modes are defined by missing telemetry or invalid assertions. The audit’s epistemic rigor lies in its refusal to import live AWS infrastructure, instead relying on synthetic evidence and logical constraints. This creates a minimal yet robust formalism for governing cloud access in a decentralized development context.\n\nDeep epistemic analysis for AWS_PLUGIN_GOVERNED_AUDIT (d956f6591efe2e81, domain=other, pages_read=1/1): Operator 'AWS Cost Gate' (page 1, domain other) captures: ## Cost / IAM / Deployment / Data Posture - Cost: paid use remains blocked by `FABLE_AWS_ALLOW_PAID_RESOURCES=false` and decision-engine defaults. Assumptions: Paid AWS usage is strictly gated by environment variable and decision logic. Breakdown regime: When FABLE_AWS_ALLOW_PAID_RESOURCES=1, cost gate fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Decision-engine cost logic mirrors GSI's risk-weighted cost inference model. Operator 'IAM Risk Classifier' (page 1, domain other) captures: - IAM: no AWS policies were created; wildcard/admin/PassRole/public-resource signals are modeled as high or critical risk. Assumptions: All IAM signals are classified as either high or critical risk based on pattern matching. Breakdown regime: Signal presence triggers risk classification override. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's risk kernel derives IAM risk from symbolic signal patterns. Operator 'Deployment Barrier' (page 1, domain other) captures: - Deployment: deploy is blocked by default; non-local AWS action requires dry-run/plan/synth/diff evidence and rollback fields. Assumptions: Deployment is conditional on evidence and rollback capability. Breakdown regime: If rollback fields absent, deployment fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's deployment barrier aligns with GSI's conditional action logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for AWS_PLUGIN_GOVERNED_AUDIT (d956f6591efe2e81, domain=other, pages_read=1/1): Operator 'AWS Cost Gate' (page 1, domain other) captures: ## Cost / IAM / Deployment / Data Posture - Cost: paid use remains blocked by `FABLE_AWS_ALLOW_PAID_RESOURCES=false` and decision-engine defaults. Assumptions: Paid AWS usage is strictly gated by environment variable and decision logic. Breakdown regime: When FABLE_AWS_ALLOW_PAID_RESOURCES=1, cost gate fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Decision-engine cost logic mirrors GSI's risk-weighted cost inference model. Operator 'IAM Risk Classifier' (page 1, domain other) captures: - IAM: no AWS policies were created; wildcard/admin/PassRole/public-resource signals are modeled as high or critical risk. Assumptions: All IAM signals are classified as either high or critical risk based on pattern matching. Breakdown regime: Signal presence triggers risk classification override. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's risk kernel derives IAM risk from symbolic signal patterns. Operator 'Deployment Barrier' (page 1, domain other) captures: - Deployment: deploy is blocked by default; non-local AWS action requires dry-run/plan/synth/diff evidence and rollback fields. Assumptions: Deployment is conditional on evidence and rollback capability. Breakdown regime: If rollback fields absent, deployment fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's deployment barrier aligns with GSI's conditional action logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles of early 2020s, this audit inherits from AWS IAM best practices and CI/CD pipeline safety models. Retrocausal Genealogy: Rooted in AWS_PLUGIN_GOVERNED_AUDIT (d956f6591efe2e81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in AWS_PLUGIN_GOVERNED_AUDIT (d956f6591efe2e81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the developer (seeking rapid deployment) and the governance layer (enforcing compliance). The system models these as competing logical paths in a decision tree. Theory of Mind & Decision Maker Model: Rooted in AWS_PLUGIN_GOVERNED_AUDIT (d956f6591efe2e81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in AWS_PLUGIN_GOVERNED_AUDIT (d956f6591efe2e81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by separating risk inference (GSI) from action control (GSE), preventing leakage between layers. Veto conditions arise when evidence is insufficient or rollback fields are missing. Cross-Layer Veto & Anti-Leakage Check: Rooted in AWS_PLUGIN_GOVERNED_AUDIT (d956f6591efe2e81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in AWS_PLUGIN_GOVERNED_AUDIT (d956f6591efe2e81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

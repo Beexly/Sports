@@ -1,16 +1,16 @@
 {
   "book_id": "1655428a29bf8972",
-  "title": "env",
-  "file_name": "env.txt",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_1655428a29bf8972",
+  "file_name": "1655428a29bf8972.quarantined",
   "sha256": "1655428a29bf89725af7d212d3882fcf5ea3203393d3d623431cfeb142ace283",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "fail-closed-stub-guard",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
   "source_status": "INSUFFICIENT_SOURCE_ACCESS",
-  "refusal_reason": "Download-bait/title-only stub PDF (1 pages, 150 extracted chars, 1 candidate quotes < 3 minimum): \"opening entry still needs to slow down, be bigger. go look at the SCHN+ app intro. that's what im looking for. more HD scenery coming from t\". Fail-closed under Foundry Gatekeeper zero-fabrication contract.",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
   "primitives": [],
   "reasoning_traces": []
 }

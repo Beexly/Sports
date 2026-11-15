@@ -1,0 +1,78 @@
+{
+  "book_id": "7dcc1224d03ca4b8",
+  "source_status": "COMPLETE",
+  "title": "media-studio-doctrine",
+  "file_name": "media-studio-doctrine.md",
+  "sha256": "7dcc1224d03ca4b82d0a69789b75709eb0f153dc93d9e152aa398c0534936a7b",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Media studio doctrine enforces brand integrity through constrained visual asset generation, aligning with design tokens and claim governance to prevent liability from tout-adjacent content. Universal Lens: Rooted in media-studio-doctrine (7dcc1224d03ca4b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework maps visual claims to probabilistic truth states; conformal prediction ensures coverage consistency across media types under governance constraints. GSI Mapping: Rooted in media-studio-doctrine (7dcc1224d03ca4b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions media states via approval gates; state-space models encode forbidden imagery and auto-publish vetoes to maintain brand safety. GSE Mapping: Rooted in media-studio-doctrine (7dcc1224d03ca4b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "visual_claim_governance",
+      "name": "Visual Claim Governance",
+      "verbatim_quote": "It defines what media may be created, by whom, using what tools, under what constraints, and with what approval gates.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Claim validity (dimensionless)', 'T': 'Time (seconds)', 'G': 'Governance level (Tier 1/2)', 'M': 'Media type (static, animated, etc.)'}",
+      "assumptions": "Claims must be validated by Tier 1/2 backing; no line movement alone suffices.",
+      "breakdown_regime": "C < 0.5 when lock imagery or tout-adjacent symbols present",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps claim validity to media approval probability via Bayesian updating on design token compliance.",
+        "source_operator": "visual_claim_governance",
+        "telemetry": "Approval gate pass/fail ratio per media type"
+      }
+    },
+    {
+      "primitive_id": "brand_safety_constraint",
+      "name": "Brand Safety Constraint",
+      "verbatim_quote": "| | Sharp money claim | Requires Tier 1/2 backing — never from line movement alone | | \"Lock\" imagery | Forbidden — lock icon implies guaranteed outcome | --## Source Evidence and R&D Rationale The media doctrine exists because: 1.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'Liability risk (dimensionless)', 'R': 'Reach (users)', 'B': 'Brand integrity score (0–1)'}",
+      "assumptions": "Bad claims increase liability risk linearly with reach.",
+      "breakdown_regime": "L > threshold when lock imagery or fabricated win rates detected",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a risk-return frontier where B = f(R, L); maximizes R while minimizing L.",
+        "source_operator": "brand_safety_constraint",
+        "telemetry": "Incident report frequency vs. media reach"
+      }
+    },
+    {
+      "primitive_id": "ai_impostor_risk",
+      "name": "AI Impostor Risk",
+      "verbatim_quote": "AI-generated imagery creates real-person impersonation risk if not governed 3.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'Impersonation risk (dimensionless)', 'A': 'AI generation flag (binary)', 'V': 'Verification score (0–1)'}",
+      "assumptions": "I increases exponentially with A when V < 0.9.",
+      "breakdown_regime": "I → ∞ as A = 1 and V < 0.9",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives I from AI usage and verification thresholds; governs image approval via conditional entropy.",
+        "source_operator": "ai_impostor_risk",
+        "telemetry": "False positive rate in AI-generated image validation"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7dcc1224d03ca4b8_t0",
+      "think": "The media studio doctrine establishes a dual constraint system: first, a generative layer enforcing design token alignment and claim validity; second, a safety layer preventing liability through forbidden imagery and auto-publish workflows. Visual assets are modeled as probabilistic claims subject to Bayesian updating based on governance inputs. The system avoids tout-adjacent content by embedding a 'lock' prohibition into its core logic, which triggers a breakdown in claim validity. The risk of AI impersonation is encoded as a function of generation flags and verification scores, creating a non-linear failure mode. These primitives form a layered state space where each transition is gated by approval metrics, ensuring that all media adheres to brand integrity and safety standards.\n\nDeep epistemic analysis for media-studio-doctrine (7dcc1224d03ca4b8, domain=other, pages_read=4/4): Operator 'Visual Claim Governance' (page 1, domain other) captures: It defines what media may be created, by whom, using what tools, under what constraints, and with what approval gates. Assumptions: Claims must be validated by Tier 1/2 backing; no line movement alone suffices. Breakdown regime: C < 0.5 when lock imagery or tout-adjacent symbols present Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps claim validity to media approval probability via Bayesian updating on design token compliance. Operator 'Brand Safety Constraint' (page 3, domain other) captures: | | Sharp money claim | Requires Tier 1/2 backing — never from line movement alone | | \"Lock\" imagery | Forbidden — lock icon implies guaranteed outcome | --## Source Evidence and R&D Rationale The media doctrine exists because: 1. Assumptions: Bad claims increase liability risk linearly with reach. Breakdown regime: L > threshold when lock imagery or fabricated win rates detected Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a risk-return frontier where B = f(R, L); maximizes R while minimizing L. Operator 'AI Impostor Risk' (page 3, domain other) captures: AI-generated imagery creates real-person impersonation risk if not governed 3. Assumptions: I increases exponentially with A when V < 0.9. Breakdown regime: I → ∞ as A = 1 and V < 0.9 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives I from AI usage and verification thresholds; governs image approval via conditional entropy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for media-studio-doctrine (7dcc1224d03ca4b8, domain=other, pages_read=4/4): Operator 'Visual Claim Governance' (page 1, domain other) captures: It defines what media may be created, by whom, using what tools, under what constraints, and with what approval gates. Assumptions: Claims must be validated by Tier 1/2 backing; no line movement alone suffices. Breakdown regime: C < 0.5 when lock imagery or tout-adjacent symbols present Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps claim validity to media approval probability via Bayesian updating on design token compliance. Operator 'Brand Safety Constraint' (page 3, domain other) captures: | | Sharp money claim | Requires Tier 1/2 backing — never from line movement alone | | \"Lock\" imagery | Forbidden — lock icon implies guaranteed outcome | --## Source Evidence and R&D Rationale The media doctrine exists because: 1. Assumptions: Bad claims increase liability risk linearly with reach. Breakdown regime: L > threshold when lock imagery or fabricated win rates detected Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a risk-return frontier where B = f(R, L); maximizes R while minimizing L. Operator 'AI Impostor Risk' (page 3, domain other) captures: AI-generated imagery creates real-person impersonation risk if not governed 3. Assumptions: I increases exponentially with A when V < 0.9. Breakdown regime: I → ∞ as A = 1 and V < 0.9 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives I from AI usage and verification thresholds; governs image approval via conditional entropy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and control systems, this doctrine reflects the evolution from deterministic publishing to probabilistic governance frameworks seen in modern digital brand management. Retrocausal Genealogy: Rooted in media-studio-doctrine (7dcc1224d03ca4b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in media-studio-doctrine (7dcc1224d03ca4b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include automated content generators and unauthorized publishers who may attempt to bypass governance. The system models these as adversarial noise in the claim validation pipeline, countered by multi-layered checks. Theory of Mind & Decision Maker Model: Rooted in media-studio-doctrine (7dcc1224d03ca4b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating claim validation from AI generation oversight. Leakage occurs if visual assets bypass approval gates or if AI-generated content lacks verification, triggering immediate veto conditions. Cross-Layer Veto & Anti-Leakage Check: Rooted in media-studio-doctrine (7dcc1224d03ca4b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

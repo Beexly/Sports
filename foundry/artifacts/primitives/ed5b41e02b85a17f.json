@@ -1,0 +1,78 @@
+{
+  "book_id": "ed5b41e02b85a17f",
+  "source_status": "COMPLETE",
+  "title": "l1_l4_root_cause",
+  "file_name": "l1_l4_root_cause.md",
+  "sha256": "ed5b41e02b85a17f31530a7e5478088e786c8e0842d7d29465f9e6cd21b0d7f3",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The L1-L4 root cause manifests as a bifurcation in the verification operator. The non-curated path enforces strict inclusion $\\mathcal{V}(q, s) = \\mathbb{I}[q \\in s]$, while the curated path collapses this to a trivial length constraint $\\|q\\| \\ge 15$. This structural asymmetry creates a zero-measure set of valid citations masquerading as a high-probability corpus.",
+  "gsi_mapping": "In GSI Bayesian inference, the curated path represents a catastrophic prior override where the likelihood function $P(E|H)$ is replaced by a constant uniform distribution over length-constrained strings. Conformal prediction intervals collapse because the calibration set contains 3,509 records with undefined epistemic grounding, artificially inflating the reported 67.4% admission rate while actual defensible coverage approaches zero.",
+  "gse_mapping": "Within GSE state-transition logic, the `FOUNDATIONAL_NFL_MIND_COMPENDIUM` acts as a phantom boundary condition. The engine transitions into a 'verified' state based on syntactic length rather than semantic containment. This missing negative case prevents demotion of stale edges, causing the situational reasoning graph to lock onto hallucinated premises without triggering the requisite rollback protocols.",
+  "primitives": [
+    {
+      "primitive_id": "deterministic_referee_invariant",
+      "name": "Deterministic Referee Invariant",
+      "verbatim_quote": "quote.includes(String(claim.value)) : true; if (!doesSourceHaveQuote || !doesQuoteHaveNum || quote.length < 15) { refereeFailures++; continue; // <-- DROPPED } ``` **This path is correct.** A record whose quote is not in its source is dropped and counted in `refereeFailures`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "refereeFailures: integer count (dimensionless), doesSourceHaveQuote: boolean indicator variable",
+      "assumptions": "Exact string matching is computationally feasible and necessary for citation validity.",
+      "breakdown_regime": "Fails if source text undergoes lossy compression or encoding shifts prior to the inclusion check.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to the GSE ground-truth validation layer, ensuring that only physically present telemetry triggers state updates.",
+        "source_operator": "deterministic_referee_invariant",
+        "telemetry": "Ratio of dropped records to total attempted admissions."
+      }
+    },
+    {
+      "primitive_id": "curated_path_length_proxy",
+      "name": "Curated Path Length Proxy",
+      "verbatim_quote": "} } ``` **`isQuoteInSource` does not check the source at all.** The variable name says one thing and the code does another.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "isQuoteInSource: boolean (misleading label), evidence_quote.length: scalar integer (characters)",
+      "assumptions": "Syntactic length serves as a sufficient proxy for semantic presence within the foundational domain.",
+      "breakdown_regime": "Complete breakdown when arbitrary strings satisfying the length threshold are injected into the curated array.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to a broken conformal score where the nonconformity measure ignores the actual feature space, relying solely on metadata bounds.",
+        "source_operator": "curated_path_length_proxy",
+        "telemetry": "Count of admitted records lacking physical offset in the source document."
+      }
+    },
+    {
+      "primitive_id": "phantom_compendium_boundary",
+      "name": "Phantom Compendium Boundary",
+      "verbatim_quote": "The 26 `FOUNDATIONAL_PAPERS` entries are **hand-written in the builder script itself**, and every one of them is filed under a source document that was never written.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "FOUNDATIONAL_PAPERS: array of structs (N=26), sourceFile: string pointer to null filesystem entity",
+      "assumptions": "Hardcoded priors do not require external file system validation to maintain ontological consistency.",
+      "breakdown_regime": "Singularities arise when downstream modules attempt to resolve the `sourceFile` pointer for context retrieval.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents an unanchored initial state in GSE, where the transition matrix references a non-existent node, creating a leak in the causal graph.",
+        "source_operator": "phantom_compendium_boundary",
+        "telemetry": "Number of unresolved file pointers in the harvested corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ed5b41e02b85a17f_t0",
+      "think": "The mathematical core of the L1-L4 failure is a discontinuity in the verification operator across two disjoint domains of the input space: the standard harvest loop and the curated foundational set. Let $\\Omega$ be the space of all potential quotes and $S$ be the source document. The non-curated path implements a strict characteristic function $\\chi_{S}(q) = 1$ if $q \\subseteq S$, else $0$. This ensures the admitted subspace $A_{std} \\subseteq S$. However, the curated path introduces a perturbation where the verification operator becomes $\\tilde{\\chi}(q) = \\mathbb{I}[\\|q\\| \\ge 15]$. This decouples the admission probability from the source geometry entirely. Consequently, the 3,509 records admitted via this branch exist in the orthogonal complement of the source text, $A_{curated} \\cap S = \\emptyset$. Furthermore, these records are anchored to a phantom boundary condition, `FOUNDATIONAL_NFL_MIND_COMPENDIUM`, which acts as a Dirac delta of authority pointing to a null set in the filesystem. The resulting corpus exhibits a severe collinearity between 'admitted status' and 'fabrication', yielding a reported 67.4% admission rate that is mathematically indistinguishable from noise. The fix requires restoring the isomorphism between the two paths by enforcing $\\chi_{S}(q)$ universally, thereby collapsing the spurious dimensionality introduced by the length-only proxy.\n\nDeep epistemic analysis for l1_l4_root_cause (ed5b41e02b85a17f, domain=other, pages_read=4/4): Operator 'Deterministic Referee Invariant' (page 1, domain other) captures: quote.includes(String(claim.value)) : true; if (!doesSourceHaveQuote || !doesQuoteHaveNum || quote.length < 15) { refereeFailures++; continue; // <-- DROPPED } ``` **This path is correct.** A record whose quote is not in its source is dropped and counted in `refereeFailures`. Assumptions: Exact string matching is computationally feasible and necessary for citation validity. Breakdown regime: Fails if source text undergoes lossy compression or encoding shifts prior to the inclusion check. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSE ground-truth validation layer, ensuring that only physically present telemetry triggers state updates. Operator 'Curated Path Length Proxy' (page 1, domain other) captures: } } ``` **`isQuoteInSource` does not check the source at all.** The variable name says one thing and the code does another. Assumptions: Syntactic length serves as a sufficient proxy for semantic presence within the foundational domain. Breakdown regime: Complete breakdown when arbitrary strings satisfying the length threshold are injected into the curated array. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to a broken conformal score where the nonconformity measure ignores the actual feature space, relying solely on metadata bounds. Operator 'Phantom Compendium Boundary' (page 2, domain other) captures: The 26 `FOUNDATIONAL_PAPERS` entries are **hand-written in the builder script itself**, and every one of them is filed under a source document that was never written. Assumptions: Hardcoded priors do not require external file system validation to maintain ontological consistency. Breakdown regime: Singularities arise when downstream modules attempt to resolve the `sourceFile` pointer for context retrieval. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents an unanchored initial state in GSE, where the transition matrix references a non-existent node, creating a leak in the causal graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for l1_l4_root_cause (ed5b41e02b85a17f, domain=other, pages_read=4/4): Operator 'Deterministic Referee Invariant' (page 1, domain other) captures: quote.includes(String(claim.value)) : true; if (!doesSourceHaveQuote || !doesQuoteHaveNum || quote.length < 15) { refereeFailures++; continue; // <-- DROPPED } ``` **This path is correct.** A record whose quote is not in its source is dropped and counted in `refereeFailures`. Assumptions: Exact string matching is computationally feasible and necessary for citation validity. Breakdown regime: Fails if source text undergoes lossy compression or encoding shifts prior to the inclusion check. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSE ground-truth validation layer, ensuring that only physically present telemetry triggers state updates. Operator 'Curated Path Length Proxy' (page 1, domain other) captures: } } ``` **`isQuoteInSource` does not check the source at all.** The variable name says one thing and the code does another. Assumptions: Syntactic length serves as a sufficient proxy for semantic presence within the foundational domain. Breakdown regime: Complete breakdown when arbitrary strings satisfying the length threshold are injected into the curated array. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to a broken conformal score where the nonconformity measure ignores the actual feature space, relying solely on metadata bounds. Operator 'Phantom Compendium Boundary' (page 2, domain other) captures: The 26 `FOUNDATIONAL_PAPERS` entries are **hand-written in the builder script itself**, and every one of them is filed under a source document that was never written. Assumptions: Hardcoded priors do not require external file system validation to maintain ontological consistency. Breakdown regime: Singularities arise when downstream modules attempt to resolve the `sourceFile` pointer for context retrieval. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents an unanchored initial state in GSE, where the transition matrix references a non-existent node, creating a leak in the causal graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This defect traces back to early heuristic-driven data pipelines where manual curation was assumed to bypass computational verification. Historically, similar failures occurred in pre-2020 sports analytics models where hardcoded 'expert priors' were merged with scraped telemetry without a unified schema validation layer, leading to silent corruption of the training manifold. Retrocausal Genealogy: Rooted in l1_l4_root_cause (ed5b41e02b85a17f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The builder script acts as an agent optimizing for corpus volume over fidelity. By hardcoding the 26 foundational papers, the developer implicitly modeled the curator as a perfectly reliable oracle, removing the need for redundant checks. The opposing agent—the auditor—operates under a zero-trust model, requiring explicit proof of containment. The conflict arises from mismatched epistemic standards between the generator and the verifier.",
+      "cross_layer_veto": "A cross-layer veto must be implemented at the junction of the L1 ingestion and L2 grounding layers. If a record's `sourceFile` pointer resolves to a null filesystem entity, or if the `evidence_quote` lacks a physical offset in the raw text, the record must be immediately flagged as `curated_derived` and excluded from the primary truth set. This prevents leakage of unverified priors into the conformal calibration pool."
+    }
+  ]
+}

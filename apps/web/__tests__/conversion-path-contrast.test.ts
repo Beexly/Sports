@@ -191,8 +191,10 @@ describe("conversion-path contrast (computed from tailwind tokens)", () => {
   });
 
   it("pins the page canvas the alpha maths composites against", () => {
+    // origin/main paints /picks with the obsidian token (which resolves to
+    // #08090C in tailwind.config.ts), matching the alpha-composite canvas below.
     expect(readSource("app/picks/page.tsx")).toContain(
-      'className="flex min-h-screen flex-col bg-obsidian"',
+      'className="min-h-screen bg-obsidian text-ion-white"',
     );
   });
 

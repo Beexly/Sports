@@ -1,0 +1,78 @@
+{
+  "book_id": "30796d1c6e6ffd2b",
+  "source_status": "COMPLETE",
+  "title": "2026-11-03",
+  "file_name": "2026-11-03.md",
+  "sha256": "30796d1c6e6ffd2b2fceec579944449c5249478379a3fb1420e1e2a9b987211e",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Dynamic challenge policy in MLB's ABS modeled via Bayesian pitch location perception and run-expectancy optimization under uncertainty. Universal Lens: Rooted in 2026-11-03 (30796d1c6e6ffd2b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework for ABS challenge decisions maps to GSI's probabilistic scoring engine using run-expectancy tables and dynamic programming. GSI Mapping: Rooted in 2026-11-03 (30796d1c6e6ffd2b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE models challenge outcomes through state transitions of count/outs/base states, informed by sdv-py data pipelines. GSE Mapping: Rooted in 2026-11-03 (30796d1c6e6ffd2b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "abs_challenge_policy",
+      "name": "Automated Ball-Strike Challenge Policy",
+      "verbatim_quote": "Sports Analytics Literature & Research **Saved this run (7 new papers; PDFs under `library/preprints/arXiv/2026/`, markdown under `md/library/preprints/arXiv/2026/`)** | Paper | Sport | N | P | R | Score | Takeaway | |---|---|--:|--:|--:|--:|---| | [Challenge or Pass?",
+      "page": 1,
+      "latex": "\\max_{a} \\mathbb{E}[V_{\\text{run}}(s)] - c_{\\text{challenge}} \\cdot P(a=\\text{challenge})",
+      "symbol_and_unit_ledger": "{'V_{\\\\text{run}}': 'Expected run value in runs', 'c_{\\\\text{challenge}}': 'Cost of challenge in units of run value', 'P(a=\\\\text{challenge})': 'Probability of challenging action'}",
+      "assumptions": "Pitch location is modeled via Bayesian perception; run-expectancy values are known functions of base/out state.",
+      "breakdown_regime": "When pitch location uncertainty exceeds threshold for acceptable error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "ABS challenge policy mirrors GSI's Bayesian decision engine using run-expectancy tables from sdv-py.",
+        "source_operator": "abs_challenge_policy",
+        "telemetry": "Accuracy of challenge decisions against actual game outcomes."
+      }
+    },
+    {
+      "primitive_id": "ordinal_ranking_system",
+      "name": "Ordinal Ranking System for Standings",
+      "verbatim_quote": "- **Ordinal ranking** (2608.23859): bears on points-system choices in standings tooling (NHL 2-1-0 vs 3-point soccer) for sdv-db standings views.",
+      "page": 2,
+      "latex": "R_i = \\sum_{j} w_{ij} \\cdot S_j",
+      "symbol_and_unit_ledger": "{'R_i': 'Rank of team i', 'w_{ij}': 'Weight matrix for pairwise comparison', 'S_j': 'Score of team j'}",
+      "assumptions": "Points system is fixed; ordinal rankings are transitive and consistent.",
+      "breakdown_regime": "When score differences become negligible or when ties occur.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ordinal ranking kernel derived from sdv-db standings logic for multi-sport compatibility.",
+        "source_operator": "ordinal_ranking_system",
+        "telemetry": "Consistency of rank ordering across different point systems."
+      }
+    },
+    {
+      "primitive_id": "basketball_bench_data_pipeline",
+      "name": "Basketball Bench Data Pipeline",
+      "verbatim_quote": "- **BasketballBench** (2608.23435): builds on official NBA play-by-play and rosters, the same tables sdv-py/hoopR expose.",
+      "page": 2,
+      "latex": "T_{\\text{play}} = f_{\\text{data}}(\\text{play-by-play}, \\text{roster})",
+      "symbol_and_unit_ledger": "{'T_{\\\\text{play}}': 'Processed play table', 'f_{\\\\text{data}}': 'Data transformation function', 'play-by-play': 'Event log of plays', 'roster': 'Player identity and stats'}",
+      "assumptions": "Data integrity and consistency across NBA datasets.",
+      "breakdown_regime": "When data inconsistency or missing fields exceed tolerance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "BasketballBench pipeline aligns with GSE's data ingestion layer using sdv-py/hoopR interfaces.",
+        "source_operator": "basketball_bench_data_pipeline",
+        "telemetry": "Completeness and accuracy of processed play data."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "30796d1c6e6ffd2b_t0",
+      "think": "The ABS challenge policy primitive formalizes a dynamic decision-making process using Bayesian inference over pitch locations and expected run values. It optimizes challenge actions based on a trade-off between potential run value gain and challenge cost. The ordinal ranking system encodes a fixed-weighted comparison kernel for standings, enabling cross-sport point system adaptation. The basketball bench pipeline leverages standardized NBA data structures, aligning with GSE’s modular ingestion architecture. All three primitives exhibit isomorphic mappings to GSI’s probabilistic reasoning and GSE’s structured data workflows, forming a coherent foundation for sports intelligence automation.\n\nDeep epistemic analysis for 2026-11-03 (30796d1c6e6ffd2b, domain=other, pages_read=2/2): Operator 'Automated Ball-Strike Challenge Policy' (page 1, domain other) captures: Sports Analytics Literature & Research **Saved this run (7 new papers; PDFs under `library/preprints/arXiv/2026/`, markdown under `md/library/preprints/arXiv/2026/`)** | Paper | Sport | N | P | R | Score | Takeaway | |---|---|--:|--:|--:|--:|---| | [Challenge or Pass? Assumptions: Pitch location is modeled via Bayesian perception; run-expectancy values are known functions of base/out state. Breakdown regime: When pitch location uncertainty exceeds threshold for acceptable error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ABS challenge policy mirrors GSI's Bayesian decision engine using run-expectancy tables from sdv-py. Operator 'Ordinal Ranking System for Standings' (page 2, domain other) captures: - **Ordinal ranking** (2608.23859): bears on points-system choices in standings tooling (NHL 2-1-0 vs 3-point soccer) for sdv-db standings views. Assumptions: Points system is fixed; ordinal rankings are transitive and consistent. Breakdown regime: When score differences become negligible or when ties occur. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ordinal ranking kernel derived from sdv-db standings logic for multi-sport compatibility. Operator 'Basketball Bench Data Pipeline' (page 2, domain other) captures: - **BasketballBench** (2608.23435): builds on official NBA play-by-play and rosters, the same tables sdv-py/hoopR expose. Assumptions: Data integrity and consistency across NBA datasets. Breakdown regime: When data inconsistency or missing fields exceed tolerance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): BasketballBench pipeline aligns with GSE's data ingestion layer using sdv-py/hoopR interfaces. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-11-03 (30796d1c6e6ffd2b, domain=other, pages_read=2/2): Operator 'Automated Ball-Strike Challenge Policy' (page 1, domain other) captures: Sports Analytics Literature & Research **Saved this run (7 new papers; PDFs under `library/preprints/arXiv/2026/`, markdown under `md/library/preprints/arXiv/2026/`)** | Paper | Sport | N | P | R | Score | Takeaway | |---|---|--:|--:|--:|--:|---| | [Challenge or Pass? Assumptions: Pitch location is modeled via Bayesian perception; run-expectancy values are known functions of base/out state. Breakdown regime: When pitch location uncertainty exceeds threshold for acceptable error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ABS challenge policy mirrors GSI's Bayesian decision engine using run-expectancy tables from sdv-py. Operator 'Ordinal Ranking System for Standings' (page 2, domain other) captures: - **Ordinal ranking** (2608.23859): bears on points-system choices in standings tooling (NHL 2-1-0 vs 3-point soccer) for sdv-db standings views. Assumptions: Points system is fixed; ordinal rankings are transitive and consistent. Breakdown regime: When score differences become negligible or when ties occur. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ordinal ranking kernel derived from sdv-db standings logic for multi-sport compatibility. Operator 'Basketball Bench Data Pipeline' (page 2, domain other) captures: - **BasketballBench** (2608.23435): builds on official NBA play-by-play and rosters, the same tables sdv-py/hoopR expose. Assumptions: Data integrity and consistency across NBA datasets. Breakdown regime: When data inconsistency or missing fields exceed tolerance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): BasketballBench pipeline aligns with GSE's data ingestion layer using sdv-py/hoopR interfaces. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory (Raiffa, 1968) and dynamic programming (Bellman, 1957), extended into sports analytics via run-expectancy models (Adair, 1990) and ordinal ranking frameworks (Kendall, 1938). Retrocausal Genealogy: Rooted in 2026-11-03 (30796d1c6e6ffd2b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2026-11-03 (30796d1c6e6ffd2b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include MLB umpires, coaches, and analysts who make probabilistic decisions under uncertainty. Each agent evaluates pitch quality and game state to decide whether to challenge a call. Theory of Mind & Decision Maker Model: Rooted in 2026-11-03 (30796d1c6e6ffd2b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that ordinal ranking does not interfere with ABS policy due to differing objectives. Leakage vetoes data inconsistencies in basketball bench pipeline that could distort player performance metrics. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-11-03 (30796d1c6e6ffd2b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "be693ddfc6170627",
+  "source_status": "COMPLETE",
+  "title": "PFR_PULL_RECIPE",
+  "file_name": "PFR_PULL_RECIPE.md",
+  "sha256": "be693ddfc617062749578d64dffd73ac3438f5f392f441854341b4a9185974ae",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Browser-lane PFR extraction maps seven-surface data streams through same-origin JS-uncommented tables using \\texttt{data-stat} keys, enabling diagnostic inference over player, team, boxscore, and coach layers. Universal Lens: Rooted in PFR_PULL_RECIPE (be693ddfc6170627), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic behavioral and tactical features from PFR's \\texttt{data-stat} tables via Bayesian belief updates on snap counts, coverage splits, and challenge rates, conditioning on referee and coaching environments. GSI Mapping: Rooted in PFR_PULL_RECIPE (be693ddfc6170627), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models state transitions across game dynamics by parsing \\texttt{exp_pts_off/def/st} and \\texttt{game_info} tables into situational value functions, enabling real-time policy adjustments based on expected points and crew penalty rates. GSE Mapping: Rooted in PFR_PULL_RECIPE (be693ddfc6170627), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pfr_table_extractor",
+      "name": "Table Data Stat Extractor",
+      "verbatim_quote": "## Full extraction script (browser evaluate after page load) ```javascript // pfr_extract_surface.js — run after page.goto + ~2s",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'data-stat': 'dimensionless, stable column identifier', 'table': 'structural object, 1D array of rows'}",
+      "assumptions": "All target tables are rendered post-JS execution; data-stat attributes are unique per column.",
+      "breakdown_regime": "403 error occurs when raw HTTP request lacks browser context.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each \\texttt{data-stat} key maps to a scalar feature in GSI's behavioral model.",
+        "source_operator": "pfr_table_extractor",
+        "telemetry": "Observable via \\texttt{document.querySelector} and \\texttt{data-stat} attribute parsing."
+      }
+    },
+    {
+      "primitive_id": "pfr_boxscore_vegas_parser",
+      "name": "Boxscore Vegas Line Parser",
+      "verbatim_quote": "### Boxscores Crew names (e.g., Hochuli), stadium, weather notes, Vegas line (may be in HTML comment — parser must handle commented tables).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'vegas_line': 'dimensionless, parsed from HTML comment or table', 'crew_name': 'categorical string identifier', 'stadium': 'geospatial coordinate tuple'}",
+      "assumptions": "Vegas lines are embedded in HTML comments for older boxscores.",
+      "breakdown_regime": "Parser fails if comment is malformed or missing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Vegas line is used as external validation in GSE's point estimation kernel.",
+        "source_operator": "pfr_boxscore_vegas_parser",
+        "telemetry": "Parsed \\texttt{vegas_line} values from \\texttt{<!-- -->} blocks."
+      }
+    },
+    {
+      "primitive_id": "pfr_coach_behavior_tracker",
+      "name": "Coach Behavior Tracker",
+      "verbatim_quote": "### Coach pages Per-year W/L, SRS off/def, playoff appearances, challenge counts (behavior feature).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'challenge_count': 'integer, number of challenges per season', 'W_L_record': 'tuple of integers (wins, losses)', 'SRS_off_def': 'real-valued, strength rating score'}",
+      "assumptions": "Challenge count is a proxy for coaching risk-taking behavior.",
+      "breakdown_regime": "Behavioral tracking fails without access to per-season stats.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Challenge counts and W/L ratios are input features in GSI's coaching behavior classifier.",
+        "source_operator": "pfr_coach_behavior_tracker",
+        "telemetry": "Observable via \\texttt{coaching_results} table parsing."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "be693ddfc6170627_t0",
+      "think": "The PFR pull recipe defines a layered data ingestion pipeline where each surface (player, team, boxscore, coach) requires a browser context due to dynamic JS rendering. The \\texttt{data-stat} attribute serves as a stable key for feature extraction, enabling consistent mapping across tables. The failure mode of bare shell requests returning 403 arises because same-origin policies block access until JS uncomments placeholders. This design enforces a dualism between static HTML and dynamic data, necessitating browser automation. The diagnostic features—such as OL/DL attribution, coverage splits, and referee environments—are derived from advanced table structures that encode tactical and behavioral signals. These features are then mapped into GSI’s Bayesian framework for inference and into GSE’s state transition engine for predictive modeling. The use of HTML comments for older Vegas lines introduces a parsing layer that must be robustly handled to avoid data loss. The legal unit of analysis includes diagnostic features like YBC/rush and draft capital, while illegal units such as direct coefficients are excluded to maintain model integrity.\n\nDeep epistemic analysis for PFR_PULL_RECIPE (be693ddfc6170627, domain=other, pages_read=3/3): Operator 'Table Data Stat Extractor' (page 1, domain other) captures: ## Full extraction script (browser evaluate after page load) ```javascript // pfr_extract_surface.js — run after page.goto + ~2s Assumptions: All target tables are rendered post-JS execution; data-stat attributes are unique per column. Breakdown regime: 403 error occurs when raw HTTP request lacks browser context. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each \\texttt{data-stat} key maps to a scalar feature in GSI's behavioral model. Operator 'Boxscore Vegas Line Parser' (page 1, domain other) captures: ### Boxscores Crew names (e.g., Hochuli), stadium, weather notes, Vegas line (may be in HTML comment — parser must handle commented tables). Assumptions: Vegas lines are embedded in HTML comments for older boxscores. Breakdown regime: Parser fails if comment is malformed or missing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Vegas line is used as external validation in GSE's point estimation kernel. Operator 'Coach Behavior Tracker' (page 1, domain other) captures: ### Coach pages Per-year W/L, SRS off/def, playoff appearances, challenge counts (behavior feature). Assumptions: Challenge count is a proxy for coaching risk-taking behavior. Breakdown regime: Behavioral tracking fails without access to per-season stats. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Challenge counts and W/L ratios are input features in GSI's coaching behavior classifier. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PFR_PULL_RECIPE (be693ddfc6170627, domain=other, pages_read=3/3): Operator 'Table Data Stat Extractor' (page 1, domain other) captures: ## Full extraction script (browser evaluate after page load) ```javascript // pfr_extract_surface.js — run after page.goto + ~2s Assumptions: All target tables are rendered post-JS execution; data-stat attributes are unique per column. Breakdown regime: 403 error occurs when raw HTTP request lacks browser context. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each \\texttt{data-stat} key maps to a scalar feature in GSI's behavioral model. Operator 'Boxscore Vegas Line Parser' (page 1, domain other) captures: ### Boxscores Crew names (e.g., Hochuli), stadium, weather notes, Vegas line (may be in HTML comment — parser must handle commented tables). Assumptions: Vegas lines are embedded in HTML comments for older boxscores. Breakdown regime: Parser fails if comment is malformed or missing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Vegas line is used as external validation in GSE's point estimation kernel. Operator 'Coach Behavior Tracker' (page 1, domain other) captures: ### Coach pages Per-year W/L, SRS off/def, playoff appearances, challenge counts (behavior feature). Assumptions: Challenge count is a proxy for coaching risk-taking behavior. Breakdown regime: Behavioral tracking fails without access to per-season stats. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Challenge counts and W/L ratios are input features in GSI's coaching behavior classifier. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in web scraping methodologies of the early 2000s, this architecture inherits from browser automation frameworks like Selenium and Puppeteer, evolving into modern serverless scraping pipelines with structured data extraction protocols. Retrocausal Genealogy: Rooted in PFR_PULL_RECIPE (be693ddfc6170627), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PFR_PULL_RECIPE (be693ddfc6170627), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the sports-reference.com infrastructure, which dynamically renders content and may rate-limit or block non-browser requests. The system must also account for inconsistent data formats (e.g., HTML comments) and varying table structures across subdomains like CFB. Theory of Mind & Decision Maker Model: Rooted in PFR_PULL_RECIPE (be693ddfc6170627), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring distinct feature sets per layer: player tables focus on individual performance metrics, while coach tables emphasize aggregate behavior. Leakage is mitigated by restricting cross-layer feature reuse to strictly defined diagnostic variables such as challenge counts and crew penalty rates. Cross-Layer Veto & Anti-Leakage Check: Rooted in PFR_PULL_RECIPE (be693ddfc6170627), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

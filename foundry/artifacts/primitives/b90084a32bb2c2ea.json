@@ -1,0 +1,95 @@
+{
+  "book_id": "b90084a32bb2c2ea",
+  "source_status": "COMPLETE",
+  "title": "API_V1_SHADOW_SEAM",
+  "file_name": "API_V1_SHADOW_SEAM.md",
+  "sha256": "b90084a32bb2c2ea461dad140010e7985bf217186e2d40ae758ad996d60cf1ee",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in API_V1_SHADOW_SEAM (b90084a32bb2c2ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in API_V1_SHADOW_SEAM (b90084a32bb2c2ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in API_V1_SHADOW_SEAM (b90084a32bb2c2ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in API_V1_SHADOW_SEAM (b90084a32bb2c2ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in API_V1_SHADOW_SEAM (b90084a32bb2c2ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in API_V1_SHADOW_SEAM (b90084a32bb2c2ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "api_key_parser",
+      "name": "API Key Parser",
+      "verbatim_quote": "## Files | File | Purpose | | --- | --- | | `apps/web/lib/api/v1/api-key.ts` | Parses `Authorization: Bearer`, `X-GSE-API-Key`, or `X-API-Key`; hashes keys with SHA-256 namespace; rejects missing, malformed, invalid-scheme, and conflicting credentials.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes input headers are correctly formatted strings; operates on opaque binary data without decoding scheme knowledge.",
+      "breakdown_regime": "Rejects any input producing a SHA-256 collision or violating header format constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a conformal prediction kernel that validates API key syntax and structure before any downstream processing, ensuring zero false positives in credential rejection.",
+        "source_operator": "api_key_parser",
+        "telemetry": "Rate of rejected requests per second, distinguishing between malformed headers and invalid credentials."
+      }
+    },
+    {
+      "primitive_id": "scope_evaluator",
+      "name": "Scope Evaluator",
+      "verbatim_quote": "| | `apps/web/lib/api/v1/scopes.ts` | Defines the first shadow endpoints and their required scopes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes each endpoint has a fixed set of permitted scopes that are known at compile time.",
+      "breakdown_regime": "Fails closed if an endpoint's requested scope exceeds its defined whitelist.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a Bayesian network that tracks the probability of a request being authorized given its claimed scope versus the ground-truth endpoint permissions.",
+        "source_operator": "scope_evaluator",
+        "telemetry": "Ratio of allowed versus denied requests, stratified by scope overlap and endpoint type."
+      }
+    },
+    {
+      "primitive_id": "payload_rights_checker",
+      "name": "Payload Rights Checker",
+      "verbatim_quote": "| | `apps/web/lib/api/v1/payload-rights.ts` | Reuses the FABLE source registry adapter and blocks API exposure when display, storage, partner-sharing, or training rights do not pass.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes the FABLE registry contains a complete and accurate record of all content rights associated with a given payload.",
+      "breakdown_regime": "Blocks all traffic if any required right (display, storage, sharing, training) is absent or expired for the payload's identifier.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a conformal hypothesis test that verifies the presence of necessary data-use licenses before allowing payload transmission, preventing legal breaches.",
+        "source_operator": "payload_rights_checker",
+        "telemetry": "Percentage of requests blocked due to missing or expired rights, segmented by right category."
+      }
+    },
+    {
+      "primitive_id": "shadow_envelope_producer",
+      "name": "Shadow Envelope Producer",
+      "verbatim_quote": "| | `apps/web/lib/api/v1/envelope.ts` | Produces deterministic shadow response envelopes with `ok`, `data`, `errors`, and metadata.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes all outputs must be structured as a fixed-format JSON object containing exactly these fields, regardless of payload size.",
+      "breakdown_regime": "Returns an empty `data` field and populates `errors` if any validation step upstream fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a fail-closed encoder that wraps all API responses in a standardized, verifiable container, enabling automated error detection and replay prevention.",
+        "source_operator": "shadow_envelope_producer",
+        "telemetry": "Average envelope size in bytes, median latency of envelope construction, and proportion of envelopes carrying error messages."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b90084a32bb2c2ea_t0",
+      "think": "The core challenge is constructing a 'shadow seam' that guarantees zero-risk exposure while remaining agnostic to underlying databases, providers, or environment variables. This is achieved through a compositional stack of independent, fail-closed operators. Each primitive acts as a deterministic filter: the `ApiKeyParser` strips away syntactic noise, the `ScopeEvaluator` enforces authorization orthogonality, the `PayloadRightsChecker` implements legal compliance as a hard constraint, and the `ShadowEnvelopeProducer` ensures all outputs are uniformly structured and verifiable. Together, they form a **Bayesian network** where each node represents a conditional probability of success, with the entire chain failing closed upon any single failure. This design prevents any accidental escalation from one layer to another, creating an anti-collinearity shield.\n\nDeep epistemic analysis for API_V1_SHADOW_SEAM (b90084a32bb2c2ea, domain=other, pages_read=4/4): Operator 'API Key Parser' (page 1, domain other) captures: ## Files | File | Purpose | | --- | --- | | `apps/web/lib/api/v1/api-key.ts` | Parses `Authorization: Bearer`, `X-GSE-API-Key`, or `X-API-Key`; hashes keys with SHA-256 namespace; rejects missing, malformed, invalid-scheme, and conflicting credentials. Assumptions: Assumes input headers are correctly formatted strings; operates on opaque binary data without decoding scheme knowledge. Breakdown regime: Rejects any input producing a SHA-256 collision or violating header format constraints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a conformal prediction kernel that validates API key syntax and structure before any downstream processing, ensuring zero false positives in credential rejection. Operator 'Scope Evaluator' (page 1, domain other) captures: | | `apps/web/lib/api/v1/scopes.ts` | Defines the first shadow endpoints and their required scopes. Assumptions: Assumes each endpoint has a fixed set of permitted scopes that are known at compile time. Breakdown regime: Fails closed if an endpoint's requested scope exceeds its defined whitelist. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a Bayesian network that tracks the probability of a request being authorized given its claimed scope versus the ground-truth endpoint permissions. Operator 'Payload Rights Checker' (page 1, domain other) captures: | | `apps/web/lib/api/v1/payload-rights.ts` | Reuses the FABLE source registry adapter and blocks API exposure when display, storage, partner-sharing, or training rights do not pass. Assumptions: Assumes the FABLE registry contains a complete and accurate record of all content rights associated with a given payload. Breakdown regime: Blocks all traffic if any required right (display, storage, sharing, training) is absent or expired for the payload's identifier. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a conformal hypothesis test that verifies the presence of necessary data-use licenses before allowing payload transmission, preventing legal breaches. Operator 'Shadow Envelope Producer' (page 1, domain other) captures: | | `apps/web/lib/api/v1/envelope.ts` | Produces deterministic shadow response envelopes with `ok`, `data`, `errors`, and metadata. Assumptions: Assumes all outputs must be structured as a fixed-format JSON object containing exactly these fields, regardless of payload size. Breakdown regime: Returns an empty `data` field and populates `errors` if any validation step upstream fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a fail-closed encoder that wraps all API responses in a standardized, verifiable container, enabling automated error detection and replay prevention. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for API_V1_SHADOW_SEAM (b90084a32bb2c2ea, domain=other, pages_read=4/4): Operator 'API Key Parser' (page 1, domain other) captures: ## Files | File | Purpose | | --- | --- | | `apps/web/lib/api/v1/api-key.ts` | Parses `Authorization: Bearer`, `X-GSE-API-Key`, or `X-API-Key`; hashes keys with SHA-256 namespace; rejects missing, malformed, invalid-scheme, and conflicting credentials. Assumptions: Assumes input headers are correctly formatted strings; operates on opaque binary data without decoding scheme knowledge. Breakdown regime: Rejects any input producing a SHA-256 collision or violating header format constraints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a conformal prediction kernel that validates API key syntax and structure before any downstream processing, ensuring zero false positives in credential rejection. Operator 'Scope Evaluator' (page 1, domain other) captures: | | `apps/web/lib/api/v1/scopes.ts` | Defines the first shadow endpoints and their required scopes. Assumptions: Assumes each endpoint has a fixed set of permitted scopes that are known at compile time. Breakdown regime: Fails closed if an endpoint's requested scope exceeds its defined whitelist. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a Bayesian network that tracks the probability of a request being authorized given its claimed scope versus the ground-truth endpoint permissions. Operator 'Payload Rights Checker' (page 1, domain other) captures: | | `apps/web/lib/api/v1/payload-rights.ts` | Reuses the FABLE source registry adapter and blocks API exposure when display, storage, partner-sharing, or training rights do not pass. Assumptions: Assumes the FABLE registry contains a complete and accurate record of all content rights associated with a given payload. Breakdown regime: Blocks all traffic if any required right (display, storage, sharing, training) is absent or expired for the payload's identifier. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a conformal hypothesis test that verifies the presence of necessary data-use licenses before allowing payload transmission, preventing legal breaches. Operator 'Shadow Envelope Producer' (page 1, domain other) captures: | | `apps/web/lib/api/v1/envelope.ts` | Produces deterministic shadow response envelopes with `ok`, `data`, `errors`, and metadata. Assumptions: Assumes all outputs must be structured as a fixed-format JSON object containing exactly these fields, regardless of payload size. Breakdown regime: Returns an empty `data` field and populates `errors` if any validation step upstream fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a fail-closed encoder that wraps all API responses in a standardized, verifiable container, enabling automated error detection and replay prevention. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This approach generalizes the concept of **conformal predictors** from machine learning into a software architecture pattern, where the goal is to produce valid confidence intervals (here, in the form of error-envelopes) without making distributional assumptions about the data. Retrocausal Genealogy: Rooted in API_V1_SHADOW_SEAM (b90084a32bb2c2ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing actors include malicious clients attempting to bypass authorization via malformed inputs, and auditors who need to verify that no sensitive data ever leaks. The system models both by assuming the client seeks to minimize the number of accepted requests while maximizing utility, whereas the auditor seeks to maximize the detectability of violations. Theory of Mind & Decision Maker Model: Rooted in API_V1_SHADOW_SEAM (b90084a32bb2c2ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that the output of one primitive (e.g., a parsed key) cannot be directly consumed by another primitive as an input (e.g., a database query), thus preventing information leakage paths across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in API_V1_SHADOW_SEAM (b90084a32bb2c2ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

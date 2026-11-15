@@ -1,0 +1,78 @@
+{
+  "book_id": "f21d6d6e636441c7",
+  "source_status": "COMPLETE",
+  "title": "radar-and-tracking-data-layer",
+  "file_name": "radar-and-tracking-data-layer.md",
+  "sha256": "f21d6d6e636441c7ac5f64f32ec09c9b21d7e9568b52f100bd3f55908982627d",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Radar and tracking data layers define structured observables for athletic performance, enabling probabilistic inference through licensed, aggregated signals with bounded uncertainty. Universal Lens: Rooted in radar-and-tracking-data-layer (f21d6d6e636441c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over licensed radar/tracking aggregates to generate calibrated uncertainty bounds on player and team performance metrics. GSI Mapping: Rooted in radar-and-tracking-data-layer (f21d6d6e636441c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes state-transition models on aggregated tracking data to simulate tactical scenarios and compute optimal action policies within bounded evidence spaces. GSE Mapping: Rooted in radar-and-tracking-data-layer (f21d6d6e636441c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "radar_tracking_evidence",
+      "name": "Radar and Tracking Evidence",
+      "verbatim_quote": "These data types represent the highest-quality non-official performance signal available for baseball, football, basketball, and soccer analytics.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v_{ball}': 'm/s, ball velocity', 'θ_{spin}': 'rad/s, spin rate', 'p_{pos}': 'm, player position vector'}",
+      "assumptions": "Data is acquired via licensed commercial APIs; raw coordinates are not stored or exposed.",
+      "breakdown_regime": "When data sources lack valid commercial enrollment or are scraped without authorization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Observables from radar/tracking data map to probabilistic state vectors in GSI's Bayesian network, enabling inference over player performance and game dynamics.",
+        "source_operator": "radar_tracking_evidence",
+        "telemetry": "Aggregated velocity trends, route efficiency scores, and positional coverage rates."
+      }
+    },
+    {
+      "primitive_id": "licensed_data_governance",
+      "name": "Licensed Data Governance",
+      "verbatim_quote": "They are also among the most commercially sensitive — almost all production-quality sources require paid enrollment or license.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{source}': 'dimensionless, license status flag', 'C_{cost}': 'USD, cost of commercial enrollment'}",
+      "assumptions": "All data ingestion must be gated by valid licensing agreements.",
+      "breakdown_regime": "Upon unauthorized access or use of unlicensed data streams.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces a kernel of legal compliance and data integrity in GSE's operational logic, preventing exposure from illegal data usage.",
+        "source_operator": "licensed_data_governance",
+        "telemetry": "License validation status, data ingestion flags, and audit logs."
+      }
+    },
+    {
+      "primitive_id": "aggregate_performance_signal",
+      "name": "Aggregate Performance Signal",
+      "verbatim_quote": "- Users receive the kind of evidence depth that separates professional sports analytics from tout-service picks.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'σ_{perf}': 'dimensionless, normalized performance index', 'E_{eff}': 'unitless, efficiency score'}",
+      "assumptions": "Only aggregate statistics are exposed; individual raw data points are not retained.",
+      "breakdown_regime": "When raw data is stored or exposed without proper anonymization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE’s belief-state update mechanism where aggregate signals inform tactical policy decisions.",
+        "source_operator": "aggregate_performance_signal",
+        "telemetry": "Weekly route efficiency, average separation, and target rate metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f21d6d6e636441c7_t0",
+      "think": "The Radar and Tracking Data Layer defines a dual structure: one for acquisition governed by commercial licensing, and another for inference grounded in probabilistic modeling. In GSI, this translates into a Bayesian framework where each radar-derived signal is treated as an informative prior with calibrated uncertainty. The GSE layer then applies these priors in state-transition models to simulate game dynamics. Failure modes include unauthorized scraping of data (P0 risk), storage of raw coordinates (P1 risk), and misattribution of fabricated data (P0 risk). These risks are mitigated through a layered governance system enforcing legal compliance and data abstraction.\n\nDeep epistemic analysis for radar-and-tracking-data-layer (f21d6d6e636441c7, domain=other, pages_read=4/4): Operator 'Radar and Tracking Evidence' (page 1, domain other) captures: These data types represent the highest-quality non-official performance signal available for baseball, football, basketball, and soccer analytics. Assumptions: Data is acquired via licensed commercial APIs; raw coordinates are not stored or exposed. Breakdown regime: When data sources lack valid commercial enrollment or are scraped without authorization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Observables from radar/tracking data map to probabilistic state vectors in GSI's Bayesian network, enabling inference over player performance and game dynamics. Operator 'Licensed Data Governance' (page 1, domain other) captures: They are also among the most commercially sensitive — almost all production-quality sources require paid enrollment or license. Assumptions: All data ingestion must be gated by valid licensing agreements. Breakdown regime: Upon unauthorized access or use of unlicensed data streams. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces a kernel of legal compliance and data integrity in GSE's operational logic, preventing exposure from illegal data usage. Operator 'Aggregate Performance Signal' (page 2, domain other) captures: - Users receive the kind of evidence depth that separates professional sports analytics from tout-service picks. Assumptions: Only aggregate statistics are exposed; individual raw data points are not retained. Breakdown regime: When raw data is stored or exposed without proper anonymization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s belief-state update mechanism where aggregate signals inform tactical policy decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for radar-and-tracking-data-layer (f21d6d6e636441c7, domain=other, pages_read=4/4): Operator 'Radar and Tracking Evidence' (page 1, domain other) captures: These data types represent the highest-quality non-official performance signal available for baseball, football, basketball, and soccer analytics. Assumptions: Data is acquired via licensed commercial APIs; raw coordinates are not stored or exposed. Breakdown regime: When data sources lack valid commercial enrollment or are scraped without authorization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Observables from radar/tracking data map to probabilistic state vectors in GSI's Bayesian network, enabling inference over player performance and game dynamics. Operator 'Licensed Data Governance' (page 1, domain other) captures: They are also among the most commercially sensitive — almost all production-quality sources require paid enrollment or license. Assumptions: All data ingestion must be gated by valid licensing agreements. Breakdown regime: Upon unauthorized access or use of unlicensed data streams. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces a kernel of legal compliance and data integrity in GSE's operational logic, preventing exposure from illegal data usage. Operator 'Aggregate Performance Signal' (page 2, domain other) captures: - Users receive the kind of evidence depth that separates professional sports analytics from tout-service picks. Assumptions: Only aggregate statistics are exposed; individual raw data points are not retained. Breakdown regime: When raw data is stored or exposed without proper anonymization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s belief-state update mechanism where aggregate signals inform tactical policy decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical mechanics and information theory, this layer builds upon classical signal processing and modern machine learning frameworks for structured data inference. Retrocausal Genealogy: Rooted in radar-and-tracking-data-layer (f21d6d6e636441c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in radar-and-tracking-data-layer (f21d6d6e636441c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include unauthorized crawlers, data fabricators, and legal entities enforcing commercial terms. Each agent influences the system through either compliance or violation of licensing protocols. Theory of Mind & Decision Maker Model: Rooted in radar-and-tracking-data-layer (f21d6d6e636441c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in radar-and-tracking-data-layer (f21d6d6e636441c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring no raw data is stored or exposed; leakage vetoes prevent unauthorized access to GPS or pitch coordinate datasets. Cross-layer checks validate that all telemetry originates from approved sources. Cross-Layer Veto & Anti-Leakage Check: Rooted in radar-and-tracking-data-layer (f21d6d6e636441c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

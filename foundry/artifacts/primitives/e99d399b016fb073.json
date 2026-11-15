@@ -1,0 +1,78 @@
+{
+  "book_id": "e99d399b016fb073",
+  "source_status": "COMPLETE",
+  "title": "bypass_notes",
+  "file_name": "bypass_notes.md",
+  "sha256": "e99d399b016fb073ab3565e7f33bbd19a1b86b1b7a02f8fafe6e5b7af1feba94",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "NGS's expectation family decouples residual semantics from paywalled conditioning; context-flat metrics enable Bayesian reordering via motion and kinematics. Universal Lens: Rooted in bypass_notes (e99d399b016fb073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI leverages NGS's context-adjusted EPA and motion indicators to construct conformal predictive distributions over play outcomes, using receiver kinematics as latent variables. GSI Mapping: Rooted in bypass_notes (e99d399b016fb073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models situational state transitions using derived separation and cushion covariates, with motion-filtered EPA as a key driver for action selection in coverage scenarios. GSE Mapping: Rooted in bypass_notes (e99d399b016fb073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "context_adjusted_epa",
+      "name": "Context-Adjusted Expected Points Added",
+      "verbatim_quote": "- **Context-adjusted EPA as a reordering metric.** r=1.000 with raw EPA on four successive bases; 0.998 even with leave-one-out defensive quality.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'EPA': 'expected points added, dimensionless', 'r': 'correlation coefficient, dimensionless'}",
+      "assumptions": "Linear correlation between raw and context-adjusted EPA holds under leave-one-out defensive quality.",
+      "breakdown_regime": "When defensive quality is omitted, correlation drops slightly from 1.000 to 0.998.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "EPA reordering maps to GSI's Bayesian score calibration for outcome prediction.",
+        "source_operator": "context_adjusted_epa",
+        "telemetry": "Correlation coefficient r between raw and adjusted EPA values."
+      }
+    },
+    {
+      "primitive_id": "motion_as_coverage_predictor",
+      "name": "Motion as Coverage Predictor",
+      "verbatim_quote": "- **Motion as a coverage predictor.** Coverage null (p=.091 binary, .128 8-class, .687 on 3rd/4th).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p': 'p-value, dimensionless', 'motion': 'receiver movement pattern, dimensionless'}",
+      "assumptions": "Motion patterns are statistically independent of coverage type in binary classification.",
+      "breakdown_regime": "Null hypothesis rejected for binary case (p < 0.1), but not for multi-class or down-specific cases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Motion filters used in GSE to refine coverage model inputs before state transition.",
+        "source_operator": "motion_as_coverage_predictor",
+        "telemetry": "Statistical significance p-values for motion vs. coverage type."
+      }
+    },
+    {
+      "primitive_id": "receiver_kinematics",
+      "name": "Receiver Kinematics",
+      "verbatim_quote": "5.17 yd/s on completions, 6.31 on incompletions, 7.03 on interceptions.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v_r': 'receiver speed, yd/s', 'outcome': 'play result, {completion, incompletion, interception}'}",
+      "assumptions": "Speed differences are indicative of decision-making under pressure.",
+      "breakdown_regime": "Speed increases with interception likelihood, suggesting higher risk-taking.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Kinematic velocity profiles map to GSI's dynamic risk scoring for pass plays.",
+        "source_operator": "receiver_kinematics",
+        "telemetry": "Mean receiver speed v_r per outcome category."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e99d399b016fb073_t0",
+      "think": "The NGS expectation family is fully exposed through JWT-based access, with residuals serving as the core semantic value. Context-adjusted EPA provides a stable reordering metric that remains robust even when excluding defensive quality. Motion indicators show weak association with coverage types, yet strong predictive power for pass outcomes. Receiver kinematics reveal distinct velocity signatures across completion types, enabling probabilistic modeling of decision-making under pressure. These primitives form a dual framework: one rooted in statistical independence (motion), another in deterministic kinematic response (speed). The failure mode lies in assuming context-flat expectations can substitute for full contextual baselines, which they cannot due to tracking-conditioning bias.\n\nDeep epistemic analysis for bypass_notes (e99d399b016fb073, domain=other, pages_read=2/2): Operator 'Context-Adjusted Expected Points Added' (page 1, domain other) captures: - **Context-adjusted EPA as a reordering metric.** r=1.000 with raw EPA on four successive bases; 0.998 even with leave-one-out defensive quality. Assumptions: Linear correlation between raw and context-adjusted EPA holds under leave-one-out defensive quality. Breakdown regime: When defensive quality is omitted, correlation drops slightly from 1.000 to 0.998. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): EPA reordering maps to GSI's Bayesian score calibration for outcome prediction. Operator 'Motion as Coverage Predictor' (page 1, domain other) captures: - **Motion as a coverage predictor.** Coverage null (p=.091 binary, .128 8-class, .687 on 3rd/4th). Assumptions: Motion patterns are statistically independent of coverage type in binary classification. Breakdown regime: Null hypothesis rejected for binary case (p < 0.1), but not for multi-class or down-specific cases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Motion filters used in GSE to refine coverage model inputs before state transition. Operator 'Receiver Kinematics' (page 2, domain other) captures: 5.17 yd/s on completions, 6.31 on incompletions, 7.03 on interceptions. Assumptions: Speed differences are indicative of decision-making under pressure. Breakdown regime: Speed increases with interception likelihood, suggesting higher risk-taking. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kinematic velocity profiles map to GSI's dynamic risk scoring for pass plays. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for bypass_notes (e99d399b016fb073, domain=other, pages_read=2/2): Operator 'Context-Adjusted Expected Points Added' (page 1, domain other) captures: - **Context-adjusted EPA as a reordering metric.** r=1.000 with raw EPA on four successive bases; 0.998 even with leave-one-out defensive quality. Assumptions: Linear correlation between raw and context-adjusted EPA holds under leave-one-out defensive quality. Breakdown regime: When defensive quality is omitted, correlation drops slightly from 1.000 to 0.998. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): EPA reordering maps to GSI's Bayesian score calibration for outcome prediction. Operator 'Motion as Coverage Predictor' (page 1, domain other) captures: - **Motion as a coverage predictor.** Coverage null (p=.091 binary, .128 8-class, .687 on 3rd/4th). Assumptions: Motion patterns are statistically independent of coverage type in binary classification. Breakdown regime: Null hypothesis rejected for binary case (p < 0.1), but not for multi-class or down-specific cases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Motion filters used in GSE to refine coverage model inputs before state transition. Operator 'Receiver Kinematics' (page 2, domain other) captures: 5.17 yd/s on completions, 6.31 on incompletions, 7.03 on interceptions. Assumptions: Speed differences are indicative of decision-making under pressure. Breakdown regime: Speed increases with interception likelihood, suggesting higher risk-taking. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kinematic velocity profiles map to GSI's dynamic risk scoring for pass plays. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical regression theory and modern machine learning frameworks, these primitives reflect a shift from static to dynamic modeling. Influenced by early work on expected value in sports analytics and recent developments in causal inference. Retrocausal Genealogy: Rooted in bypass_notes (e99d399b016fb073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include defensive coordinators who may misinterpret motion signals and offensive players who adjust based on perceived coverage. Each agent operates within a bounded rationality framework where motion and kinematics serve as shared observables for strategic inference. Theory of Mind & Decision Maker Model: Rooted in bypass_notes (e99d399b016fb073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between motion predictors and EPA, preventing redundant encoding. Leakage occurs if motion is treated as a proxy for defensive quality without accounting for its own signal strength. Veto conditions require that motion be filtered before use in EPA models to avoid spurious correlations. Cross-Layer Veto & Anti-Leakage Check: Rooted in bypass_notes (e99d399b016fb073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

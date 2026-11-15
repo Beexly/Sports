@@ -1,0 +1,78 @@
+{
+  "book_id": "d3bbf84b7b86dc92",
+  "source_status": "COMPLETE",
+  "title": "cli-inventory-20260926",
+  "file_name": "cli-inventory-20260926.md",
+  "sha256": "d3bbf84b7b86dc9205c71439565bc4d9d64a06530962878d1396fc4edbe41c22",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Disk-search space traversal with grain-family isomorphisms maps file-system semantics to probabilistic inference layers. Universal Lens: Rooted in cli-inventory-20260926 (d3bbf84b7b86dc92), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over discrete grain states uses file presence/absence as likelihood priors for game-level and play-level data. GSI Mapping: Rooted in cli-inventory-20260926 (d3bbf84b7b86dc92), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions between game, play, and player grains using directional join keys and status flags. GSE Mapping: Rooted in cli-inventory-20260926 (d3bbf84b7b86dc92), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "file_system_grain_status",
+      "name": "File System Grain Status",
+      "verbatim_quote": "| table | grain (one row means) | join key | direction | status | |---|---|---|---|---| | games | one NFL game | `game_id` (`YYYY_WW_AWAY_HOME`) | schedule_and_body | REPRESENTATIVE.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'game_id': 'dimensionless identifier string', 'status': 'categorical {REPRESENTATIVE, DUPLICATE, ABSENT}'}",
+      "assumptions": "Each grain represents a unique entity; status reflects disk presence and family membership.",
+      "breakdown_regime": "When multiple files represent same grain family, only first is considered REPRESENTATIVE.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Grain status maps to Bayesian evidence in GSI; GSE uses it for state transition logic.",
+        "source_operator": "file_system_grain_status",
+        "telemetry": "Presence/absence of `game_id` in search roots."
+      }
+    },
+    {
+      "primitive_id": "duplicate_grain_detection",
+      "name": "Duplicate Grain Detection",
+      "verbatim_quote": "A second grain of a family that already has a representative on this branch is DUPLICATE, not a new candidate.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'family': 'set of related grain identifiers', 'representative': 'first grain in family', 'duplicate': 'subsequent grain in family'}",
+      "assumptions": "Family membership is defined by shared logical key structure.",
+      "breakdown_regime": "Failure mode occurs when duplicate grain is misclassified as new candidate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI applies duplicate detection to prevent overcounting; GSE avoids redundant state updates.",
+        "source_operator": "duplicate_grain_detection",
+        "telemetry": "Comparison of grain keys against existing family representatives."
+      }
+    },
+    {
+      "primitive_id": "absent_file_flagging",
+      "name": "Absent File Flagging",
+      "verbatim_quote": "ABSENT means the filename was looked for and was not in the four roots.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'filename': 'string path', 'roots': 'list of directory paths', 'status': 'categorical {ABSENT, FOUND}'}",
+      "assumptions": "All expected files must be located within predefined search roots.",
+      "breakdown_regime": "Failure mode when file is logically expected but not found due to path misconfiguration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "ABSENT flag triggers GSI absence prior; GSE marks missing data for fallback logic.",
+        "source_operator": "absent_file_flagging",
+        "telemetry": "Boolean result of file existence check in root directories."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d3bbf84b7b86dc92_t0",
+      "think": "The primitives define a hierarchical data ingestion pipeline where each grain type (game, play, player) is mapped through a file system lens. File status determines whether a grain is REPRESENTATIVE, DUPLICATE, or ABSENT. These statuses form a categorical signal used by GSI to compute Bayesian posteriors over data completeness. GSE leverages these signals to manage internal state transitions and avoid redundant processing. The failure modes arise from misclassification of duplicates or false negatives in file discovery, leading to incorrect data weighting or missing state updates.\n\nDeep epistemic analysis for cli-inventory-20260926 (d3bbf84b7b86dc92, domain=other, pages_read=7/7): Operator 'File System Grain Status' (page 1, domain other) captures: | table | grain (one row means) | join key | direction | status | |---|---|---|---|---| | games | one NFL game | `game_id` (`YYYY_WW_AWAY_HOME`) | schedule_and_body | REPRESENTATIVE. Assumptions: Each grain represents a unique entity; status reflects disk presence and family membership. Breakdown regime: When multiple files represent same grain family, only first is considered REPRESENTATIVE. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Grain status maps to Bayesian evidence in GSI; GSE uses it for state transition logic. Operator 'Duplicate Grain Detection' (page 1, domain other) captures: A second grain of a family that already has a representative on this branch is DUPLICATE, not a new candidate. Assumptions: Family membership is defined by shared logical key structure. Breakdown regime: Failure mode occurs when duplicate grain is misclassified as new candidate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI applies duplicate detection to prevent overcounting; GSE avoids redundant state updates. Operator 'Absent File Flagging' (page 1, domain other) captures: ABSENT means the filename was looked for and was not in the four roots. Assumptions: All expected files must be located within predefined search roots. Breakdown regime: Failure mode when file is logically expected but not found due to path misconfiguration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ABSENT flag triggers GSI absence prior; GSE marks missing data for fallback logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for cli-inventory-20260926 (d3bbf84b7b86dc92, domain=other, pages_read=7/7): Operator 'File System Grain Status' (page 1, domain other) captures: | table | grain (one row means) | join key | direction | status | |---|---|---|---|---| | games | one NFL game | `game_id` (`YYYY_WW_AWAY_HOME`) | schedule_and_body | REPRESENTATIVE. Assumptions: Each grain represents a unique entity; status reflects disk presence and family membership. Breakdown regime: When multiple files represent same grain family, only first is considered REPRESENTATIVE. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Grain status maps to Bayesian evidence in GSI; GSE uses it for state transition logic. Operator 'Duplicate Grain Detection' (page 1, domain other) captures: A second grain of a family that already has a representative on this branch is DUPLICATE, not a new candidate. Assumptions: Family membership is defined by shared logical key structure. Breakdown regime: Failure mode occurs when duplicate grain is misclassified as new candidate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI applies duplicate detection to prevent overcounting; GSE avoids redundant state updates. Operator 'Absent File Flagging' (page 1, domain other) captures: ABSENT means the filename was looked for and was not in the four roots. Assumptions: All expected files must be located within predefined search roots. Breakdown regime: Failure mode when file is logically expected but not found due to path misconfiguration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ABSENT flag triggers GSI absence prior; GSE marks missing data for fallback logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory's data integrity checks and Bayesian network propagation, extending to modern disk-based data pipelines and agent-based reasoning architectures. Retrocausal Genealogy: Rooted in cli-inventory-20260926 (d3bbf84b7b86dc92), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in cli-inventory-20260926 (d3bbf84b7b86dc92), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the data ingestion layer (which may misclassify files) and the reasoning engine (which must detect and correct such errors). Decision actors are the file system indexer and the grain processor. Theory of Mind & Decision Maker Model: Rooted in cli-inventory-20260926 (d3bbf84b7b86dc92), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that duplicate detection does not interfere with absent file handling. Leakage vetos prevent ABSENT flags from being overridden by spurious DUPLICATE classifications during grain expansion. Cross-Layer Veto & Anti-Leakage Check: Rooted in cli-inventory-20260926 (d3bbf84b7b86dc92), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in cli-inventory-20260926 (d3bbf84b7b86dc92), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

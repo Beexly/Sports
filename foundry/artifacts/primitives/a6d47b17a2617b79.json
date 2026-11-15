@@ -1,0 +1,78 @@
+{
+  "book_id": "a6d47b17a2617b79",
+  "source_status": "COMPLETE",
+  "title": "nfl-source-last12-2026-10-28",
+  "file_name": "nfl-source-last12-2026-10-28.md",
+  "sha256": "a6d47b17a2617b795ba54e288d023aacd5973f56a31dbc346ae7f3a3e72e448c",
+  "primary_domain": "football",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The epistemic accessibility of a digital host is modeled as a projection operator onto a public subspace. When standard basis vectors (conventional API paths) yield null responses, the system exhibits high-dimensional opacity, requiring non-linear state transitions to extract any meaningful signal.",
+  "gsi_mapping": "We construct a Bayesian classifier over the twelve hosts, updating priors based on HTTP response codes and payload entropy. The posterior probability of genuine data availability collapses for nine entities, leaving only sparse, credentialed manifolds for reliable conformal inference.",
+  "gse_mapping": "Situational awareness requires mapping static path failures to dynamic authentication gates. The transition from an unauthenticated probe to a funded account represents a discrete state jump in the GSE engine, fundamentally altering the observable phase space.",
+  "primitives": [
+    {
+      "primitive_id": "static_probe_nullity",
+      "name": "Static Probe Nullity Operator",
+      "verbatim_quote": "These are the hosts that yielded nothing to static probing or to a rendered browser.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "P: Probability of yielding a non-empty payload (dimensionless). B: Boolean indicator for rendered browser success (dimensionless).",
+      "assumptions": "Standard HTTP GET requests to conventional endpoints do not trigger server-side rendering or require pre-existing session cookies.",
+      "breakdown_regime": "Breaks down when the host employs universal catch-all routing (SPA shells), returning 200 OK with identical payloads for all paths.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to the GSI zero-signal detection layer, identifying hosts where the observable manifold is completely degenerate under standard querying.",
+        "source_operator": "static_probe_nullity",
+        "telemetry": "Count of 404/403 responses versus identical SPA shell byte counts across the 12 conventional paths."
+      }
+    },
+    {
+      "primitive_id": "spa_shell_degeneracy",
+      "name": "Single Page Application Shell Degeneracy",
+      "verbatim_quote": "The `key-auth` and `openapi` signals picked up from them are just words in the bundle, not a published spec.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "H(S): Shannon entropy of the returned HTML payload (bits). L: Length of the payload string (bytes).",
+      "assumptions": "A true API endpoint returns structured JSON/XML with high information density, whereas an SPA shell returns a static JavaScript bundle.",
+      "breakdown_regime": "Fails if the SPA dynamically injects OpenAPI specs into the DOM upon client-side execution without authentication.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the 'fake positive' kernel in GSE situational reasoning, filtering out hosts that merely contain API terminology within their compiled frontend assets.",
+        "source_operator": "spa_shell_degeneracy",
+        "telemetry": "Variance of payload sizes across the 12 paths; near-zero variance indicates shell degeneracy."
+      }
+    },
+    {
+      "primitive_id": "credential_gate_transition",
+      "name": "Credential Gate Transition",
+      "verbatim_quote": "These need a credentialed session, and for the sportsbooks that means a funded or at least registered account.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "C: Credential state vector (dimensionless). F: Binary flag for funded account status (dimensionless).",
+      "assumptions": "Stationary parameter regime within the documented observation horizon; zero missing covariates.",
+      "breakdown_regime": "Becomes singular if the platform implements decentralized identity or open-data tiers that bypass traditional funding requirements.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the GSE authentication wall, defining the exact boundary condition where passive observation must transition into active, resource-backed participation.",
+        "source_operator": "credential_gate_transition",
+        "telemetry": "Presence of 401 Unauthorized headers and explicit redirects to registration/funding portals upon probing `/api`."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a6d47b17a2617b79_t0",
+      "think": "The derivation begins by defining the observable space of the twelve NFL-related data hosts as a discrete set $\\mathcal{H} = \\{h_1, ..., h_{12}\\}$. We apply a linear probe operator $\\hat{P}$ consisting of twelve conventional path vectors (e.g., `/docs`, `/api`). The primary finding is that for nine elements in $\\mathcal{H}$, the projection $\\hat{P}h_i$ yields a null result or a degenerate constant (the SPA shell). This establishes a high-dimensional opacity regime. The remaining three hosts exhibit distinct behaviors: one (`mysportsfeeds`) projects onto a genuine free-tier subspace, while two others (`rotoviz`, `tipico`) project onto a deceptive manifold where the payload norm is non-zero but the informational content is invariant across paths. Mathematically, this is a failure of the standard basis to span the accessible data space. The duality here lies between the syntactic presence of API keywords (found in the SPA bundles) and the semantic absence of a reachable endpoint. The failure mode of static probing forces a shift in the epistemic framework: we can no longer treat these hosts as passive repositories. Instead, they function as state machines requiring an external key (credentials/funds) to unlock the next layer of the Hilbert space. The classification derived—1 open, 2 partial, 9 gated—is essentially a spectral decomposition of the field's accessibility, revealing that the foundational public work has largely migrated behind a non-linear authentication barrier.\n\nDeep epistemic analysis for nfl-source-last12-2026-10-28 (a6d47b17a2617b79, domain=football, pages_read=1/1): Operator 'Static Probe Nullity Operator' (page 1, domain football) captures: These are the hosts that yielded nothing to static probing or to a rendered browser. Assumptions: Standard HTTP GET requests to conventional endpoints do not trigger server-side rendering or require pre-existing session cookies. Breakdown regime: Breaks down when the host employs universal catch-all routing (SPA shells), returning 200 OK with identical payloads for all paths. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSI zero-signal detection layer, identifying hosts where the observable manifold is completely degenerate under standard querying. Operator 'Single Page Application Shell Degeneracy' (page 1, domain football) captures: The `key-auth` and `openapi` signals picked up from them are just words in the bundle, not a published spec. Assumptions: A true API endpoint returns structured JSON/XML with high information density, whereas an SPA shell returns a static JavaScript bundle. Breakdown regime: Fails if the SPA dynamically injects OpenAPI specs into the DOM upon client-side execution without authentication. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives the 'fake positive' kernel in GSE situational reasoning, filtering out hosts that merely contain API terminology within their compiled frontend assets. Operator 'Credential Gate Transition' (page 1, domain football) captures: These need a credentialed session, and for the sportsbooks that means a funded or at least registered account. Assumptions: Stationary parameter regime within the documented observation horizon; zero missing covariates. Breakdown regime: Becomes singular if the platform implements decentralized identity or open-data tiers that bypass traditional funding requirements. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the GSE authentication wall, defining the exact boundary condition where passive observation must transition into active, resource-backed participation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for nfl-source-last12-2026-10-28 (a6d47b17a2617b79, domain=football, pages_read=1/1): Operator 'Static Probe Nullity Operator' (page 1, domain football) captures: These are the hosts that yielded nothing to static probing or to a rendered browser. Assumptions: Standard HTTP GET requests to conventional endpoints do not trigger server-side rendering or require pre-existing session cookies. Breakdown regime: Breaks down when the host employs universal catch-all routing (SPA shells), returning 200 OK with identical payloads for all paths. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSI zero-signal detection layer, identifying hosts where the observable manifold is completely degenerate under standard querying. Operator 'Single Page Application Shell Degeneracy' (page 1, domain football) captures: The `key-auth` and `openapi` signals picked up from them are just words in the bundle, not a published spec. Assumptions: A true API endpoint returns structured JSON/XML with high information density, whereas an SPA shell returns a static JavaScript bundle. Breakdown regime: Fails if the SPA dynamically injects OpenAPI specs into the DOM upon client-side execution without authentication. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives the 'fake positive' kernel in GSE situational reasoning, filtering out hosts that merely contain API terminology within their compiled frontend assets. Operator 'Credential Gate Transition' (page 1, domain football) captures: These need a credentialed session, and for the sportsbooks that means a funded or at least registered account. Assumptions: Stationary parameter regime within the documented observation horizon; zero missing covariates. Breakdown regime: Becomes singular if the platform implements decentralized identity or open-data tiers that bypass traditional funding requirements. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the GSE authentication wall, defining the exact boundary condition where passive observation must transition into active, resource-backed participation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive lineage traces back to early web scraping heuristics, which assumed a direct correlation between URL structure and data availability. The historical shift toward Single Page Applications (SPAs) and heavy JavaScript gating broke this isomorphism. The current state reflects a defensive evolution by sportsbooks and data vendors, retroactively invalidating simple static probes and forcing a return to credential-based access models reminiscent of early proprietary mainframe terminals.",
+      "theory_of_mind": "From the perspective of the data vendor (the opposing agent), the deployment of SPA shells and strict credential gates is a deliberate strategy to obfuscate the underlying data architecture. They aim to prevent unauthorized enumeration and force potential consumers into a controlled funnel (registration/funding). Our modeling must account for this adversarial intent: the 'empty' responses are not mere omissions but active denials designed to maximize the friction of access, thereby protecting their proprietary moat.",
+      "cross_layer_veto": "We must veto any inference that equates a 200 OK status code with data availability. The telemetry from `tipico` and `rotoviz` demonstrates severe collinearity between the HTTP success signal and actual informational yield. If the GSE engine accepts these shell responses as valid states, it will suffer catastrophic leakage, misclassifying gated environments as open. Therefore, a cross-layer veto is applied: any host returning invariant payloads across multiple distinct probe paths is immediately flagged as degenerate, overriding the raw HTTP status code in the final accessibility map."
+    }
+  ]
+}

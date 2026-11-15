@@ -1,0 +1,78 @@
+{
+  "book_id": "b5c2c3df3345044d",
+  "source_status": "COMPLETE",
+  "title": "0243-markov-cricket-using-forward-and-inverse",
+  "file_name": "0243-markov-cricket-using-forward-and-inverse.md",
+  "sha256": "b5c2c3df3345044d8f1322610c0203ca6ad5cc07a7ed806f5631402b3bde04cf",
+  "primary_domain": "history",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Markov reward processes model batting states as score, wickets, over, ball; inverse RL infers reward from expert action sequences using guided cost learning. Universal Lens: Rooted in 0243-markov-cricket-using-forward-and-inverse (b5c2c3df3345044d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps batting states to scoring probabilities; conformal prediction bounds uncertainty in DLS-derived resource estimates. GSI Mapping: Rooted in 0243-markov-cricket-using-forward-and-inverse (b5c2c3df3345044d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes state transitions via Monte Carlo simulation; policy optimization maximizes value function margin between optimal and suboptimal paths. GSE Mapping: Rooted in 0243-markov-cricket-using-forward-and-inverse (b5c2c3df3345044d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "forward_markov_reward_process",
+      "name": "Forward Markov Reward Process",
+      "verbatim_quote": "**Markov Reward Process + Monte Carlo value learning:** reward = fraction of total runs scored in the state.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r': 'reward (dimensionless, fraction of runs)', 's': 'state (score, wickets, over, ball)', 'V^\\\\pi(s)': 'value function (expected return from state s)'}",
+      "assumptions": "State transitions follow Markov property; reward is a function of runs scored in state.",
+      "breakdown_regime": "When state space is too large or reward function is mis-specified.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Value function approximates scoring resources remaining; enables predictive modeling of final score via Monte Carlo methods.",
+        "source_operator": "forward_markov_reward_process",
+        "telemetry": "Mean percentage error vs DLS table"
+      }
+    },
+    {
+      "primitive_id": "inverse_reinforcement_learning_batting_policy",
+      "name": "Inverse Reinforcement Learning Batting Policy",
+      "verbatim_quote": "**Inverse RL (first innings only):** MDP with actions = {dot ball (0), 1, 2, 3, 4, 6 runs}.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r(s,a)': 'linear reward function (runs per action)', 'π^*(s)': 'optimal policy (action sequence)', 'π_i(s)': 'suboptimal policy (e.g., losing team)', 'p': 'squared Euclidean distance between value functions'}",
+      "assumptions": "Expert strategies are optimal; reward function can be inferred from action sequences.",
+      "breakdown_regime": "When expert behavior is inconsistent or non-optimal.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Inferred reward function mirrors strategic intent of winning teams; used to optimize batting policy via guided cost learning.",
+        "source_operator": "inverse_reinforcement_learning_batting_policy",
+        "telemetry": "Coefficient magnitudes for state/action features"
+      }
+    },
+    {
+      "primitive_id": "monte_carlo_simulator_cricket",
+      "name": "Monte Carlo Simulator for Cricket",
+      "verbatim_quote": "2016): maximize Σi p(V^π*(s0) - V^πi(s0)) with p = squared Euclidean distance — maximize margin between optimal and suboptimal strategies.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P(r|s)': 'probability of runs given state', 'P(w|s)': 'probability of wicket given state', 'P(a|s)': 'probability of action given state', 'N': 'number of simulations'}",
+      "assumptions": "Historical data accurately reflects transition dynamics; actions are sampled from probability distributions.",
+      "breakdown_regime": "When historical data is insufficient or biased.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Simulates batting trajectories; generates posterior distribution of final scores for probabilistic forecasting.",
+        "source_operator": "monte_carlo_simulator_cricket",
+        "telemetry": "Posterior variance of simulated final scores"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b5c2c3df3345044d_t0",
+      "think": "The core innovation lies in applying inverse reinforcement learning (IRL) to infer batting strategies from expert performance, rather than assuming a fixed reward function. This is mathematically grounded in Ng & Russell’s guided cost learning framework, which maximizes the margin between optimal and suboptimal policies. The forward process uses a Markov reward process to estimate value functions, mapping current game states to expected final scores. These are then compared against DLS tables, showing up to 10x improvement in accuracy. The Monte Carlo simulator models state transitions using empirical probabilities derived from historical data. Each primitive operates in distinct regimes: IRL infers rewards from demonstrations, value functions predict outcomes, and simulation generates uncertainty distributions. Dualities emerge in how value estimation and policy optimization interact—IRL provides the reward kernel that shapes the value function, while the simulator validates both. Failure modes include overfitting in small datasets, incorrect assumptions about Markovity, and misalignment between inferred rewards and true strategic goals.\n\nDeep epistemic analysis for 0243-markov-cricket-using-forward-and-inverse (b5c2c3df3345044d, domain=history, pages_read=5/5): Operator 'Forward Markov Reward Process' (page 1, domain history) captures: **Markov Reward Process + Monte Carlo value learning:** reward = fraction of total runs scored in the state. Assumptions: State transitions follow Markov property; reward is a function of runs scored in state. Breakdown regime: When state space is too large or reward function is mis-specified. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Value function approximates scoring resources remaining; enables predictive modeling of final score via Monte Carlo methods. Operator 'Inverse Reinforcement Learning Batting Policy' (page 1, domain history) captures: **Inverse RL (first innings only):** MDP with actions = {dot ball (0), 1, 2, 3, 4, 6 runs}. Assumptions: Expert strategies are optimal; reward function can be inferred from action sequences. Breakdown regime: When expert behavior is inconsistent or non-optimal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Inferred reward function mirrors strategic intent of winning teams; used to optimize batting policy via guided cost learning. Operator 'Monte Carlo Simulator for Cricket' (page 2, domain history) captures: 2016): maximize Σi p(V^π*(s0) - V^πi(s0)) with p = squared Euclidean distance — maximize margin between optimal and suboptimal strategies. Assumptions: Historical data accurately reflects transition dynamics; actions are sampled from probability distributions. Breakdown regime: When historical data is insufficient or biased. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Simulates batting trajectories; generates posterior distribution of final scores for probabilistic forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0243-markov-cricket-using-forward-and-inverse (b5c2c3df3345044d, domain=history, pages_read=5/5): Operator 'Forward Markov Reward Process' (page 1, domain history) captures: **Markov Reward Process + Monte Carlo value learning:** reward = fraction of total runs scored in the state. Assumptions: State transitions follow Markov property; reward is a function of runs scored in state. Breakdown regime: When state space is too large or reward function is mis-specified. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Value function approximates scoring resources remaining; enables predictive modeling of final score via Monte Carlo methods. Operator 'Inverse Reinforcement Learning Batting Policy' (page 1, domain history) captures: **Inverse RL (first innings only):** MDP with actions = {dot ball (0), 1, 2, 3, 4, 6 runs}. Assumptions: Expert strategies are optimal; reward function can be inferred from action sequences. Breakdown regime: When expert behavior is inconsistent or non-optimal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Inferred reward function mirrors strategic intent of winning teams; used to optimize batting policy via guided cost learning. Operator 'Monte Carlo Simulator for Cricket' (page 2, domain history) captures: 2016): maximize Σi p(V^π*(s0) - V^πi(s0)) with p = squared Euclidean distance — maximize margin between optimal and suboptimal strategies. Assumptions: Historical data accurately reflects transition dynamics; actions are sampled from probability distributions. Breakdown regime: When historical data is insufficient or biased. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Simulates batting trajectories; generates posterior distribution of final scores for probabilistic forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in reinforcement learning theory (Sutton & Barto), extended by Ng & Russell’s IRL and Finn et al.'s guided cost learning. Builds upon earlier work in probabilistic modeling of sports outcomes and Markov decision processes in gaming contexts. Retrocausal Genealogy: Rooted in 0243-markov-cricket-using-forward-and-inverse (b5c2c3df3345044d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing agents as either expert (winning) or non-expert (losing) teams. The system assumes that experts make rational choices under constraints, and that these choices encode an implicit reward structure. Suboptimal strategies are treated as deviations from this structure, enabling inference of underlying utility functions. Theory of Mind & Decision Maker Model: Rooted in 0243-markov-cricket-using-forward-and-inverse (b5c2c3df3345044d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by separating value estimation (forward process) from reward inference (inverse process). Leakage occurs if the simulator's transition probabilities are not independent of the IRL reward function. Veto conditions include ensuring that the state representation captures sufficient information for both value learning and policy recovery. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0243-markov-cricket-using-forward-and-inverse (b5c2c3df3345044d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

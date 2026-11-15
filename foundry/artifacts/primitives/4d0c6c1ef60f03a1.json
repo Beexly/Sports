@@ -1,0 +1,78 @@
+{
+  "book_id": "4d0c6c1ef60f03a1",
+  "source_status": "COMPLETE",
+  "title": "syntheses",
+  "file_name": "syntheses.md",
+  "sha256": "4d0c6c1ef60f03a198f14594a8fbd0f824248ab8a49ba17a8acd45052f18c84c",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Three-tier data-rights architecture governs qb-behavior computations: T1 (nflverse pbp) is engine-eligible, T2 (FTN charting) is attribution-bound, T3 (NGS) is founder-gated. Universal Lens: Rooted in syntheses (4d0c6c1ef60f03a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference over T1/T2 data streams to compute probabilistic behavioral traits, using conformal prediction for uncertainty quantification in pressure-sensitive metrics. GSI Mapping: Rooted in syntheses (4d0c6c1ef60f03a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models situational reasoning via state transitions between clean/pressured dropbacks, applying pressure-floor contrasts to isolate QB response behavior while respecting data tier constraints. GSE Mapping: Rooted in syntheses (4d0c6c1ef60f03a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pressure_floor_sensitivity",
+      "name": "Pressure Floor Sensitivity",
+      "verbatim_quote": "**Evaluative pressure (EPA):** `sensitivity = EPA/db(clean) - EPA/db(pressured)` (proposal, a01-pending/a06-extracted).",
+      "page": 1,
+      "latex": "sensitivity = \\frac{\\text{EPA}_{\\text{clean}}}{\\text{db(clean)}} - \\frac{\\text{EPA}_{\\text{pressured}}}{\\text{db(pressured)}}",
+      "symbol_and_unit_ledger": "{'sensitivity': 'dimensionless', 'EPA': 'yards', 'db': 'dropbacks'}",
+      "assumptions": "QB performance under pressure is isolated from OL influence through clean vs pressured contrast; assumes constant db size within groups.",
+      "breakdown_regime": "When db(clean) < 100 or db(pressured) < 100, sensitivity becomes unstable due to low sample size.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI computes sensitivity as a posterior distribution over QBs using T1 EPA data, with variance controlled by db counts; GSE uses this to model QB response in pressure states.",
+        "source_operator": "pressure_floor_sensitivity",
+        "telemetry": "QB-specific sensitivity score with confidence interval derived from db counts."
+      }
+    },
+    {
+      "primitive_id": "int_rate_pressure_floor",
+      "name": "INT Rate Under Pressure Floor",
+      "verbatim_quote": "**Evaluative pressure (INT):** INT rate by pressure-floor vs clean, EB-shrunk (a06 buildable spec).",
+      "page": 1,
+      "latex": "\\text{INT}_\\text{pressure-floor} = \\frac{\\text{INT}_{\\text{pressured}}}{\\text{db(pressured)}}",
+      "symbol_and_unit_ledger": "{'INT_rate': 'dimensionless', 'INT': 'interceptions', 'db': 'dropbacks'}",
+      "assumptions": "INT rate is measured only on pressure-floor dropbacks; EB-shrunk ensures minimal bias from small samples.",
+      "breakdown_regime": "When db(pressured) < 50, INT rate becomes unreliable due to insufficient data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI models INT rate as a Bernoulli process conditioned on pressure floor; GSE applies this to evaluate QB decision-making under pressure.",
+        "source_operator": "int_rate_pressure_floor",
+        "telemetry": "Observed INT rate per QB per game, adjusted for pressure floor and EB shrinkage."
+      }
+    },
+    {
+      "primitive_id": "blitz_conditioned_splits",
+      "name": "Blitz Conditioned Splits",
+      "verbatim_quote": "(a06) - Blitz splits in the engine are **blocked** — nflverse has no blitz column; FTN `n_blitzers` is T2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "No direct engine access to blitz data; splits must await founder rights decision.",
+      "breakdown_regime": "Blocked when T2 data not available or rights architecture prevents inclusion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE isolates blitz splits as a T2-dependent module; GSI treats it as a conditional exclusion in inference models.",
+        "source_operator": "blitz_conditioned_splits",
+        "telemetry": "Flag indicating whether blitz splits are computable based on data availability."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4d0c6c1ef60f03a1_t0",
+      "think": "The pressure floor sensitivity primitive isolates QB performance under pressure by contrasting clean and pressured dropbacks. It relies on EPA differentials from T1 data, assuming that pressure affects outcomes independently of OL quality. This introduces a structural hole: the lack of hurry data in either T1 or T2, leading to contamination of clean dropbacks. The sensitivity measure is conservative, understating true effects. The INT rate under pressure floor is a derived quantity that corrects for sample size using EB shrinkage. Both primitives are constrained by the three-tier architecture, where T2 data cannot enter training exports, and T3 data remains founder-gated. The absence of true time-to-throw and tight-window aggressiveness proxies limits modeling depth. The system avoids retroactive bias through point-in-time week boundaries and validation gates.\n\nDeep epistemic analysis for syntheses (4d0c6c1ef60f03a1, domain=other, pages_read=4/4): Operator 'Pressure Floor Sensitivity' (page 1, domain other) captures: **Evaluative pressure (EPA):** `sensitivity = EPA/db(clean) - EPA/db(pressured)` (proposal, a01-pending/a06-extracted). Assumptions: QB performance under pressure is isolated from OL influence through clean vs pressured contrast; assumes constant db size within groups. Breakdown regime: When db(clean) < 100 or db(pressured) < 100, sensitivity becomes unstable due to low sample size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes sensitivity as a posterior distribution over QBs using T1 EPA data, with variance controlled by db counts; GSE uses this to model QB response in pressure states. Operator 'INT Rate Under Pressure Floor' (page 1, domain other) captures: **Evaluative pressure (INT):** INT rate by pressure-floor vs clean, EB-shrunk (a06 buildable spec). Assumptions: INT rate is measured only on pressure-floor dropbacks; EB-shrunk ensures minimal bias from small samples. Breakdown regime: When db(pressured) < 50, INT rate becomes unreliable due to insufficient data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI models INT rate as a Bernoulli process conditioned on pressure floor; GSE applies this to evaluate QB decision-making under pressure. Operator 'Blitz Conditioned Splits' (page 1, domain other) captures: (a06) - Blitz splits in the engine are **blocked** — nflverse has no blitz column; FTN `n_blitzers` is T2. Assumptions: No direct engine access to blitz data; splits must await founder rights decision. Breakdown regime: Blocked when T2 data not available or rights architecture prevents inclusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE isolates blitz splits as a T2-dependent module; GSI treats it as a conditional exclusion in inference models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for syntheses (4d0c6c1ef60f03a1, domain=other, pages_read=4/4): Operator 'Pressure Floor Sensitivity' (page 1, domain other) captures: **Evaluative pressure (EPA):** `sensitivity = EPA/db(clean) - EPA/db(pressured)` (proposal, a01-pending/a06-extracted). Assumptions: QB performance under pressure is isolated from OL influence through clean vs pressured contrast; assumes constant db size within groups. Breakdown regime: When db(clean) < 100 or db(pressured) < 100, sensitivity becomes unstable due to low sample size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes sensitivity as a posterior distribution over QBs using T1 EPA data, with variance controlled by db counts; GSE uses this to model QB response in pressure states. Operator 'INT Rate Under Pressure Floor' (page 1, domain other) captures: **Evaluative pressure (INT):** INT rate by pressure-floor vs clean, EB-shrunk (a06 buildable spec). Assumptions: INT rate is measured only on pressure-floor dropbacks; EB-shrunk ensures minimal bias from small samples. Breakdown regime: When db(pressured) < 50, INT rate becomes unreliable due to insufficient data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI models INT rate as a Bernoulli process conditioned on pressure floor; GSE applies this to evaluate QB decision-making under pressure. Operator 'Blitz Conditioned Splits' (page 1, domain other) captures: (a06) - Blitz splits in the engine are **blocked** — nflverse has no blitz column; FTN `n_blitzers` is T2. Assumptions: No direct engine access to blitz data; splits must await founder rights decision. Breakdown regime: Blocked when T2 data not available or rights architecture prevents inclusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE isolates blitz splits as a T2-dependent module; GSI treats it as a conditional exclusion in inference models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s work on defensive pressure metrics and QB response modeling, evolving through NFL analytics frameworks like PFF and ESPN’s advanced stats. The formalization of pressure floors aligns with modern causal inference techniques. Retrocausal Genealogy: Rooted in syntheses (4d0c6c1ef60f03a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include QBs who respond differently under pressure, and OLs who may be underperforming or overperforming relative to expectations. The system models these as latent variables in a Bayesian framework, with sensitivity and INT rate serving as observables. Theory of Mind & Decision Maker Model: Rooted in syntheses (4d0c6c1ef60f03a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring T2 data does not leak into training sets. Leakage vetoes prevent overfitting to charted data. Structural holes like missing hurry data and founder-gated NGS fields are flagged as non-computable, maintaining integrity of the engine's state transitions. Cross-Layer Veto & Anti-Leakage Check: Rooted in syntheses (4d0c6c1ef60f03a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

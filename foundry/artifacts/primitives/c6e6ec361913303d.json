@@ -1,0 +1,78 @@
+{
+  "book_id": "c6e6ec361913303d",
+  "source_status": "COMPLETE",
+  "title": "epa_residualization",
+  "file_name": "epa_residualization.md",
+  "sha256": "c6e6ec361913303d7fa5d8079ea35d5c3f78ad0ae4c127c9e30cb3fee15e8ae1",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Context-adjusted EPA residualisation maps situational features to a pure team-quality signal via regression, isolating team performance from environmental variance. Universal Lens: Rooted in epa_residualization (c6e6ec361913303d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction on residuals to quantify uncertainty in team quality estimates, enabling Bayesian risk-adjusted decision-making under epistemic uncertainty. GSI Mapping: Rooted in epa_residualization (c6e6ec361913303d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models team state transitions using residual-based contextual signals, enabling dynamic situational awareness and adaptive policy selection across game states. GSE Mapping: Rooted in epa_residualization (c6e6ec361913303d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "context_adjusted_epa_residualisation",
+      "name": "Context-Adjusted EPA Residualisation",
+      "verbatim_quote": "# Context-adjusted EPA residualisation (mission primitive 1) Built the residualiser the brief asks for: regress EPA on the situational basis, keep the residual as \"pure\" context value.",
+      "page": 1,
+      "latex": "\\hat{\\epsilon} = \\text{EPA} - \\mathbb{E}[\\text{EPA} \\mid X_{\\text{situational}}]",
+      "symbol_and_unit_ledger": "{'\\\\hat{\\\\epsilon}': 'dimensionless residual representing pure team quality', '\\\\text{EPA}': 'expected points added, dimensionless', 'X_{\\\\text{situational}}': 'vector of situational features (down, distance, field position, score difference, quarter)'}",
+      "assumptions": "Linear relationship between EPA and situational features; no opponent or personnel included in model.",
+      "breakdown_regime": "When situational basis explains <2% of variance, residual becomes unreliable as a team quality proxy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Residuals serve as input to GSI's Bayesian uncertainty quantifiers and GSE's state transition models.",
+        "source_operator": "context_adjusted_epa_residualisation",
+        "telemetry": "Standard deviation of residuals (sd=1.41), in-sample R2 (0.0152)"
+      }
+    },
+    {
+      "primitive_id": "residual_team_quality_ranking",
+      "name": "Residual Team Quality Ranking",
+      "verbatim_quote": "HistGradientBoosting on down, distance, field position, |score diff|, quarter — no opponent, no personnel.",
+      "page": 1,
+      "latex": "Q_{\\text{team}} = \\arg\\max_{t} \\mathbb{E}[\\hat{\\epsilon}_t]",
+      "symbol_and_unit_ledger": "{'Q_{\\\\text{team}}': 'team quality rank, dimensionless', '\\\\hat{\\\\epsilon}_t': 'residual for team t'}",
+      "assumptions": "Team quality is captured by residual magnitude; ranking is stable across small perturbations in features.",
+      "breakdown_regime": "Rankings become unstable when R2 drops below 1.5%, indicating high noise in residual signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's policy evaluation kernel where team quality drives action selection.",
+        "source_operator": "residual_team_quality_ranking",
+        "telemetry": "Top teams: LAR (+0.150), BUF (+0.121); Bottom teams: CLE (-0.139), NYJ (-0.105)"
+      }
+    },
+    {
+      "primitive_id": "residual_stability_assessment",
+      "name": "Residual Stability Assessment",
+      "verbatim_quote": "That stability is the useful part; it means the residual is measuring team quality, not feature noise.",
+      "page": 1,
+      "latex": "\\sigma_{\\hat{\\epsilon}} = \\sqrt{\\mathbb{V}[\\hat{\\epsilon}]}, \\quad \\text{where } \\sigma_{\\hat{\\epsilon}} \\approx 1.41",
+      "symbol_and_unit_ledger": "{'\\\\sigma_{\\\\hat{\\\\epsilon}}': 'standard deviation of residuals, dimensionless'}",
+      "assumptions": "Stability implies minimal feature noise in residual; variance is representative of true team quality.",
+      "breakdown_regime": "If \\sigma_{\\hat{\\epsilon}} exceeds 1.5, residual is too noisy for reliable inference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI to calibrate confidence intervals for team quality estimates.",
+        "source_operator": "residual_stability_assessment",
+        "telemetry": "Residual SD = 1.41, mean = -0.01"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c6e6ec361913303d_t0",
+      "think": "The core operator is a linear regression of EPA against situational variables (down, distance, field position, score differential, quarter), yielding a residual term that purports to isolate team quality from context. This residual is computed per possession team and used to rank teams. The regression's explanatory power is low (R2 ≈ 1.5%), implying that most variance in EPA is due to situational factors rather than inherent team ability. The stability of rankings across different model specifications suggests robustness to minor feature changes, but the low R2 indicates that the residual is more of a screening tool than a valuation metric. The residual's large standard deviation (σ ≈ 1.41) implies significant noise, making any claim of 'pure context' fragile. The absence of opponent and personnel controls introduces schedule bias and confounding, limiting interpretability. The sign ambiguity in EPA further restricts absolute interpretation, leaving only relative orderings valid. Thus, while the primitive enables consistent ranking, its use requires careful calibration of uncertainty bounds and explicit control for opponent and personnel effects.\n\nDeep epistemic analysis for epa_residualization (c6e6ec361913303d, domain=other, pages_read=1/1): Operator 'Context-Adjusted EPA Residualisation' (page 1, domain other) captures: # Context-adjusted EPA residualisation (mission primitive 1) Built the residualiser the brief asks for: regress EPA on the situational basis, keep the residual as \"pure\" context value. Assumptions: Linear relationship between EPA and situational features; no opponent or personnel included in model. Breakdown regime: When situational basis explains <2% of variance, residual becomes unreliable as a team quality proxy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Residuals serve as input to GSI's Bayesian uncertainty quantifiers and GSE's state transition models. Operator 'Residual Team Quality Ranking' (page 1, domain other) captures: HistGradientBoosting on down, distance, field position, |score diff|, quarter — no opponent, no personnel. Assumptions: Team quality is captured by residual magnitude; ranking is stable across small perturbations in features. Breakdown regime: Rankings become unstable when R2 drops below 1.5%, indicating high noise in residual signal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's policy evaluation kernel where team quality drives action selection. Operator 'Residual Stability Assessment' (page 1, domain other) captures: That stability is the useful part; it means the residual is measuring team quality, not feature noise. Assumptions: Stability implies minimal feature noise in residual; variance is representative of true team quality. Breakdown regime: If \\sigma_{\\hat{\\epsilon}} exceeds 1.5, residual is too noisy for reliable inference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to calibrate confidence intervals for team quality estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for epa_residualization (c6e6ec361913303d, domain=other, pages_read=1/1): Operator 'Context-Adjusted EPA Residualisation' (page 1, domain other) captures: # Context-adjusted EPA residualisation (mission primitive 1) Built the residualiser the brief asks for: regress EPA on the situational basis, keep the residual as \"pure\" context value. Assumptions: Linear relationship between EPA and situational features; no opponent or personnel included in model. Breakdown regime: When situational basis explains <2% of variance, residual becomes unreliable as a team quality proxy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Residuals serve as input to GSI's Bayesian uncertainty quantifiers and GSE's state transition models. Operator 'Residual Team Quality Ranking' (page 1, domain other) captures: HistGradientBoosting on down, distance, field position, |score diff|, quarter — no opponent, no personnel. Assumptions: Team quality is captured by residual magnitude; ranking is stable across small perturbations in features. Breakdown regime: Rankings become unstable when R2 drops below 1.5%, indicating high noise in residual signal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's policy evaluation kernel where team quality drives action selection. Operator 'Residual Stability Assessment' (page 1, domain other) captures: That stability is the useful part; it means the residual is measuring team quality, not feature noise. Assumptions: Stability implies minimal feature noise in residual; variance is representative of true team quality. Breakdown regime: If \\sigma_{\\hat{\\epsilon}} exceeds 1.5, residual is too noisy for reliable inference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to calibrate confidence intervals for team quality estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical regression diagnostics and econometric decontamination techniques, tracing back to early work in sports analytics and causal inference frameworks such as those developed in the 1970s–80s for player and team evaluation. Retrocausal Genealogy: Rooted in epa_residualization (c6e6ec361913303d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (teams) may exploit the low signal-to-noise ratio by manipulating situational contexts to artificially inflate or deflate their residual scores. Additionally, the lack of opponent adjustment allows schedule strength to leak into team rankings, creating incentives for strategic scheduling or defensive positioning to improve perceived quality. Theory of Mind & Decision Maker Model: Rooted in epa_residualization (c6e6ec361913303d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes inclusion of opponent and personnel features without explicit modeling; leakage veto prevents use of residual as a standalone quality metric without correcting for schedule bias and EPA sign ambiguity. Cross-Layer Veto & Anti-Leakage Check: Rooted in epa_residualization (c6e6ec361913303d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

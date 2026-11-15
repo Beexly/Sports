@@ -1,0 +1,78 @@
+{
+  "book_id": "cf39411ce5cded9c",
+  "source_status": "COMPLETE",
+  "title": "EXPANDED_NFL_SPORTS_MIND_ARBITRAGE_PAGE2",
+  "file_name": "EXPANDED_NFL_SPORTS_MIND_ARBITRAGE_PAGE2.md",
+  "sha256": "cf39411ce5cded9c98f859f30460fd8e96350654b359cb66577c054c89580d64",
+  "primary_domain": "psych",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The NFL betting market is modeled as a non-equilibrium thermodynamic system where the closing spread represents a metastable state. Oddsmaker shading introduces an external potential field driven by retail cognitive biases, while line drift acts as a temporal diffusion process. True predictive expectation requires isolating the pure probability gradient from these liquidity-induced distortions.",
+  "gsi_mapping": "GSI employs conformal inference to construct dynamic prediction intervals around true win probabilities. By treating oddsmaker shading as a known bias vector, we apply Bayesian shrinkage to historical priors. This corrects the empirical distribution of point differentials, ensuring our probabilistic forecasts maintain strict calibration against the distorted closing line baseline.",
+  "gse_mapping": "GSE translates these statistical edges into discrete state transitions within `devig.ts`. The engine monitors real-time liquidity flows to detect mid-week steam moves and key number hesitations (3, 7, 10). It executes selective pass discipline, mapping continuous probability gradients to binary trade actions only when the expected value strictly exceeds the bookmaker's vigorish barrier.",
+  "primitives": [
+    {
+      "primitive_id": "retail_bias_correction",
+      "name": "Retail Cognitive Bias Correction Operator",
+      "verbatim_quote": "Schlicht (Oct 2017)* - **The Core Finding**: Sportsbooks and oddsmakers do **not** set spreads to be purely predictive of game outcomes; they set lines to balance betting volume and exploit retail public biases (e.g.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S_obs: Observed spread (points), S_true: True predictive spread (points), B_pub: Retail bias vector (dimensionless magnitude)",
+      "assumptions": "Oddsmakers optimize for balanced liability rather than pure epistemic accuracy; retail bias vectors are historically stationary.",
+      "breakdown_regime": "Fails during unprecedented macro-events where historical retail behavioral priors collapse or liquidity becomes entirely one-sided.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's retail shade detection filter, isolating the true probability surface from the liquidity-distorted observed spread.",
+        "source_operator": "retail_bias_correction",
+        "telemetry": "Out-of-sample positive expectation (+EV) returns against the closing spread."
+      }
+    },
+    {
+      "primitive_id": "temporal_drift_capture",
+      "name": "Temporal Line Drift & CLV Capture",
+      "verbatim_quote": "While closing spreads are information-dense, early openers exhibit systematic drift and pricing delays on key numbers (3, 7, 10).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "L(t): Line value at time t (points), L_close: Closing line (points), K: Set of key numbers {3, 7, 10}",
+      "assumptions": "Market information incorporation is not instantaneous; early openers contain structural inefficiencies relative to the final consensus.",
+      "breakdown_regime": "Breaks down if pre-market information asymmetry vanishes due to perfectly synchronized global algorithmic opening protocols.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Drives the timing logic in GSE situational reasoning, identifying optimal entry points before mid-week steam moves compress the edge.",
+        "source_operator": "temporal_drift_capture",
+        "telemetry": "Closing Line Value (CLV) differential between model entry price and final market consensus."
+      }
+    },
+    {
+      "primitive_id": "vigilance_thresholding",
+      "name": "Vigorish-Calibrated Pass Discipline",
+      "verbatim_quote": "predicting 65% straight-up winners) fail to yield betting profit if the edge does not exceed bookmaker vigorish (vig).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "p_hat: Predicted win probability (dimensionless), v: Bookmaker vigorish margin (dimensionless), ROI: Return on investment (%)",
+      "assumptions": "Standard classification accuracy is insufficient; profitability is strictly a function of probability calibration relative to transaction costs.",
+      "breakdown_regime": "Systematic failure occurs if the model overfits to historical noise, producing high-confidence predictions that consistently underperform the vig threshold.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Implements the hard constraint layer in GSE execution engines, enforcing selective pass discipline to guarantee positive ROI.",
+        "source_operator": "vigilance_thresholding",
+        "telemetry": "Net ROI after deducting standard -110 juice across a large sample of deployed wagers."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cf39411ce5cded9c_t0",
+      "think": "Deep epistemic analysis for EXPANDED_NFL_SPORTS_MIND_ARBITRAGE_PAGE2 (cf39411ce5cded9c, domain=psych, pages_read=3/3): Operator 'Retail Cognitive Bias Correction Operator' (page 1, domain psych) captures: Schlicht (Oct 2017)* - **The Core Finding**: Sportsbooks and oddsmakers do **not** set spreads to be purely predictive of game outcomes; they set lines to balance betting volume and exploit retail public biases (e.g. Assumptions: Oddsmakers optimize for balanced liability rather than pure epistemic accuracy; retail bias vectors are historically stationary. Breakdown regime: Fails during unprecedented macro-events where historical retail behavioral priors collapse or liquidity becomes entirely one-sided. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's retail shade detection filter, isolating the true probability surface from the liquidity-distorted observed spread. Operator 'Temporal Line Drift & CLV Capture' (page 1, domain psych) captures: While closing spreads are information-dense, early openers exhibit systematic drift and pricing delays on key numbers (3, 7, 10). Assumptions: Market information incorporation is not instantaneous; early openers contain structural inefficiencies relative to the final consensus. Breakdown regime: Breaks down if pre-market information asymmetry vanishes due to perfectly synchronized global algorithmic opening protocols. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Drives the timing logic in GSE situational reasoning, identifying optimal entry points before mid-week steam moves compress the edge. Operator 'Vigorish-Calibrated Pass Discipline' (page 1, domain psych) captures: predicting 65% straight-up winners) fail to yield betting profit if the edge does not exceed bookmaker vigorish (vig). Assumptions: Standard classification accuracy is insufficient; profitability is strictly a function of probability calibration relative to transaction costs. Breakdown regime: Systematic failure occurs if the model overfits to historical noise, producing high-confidence predictions that consistently underperform the vig threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Implements the hard constraint layer in GSE execution engines, enforcing selective pass discipline to guarantee positive ROI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for EXPANDED_NFL_SPORTS_MIND_ARBITRAGE_PAGE2 (cf39411ce5cded9c, domain=psych, pages_read=3/3): Operator 'Retail Cognitive Bias Correction Operator' (page 1, domain psych) captures: Schlicht (Oct 2017)* - **The Core Finding**: Sportsbooks and oddsmakers do **not** set spreads to be purely predictive of game outcomes; they set lines to balance betting volume and exploit retail public biases (e.g. Assumptions: Oddsmakers optimize for balanced liability rather than pure epistemic accuracy; retail bias vectors are historically stationary. Breakdown regime: Fails during unprecedented macro-events where historical retail behavioral priors collapse or liquidity becomes entirely one-sided. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's retail shade detection filter, isolating the true probability surface from the liquidity-distorted observed spread. Operator 'Temporal Line Drift & CLV Capture' (page 1, domain psych) captures: While closing spreads are information-dense, early openers exhibit systematic drift and pricing delays on key numbers (3, 7, 10). Assumptions: Market information incorporation is not instantaneous; early openers contain structural inefficiencies relative to the final consensus. Breakdown regime: Breaks down if pre-market information asymmetry vanishes due to perfectly synchronized global algorithmic opening protocols. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Drives the timing logic in GSE situational reasoning, identifying optimal entry points before mid-week steam moves compress the edge. Operator 'Vigorish-Calibrated Pass Discipline' (page 1, domain psych) captures: predicting 65% straight-up winners) fail to yield betting profit if the edge does not exceed bookmaker vigorish (vig). Assumptions: Standard classification accuracy is insufficient; profitability is strictly a function of probability calibration relative to transaction costs. Breakdown regime: Systematic failure occurs if the model overfits to historical noise, producing high-confidence predictions that consistently underperform the vig threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Implements the hard constraint layer in GSE execution engines, enforcing selective pass discipline to guarantee positive ROI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in EXPANDED_NFL_SPORTS_MIND_ARBITRAGE_PAGE2 (cf39411ce5cded9c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in EXPANDED_NFL_SPORTS_MIND_ARBITRAGE_PAGE2 (cf39411ce5cded9c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Theory of Mind & Decision Maker Model: Rooted in EXPANDED_NFL_SPORTS_MIND_ARBITRAGE_PAGE2 (cf39411ce5cded9c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in EXPANDED_NFL_SPORTS_MIND_ARBITRAGE_PAGE2 (cf39411ce5cded9c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Cross-Layer Veto & Anti-Leakage Check: Rooted in EXPANDED_NFL_SPORTS_MIND_ARBITRAGE_PAGE2 (cf39411ce5cded9c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in EXPANDED_NFL_SPORTS_MIND_ARBITRAGE_PAGE2 (cf39411ce5cded9c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

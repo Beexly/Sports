@@ -1,0 +1,95 @@
+{
+  "book_id": "9d5cecca4d47b5e1",
+  "source_status": "COMPLETE",
+  "title": "0457-decision-synthesis-in-monetary-policy",
+  "file_name": "0457-decision-synthesis-in-monetary-policy.md",
+  "sha256": "9d5cecca4d47b5e1a81de96ac3efc142448c588980922e466c5364ad8cb4fa6f",
+  "primary_domain": "psych",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'operator': 'Bayesian Predictive Decision Synthesis', 'equation': 'f(y|x) ∝ Σ π_j(x) α_j(y|x) p_j(y|M_j)', 'regime': 'Multi-model ensemble, decision-weighted posterior', 'singularity': 'When decision utilities are extreme, tilting becomes unstable'} Universal Lens: Rooted in 0457-decision-synthesis-in-monetary-policy (9d5cecca4d47b5e1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "{'mapping': \"GSI's multi-model ensemble combines forecasts via posterior predictive mixtures, where each model's weight depends on both its predictive accuracy and its historical performance on the specific decision variable of interest (e.g., CLV, risk-adjusted returns). This replaces standard BMA, which only uses predictive likelihood.\"}",
+  "gse_mapping": "{'mapping': \"GSE's daily situational reasoning engine processes multi-period state transitions (e.g., week t to t+1) by synthesizing predictive distributions for outcomes (team performance, game lines) using a BPDS-like mixture. The mixture weights are updated based on how well each model has previously recommended profitable betting strategies (bet size, exposure, hedging) across similar market conditions.\"}",
+  "primitives": [
+    {
+      "primitive_id": "bayesian_predictive_decision_synthesis",
+      "name": "Bayesian Predictive Decision Synthesis",
+      "verbatim_quote": "Research question Central banks combine multiple models into policy decisions, but Bayesian model averaging (BMA) weights models only by statistical fit/predictive likelihood — ignoring that models individually recommend very different *decisions*.",
+      "page": 1,
+      "latex": "f(y|x) \\propto \\sum_{j=0:J} \\pi_j(x) \\alpha_j(y|x) p_j(y|x, M_j)",
+      "symbol_and_unit_ledger": "- \\(f(y|x)\\): Posterior predictive density of outcomes \\(y\\) given decision \\(x\\) (dimensionless). - \\(\\pi_j(x)\\): Decision-dependent model probability for model \\(M_j\\) (dimensionless). - \\(\\alpha_j(y|x)\\): Outcome-dependent calibration function (dimensionless). - \\(p_j(y|x, M_j)\\): Predictive density of model \\(M_j\\) (dimensionless).",
+      "assumptions": "- Models are static ensembles (VARs). - Decision utilities are known and fixed. - Importance sampling effective sample size (ESS) remains finite.",
+      "breakdown_regime": "When the target decision utility exceeds the model's achievable range, the exponential tilting parameter \\(\\tau(x)\\) diverges, causing numerical instability.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's multi-model betting strategy synthesis can use an identical BPDS form, where the decision variable \\(x\\) is the recommended bet size and hedge ratio, the outcome \\(y\\) is the realized profit/loss, and the model \\(M_j\\) is a sub-model trained on specific market regimes. The calibration function \\(\\alpha_j\\) adjusts for regime-specific volatility.",
+        "source_operator": "bayesian_predictive_decision_synthesis",
+        "telemetry": "Importance-sampling ESS of the BPDS mixture relative to a uniform mixture; when ESS drops below a threshold (e.g., 50%), the current slate's target utility is too aggressive."
+      }
+    },
+    {
+      "primitive_id": "entropic_tilting",
+      "name": "Entropic Tilting",
+      "verbatim_quote": "**Entropic (exponential) tilting**: α_j chosen as exp{τ(x)′s(y,x)} so the BPDS predictive hits a *target expected score* E_f[s(y,x)] = m_f(x); τ(x) solved numerically per candidate decision x.",
+      "page": 1,
+      "latex": "\\alpha_j(y|x) = \\exp\\{\\tau(x)^\\top s(y,x)\\}",
+      "symbol_and_unit_ledger": "- \\(\\tau(x)\\): Tilting parameter vector (score units / outcome units). - \\(s(y,x)\\): Score function (dimensionless). - \\(m_f(x)\\): Target expected score (dimensionless).",
+      "assumptions": "- The score function is bounded and integrable. - The moment generating function exists. - The target score \\(m_f(x)\\) is feasible within the model class.",
+      "breakdown_regime": "If the target score lies outside the convex hull of achievable scores, the normalizing constant diverges, rendering the tilted distribution improper.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSE, entropic tilting calibrates the weight of each sub-model's recommendation based on its historical realized decision utility (e.g., CLV) relative to a target utility for the current slate. The score function \\(s\\) could be the signed log-odds of profitable bets, and \\(\\tau\\) scales inversely with risk aversion.",
+        "source_operator": "entropic_tilting",
+        "telemetry": "The magnitude of \\(\\tau\\) tracks risk tolerance; large \\(|\\tau|\\) indicates overfitting to past utilities, while near-zero \\(\\tau\\) suggests flat (uniform) mixing."
+      }
+    },
+    {
+      "primitive_id": "reweighted_mixture_form",
+      "name": "Reweighted Mixture Form",
+      "verbatim_quote": "**Decision-dependent model probabilities π_j(x)**: weight models differentially over the decision space x (e.g., interest-rate paths), incorporating prior info on past predictive fit *and past decision outcomes* (\"models that recommended good decisions in the past get upweighted\").",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "- \\(π_j(x)\\): Weight for model \\(M_j\\) given decision \\(x\\) (dimensionless). - \\(α_j(y|x)\\): Outcome-dependent modifier (dimensionless). - \\(p_j(y|x, M_j)\\): Predictive density of model \\(M_j\\) (dimensionless).",
+      "assumptions": "- The original model probabilities \\(π_j\\) are derived from predictive likelihood. - The calibration functions \\(α_j\\) are non-negative and integrate to one under the tilted measure.",
+      "breakdown_regime": "If any \\(α_j\\) becomes negative or unbounded, the mixture ceases to be a valid density, leading to erratic predictions.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's ensemble combines sub-models via a reweighted mixture where \\(π_j(x)\\) encodes the historical success rate of sub-model \\(j\\) in recommending optimal bet sizes and hedging ratios for decision \\(x\\) (the slate composition). The calibrated predictive \\(f_j\\) then provides the probability distribution for net returns.",
+        "source_operator": "reweighted_mixture_form",
+        "telemetry": "The variance of \\(π_j(x)\\) across slates measures model disagreement on optimal strategy; high variance signals exploitable inefficiency."
+      }
+    },
+    {
+      "primitive_id": "conditional_forecasting_extension",
+      "name": "Conditional Forecasting Extension",
+      "verbatim_quote": "**Computation**: outer-loop particle-swarm optimization over x (multi-modal expected utility), inner per-model trust-region optimization (PDFO, derivative-free), posterior simulation for predictives, importance-sampling ESS diagnostics to monitor tilting feasibility.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "- \\(x\\): Candidate decision (policy rate, bet allocation). - \\(p(x)\\): Prior predictive density of \\(x\\). - \\(f(y|x)\\): Conditional predictive for outcomes given decision.",
+      "assumptions": "- The prior \\(p(x)\\) is proper and independent of the data. - The model class is correctly specified for both the outcome and decision mechanisms.",
+      "breakdown_regime": "If the prior assigns negligible mass to regions of high decision utility, the posterior over \\(x\\) will be dominated by low-utility areas, undermining the purpose of decision weighting.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE applies this principle by first predicting the plausibility of different market-moving events (e.g., sharp line shifts) and then recomputing model weights only for those events deemed likely enough. This prevents over-reliance on rare, high-variance scenarios.",
+        "source_operator": "conditional_forecasting_extension",
+        "telemetry": "The KL divergence between the prior \\(p(x)\\) and the posterior decision distribution; excessive divergence indicates the prior is being ignored, suggesting overfitting to recent data."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9d5cecca4d47b5e1_t0",
+      "think": "BPDS unifies two pillars of decision-making: predictive accuracy and decision utility. It does this by rewriting Bayes' rule as a mixture where each component's weight is the product of a decision-dependent factor \\(π_j(x)\\) (based on past decision quality) and an outcome-dependent modifier \\(α_j(y|x)\\) (to focus on relevant regions). The calibration functions \\(α_j\\) are derived via entropic tilting to match a pre-specified target expected score, ensuring the final predictive distribution concentrates on high-utility outcomes. This approach naturally handles multi-modal decision spaces (e.g., Fed rate hikes vs. cuts) by assigning zero weight to low-utility branches. However, the method fails when the target score is unrealizable, causing the tilting parameter to explode. In GSE, this translates to a dynamic portfolio construction problem where the 'model' is a betting strategy, the 'decision' is the stake allocation, and the 'outcome' is the realized return. The key challenge is estimating the decision utility surface, which requires rich historical telemetry on strategy performance.\n\nDeep epistemic analysis for 0457-decision-synthesis-in-monetary-policy (9d5cecca4d47b5e1, domain=psych, pages_read=4/4): Operator 'Bayesian Predictive Decision Synthesis' (page 1, domain psych) captures: Research question Central banks combine multiple models into policy decisions, but Bayesian model averaging (BMA) weights models only by statistical fit/predictive likelihood — ignoring that models individually recommend very different *decisions*. Assumptions: - Models are static ensembles (VARs). - Decision utilities are known and fixed. - Importance sampling effective sample size (ESS) remains finite. Breakdown regime: When the target decision utility exceeds the model's achievable range, the exponential tilting parameter \\(\\tau(x)\\) diverges, causing numerical instability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's multi-model betting strategy synthesis can use an identical BPDS form, where the decision variable \\(x\\) is the recommended bet size and hedge ratio, the outcome \\(y\\) is the realized profit/loss, and the model \\(M_j\\) is a sub-model trained on specific market regimes. The calibration function \\(\\alpha_j\\) adjusts for regime-specific volatility. Operator 'Entropic Tilting' (page 1, domain psych) captures: **Entropic (exponential) tilting**: α_j chosen as exp{τ(x)′s(y,x)} so the BPDS predictive hits a *target expected score* E_f[s(y,x)] = m_f(x); τ(x) solved numerically per candidate decision x. Assumptions: - The score function is bounded and integrable. - The moment generating function exists. - The target score \\(m_f(x)\\) is feasible within the model class. Breakdown regime: If the target score lies outside the convex hull of achievable scores, the normalizing constant diverges, rendering the tilted distribution improper. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSE, entropic tilting calibrates the weight of each sub-model's recommendation based on its historical realized decision utility (e.g., CLV) relative to a target utility for the current slate. The score function \\(s\\) could be the signed log-odds of profitable bets, and \\(\\tau\\) scales inversely with risk aversion. Operator 'Reweighted Mixture Form' (page 1, domain psych) captures: **Decision-dependent model probabilities π_j(x)**: weight models differentially over the decision space x (e.g., interest-rate paths), incorporating prior info on past predictive fit *and past decision outcomes* (\"models that recommended good decisions in the past get upweighted\"). Assumptions: - The original model probabilities \\(π_j\\) are derived from predictive likelihood. - The calibration functions \\(α_j\\) are non-negative and integrate to one under the tilted measure. Breakdown regime: If any \\(α_j\\) becomes negative or unbounded, the mixture ceases to be a valid density, leading to erratic predictions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's ensemble combines sub-models via a reweighted mixture where \\(π_j(x)\\) encodes the historical success rate of sub-model \\(j\\) in recommending optimal bet sizes and hedging ratios for decision \\(x\\) (the slate composition). The calibrated predictive \\(f_j\\) then provides the probability distribution for net returns. Operator 'Conditional Forecasting Extension' (page 2, domain psych) captures: **Computation**: outer-loop particle-swarm optimization over x (multi-modal expected utility), inner per-model trust-region optimization (PDFO, derivative-free), posterior simulation for predictives, importance-sampling ESS diagnostics to monitor tilting feasibility. Assumptions: - The prior \\(p(x)\\) is proper and independent of the data. - The model class is correctly specified for both the outcome and decision mechanisms. Breakdown regime: If the prior assigns negligible mass to regions of high decision utility, the posterior over \\(x\\) will be dominated by low-utility areas, undermining the purpose of decision weighting. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE applies this principle by first predicting the plausibility of different market-moving events (e.g., sharp line shifts) and then recomputing model weights only for those events deemed likely enough. This prevents over-reliance on rare, high-variance scenarios. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 0457-decision-synthesis-in-monetary-policy (9d5cecca4d47b5e1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 0457-decision-synthesis-in-monetary-policy (9d5cecca4d47b5e1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Central bankers act as boundedly rational agents who observe noisy macroeconomic signals and must choose a single interest-rate path. Their cognitive bias is to overweight recent data fits, leading to overconfidence in their favored model. BPDS models them as having access to a full ensemble, allowing them to \"debias\" their choices by considering how well each model would have performed on past decisions, thus mitigating hindsight bias and structural uncertainty.",
+      "cross_layer_veto": "A critical anti-collinearity condition is that the decision utility must be orthogonal to the predictive likelihood surface; otherwise, the decomposition into \\(π_j\\) and \\(α_j\\) becomes non-unique. In practice, this means that sub-models that are highly correlated in terms of predictive accuracy but differ drastically in recommended betting strategies should be retained, even if one appears statistically superior. Additionally, leakage occurs if the utility function is misspecified—using proxy metrics like Sharpe ratio instead of true CLV can lead to perverse allocations."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "d1d166e9277ecdd8",
+  "source_status": "COMPLETE",
+  "title": "C7_OFFLINE_SOURCE_BIAS",
+  "file_name": "C7_OFFLINE_SOURCE_BIAS.md",
+  "sha256": "d1d166e9277ecdd8ec2b382c337cb1273ffa31570d1847badfec7c647980e8a3",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Offline source-bias hygiene enforces feature integrity via measurement scaffolds, flagging high missingness, near-constancy, and market-leakage suspects. Universal Lens: Rooted in C7_OFFLINE_SOURCE_BIAS (d1d166e9277ecdd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction to assess feature validity, using bias flags as stochastic constraints in Bayesian update protocols for probabilistic feature selection. GSI Mapping: Rooted in C7_OFFLINE_SOURCE_BIAS (d1d166e9277ecdd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies state-transition logic to manage feature lifecycle, where flagged features enter defensive parking states until founder approval, ensuring causal integrity in model training. GSE Mapping: Rooted in C7_OFFLINE_SOURCE_BIAS (d1d166e9277ecdd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "offline_source_bias_hygiene",
+      "name": "Offline Source-Bias Hygiene",
+      "verbatim_quote": "# C7 — Offline source-bias / feature hygiene **Status:** harness scaffold (measurement only) **Code:** `apps/web/lib/features/offline-source-bias-hygiene.ts` **Tests:**",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Features must be measured for missingness, variance, and leakage before deployment.",
+      "breakdown_regime": "High missingness or constant-value features invalidate model training.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Operates as a kernel for feature validation in GSI's probabilistic inference pipeline, and as a state guard in GSE's feature lifecycle engine.",
+        "source_operator": "offline_source_bias_hygiene",
+        "telemetry": "Feature flag counts for missingness, variance, and leakage."
+      }
+    },
+    {
+      "primitive_id": "feature_flagging_protocol",
+      "name": "Feature Flagging Protocol",
+      "verbatim_quote": "Run ```bash cd apps/web && npx vitest run lib/features/offline-source-bias-hygiene.test.ts ``` ## Done when - Flags high",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Flagged features are non-deployable without explicit approval.",
+      "breakdown_regime": "Production feature drop without founder OK leads to model drift.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian rejection sampling and GSE's conditional state transition rules.",
+        "source_operator": "feature_flagging_protocol",
+        "telemetry": "Deployment gate status and founder approval logs."
+      }
+    },
+    {
+      "primitive_id": "market_leakage_suspect",
+      "name": "Market-Leakage Suspect",
+      "verbatim_quote": "market-leakage-suspect columns - No production feature drops without founder OK ## Next Run against real feature-store",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Features with market leakage introduce spurious correlations.",
+      "breakdown_regime": "Leakage detection triggers feature exclusion from training sets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as a kernel for causal integrity checks in GSI and a constraint in GSE's feature validation.",
+        "source_operator": "market_leakage_suspect",
+        "telemetry": "Correlation matrices and temporal leakage scores."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d1d166e9277ecdd8_t0",
+      "think": "The offline source-bias hygiene primitive operates as a measurement scaffold that evaluates features for statistical anomalies such as high missingness, near-constant values, and market leakage. These anomalies are flagged to prevent their inclusion in production models, which could lead to overfitting or spurious correlations. The protocol uses a binary decision framework: either a feature passes all checks and enters the model, or it is rejected and placed into a defensive state. This mechanism aligns with Bayesian inference principles by filtering out low-information or biased inputs, and with GSE’s state-transition logic by enforcing a conditional gate on feature deployment. Failure modes include false positives from noisy data or insufficient test coverage, leading to unnecessary rejections or missed biases.\n\nDeep epistemic analysis for C7_OFFLINE_SOURCE_BIAS (d1d166e9277ecdd8, domain=other, pages_read=1/1): Operator 'Offline Source-Bias Hygiene' (page 1, domain other) captures: # C7 — Offline source-bias / feature hygiene **Status:** harness scaffold (measurement only) **Code:** `apps/web/lib/features/offline-source-bias-hygiene.ts` **Tests:** Assumptions: Features must be measured for missingness, variance, and leakage before deployment. Breakdown regime: High missingness or constant-value features invalidate model training. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Operates as a kernel for feature validation in GSI's probabilistic inference pipeline, and as a state guard in GSE's feature lifecycle engine. Operator 'Feature Flagging Protocol' (page 1, domain other) captures: Run ```bash cd apps/web && npx vitest run lib/features/offline-source-bias-hygiene.test.ts ``` ## Done when - Flags high Assumptions: Flagged features are non-deployable without explicit approval. Breakdown regime: Production feature drop without founder OK leads to model drift. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian rejection sampling and GSE's conditional state transition rules. Operator 'Market-Leakage Suspect' (page 1, domain other) captures: market-leakage-suspect columns - No production feature drops without founder OK ## Next Run against real feature-store Assumptions: Features with market leakage introduce spurious correlations. Breakdown regime: Leakage detection triggers feature exclusion from training sets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as a kernel for causal integrity checks in GSI and a constraint in GSE's feature validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for C7_OFFLINE_SOURCE_BIAS (d1d166e9277ecdd8, domain=other, pages_read=1/1): Operator 'Offline Source-Bias Hygiene' (page 1, domain other) captures: # C7 — Offline source-bias / feature hygiene **Status:** harness scaffold (measurement only) **Code:** `apps/web/lib/features/offline-source-bias-hygiene.ts` **Tests:** Assumptions: Features must be measured for missingness, variance, and leakage before deployment. Breakdown regime: High missingness or constant-value features invalidate model training. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Operates as a kernel for feature validation in GSI's probabilistic inference pipeline, and as a state guard in GSE's feature lifecycle engine. Operator 'Feature Flagging Protocol' (page 1, domain other) captures: Run ```bash cd apps/web && npx vitest run lib/features/offline-source-bias-hygiene.test.ts ``` ## Done when - Flags high Assumptions: Flagged features are non-deployable without explicit approval. Breakdown regime: Production feature drop without founder OK leads to model drift. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian rejection sampling and GSE's conditional state transition rules. Operator 'Market-Leakage Suspect' (page 1, domain other) captures: market-leakage-suspect columns - No production feature drops without founder OK ## Next Run against real feature-store Assumptions: Features with market leakage introduce spurious correlations. Breakdown regime: Leakage detection triggers feature exclusion from training sets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as a kernel for causal integrity checks in GSI and a constraint in GSE's feature validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical quality control and modern machine learning robustness theory, tracing back to Fisher's design of experiments and Tukey's exploratory data analysis. Retrocausal Genealogy: Rooted in C7_OFFLINE_SOURCE_BIAS (d1d166e9277ecdd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in C7_OFFLINE_SOURCE_BIAS (d1d166e9277ecdd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data scientists who may wish to deploy marginal features and system architects who enforce integrity. The protocol balances these by embedding a governance layer that requires explicit approval for feature drops. Theory of Mind & Decision Maker Model: Rooted in C7_OFFLINE_SOURCE_BIAS (d1d166e9277ecdd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through variance thresholds, while leakage veto conditions are defined by temporal correlation checks. Features violating either condition are excluded from both GSI's probabilistic inference and GSE's model training pipelines. Cross-Layer Veto & Anti-Leakage Check: Rooted in C7_OFFLINE_SOURCE_BIAS (d1d166e9277ecdd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

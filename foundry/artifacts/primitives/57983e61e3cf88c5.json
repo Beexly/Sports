@@ -1,78 +1,16 @@
 {
   "book_id": "57983e61e3cf88c5",
-  "source_status": "COMPLETE",
-  "title": "revenue-activation",
-  "file_name": "revenue-activation.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_57983e61e3cf88c5",
+  "file_name": "57983e61e3cf88c5.quarantined",
   "sha256": "57983e61e3cf88c5aec9c3905c9524e8477ac5de4f541f96af44ee1493193287",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Local revenue activation encodes a deterministic pipeline from intake to delivery, modeled as a Markov chain over states {LEAD, WORKING, DELIVERED, LOST, BLOCKED} with stochastic transitions governed by owner-confirmation and system readiness.",
-  "gsi_mapping": "Bayesian inference maps intake quality and owner confirmation to posterior revenue probability, using `REVENUE_READY_LOCAL` as prior evidence and `EXTERNAL_ACTION_BLOCKED` as likelihood constraint. GSI Mapping: Rooted in revenue-activation (57983e61e3cf88c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situational reasoning in GSE models state transitions via guarded pipeline logic, where `LEAD` evolves to `WORKING` only upon confirmed intake and `DELIVERED` upon successful fulfillment, with `BLOCKED` as terminal failure state.",
-  "primitives": [
-    {
-      "primitive_id": "revenue_activation_pipeline",
-      "name": "Revenue Activation Pipeline",
-      "verbatim_quote": "# Local Revenue Activation Record Date: 2026-07-19 Status: `REVENUE_READY_LOCAL` and `EXTERNAL_ACTION_BLOCKED` ## Offer - AI Content",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'S': 'state space of pipeline stages {LEAD, WORKING, DELIVERED, LOST, BLOCKED}', 'T': 'transition function T: S × A → S', 'R': 'revenue outcome in USD'}",
-      "assumptions": "Pipeline stages are mutually exclusive and collectively exhaustive; transitions depend on owner confirmation and system readiness.",
-      "breakdown_regime": "When `EXTERNAL_ACTION_BLOCKED` is true, all external actions are halted until `REVENUE_READY_LOCAL` is verified.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "The pipeline state progression mirrors a Bayesian belief update process where each stage reflects increasing confidence in revenue realization.",
-        "source_operator": "revenue_activation_pipeline",
-        "telemetry": "Observable: `REVENUE_READY_LOCAL` flag, `EXTERNAL_ACTION_BLOCKED` status, and state transition logs."
-      }
-    },
-    {
-      "primitive_id": "owner_confirmed_revenue",
-      "name": "Owner Confirmed Revenue",
-      "verbatim_quote": "Do not mark revenue until owner-confirmed REAL finance evidence exists.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'C': 'confirmation signal from owner (boolean)', 'E': 'financial evidence (USD)'}",
-      "assumptions": "Revenue is only recorded when C = true and E > 0.",
-      "breakdown_regime": "If C = false or E = 0, revenue remains unmarked and is not included in financial reports.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "This primitive defines the kernel of trust in revenue tracking, derived from the conditional probability P(revenue | owner_confirmation ∧ financial_evidence).",
-        "source_operator": "owner_confirmed_revenue",
-        "telemetry": "Verification: `C` flag, `E` value, and timestamp of last confirmation."
-      }
-    },
-    {
-      "primitive_id": "sprint_pricing_model",
-      "name": "Sprint Pricing Model",
-      "verbatim_quote": "Sprint - $299 founding price for the first three owner-confirmed clients - $599 standard price -",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'P_f': 'founding price = $299', 'P_s': 'standard price = $599', 'N_c': 'number of confirmed clients'}",
-      "assumptions": "Price is fixed per client within the founding period, then escalates to standard rate.",
-      "breakdown_regime": "For N_c ≤ 3, P = P_f; otherwise P = P_s.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps pricing strategy to a piecewise linear function over client count, reflecting market positioning and early adoption incentives.",
-        "source_operator": "sprint_pricing_model",
-        "telemetry": "Client count, pricing tier, and revenue generated per sprint."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "57983e61e3cf88c5_t0",
-      "think": "The revenue activation pipeline operates as a discrete-state Markov chain with five absorbing states: LEAD, WORKING, DELIVERED, LOST, BLOCKED. Transitions occur based on owner confirmation and system readiness. The primitive 'owner_confirmed_revenue' acts as a probabilistic filter, ensuring that revenue is only attributed when both C=true and E>0. The 'sprint_pricing_model' introduces a piecewise cost structure that incentivizes early adoption. These primitives form a dual framework: one for temporal progression and another for economic valuation. Failure modes include blocked external actions due to unmet readiness criteria, or misalignment between owner confirmation and financial evidence. The system's robustness depends on deterministic local Markdown outputs and SQLite persistence for integrity.\n\nDeep epistemic analysis for revenue-activation (57983e61e3cf88c5, domain=other, pages_read=1/1): Operator 'Revenue Activation Pipeline' (page 1, domain other) captures: # Local Revenue Activation Record Date: 2026-07-19 Status: `REVENUE_READY_LOCAL` and `EXTERNAL_ACTION_BLOCKED` ## Offer - AI Content Assumptions: Pipeline stages are mutually exclusive and collectively exhaustive; transitions depend on owner confirmation and system readiness. Breakdown regime: When `EXTERNAL_ACTION_BLOCKED` is true, all external actions are halted until `REVENUE_READY_LOCAL` is verified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The pipeline state progression mirrors a Bayesian belief update process where each stage reflects increasing confidence in revenue realization. Operator 'Owner Confirmed Revenue' (page 1, domain other) captures: Do not mark revenue until owner-confirmed REAL finance evidence exists. Assumptions: Revenue is only recorded when C = true and E > 0. Breakdown regime: If C = false or E = 0, revenue remains unmarked and is not included in financial reports. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): This primitive defines the kernel of trust in revenue tracking, derived from the conditional probability P(revenue | owner_confirmation ∧ financial_evidence). Operator 'Sprint Pricing Model' (page 1, domain other) captures: Sprint - $299 founding price for the first three owner-confirmed clients - $599 standard price - Assumptions: Price is fixed per client within the founding period, then escalates to standard rate. Breakdown regime: For N_c ≤ 3, P = P_f; otherwise P = P_s. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps pricing strategy to a piecewise linear function over client count, reflecting market positioning and early adoption incentives. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for revenue-activation (57983e61e3cf88c5, domain=other, pages_read=1/1): Operator 'Revenue Activation Pipeline' (page 1, domain other) captures: # Local Revenue Activation Record Date: 2026-07-19 Status: `REVENUE_READY_LOCAL` and `EXTERNAL_ACTION_BLOCKED` ## Offer - AI Content Assumptions: Pipeline stages are mutually exclusive and collectively exhaustive; transitions depend on owner confirmation and system readiness. Breakdown regime: When `EXTERNAL_ACTION_BLOCKED` is true, all external actions are halted until `REVENUE_READY_LOCAL` is verified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The pipeline state progression mirrors a Bayesian belief update process where each stage reflects increasing confidence in revenue realization. Operator 'Owner Confirmed Revenue' (page 1, domain other) captures: Do not mark revenue until owner-confirmed REAL finance evidence exists. Assumptions: Revenue is only recorded when C = true and E > 0. Breakdown regime: If C = false or E = 0, revenue remains unmarked and is not included in financial reports. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): This primitive defines the kernel of trust in revenue tracking, derived from the conditional probability P(revenue | owner_confirmation ∧ financial_evidence). Operator 'Sprint Pricing Model' (page 1, domain other) captures: Sprint - $299 founding price for the first three owner-confirmed clients - $599 standard price - Assumptions: Price is fixed per client within the founding period, then escalates to standard rate. Breakdown regime: For N_c ≤ 3, P = P_f; otherwise P = P_s. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps pricing strategy to a piecewise linear function over client count, reflecting market positioning and early adoption incentives. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in classical control theory and Bayesian decision-making frameworks, this design inherits principles from information theory and probabilistic programming, tracing back to Shannon’s entropy and Bayes’ theorem. Retrocausal Genealogy: Rooted in revenue-activation (57983e61e3cf88c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in revenue-activation (57983e61e3cf88c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Opposing agents include the owner (decision-maker), the system (executor), and the client (input provider). Each agent has distinct objectives: owner seeks revenue, system ensures compliance, and client provides data. Their interaction is modeled through conditional probabilities and state transitions. Theory of Mind & Decision Maker Model: Rooted in revenue-activation (57983e61e3cf88c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity is enforced by separating logical layers: intake validation, revenue confirmation, and pricing logic. Leakage occurs if external actions bypass the `EXTERNAL_ACTION_BLOCKED` constraint, which would violate the integrity of the `REVENUE_READY_LOCAL` state. Cross-Layer Veto & Anti-Leakage Check: Rooted in revenue-activation (57983e61e3cf88c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

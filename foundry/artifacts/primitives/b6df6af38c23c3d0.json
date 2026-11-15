@@ -1,0 +1,78 @@
+{
+  "book_id": "b6df6af38c23c3d0",
+  "source_status": "COMPLETE",
+  "title": "gse-eval-preregistration-template",
+  "file_name": "gse-eval-preregistration-template.md",
+  "sha256": "b6df6af38c23c3d0ae7ab3ed5b02933e5c144fcce6b660fc0ba05f257663316e",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The evaluation preregistration enforces a strict temporal boundary operator, projecting the hypothesis space onto a frozen dataset manifold. By fixing success criteria prior to execution, it mathematically eliminates look-ahead bias, ensuring the resulting metric is an unbiased estimator of true predictive power.",
+  "gsi_mapping": "In GSI, this template acts as a conformal prediction calibration gate. The pre-committed threshold defines the exact confidence region for Bayesian posterior updates. Publishing failures ensures the epistemic state remains calibrated, preventing overfitting to transient noise in sportsbook market movements or player performance metrics.",
+  "gse_mapping": "For GSE situational reasoning, the template establishes a rigid state-transition contract. The 'frozen' dataset represents the current game state, while the success criterion dictates valid future trajectories. It prevents goalpost shifting by locking the reward function before the agent interacts with the environment.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_causal_cut",
+      "name": "Temporal Causal Cut",
+      "verbatim_quote": "TimesFM-3 zero-shot beats the naive seasonal baseline on daily site-traffic forecasting.> ## Dataset (frozen) - Source: <table/query + row count> - Train/cutoff: <dates> | Test window: <dates> — no peeking past the cutoff.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "t_cutoff: Continuous time scalar defining the strict boundary between training and testing manifolds.",
+      "assumptions": "Information flow is strictly unidirectional; no leakage from t > t_cutoff into the training distribution.",
+      "breakdown_regime": "Breaks down if data generation processes are non-stationary across the cutoff, or if hidden variables leak through correlated features.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the light-cone separation in relativistic causal inference, ensuring no superluminal information transfer into the training set.",
+        "source_operator": "temporal_causal_cut",
+        "telemetry": "Data leakage audit score / cross-validation isolation index."
+      }
+    },
+    {
+      "primitive_id": "precommitted_success_contract",
+      "name": "Precommitted Success Contract",
+      "verbatim_quote": "## Success criterion (written before running; this is the contract) - Primary metric: <e.g.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "M: Dimensionless loss or utility metric; T: Threshold scalar defining the acceptance boundary.",
+      "assumptions": "The chosen metric M is a sufficient statistic for the underlying objective function.",
+      "breakdown_regime": "Fails if the metric M is gamed (Goodhart's Law) or if the threshold T is arbitrarily adjusted post-hoc.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to a fixed rejection region in Neyman-Pearson lemma, locking the Type I error rate before observing the test statistic.",
+        "source_operator": "precommitted_success_contract",
+        "telemetry": "Goalpost shift frequency / post-hoc threshold adjustment delta."
+      }
+    },
+    {
+      "primitive_id": "negative_result_transparency",
+      "name": "Negative Result Transparency",
+      "verbatim_quote": "No \"one more tweak.\"> ## Results (filled after) - Outcome: MET / NOT MET - Numbers: <...> - Published anyway: yes (a failing number is proof the threshold wasn't tuned) ``` Applies to: TimesFM-3 eval, the prop-prompt pack validation, any new metric from the benchmark lane.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "P(fail): Probability of publishing a negative result, constrained to 1.0.",
+      "assumptions": "The scientific/engineering process values truth-seeking over narrative optimization.",
+      "breakdown_regime": "Collapses under organizational pressure to only report positive outcomes, leading to severe publication bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to maintaining a complete measure space in probability theory, preventing truncation of the sample space based on outcome desirability.",
+        "source_operator": "negative_result_transparency",
+        "telemetry": "Ratio of published negative results to total experiments."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b6df6af38c23c3d0_t0",
+      "think": "The GSE eval preregistration template formalizes the mathematical necessity of separating hypothesis formation from data observation. In quantitative research, the most pervasive source of bias is the iterative tuning of parameters against a test set, effectively collapsing the test set into the training manifold. By enforcing a 'frozen' dataset and a pre-written success criterion, we establish a rigorous temporal causal cut. This ensures that the estimated performance metric is an unbiased estimator of the model's true generalization error. The requirement to publish failures, even when the threshold is not met, maintains the integrity of the statistical power analysis. If negative results are suppressed, the observed effect sizes become inflated due to selection bias. Mathematically, this template implements a strict Neyman-Pearson framework where the rejection region is defined prior to calculating the test statistic. The 'contract' nature of the success criterion prevents the p-hacking equivalent in machine learning: metric hacking. By committing to a primary metric and a relative improvement threshold over a naive baseline, we bound the family-wise error rate across multiple experimental runs. This discipline transforms ad-hoc model tweaking into a rigorous scientific method, applicable to both timeseries forecasting like TimesFM-3 and complex behavioral benchmarks.\n\nDeep epistemic analysis for gse-eval-preregistration-template (b6df6af38c23c3d0, domain=other, pages_read=1/1): Operator 'Temporal Causal Cut' (page 1, domain other) captures: TimesFM-3 zero-shot beats the naive seasonal baseline on daily site-traffic forecasting.> ## Dataset (frozen) - Source: <table/query + row count> - Train/cutoff: <dates> | Test window: <dates> — no peeking past the cutoff. Assumptions: Information flow is strictly unidirectional; no leakage from t > t_cutoff into the training distribution. Breakdown regime: Breaks down if data generation processes are non-stationary across the cutoff, or if hidden variables leak through correlated features. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the light-cone separation in relativistic causal inference, ensuring no superluminal information transfer into the training set. Operator 'Precommitted Success Contract' (page 1, domain other) captures: ## Success criterion (written before running; this is the contract) - Primary metric: <e.g. Assumptions: The chosen metric M is a sufficient statistic for the underlying objective function. Breakdown regime: Fails if the metric M is gamed (Goodhart's Law) or if the threshold T is arbitrarily adjusted post-hoc. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to a fixed rejection region in Neyman-Pearson lemma, locking the Type I error rate before observing the test statistic. Operator 'Negative Result Transparency' (page 1, domain other) captures: No \"one more tweak.\"> ## Results (filled after) - Outcome: MET / NOT MET - Numbers: <...> - Published anyway: yes (a failing number is proof the threshold wasn't tuned) ``` Applies to: TimesFM-3 eval, the prop-prompt pack validation, any new metric from the benchmark lane. Assumptions: The scientific/engineering process values truth-seeking over narrative optimization. Breakdown regime: Collapses under organizational pressure to only report positive outcomes, leading to severe publication bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to maintaining a complete measure space in probability theory, preventing truncation of the sample space based on outcome desirability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for gse-eval-preregistration-template (b6df6af38c23c3d0, domain=other, pages_read=1/1): Operator 'Temporal Causal Cut' (page 1, domain other) captures: TimesFM-3 zero-shot beats the naive seasonal baseline on daily site-traffic forecasting.> ## Dataset (frozen) - Source: <table/query + row count> - Train/cutoff: <dates> | Test window: <dates> — no peeking past the cutoff. Assumptions: Information flow is strictly unidirectional; no leakage from t > t_cutoff into the training distribution. Breakdown regime: Breaks down if data generation processes are non-stationary across the cutoff, or if hidden variables leak through correlated features. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the light-cone separation in relativistic causal inference, ensuring no superluminal information transfer into the training set. Operator 'Precommitted Success Contract' (page 1, domain other) captures: ## Success criterion (written before running; this is the contract) - Primary metric: <e.g. Assumptions: The chosen metric M is a sufficient statistic for the underlying objective function. Breakdown regime: Fails if the metric M is gamed (Goodhart's Law) or if the threshold T is arbitrarily adjusted post-hoc. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to a fixed rejection region in Neyman-Pearson lemma, locking the Type I error rate before observing the test statistic. Operator 'Negative Result Transparency' (page 1, domain other) captures: No \"one more tweak.\"> ## Results (filled after) - Outcome: MET / NOT MET - Numbers: <...> - Published anyway: yes (a failing number is proof the threshold wasn't tuned) ``` Applies to: TimesFM-3 eval, the prop-prompt pack validation, any new metric from the benchmark lane. Assumptions: The scientific/engineering process values truth-seeking over narrative optimization. Breakdown regime: Collapses under organizational pressure to only report positive outcomes, leading to severe publication bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to maintaining a complete measure space in probability theory, preventing truncation of the sample space based on outcome desirability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This methodology traces back to Ronald Fisher's agricultural experiments, where randomization and pre-specified analysis plans were introduced to combat soil nutrient biases. It evolved through the clinical trial era, where double-blind protocols and Data Monitoring Committees enforced strict separation of treatment and evaluation. In modern machine learning, it responds to the 'reproducibility crisis' driven by hyperparameter tuning on test sets, reviving the classical statistical rigor of pre-registration.",
+      "theory_of_mind": "The template models the researcher as an agent prone to confirmation bias, actively seeking patterns that validate their initial intuition. By forcing the success criterion into code before execution, we externalize the decision boundary, removing the agent's ability to retroactively adjust goals. It also anticipates the audience's skepticism, providing a transparent audit trail that proves the results were not cherry-picked from a dozen failed attempts.",
+      "cross_layer_veto": "A critical veto condition arises if the 'naive seasonal baseline' itself is contaminated by future information, rendering the entire comparison invalid. Another failure mode occurs if the dataset cutoff aligns perfectly with a structural break in the underlying data generating process, causing the model to fail not due to poor learning, but due to non-stationarity. The template must include a validity gate to detect such regime shifts, otherwise the pre-committed threshold becomes an arbitrary target rather than a meaningful benchmark."
+    }
+  ]
+}

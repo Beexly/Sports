@@ -1,0 +1,78 @@
+{
+  "book_id": "a653f25da4f54059",
+  "source_status": "COMPLETE",
+  "title": "1194-seasonal-linear-predictivity-in-national-football",
+  "file_name": "1194-seasonal-linear-predictivity-in-national-football.md",
+  "sha256": "a653f25da4f540591c5d56c34fa8f422b1aeefad04c18e24e0b3fe055a5d286b",
+  "primary_domain": "football",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Linear regression of cumulative points versus rounds models seasonal predictivity under constant rate assumption; fails to capture non-linear dynamics or external shocks. Universal Lens: Rooted in 1194-seasonal-linear-predictivity-in-national-football (a653f25da4f54059), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian predictive distributions over team performance trajectories enable conformal uncertainty quantification; marginal likelihoods support model selection against random nulls. GSI Mapping: Rooted in 1194-seasonal-linear-predictivity-in-national-football (a653f25da4f54059), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps team-state transitions through point accumulation; state-space models encode positional drift and final-table displacement for tactical planning. GSE Mapping: Rooted in 1194-seasonal-linear-predictivity-in-national-football (a653f25da4f54059), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "linear_seasonal_extrapolation",
+      "name": "Linear Seasonal Extrapolation",
+      "verbatim_quote": "Equations & assumptions - Linear model: cumulative_points(r) = α + β·r, fit on rounds 1...(n-ts), evaluated at round n.",
+      "page": 1,
+      "latex": "y(t) = \\alpha + \\beta t",
+      "symbol_and_unit_ledger": "{'y(t)': 'cumulative points at round t, dimensionless', 't': 'round number, integer', 'α': 'intercept term, points', 'β': 'slope coefficient, points per round'}",
+      "assumptions": "Points accumulate linearly; no structural breaks; independence of team-seasons.",
+      "breakdown_regime": "When team performance deviates from constant rate or when external factors disrupt trend.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models trajectory prediction via linear interpolation; used for baseline forecasting in GSE's probabilistic engine.",
+        "source_operator": "linear_seasonal_extrapolation",
+        "telemetry": "Mean absolute error of final points prediction"
+      }
+    },
+    {
+      "primitive_id": "holdout_validation_scheme",
+      "name": "Holdout Validation Scheme",
+      "verbatim_quote": "Validation design All 7,768 team-seasons pooled; for each, the last ts rounds are held out (ts = 1...20) and the model fit on earlier rounds predicts the final total — a within-season holdout, not a time-ordered cross-season backtest.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ts': 'number of held-out rounds, integer'}",
+      "assumptions": "Team-seasons are independent; temporal order within season preserved.",
+      "breakdown_regime": "When season structure varies significantly across years or teams.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE’s internal cross-validation framework for evaluating predictive stability.",
+        "source_operator": "holdout_validation_scheme",
+        "telemetry": "Final-table normalized displacement at ts=10"
+      }
+    },
+    {
+      "primitive_id": "regression_model_comparison",
+      "name": "Regression Model Comparison",
+      "verbatim_quote": "Compared against quadratic and cubic regression on the same task, and against a null of random sequences with matched marginals.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'quadratic': 'β₂r² term added to linear model', 'cubic': 'β₃r³ term added to linear model'}",
+      "assumptions": "Higher-order polynomials may overfit; random sequences serve as null hypothesis.",
+      "breakdown_regime": "When data exhibits non-linear patterns or noise dominates signal.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to select optimal regression kernel based on empirical risk minimization.",
+        "source_operator": "regression_model_comparison",
+        "telemetry": "Mean absolute error for linear vs quadratic vs cubic models"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a653f25da4f54059_t0",
+      "think": "The core operator 'Linear Seasonal Extrapolation' assumes a constant rate of point accumulation, modeled as y(t) = α + βt. This is a simplified dynamical system where β represents the average points-per-round. The model's failure lies in its inability to account for non-linear performance shifts, managerial changes, or sudden motivational spikes. It operates under the assumption that early-season trends persist uniformly, which is often violated in real-world scenarios. The validation scheme uses within-season holdouts, limiting generalizability but ensuring consistency in model evaluation. Compared to higher-order regressions, linear models show superior performance only marginally, indicating weak predictive power. The null model of random sequences demonstrates that actual data is only slightly more predictable than stochastic noise. Thus, while the primitive provides a foundational kernel for forecasting, it lacks robustness and must be embedded in more sophisticated frameworks to be actionable in GSE.\n\nDeep epistemic analysis for 1194-seasonal-linear-predictivity-in-national-football (a653f25da4f54059, domain=football, pages_read=3/3): Operator 'Linear Seasonal Extrapolation' (page 1, domain football) captures: Equations & assumptions - Linear model: cumulative_points(r) = α + β·r, fit on rounds 1...(n-ts), evaluated at round n. Assumptions: Points accumulate linearly; no structural breaks; independence of team-seasons. Breakdown regime: When team performance deviates from constant rate or when external factors disrupt trend. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models trajectory prediction via linear interpolation; used for baseline forecasting in GSE's probabilistic engine. Operator 'Holdout Validation Scheme' (page 1, domain football) captures: Validation design All 7,768 team-seasons pooled; for each, the last ts rounds are held out (ts = 1...20) and the model fit on earlier rounds predicts the final total — a within-season holdout, not a time-ordered cross-season backtest. Assumptions: Team-seasons are independent; temporal order within season preserved. Breakdown regime: When season structure varies significantly across years or teams. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s internal cross-validation framework for evaluating predictive stability. Operator 'Regression Model Comparison' (page 1, domain football) captures: Compared against quadratic and cubic regression on the same task, and against a null of random sequences with matched marginals. Assumptions: Higher-order polynomials may overfit; random sequences serve as null hypothesis. Breakdown regime: When data exhibits non-linear patterns or noise dominates signal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to select optimal regression kernel based on empirical risk minimization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1194-seasonal-linear-predictivity-in-national-football (a653f25da4f54059, domain=football, pages_read=3/3): Operator 'Linear Seasonal Extrapolation' (page 1, domain football) captures: Equations & assumptions - Linear model: cumulative_points(r) = α + β·r, fit on rounds 1...(n-ts), evaluated at round n. Assumptions: Points accumulate linearly; no structural breaks; independence of team-seasons. Breakdown regime: When team performance deviates from constant rate or when external factors disrupt trend. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models trajectory prediction via linear interpolation; used for baseline forecasting in GSE's probabilistic engine. Operator 'Holdout Validation Scheme' (page 1, domain football) captures: Validation design All 7,768 team-seasons pooled; for each, the last ts rounds are held out (ts = 1...20) and the model fit on earlier rounds predicts the final total — a within-season holdout, not a time-ordered cross-season backtest. Assumptions: Team-seasons are independent; temporal order within season preserved. Breakdown regime: When season structure varies significantly across years or teams. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s internal cross-validation framework for evaluating predictive stability. Operator 'Regression Model Comparison' (page 1, domain football) captures: Compared against quadratic and cubic regression on the same task, and against a null of random sequences with matched marginals. Assumptions: Higher-order polynomials may overfit; random sequences serve as null hypothesis. Breakdown regime: When data exhibits non-linear patterns or noise dominates signal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to select optimal regression kernel based on empirical risk minimization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical econometrics and time-series analysis, tracing back to early regression theory and the work of Gauss and Galton on linear relationships. Influenced by statistical mechanics and information theory in modern applications. Retrocausal Genealogy: Rooted in 1194-seasonal-linear-predictivity-in-national-football (a653f25da4f54059), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the team itself, whose behavior may deviate from linear expectations due to fatigue, strategy shifts, or external events. Market-based forecasters like Elo systems offer alternative paradigms, suggesting that the linear model's utility is bounded by its lack of adaptive learning. Theory of Mind & Decision Maker Model: Rooted in 1194-seasonal-linear-predictivity-in-national-football (a653f25da4f54059), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes reliance on linear extrapolation alone due to high variance in real-world performance. Leakage occurs when model assumptions fail to capture heterogeneity in team dynamics or temporal dependencies. The model cannot be used in isolation without calibration against dynamic environments. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1194-seasonal-linear-predictivity-in-national-football (a653f25da4f54059), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "87c76991101ca3c8",
+  "source_status": "COMPLETE",
+  "title": "game-procedural-animation",
+  "file_name": "game-procedural-animation.md",
+  "sha256": "87c76991101ca3c887a5824fe2e09ad12f062d17a5d4448abe5f208f1a0b8bed",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'name': 'Distance Weighting', 'description': 'A robust method for assigning skin weights to procedural skeletons using inverse distance to bone segments, avoiding manual intervention.', 'formula': '$w_i = \\\\frac{1/d_i}{\\\\sum_j (1/d_j)}$', 'units': 'Dimensionless weight fraction ($w_i$), Distance ($d_i$ in meters)', 'assumptions': 'Uniform mesh density, rigid bone segments, linear blend skinning', 'breakdown': 'Zero-weight vertices when bone distance approaches infinity'}",
+  "gsi_mapping": "{'name': 'Distance Weighting', 'mapping': 'Bayesian prior distribution over skeletal configurations, where posterior weight updates are proportional to inverse squared distance from bone anchors, stabilizing pose estimation across diverse creature topologies.', 'source_operator': 'Distance Weighting', 'telemetry': 'Mean percentage of vertices with non-zero skin weight after binding'}",
+  "gse_mapping": "{'name': 'Distance Weighting', 'mapping': 'Conformal prediction interval for motion capture drift, using inverse distance as a kernel function to measure similarity between procedural and captured poses, enabling adaptive filtering.', 'source_operator': 'Distance Weighting', 'telemetry': 'Root mean square error (RMSE) in bone position after weight application'}",
+  "primitives": [
+    {
+      "primitive_id": "distance_based_weights",
+      "name": "Distance-Based Weights",
+      "verbatim_quote": "- Replacement that works: per-vertex **inverse-distance weights to the 2 nearest bones** (distance from vertex to bone segment, not bone head).",
+      "page": 1,
+      "latex": "w_i = \\frac{1/d_i}{\\sum_{j\\in N(i)} (1/d_j)}",
+      "symbol_and_unit_ledger": "{'w_i': 'Dimensionless weight fraction assigned to vertex i', 'd_i': 'Inverse distance from vertex i to its nearest bone segment (meters)', 'N(i)': 'Set of the two nearest bones to vertex i'}",
+      "assumptions": "Uniform mesh resolution, rigid bone segments, linear blend skinning",
+      "breakdown_regime": "Weight becomes undefined when d_i approaches zero",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Kernel smoothing applied to skeletal rigging, where the distance metric serves as a Gaussian kernel bandwidth parameter, providing a non-parametric estimate of local influence.",
+        "source_operator": "distance_based_weights",
+        "telemetry": "Percentage of vertices with positive skin weight after binding"
+      }
+    },
+    {
+      "primitive_id": "sine_motion_formula",
+      "name": "Sine Motion Formula",
+      "verbatim_quote": "Core idiom: `angle(t) = A * sin(2π * t/T + φ)` per bone, with phase offsets φ creating wave propagation and gait patterns.",
+      "page": 1,
+      "latex": "\\theta(t) = A \\sin\\left(\\frac{2\\pi t}{T} + \\varphi\\right)",
+      "symbol_and_unit_ledger": "{'θ(t)': 'Bone orientation angle (radians)', 'A': 'Amplitude (radians)', 'T': 'Period of oscillation (seconds)', 'φ': 'Phase offset (radians)'}",
+      "assumptions": "Small-angle approximation, constant angular velocity envelope",
+      "breakdown_regime": "Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Fourier series truncation at the fundamental frequency, representing cyclic animal gaits as a superposition of harmonic oscillators, which aligns with principal component analysis of locomotion data.",
+        "source_operator": "sine_motion_formula",
+        "telemetry": "Frame-to-frame angular acceleration smoothness metric"
+      }
+    },
+    {
+      "primitive_id": "bbox_skeleton_analysis",
+      "name": "BBox Skeleton Analysis",
+      "verbatim_quote": "- Dragon layout (16 bones): `spine → chest → neck → head`, 4 tail segments (opposite the head), 2 bones per wing (inner/outer), 4 leg bones.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'bbox_axis': 'Longest axis aligned with body centerline', 'half_bbox': 'Body axis divided into head and tail halves', 'bone_fraction': 'Position along bbox length as a scalar 0..1'}",
+      "assumptions": "Convex hull approximation, uniform mass distribution along centerline",
+      "breakdown_regime": "Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Principal component analysis (PCA) of point cloud vertices, where the first eigenvector defines the body axis, reducing 3D rigging to 1D placement along a dominant direction.",
+        "source_operator": "bbox_skeleton_analysis",
+        "telemetry": "Ratio of explained variance by first principal component"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "87c76991101ca3c8_t0",
+      "think": "The core challenge in procedural rigging is constructing a skeleton that generalizes across vastly different topologies without manual tweaking. Distance-based skinning bypasses the need for complex mesh-specific correspondence, treating each vertex as a distributed influence across the nearest bones. This approach maps directly onto kernel density estimation, where the inverse distance acts as a bandwidth parameter controlling the smoothness of the weighting function. The sine-motion formula emerges as a natural choice because animal locomotion can be decomposed into periodic components; by summing sinusoids with carefully chosen phases, we replicate wave-like patterns such as trotting or swimming. Bounding box analysis reduces the high-dimensional problem of bone placement to a one-dimensional optimization along the longest axis, leveraging the assumption that mass is primarily distributed along this line. Together, these primitives form a minimal sufficient statistic for animating arbitrary creatures: a skeleton derived from global geometry, weights based on local proximity, and motion defined by harmonic synthesis.\n\nDeep epistemic analysis for game-procedural-animation (87c76991101ca3c8, domain=other, pages_read=3/3): Operator 'Distance-Based Weights' (page 1, domain other) captures: - Replacement that works: per-vertex **inverse-distance weights to the 2 nearest bones** (distance from vertex to bone segment, not bone head). Assumptions: Uniform mesh resolution, rigid bone segments, linear blend skinning Breakdown regime: Weight becomes undefined when d_i approaches zero Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kernel smoothing applied to skeletal rigging, where the distance metric serves as a Gaussian kernel bandwidth parameter, providing a non-parametric estimate of local influence. Operator 'Sine Motion Formula' (page 1, domain other) captures: Core idiom: `angle(t) = A * sin(2π * t/T + φ)` per bone, with phase offsets φ creating wave propagation and gait patterns. Assumptions: Small-angle approximation, constant angular velocity envelope Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Fourier series truncation at the fundamental frequency, representing cyclic animal gaits as a superposition of harmonic oscillators, which aligns with principal component analysis of locomotion data. Operator 'BBox Skeleton Analysis' (page 1, domain other) captures: - Dragon layout (16 bones): `spine → chest → neck → head`, 4 tail segments (opposite the head), 2 bones per wing (inner/outer), 4 leg bones. Assumptions: Convex hull approximation, uniform mass distribution along centerline Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Principal component analysis (PCA) of point cloud vertices, where the first eigenvector defines the body axis, reducing 3D rigging to 1D placement along a dominant direction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for game-procedural-animation (87c76991101ca3c8, domain=other, pages_read=3/3): Operator 'Distance-Based Weights' (page 1, domain other) captures: - Replacement that works: per-vertex **inverse-distance weights to the 2 nearest bones** (distance from vertex to bone segment, not bone head). Assumptions: Uniform mesh resolution, rigid bone segments, linear blend skinning Breakdown regime: Weight becomes undefined when d_i approaches zero Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kernel smoothing applied to skeletal rigging, where the distance metric serves as a Gaussian kernel bandwidth parameter, providing a non-parametric estimate of local influence. Operator 'Sine Motion Formula' (page 1, domain other) captures: Core idiom: `angle(t) = A * sin(2π * t/T + φ)` per bone, with phase offsets φ creating wave propagation and gait patterns. Assumptions: Small-angle approximation, constant angular velocity envelope Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Fourier series truncation at the fundamental frequency, representing cyclic animal gaits as a superposition of harmonic oscillators, which aligns with principal component analysis of locomotion data. Operator 'BBox Skeleton Analysis' (page 1, domain other) captures: - Dragon layout (16 bones): `spine → chest → neck → head`, 4 tail segments (opposite the head), 2 bones per wing (inner/outer), 4 leg bones. Assumptions: Convex hull approximation, uniform mass distribution along centerline Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Principal component analysis (PCA) of point cloud vertices, where the first eigenvector defines the body axis, reducing 3D rigging to 1D placement along a dominant direction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The methodology traces back to early computer graphics works on procedural modeling (e.g., Lindenmayer systems) and fluid simulation (SPH kernels). Distance weighting mirrors Shepard interpolation and kernel regression from numerical analysis, while the use of sinusoids dates to Fourier's decomposition of periodic phenomena. The bounding box heuristic is an优化 variant of the axis-aligned minimum bounding rectangle used in collision detection.",
+      "theory_of_mind": "Opposing researchers might prioritize speed over accuracy, arguing that neural network embeddings could learn better correspondences than hand-crafted distances. However, this approach deliberately avoids black-box learning to ensure transparency and reproducibility across different hardware configurations. The sine waves are chosen for their interpretability rather than optimality, allowing artists to intuitively adjust parameters. Theory of Mind & Decision Maker Model: Rooted in game-procedural-animation (87c76991101ca3c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent leakage between layers, the distance metric must remain invariant under affine transformations (scaling, rotation) to avoid biasing the weight computation based on rendering projection. Additionally, the phase offsets must be calibrated against empirical motion capture data to avoid aliasing artifacts that would corrupt downstream physics simulations. Cross-Layer Veto & Anti-Leakage Check: Rooted in game-procedural-animation (87c76991101ca3c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

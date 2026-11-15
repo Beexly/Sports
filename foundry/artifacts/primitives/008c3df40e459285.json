@@ -1,78 +1,16 @@
 {
   "book_id": "008c3df40e459285",
-  "source_status": "COMPLETE",
-  "title": "JORDYN_FINAL_AUDIT(1).txt",
-  "file_name": "JORDYN_FINAL_AUDIT(1).txt.txt",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_008c3df40e459285",
+  "file_name": "008c3df40e459285.quarantined",
   "sha256": "008c3df40e459285690eb10fb88f4505c6e31c0c4dd3607ddd87c494d48a5791",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "The audit process is modeled as a projection operator onto a constrained subspace, enforcing strict nullification of unauthorized temporal and spatial parameters. This establishes an information-theoretic boundary condition where the final state vector strictly adheres to prescribed categorical bases, eliminating high-dimensional noise.",
-  "gsi_mapping": "GSI treats the audit constraints as hard priors in a Bayesian filtering framework. The removal of capacity and site details acts as a variance reduction mechanism, ensuring conformal prediction intervals for recruitment yield remain robust against overfitting to unverified physical infrastructure metrics.",
-  "gse_mapping": "In GSE, the audit dictates a discrete state-transition system. The elimination of interview and hours language forces the agent's policy network to rely exclusively on verified QR routing, optimizing situational awareness by pruning invalid action branches from the decision tree.",
-  "primitives": [
-    {
-      "primitive_id": "temporal_nullification_operator",
-      "name": "Temporal Nullification Operator",
-      "verbatim_quote": "SOURCE_FILE: drive_export\\JORDYN_FINAL_AUDIT(1).txt ============================================================ CTS Lonestar SPO Recruiting Campaign - Jordyn Final v13 Audit Jordyn requested: remove 2026 and link QR to Turner Careers.",
-      "page": 1,
-      "latex": "P_{\\tau}(\\psi) = \\psi - \\langle \\psi | t_{2026} \\rangle |t_{2026}\\rangle + \\mathcal{L}_{QR}|\\text{Turner}\\rangle",
-      "symbol_and_unit_ledger": "\\psi: State vector (dimensionless), P_{\\tau}: Projection operator (dimensionless), t_{2026}: Temporal basis vector (dimensionless), \\mathcal{L}_{QR}: Routing functional (dimensionless)",
-      "assumptions": "The state space allows orthogonal decomposition of temporal attributes; QR redirection is a deterministic mapping.",
-      "breakdown_regime": "Fails if the temporal attribute is entangled with non-removable structural identifiers, causing informational paradoxes.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Isomorphic to removing future-state leakage in causal inference models to prevent look-ahead bias.",
-        "source_operator": "temporal_nullification_operator",
-        "telemetry": "Absence of '2026' string in final rendered output."
-      }
-    },
-    {
-      "primitive_id": "categorical_basis_projection",
-      "name": "Categorical Basis Projection",
-      "verbatim_quote": "Final copy uses CTS Lonestar only and SPO roles: Carpenter Journeymen, Foremen, Laborers.",
-      "page": 1,
-      "latex": "\\Pi_{SPO}(\\mathbf{x}) = \\sum_{r \\in \\{C,F,L\\}} \\delta(\\mathbf{x}, r) \\cdot \\mathbb{I}_{CTS}",
-      "symbol_and_unit_ledger": "\\mathbf{x}: Role identifier (dimensionless), \\Pi_{SPO}: Projection matrix (dimensionless), \\delta: Kronecker delta (dimensionless), \\mathbb{I}_{CTS}: Entity indicator (dimensionless)",
-      "assumptions": "Role categories form a mutually exclusive and collectively exhaustive basis for the SPO subspace.",
-      "breakdown_regime": "Breaks down if hybrid roles exist that cannot be cleanly decomposed into the defined basis set.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Maps directly to feature masking in GSE, isolating specific skill vectors for targeted optimization.",
-        "source_operator": "categorical_basis_projection",
-        "telemetry": "Exact match count of authorized role strings versus total role mentions."
-      }
-    },
-    {
-      "primitive_id": "metric_space_pruning",
-      "name": "Metric Space Pruning",
-      "verbatim_quote": "No capacity, building names, building counts, square footage, or actual-site detail added.",
-      "page": 1,
-      "latex": "\\nabla_{\\mathcal{M}} \\Phi = 0 \\quad \\forall \\mathcal{M} \\in \\{\\text{capacity, area, topology}\\}",
-      "symbol_and_unit_ledger": "\\Phi: Information potential (dimensionless), \\mathcal{M}: Metric domain (dimensionless), \\nabla_{\\mathcal{M}}: Gradient operator over metric space (dimensionless)",
-      "assumptions": "Physical site metrics constitute a distinct, removable manifold within the overall communication tensor.",
-      "breakdown_regime": "Singularity occurs if physical scale is intrinsically required to define the validity of the SPO roles.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Mirrors dimensionality reduction techniques, projecting high-dimensional facility data onto a zero-measure set to preserve privacy.",
-        "source_operator": "metric_space_pruning",
-        "telemetry": "Zero occurrences of numerical area/capacity units in the final artifact."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "008c3df40e459285_t0",
-      "think": "The audit document represents a rigorous application of linear operators to a high-dimensional communication state vector. We begin by defining the initial state $\\Psi_0$ containing all draft elements. The first primitive, Temporal Nullification, applies a projection operator $P_{\\tau}$ that annihilates any component aligned with the forbidden temporal basis vector $|t_{2026}\\rangle$. Simultaneously, it injects a deterministic routing functional $\\mathcal{L}_{QR}$, ensuring the gradient of user attention flows exclusively toward the Turner Careers manifold. This prevents temporal leakage, a common failure mode in predictive recruiting campaigns.\n\nNext, we apply the Categorical Basis Projection $\\Pi_{SPO}$. This operator restricts the active subspace to a finite set of orthogonal role vectors: Carpenters, Foremen, and Laborers. Any superposition involving unauthorized entities collapses immediately upon observation (rendering). This is mathematically equivalent to applying a strict mask in a neural network, forcing the model to attend only to the specified features.\n\nThe third primitive, Metric Space Pruning, enforces a zero-gradient condition $\\nabla_{\\mathcal{M}} \\Phi = 0$ across all physical dimensions (square footage, capacity). By flattening this metric space, we eliminate the risk of overfitting the campaign to specific, potentially transient physical sites. The final state $\\Psi_f$ is thus a highly purified vector, stripped of extraneous geometric and temporal noise, leaving only the core categorical and routing signals. The verification via OpenCV acts as a final checksum, confirming the integrity of the embedded routing coordinates.\n\nDeep epistemic analysis for JORDYN_FINAL_AUDIT(1).txt (008c3df40e459285, domain=other, pages_read=1/1): Operator 'Temporal Nullification Operator' (page 1, domain other) captures: SOURCE_FILE: drive_export\\JORDYN_FINAL_AUDIT(1).txt ============================================================ CTS Lonestar SPO Recruiting Campaign - Jordyn Final v13 Audit Jordyn requested: remove 2026 and link QR to Turner Careers. Assumptions: The state space allows orthogonal decomposition of temporal attributes; QR redirection is a deterministic mapping. Breakdown regime: Fails if the temporal attribute is entangled with non-removable structural identifiers, causing informational paradoxes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to removing future-state leakage in causal inference models to prevent look-ahead bias. Operator 'Categorical Basis Projection' (page 1, domain other) captures: Final copy uses CTS Lonestar only and SPO roles: Carpenter Journeymen, Foremen, Laborers. Assumptions: Role categories form a mutually exclusive and collectively exhaustive basis for the SPO subspace. Breakdown regime: Breaks down if hybrid roles exist that cannot be cleanly decomposed into the defined basis set. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to feature masking in GSE, isolating specific skill vectors for targeted optimization. Operator 'Metric Space Pruning' (page 1, domain other) captures: No capacity, building names, building counts, square footage, or actual-site detail added. Assumptions: Physical site metrics constitute a distinct, removable manifold within the overall communication tensor. Breakdown regime: Singularity occurs if physical scale is intrinsically required to define the validity of the SPO roles. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors dimensionality reduction techniques, projecting high-dimensional facility data onto a zero-measure set to preserve privacy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for JORDYN_FINAL_AUDIT(1).txt (008c3df40e459285, domain=other, pages_read=1/1): Operator 'Temporal Nullification Operator' (page 1, domain other) captures: SOURCE_FILE: drive_export\\JORDYN_FINAL_AUDIT(1).txt ============================================================ CTS Lonestar SPO Recruiting Campaign - Jordyn Final v13 Audit Jordyn requested: remove 2026 and link QR to Turner Careers. Assumptions: The state space allows orthogonal decomposition of temporal attributes; QR redirection is a deterministic mapping. Breakdown regime: Fails if the temporal attribute is entangled with non-removable structural identifiers, causing informational paradoxes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to removing future-state leakage in causal inference models to prevent look-ahead bias. Operator 'Categorical Basis Projection' (page 1, domain other) captures: Final copy uses CTS Lonestar only and SPO roles: Carpenter Journeymen, Foremen, Laborers. Assumptions: Role categories form a mutually exclusive and collectively exhaustive basis for the SPO subspace. Breakdown regime: Breaks down if hybrid roles exist that cannot be cleanly decomposed into the defined basis set. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to feature masking in GSE, isolating specific skill vectors for targeted optimization. Operator 'Metric Space Pruning' (page 1, domain other) captures: No capacity, building names, building counts, square footage, or actual-site detail added. Assumptions: Physical site metrics constitute a distinct, removable manifold within the overall communication tensor. Breakdown regime: Singularity occurs if physical scale is intrinsically required to define the validity of the SPO roles. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors dimensionality reduction techniques, projecting high-dimensional facility data onto a zero-measure set to preserve privacy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "This formalism traces back to Dirac's projection algebra in quantum mechanics, adapted here for information control. It parallels the development of conformal prediction in statistical learning, where strict boundaries are enforced to guarantee coverage probabilities. The removal of specific metrics echoes the redaction protocols in secure multi-party computation, ensuring no sensitive geometric data leaks into the public domain. Retrocausal Genealogy: Rooted in JORDYN_FINAL_AUDIT(1).txt (008c3df40e459285), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "We model two primary agents: the Campaign Architect (seeking maximum signal fidelity) and the Compliance Auditor (seeking minimum liability). The primitives represent a Nash equilibrium where the Architect achieves precise targeting without violating the Auditor's hard constraints on temporal and spatial exposure. The candidate, acting as a third agent, receives a perfectly filtered signal, reducing cognitive load and decision friction.",
-      "cross_layer_veto": "A veto is triggered if the QR routing functional $\\mathcal{L}_{QR}$ points to a dead endpoint, creating a disconnected graph in the user journey. Additionally, if the Categorical Basis Projection inadvertently excludes a critical hybrid role required for site operations, the system flags a collinearity error between marketing promises and operational reality. These vetoes ensure the mathematical abstraction remains grounded in executable business logic."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

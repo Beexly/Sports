@@ -1,0 +1,78 @@
+{
+  "book_id": "07368bdfa8d27366",
+  "source_status": "COMPLETE",
+  "title": "promotions-affiliate-partnerships",
+  "file_name": "promotions-affiliate-partnerships.md",
+  "sha256": "07368bdfa8d273665e6fe8c66ec2d7a16c70b218a0b482453dc0ef38fd2519d7",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Promotions/affiliate partnerships form a trust-layered revenue kernel with launch-critical integrity constraints, modeled as a probabilistic risk–revenue trade-off manifold. Universal Lens: Rooted in promotions-affiliate-partnerships (07368bdfa8d27366), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief nets over partner compliance and revenue streams, conditioned on launch readiness scorecards and P0 data veracity. GSI Mapping: Rooted in promotions-affiliate-partnerships (07368bdfa8d27366), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions governed by build-card readiness gates, with dynamic feedback from QA and legal escalation protocols. GSE Mapping: Rooted in promotions-affiliate-partnerships (07368bdfa8d27366), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "launch_readiness_kernel",
+      "name": "Launch Readiness Kernel",
+      "verbatim_quote": "# Promotions / Affiliate Partnerships As of: 2026-06-09 ## Mission Owns gated partner revenue, disclosures, tracking, and legal approvals.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Revenue (USD)', 'T': 'Trust score (0–1)', 'B': 'Blocker count (dimensionless)', 'D': 'Data veracity (0–1)'}",
+      "assumptions": "Launch readiness is a composite function of trust, revenue integrity, and blocker count.",
+      "breakdown_regime": "When B > 0 or D < 0.5, system enters failure mode.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Launch readiness maps to a conditional probability distribution over system stability given compliance and data integrity.",
+        "source_operator": "launch_readiness_kernel",
+        "telemetry": "Readiness scorecard, blocker count, test evidence"
+      }
+    },
+    {
+      "primitive_id": "compliance_verification_gate",
+      "name": "Compliance Verification Gate",
+      "verbatim_quote": "## Escalation Rules Escalate legal/compliance, deploy, production data, payments, live affiliate, method leakage, or P0 data accuracy problems immediately.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Compliance status (0 or 1)', 'E': 'Escalation trigger (0 or 1)', 'P0': 'Critical data accuracy (0–1)'}",
+      "assumptions": "Compliance is binary; escalation occurs when P0 < threshold or C = 0.",
+      "breakdown_regime": "When E = 1, system halts until resolution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Compliance gate is derived from P0 data and legal approval states.",
+        "source_operator": "compliance_verification_gate",
+        "telemetry": "Legal approval logs, P0 data audit trail"
+      }
+    },
+    {
+      "primitive_id": "build_card_execution_state",
+      "name": "Build Card Execution State",
+      "verbatim_quote": "## Definition Of Ready The build has an owner, source files, duplicate gate, approval gate, test plan, rollback plan, and acceptance criteria.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'State of build (0–1)', 'O': 'Owner assigned (0 or 1)', 'A': 'Approval status (0 or 1)', 'T': 'Test coverage (0–1)'}",
+      "assumptions": "Execution state S = O × A × T, with S = 1 indicating readiness.",
+      "breakdown_regime": "When any of {O, A, T} = 0, S = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Build state mirrors a logical conjunction of operational readiness flags.",
+        "source_operator": "build_card_execution_state",
+        "telemetry": "Build queue card status, test plan evidence, approval logs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "07368bdfa8d27366_t0",
+      "think": "The core operators define a layered system where trust, compliance, and execution state interlock. Launch readiness is a composite metric R(T, B, D), where trust T is modulated by blocker count B and data veracity D. Compliance verification acts as a hard gate, with escalation E triggered when P0 falls below threshold or C = 0. Build state S is a Boolean conjunction of ownership, approval, and test coverage. These primitives form a dual structure: one side governs risk and revenue, the other governs operational integrity. Failure modes arise when any kernel fails: e.g., B > 0 implies launch delay, E = 1 implies halt, S = 0 implies rework. The system's robustness depends on feedback loops between telemetry and state updates.\n\nDeep epistemic analysis for promotions-affiliate-partnerships (07368bdfa8d27366, domain=other, pages_read=2/2): Operator 'Launch Readiness Kernel' (page 1, domain other) captures: # Promotions / Affiliate Partnerships As of: 2026-06-09 ## Mission Owns gated partner revenue, disclosures, tracking, and legal approvals. Assumptions: Launch readiness is a composite function of trust, revenue integrity, and blocker count. Breakdown regime: When B > 0 or D < 0.5, system enters failure mode. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Launch readiness maps to a conditional probability distribution over system stability given compliance and data integrity. Operator 'Compliance Verification Gate' (page 1, domain other) captures: ## Escalation Rules Escalate legal/compliance, deploy, production data, payments, live affiliate, method leakage, or P0 data accuracy problems immediately. Assumptions: Compliance is binary; escalation occurs when P0 < threshold or C = 0. Breakdown regime: When E = 1, system halts until resolution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compliance gate is derived from P0 data and legal approval states. Operator 'Build Card Execution State' (page 1, domain other) captures: ## Definition Of Ready The build has an owner, source files, duplicate gate, approval gate, test plan, rollback plan, and acceptance criteria. Assumptions: Execution state S = O × A × T, with S = 1 indicating readiness. Breakdown regime: When any of {O, A, T} = 0, S = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Build state mirrors a logical conjunction of operational readiness flags. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for promotions-affiliate-partnerships (07368bdfa8d27366, domain=other, pages_read=2/2): Operator 'Launch Readiness Kernel' (page 1, domain other) captures: # Promotions / Affiliate Partnerships As of: 2026-06-09 ## Mission Owns gated partner revenue, disclosures, tracking, and legal approvals. Assumptions: Launch readiness is a composite function of trust, revenue integrity, and blocker count. Breakdown regime: When B > 0 or D < 0.5, system enters failure mode. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Launch readiness maps to a conditional probability distribution over system stability given compliance and data integrity. Operator 'Compliance Verification Gate' (page 1, domain other) captures: ## Escalation Rules Escalate legal/compliance, deploy, production data, payments, live affiliate, method leakage, or P0 data accuracy problems immediately. Assumptions: Compliance is binary; escalation occurs when P0 < threshold or C = 0. Breakdown regime: When E = 1, system halts until resolution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compliance gate is derived from P0 data and legal approval states. Operator 'Build Card Execution State' (page 1, domain other) captures: ## Definition Of Ready The build has an owner, source files, duplicate gate, approval gate, test plan, rollback plan, and acceptance criteria. Assumptions: Execution state S = O × A × T, with S = 1 indicating readiness. Breakdown regime: When any of {O, A, T} = 0, S = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Build state mirrors a logical conjunction of operational readiness flags. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in control theory and risk management frameworks, with influence from Bayesian belief networks and formal verification models. Retrocausal Genealogy: Rooted in promotions-affiliate-partnerships (07368bdfa8d27366), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in promotions-affiliate-partnerships (07368bdfa8d27366), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the compliance auditor (ensuring P0 integrity), the product manager (driving launch readiness), and the QA engineer (validating build state). Each agent operates under distinct utility functions aligned with their domain. Theory of Mind & Decision Maker Model: Rooted in promotions-affiliate-partnerships (07368bdfa8d27366), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when a single failure in one layer (e.g., compliance) blocks all downstream layers (execution, launch). Leakage occurs if build state is not synchronized with real app evidence, leading to false positives in readiness. Cross-Layer Veto & Anti-Leakage Check: Rooted in promotions-affiliate-partnerships (07368bdfa8d27366), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

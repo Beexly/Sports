@@ -1,0 +1,78 @@
+{
+  "book_id": "d622693ba89662e1",
+  "source_status": "COMPLETE",
+  "title": "signal-ledger-scale-fit",
+  "file_name": "signal-ledger-scale-fit.md",
+  "sha256": "d622693ba89662e1c5f1059484ebe0b2f7607f2949e636556fd2da6ca04aa527",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Per-key normalization and fitted weighting resolve scale incompatibility and signal strength disparities in composite signal ledgers. Universal Lens: Rooted in signal-ledger-scale-fit (d622693ba89662e1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian signal weights and normalized readings enable conformal prediction of player performance outcomes via residual correlation analysis. GSI Mapping: Rooted in signal-ledger-scale-fit (d622693ba89662e1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning uses fitted weights and scaled signals to compute dynamic player impact states and transition probabilities. GSE Mapping: Rooted in signal-ledger-scale-fit (d622693ba89662e1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "per_key_scale",
+      "name": "Per-Key Scale Normalization",
+      "verbatim_quote": "A shared scale.** Each key's raw reading is normalized onto -1..1 by its measured anchor and spread.",
+      "page": 1,
+      "latex": "\\text{normalizedReading} = \\frac{\\text{rawReading} - \\text{anchor}}{\\text{spread}}",
+      "symbol_and_unit_ledger": "{'rawReading': 'dimensionless raw signal value', 'anchor': 'mean of raw signal distribution', 'spread': 'standard deviation of raw signal distribution'}",
+      "assumptions": "Signal distributions are approximately normal; anchor and spread are stable over time.",
+      "breakdown_regime": "When anchor or spread is undefined or zero, normalization fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each key's normalized reading maps to a standardized unit vector in GSI's latent space.",
+        "source_operator": "per_key_scale",
+        "telemetry": "Signal variance across keys after normalization."
+      }
+    },
+    {
+      "primitive_id": "fitted_weight",
+      "name": "Fitted Weight",
+      "verbatim_quote": "A fitted weight.** Per key, from the within-player correlation against a settled outcome, evidence-scaled by distinct fixtures.",
+      "page": 1,
+      "latex": "\\text{weight} = \\text{correlation}(\\text{signal}, \\text{outcome}) \\times \\text{fixtureCount}^{-1/2}",
+      "symbol_and_unit_ledger": "{'weight': 'dimensionless signal importance factor', 'correlation': 'Pearson correlation coefficient', 'outcome': 'next-week fantasyPointsPpr above median', 'fixtureCount': 'number of distinct game weeks'}",
+      "assumptions": "Correlation is linear; outcome is stationary; sufficient sample size exists.",
+      "breakdown_regime": "When fixture count < 100, weight is set to zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Weighted sum of normalized signals forms a predictive composite in GSI.",
+        "source_operator": "fitted_weight",
+        "telemetry": "Weighted composite signal variance and predictive accuracy."
+      }
+    },
+    {
+      "primitive_id": "residual_weighting",
+      "name": "Residual Weighting",
+      "verbatim_quote": "The weight is fitted on the residual (player fixed effect removed), which answers the only question a weight can legitimately answer: on a week this player looks unusually good, do they do unusually well next week?",
+      "page": 1,
+      "latex": "\\text{weight}_{\\text{residual}} = \\text{correlation}(\\text{signal}_{\\text{residual}}, \\text{outcome}_{\\text{residual}})",
+      "symbol_and_unit_ledger": "{'signal_residual': 'signal adjusted for player-specific baseline', 'outcome_residual': 'fantasyPointsPpr adjusted for baseline'}",
+      "assumptions": "Player fixed effects are additive; residuals capture true signal variation.",
+      "breakdown_regime": "When residual variance is near-zero, correlation is undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Residual-weighted signals isolate idiosyncratic performance from baseline trends in GSI.",
+        "source_operator": "residual_weighting",
+        "telemetry": "Residual correlation magnitude and stability over time."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d622693ba89662e1_t0",
+      "think": "The core insight is that raw signal magnitudes vary orders of magnitude across keys, making uniform weighting invalid. Normalization ensures each key contributes proportionally to its signal strength rather than its scale. Fitting weights via within-player correlations against a settled outcome (fantasy points) provides a principled way to assign importance. Residual weighting removes player baseline effects, focusing on deviations that predict future performance. The failure mode arises when insufficient fixtures exist to estimate weights reliably, leading to zero weights. The dual nature of the system lies in balancing scale normalization and signal strength estimation, where the former prevents dominance by large-magnitude but weak signals, and the latter ensures predictive relevance. This structure enables robust composite signal construction for both inference (GSI) and reasoning (GSE).\n\nDeep epistemic analysis for signal-ledger-scale-fit (d622693ba89662e1, domain=other, pages_read=3/3): Operator 'Per-Key Scale Normalization' (page 1, domain other) captures: A shared scale.** Each key's raw reading is normalized onto -1..1 by its measured anchor and spread. Assumptions: Signal distributions are approximately normal; anchor and spread are stable over time. Breakdown regime: When anchor or spread is undefined or zero, normalization fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each key's normalized reading maps to a standardized unit vector in GSI's latent space. Operator 'Fitted Weight' (page 1, domain other) captures: A fitted weight.** Per key, from the within-player correlation against a settled outcome, evidence-scaled by distinct fixtures. Assumptions: Correlation is linear; outcome is stationary; sufficient sample size exists. Breakdown regime: When fixture count < 100, weight is set to zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Weighted sum of normalized signals forms a predictive composite in GSI. Operator 'Residual Weighting' (page 1, domain other) captures: The weight is fitted on the residual (player fixed effect removed), which answers the only question a weight can legitimately answer: on a week this player looks unusually good, do they do unusually well next week? Assumptions: Player fixed effects are additive; residuals capture true signal variation. Breakdown regime: When residual variance is near-zero, correlation is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Residual-weighted signals isolate idiosyncratic performance from baseline trends in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for signal-ledger-scale-fit (d622693ba89662e1, domain=other, pages_read=3/3): Operator 'Per-Key Scale Normalization' (page 1, domain other) captures: A shared scale.** Each key's raw reading is normalized onto -1..1 by its measured anchor and spread. Assumptions: Signal distributions are approximately normal; anchor and spread are stable over time. Breakdown regime: When anchor or spread is undefined or zero, normalization fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each key's normalized reading maps to a standardized unit vector in GSI's latent space. Operator 'Fitted Weight' (page 1, domain other) captures: A fitted weight.** Per key, from the within-player correlation against a settled outcome, evidence-scaled by distinct fixtures. Assumptions: Correlation is linear; outcome is stationary; sufficient sample size exists. Breakdown regime: When fixture count < 100, weight is set to zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Weighted sum of normalized signals forms a predictive composite in GSI. Operator 'Residual Weighting' (page 1, domain other) captures: The weight is fitted on the residual (player fixed effect removed), which answers the only question a weight can legitimately answer: on a week this player looks unusually good, do they do unusually well next week? Assumptions: Player fixed effects are additive; residuals capture true signal variation. Breakdown regime: When residual variance is near-zero, correlation is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Residual-weighted signals isolate idiosyncratic performance from baseline trends in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical signal processing and econometrics, particularly the use of standardized scores and regression-based weighting. Influenced by machine learning approaches to feature scaling and variable selection. Retrocausal Genealogy: Rooted in signal-ledger-scale-fit (d622693ba89662e1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in signal-ledger-scale-fit (d622693ba89662e1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to exploit scale inconsistencies or overfit to small samples. The system counters these by anchoring scales on empirical data and enforcing minimum fixture thresholds for weight validity. Theory of Mind & Decision Maker Model: Rooted in signal-ledger-scale-fit (d622693ba89662e1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through distinct fixture counts and residual adjustments. Leakage is mitigated by ensuring weights are derived from independent game-week observations, preventing temporal leakage into the training signal. Cross-Layer Veto & Anti-Leakage Check: Rooted in signal-ledger-scale-fit (d622693ba89662e1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

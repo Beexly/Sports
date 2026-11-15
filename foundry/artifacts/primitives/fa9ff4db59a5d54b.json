@@ -1,0 +1,95 @@
+{
+  "book_id": "fa9ff4db59a5d54b",
+  "source_status": "COMPLETE",
+  "title": "market-atlas",
+  "file_name": "market-atlas.md",
+  "sha256": "fa9ff4db59a5d54bce7454226e50bcc49629d970e9c0fab791d48af2985d7878",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "mean_absolute_margin",
+      "name": "Mean Absolute Margin",
+      "verbatim_quote": "Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations.",
+      "page": 1,
+      "latex": "$\\langle | \\text{miss} | \\rangle = \\frac{1}{N} \\sum_{i=1}^{N} | s_i - o_i |$",
+      "symbol_and_unit_ledger": "{'s_i': 'Sportsbook line (dimensionless)', 'o_i': 'Outcome (dimensionless)', 'N': 'Number of observations (dimensionless)', '|miss|': 'Absolute margin error (dimensionless)'}",
+      "assumptions": "Assumes linear utility, i.i.d. errors, and no systematic bias in point spread predictions.",
+      "breakdown_regime": "Fails when prediction distribution exhibits heavy tails or multi-modality, leading to underestimation of true dispersion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction interval width via $\\Delta = 2 \\cdot \\langle |miss| \\rangle$. Maps to GSE's uncertainty quantification through state-transition entropy.",
+        "source_operator": "mean_absolute_margin",
+        "telemetry": "Cross-validation mean absolute error on holdout sets, temporal stability over seasons."
+      }
+    },
+    {
+      "primitive_id": "cover_rate",
+      "name": "Cover Rate",
+      "verbatim_quote": "Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations.",
+      "page": 1,
+      "latex": "$C = \\frac{1}{N} \\sum_{i=1}^{N} \\mathbb{I}(o_i > s_i)$",
+      "symbol_and_unit_ledger": "{'o_i': 'Outcome (dimensionless)', 's_i': 'Spread line (dimensionless)', 'N': 'Number of games (dimensionless)', 'C': 'Probability of cover (dimensionless)'}",
+      "assumptions": "Binary outcome assumption, no draws, independent trials.",
+      "breakdown_regime": "Breaks down when there are frequent ties near the spread, requiring adjustment to $C' = C + 0.5 \\cdot P(\text{tie})$.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's binary classification accuracy for directional bets. Maps to GSE's state-transition probability from 'underdog' to 'covered' regime.",
+        "source_operator": "cover_rate",
+        "telemetry": "Historical win percentage relative to spread, season-over-season consistency."
+      }
+    },
+    {
+      "primitive_id": "seasonal_mean_margin",
+      "name": "Seasonal Mean Margin",
+      "verbatim_quote": "Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations.",
+      "page": 1,
+      "latex": "$\\mu = \\frac{1}{N} \\sum_{i=1}^{N} (o_i - s_i)$",
+      "symbol_and_unit_ledger": "{'o_i': 'Outcome (point)', 's_i': 'Spread line (point)', 'N': 'Number of games (dimensionless)', 'μ': 'Mean margin (point)'}",
+      "assumptions": "Additive error structure, constant mean across games, finite variance.",
+      "breakdown_regime": "Fails when systematic bias drifts over time, causing non-stationarity in the mean.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's expected value calculation as $EV = \\mu \\cdot \\text{odds}$ assuming fair odds. Maps to GSE's drift-diffusion model parameters.",
+        "source_operator": "seasonal_mean_margin",
+        "telemetry": "Trend analysis via linear regression, structural break tests."
+      }
+    },
+    {
+      "primitive_id": "over_rate",
+      "name": "Over Rate",
+      "verbatim_quote": "Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations.",
+      "page": 1,
+      "latex": "$O = \\frac{1}{N} \\sum_{i=1}^{N} \\mathbb{I}(o_i > T)$",
+      "symbol_and_unit_ledger": "{'o_i': 'Outcome (point)', 'T': 'Total line (point)', 'N': 'Number of games (dimensionless)', 'O': 'Probability of going over (dimensionless)'}",
+      "assumptions": "Binary over/under outcome, independent scoring events.",
+      "breakdown_regime": "Breaks down for low-scoring games where the total is close to the sum of team averages.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's over-under betting frequency. Maps to GSE's state-transition from 'low-scoring' to 'high-scoring' regime based on total.",
+        "source_operator": "over_rate",
+        "telemetry": "Historical over rate relative to bookmaker's implied probability, volatility analysis."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fa9ff4db59a5d54b_t0",
+      "think": "These primitives form a minimal sufficient statistic set for NFL point-spread markets. The mean absolute margin captures dispersion, while cover rate and over rate quantify directional and total probabilities. Seasonal mean margin links to predictive bias. Dualities emerge: cover rate mirrors over rate under symmetric distributions, and both pair with dispersion metrics for complete market description. Failure modes include heavy-tailed residuals, time-varying biases, and structural breaks. Anti-collinearity requires independence between primitives; leakage occurs when information sets overlap.\n\nDeep epistemic analysis for market-atlas (fa9ff4db59a5d54b, domain=other, pages_read=1/1): Operator 'Mean Absolute Margin' (page 1, domain other) captures: Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations. Assumptions: Assumes linear utility, i.i.d. errors, and no systematic bias in point spread predictions. Breakdown regime: Fails when prediction distribution exhibits heavy tails or multi-modality, leading to underestimation of true dispersion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction interval width via $\\Delta = 2 \\cdot \\langle |miss| \\rangle$. Maps to GSE's uncertainty quantification through state-transition entropy. Operator 'Cover Rate' (page 1, domain other) captures: Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations. Assumptions: Binary outcome assumption, no draws, independent trials. Breakdown regime: Breaks down when there are frequent ties near the spread, requiring adjustment to $C' = C + 0.5 \\cdot P(\text{tie})$. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's binary classification accuracy for directional bets. Maps to GSE's state-transition probability from 'underdog' to 'covered' regime. Operator 'Seasonal Mean Margin' (page 1, domain other) captures: Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations. Assumptions: Additive error structure, constant mean across games, finite variance. Breakdown regime: Fails when systematic bias drifts over time, causing non-stationarity in the mean. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's expected value calculation as $EV = \\mu \\cdot \\text{odds}$ assuming fair odds. Maps to GSE's drift-diffusion model parameters. Operator 'Over Rate' (page 1, domain other) captures: Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations. Assumptions: Binary over/under outcome, independent scoring events. Breakdown regime: Breaks down for low-scoring games where the total is close to the sum of team averages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's over-under betting frequency. Maps to GSE's state-transition from 'low-scoring' to 'high-scoring' regime based on total. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for market-atlas (fa9ff4db59a5d54b, domain=other, pages_read=1/1): Operator 'Mean Absolute Margin' (page 1, domain other) captures: Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations. Assumptions: Assumes linear utility, i.i.d. errors, and no systematic bias in point spread predictions. Breakdown regime: Fails when prediction distribution exhibits heavy tails or multi-modality, leading to underestimation of true dispersion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction interval width via $\\Delta = 2 \\cdot \\langle |miss| \\rangle$. Maps to GSE's uncertainty quantification through state-transition entropy. Operator 'Cover Rate' (page 1, domain other) captures: Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations. Assumptions: Binary outcome assumption, no draws, independent trials. Breakdown regime: Breaks down when there are frequent ties near the spread, requiring adjustment to $C' = C + 0.5 \\cdot P(\text{tie})$. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's binary classification accuracy for directional bets. Maps to GSE's state-transition probability from 'underdog' to 'covered' regime. Operator 'Seasonal Mean Margin' (page 1, domain other) captures: Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations. Assumptions: Additive error structure, constant mean across games, finite variance. Breakdown regime: Fails when systematic bias drifts over time, causing non-stationarity in the mean. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's expected value calculation as $EV = \\mu \\cdot \\text{odds}$ assuming fair odds. Maps to GSE's drift-diffusion model parameters. Operator 'Over Rate' (page 1, domain other) captures: Disclaimer: correlation ≠ predictive edge; these are descriptive, not betting recommendations. Assumptions: Binary over/under outcome, independent scoring events. Breakdown regime: Breaks down for low-scoring games where the total is close to the sum of team averages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's over-under betting frequency. Maps to GSE's state-transition from 'low-scoring' to 'high-scoring' regime based on total. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Black-Scholes option pricing (dispersion), Kelly criterion (mean), and early gambling theory (binary outcomes). Retrocausal Genealogy: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Bookmakers aim to balance edges and handle large bets, creating clustering at key numbers. Bettors exhibit herding and loss aversion, affecting margins. Theory of Mind & Decision Maker Model: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must avoid using future information (e.g., closing line) as predictors. Prevents look-ahead bias across GSI and GSE layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in market-atlas (fa9ff4db59a5d54b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

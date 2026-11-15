@@ -1,78 +1,16 @@
 {
   "book_id": "6cc811b351a7c446",
-  "source_status": "COMPLETE",
-  "title": "Baxley_Exhibit_Index_v2.docx",
-  "file_name": "Baxley_Exhibit_Index_v2.docx.txt",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_6cc811b351a7c446",
+  "file_name": "6cc811b351a7c446.quarantined",
   "sha256": "6cc811b351a7c446f86779f33124b49105dd6449bbb237b57fe70d54c92dffe7",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Structural unification of evidence custody and legal retention protocols under privileged attorney work-product constraints. Universal Lens: Rooted in Baxley_Exhibit_Index_v2.docx (6cc811b351a7c446), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian inference over document retention policies and witness coordination using conformal predictive distributions for legal risk quantification. GSI Mapping: Rooted in Baxley_Exhibit_Index_v2.docx (6cc811b351a7c446), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situational reasoning engine models employer-holding dynamics and counsel-control transitions through state-space paths defined by discovery liabilities. GSE Mapping: Rooted in Baxley_Exhibit_Index_v2.docx (6cc811b351a7c446), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "evidence_custody_protocol",
-      "name": "Evidence Custody Protocol",
-      "verbatim_quote": "SOURCE_FILE: drive_export\\Baxley_Exhibit_Index_v2.docx ============================================================ PRIVILEGED & CONFIDENTIAL — ATTORNEY WORK-PRODUCT EXHIBIT INDEX (v2) Baxley / Turner — evidence held vs.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'C': 'Custody status (binary: 0 = not held, 1 = held)', 'P': 'Privilege flag (binary: 0 = public, 1 = privileged)'}",
-      "assumptions": "All documents are either in custody or not; privilege applies uniformly across all items.",
-      "breakdown_regime": "When P=1 and C=0, legal liability increases exponentially.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps to GSI's legal risk scoring function where privileged documents are treated as high-value latent variables.",
-        "source_operator": "evidence_custody_protocol",
-        "telemetry": "Document retention compliance rate"
-      }
-    },
-    {
-      "primitive_id": "termination_decision_file",
-      "name": "Termination Decision File",
-      "verbatim_quote": "Item Status P-7 Termination letter + full Agreement & General Release (signed by Jeff Dolan, VP & Sr Dir HR); states $20,800 + $1,865.66 COBRA, 21-day review.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'T_d': 'Termination date (ISO 8601)', 'R': 'Review period (days)', 'C_t': 'Compensation amount ($)', 'C_c': 'COBRA cost ($)'}",
-      "assumptions": "Decision-making process is deterministic given inputs; compensation structure is fixed.",
-      "breakdown_regime": "If R < 21, termination may be contested.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Used in GSE to model HR decision states and temporal transitions during exit protocols.",
-        "source_operator": "termination_decision_file",
-        "telemetry": "Time-to-resolution for termination disputes"
-      }
-    },
-    {
-      "primitive_id": "legal_retention_policy",
-      "name": "Legal Retention Policy",
-      "verbatim_quote": "Release ¶2 (no copies) and ¶5 (no witness coordination) — counsel handles retention and any witness contact (Tandee Butler, Brandon Goings).",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'R_p': 'Retention policy (binary: 0 = retain, 1 = discard)', 'W_c': 'Witness coordination flag (binary: 0 = none, 1 = coordinated)'}",
-      "assumptions": "Policy enforcement is absolute; witness coordination is centralized.",
-      "breakdown_regime": "If W_c = 1 and R_p = 1, data integrity is compromised.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps to GSI's document lifecycle management kernel with policy-driven access control.",
-        "source_operator": "legal_retention_policy",
-        "telemetry": "Compliance score for document retention"
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "6cc811b351a7c446_t0",
-      "think": "The primitives form a coherent framework for modeling legal and HR-related document handling within a constrained environment. The 'Evidence Custody Protocol' establishes a binary classification system for document accessibility, which directly influences downstream inference in GSI’s Bayesian models. The 'Termination Decision File' introduces temporal and financial dimensions that enable GSE to simulate HR transitions and their consequences. The 'Legal Retention Policy' enforces a constraint on information flow, aligning with GSI’s need to manage privileged data. These operators interlock through shared metadata fields such as timestamps and identifiers, forming a dualistic structure where each primitive represents a distinct yet interconnected layer of legal and operational logic. Failure modes arise when privilege flags are misapplied or retention timelines are violated, leading to cascading effects in both legal exposure and internal auditability.\n\nDeep epistemic analysis for Baxley_Exhibit_Index_v2.docx (6cc811b351a7c446, domain=other, pages_read=1/1): Operator 'Evidence Custody Protocol' (page 1, domain other) captures: SOURCE_FILE: drive_export\\Baxley_Exhibit_Index_v2.docx ============================================================ PRIVILEGED & CONFIDENTIAL — ATTORNEY WORK-PRODUCT EXHIBIT INDEX (v2) Baxley / Turner — evidence held vs. Assumptions: All documents are either in custody or not; privilege applies uniformly across all items. Breakdown regime: When P=1 and C=0, legal liability increases exponentially. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's legal risk scoring function where privileged documents are treated as high-value latent variables. Operator 'Termination Decision File' (page 1, domain other) captures: Item Status P-7 Termination letter + full Agreement & General Release (signed by Jeff Dolan, VP & Sr Dir HR); states $20,800 + $1,865.66 COBRA, 21-day review. Assumptions: Decision-making process is deterministic given inputs; compensation structure is fixed. Breakdown regime: If R < 21, termination may be contested. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to model HR decision states and temporal transitions during exit protocols. Operator 'Legal Retention Policy' (page 1, domain other) captures: Release ¶2 (no copies) and ¶5 (no witness coordination) — counsel handles retention and any witness contact (Tandee Butler, Brandon Goings). Assumptions: Policy enforcement is absolute; witness coordination is centralized. Breakdown regime: If W_c = 1 and R_p = 1, data integrity is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's document lifecycle management kernel with policy-driven access control. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Baxley_Exhibit_Index_v2.docx (6cc811b351a7c446, domain=other, pages_read=1/1): Operator 'Evidence Custody Protocol' (page 1, domain other) captures: SOURCE_FILE: drive_export\\Baxley_Exhibit_Index_v2.docx ============================================================ PRIVILEGED & CONFIDENTIAL — ATTORNEY WORK-PRODUCT EXHIBIT INDEX (v2) Baxley / Turner — evidence held vs. Assumptions: All documents are either in custody or not; privilege applies uniformly across all items. Breakdown regime: When P=1 and C=0, legal liability increases exponentially. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's legal risk scoring function where privileged documents are treated as high-value latent variables. Operator 'Termination Decision File' (page 1, domain other) captures: Item Status P-7 Termination letter + full Agreement & General Release (signed by Jeff Dolan, VP & Sr Dir HR); states $20,800 + $1,865.66 COBRA, 21-day review. Assumptions: Decision-making process is deterministic given inputs; compensation structure is fixed. Breakdown regime: If R < 21, termination may be contested. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to model HR decision states and temporal transitions during exit protocols. Operator 'Legal Retention Policy' (page 1, domain other) captures: Release ¶2 (no copies) and ¶5 (no witness coordination) — counsel handles retention and any witness contact (Tandee Butler, Brandon Goings). Assumptions: Policy enforcement is absolute; witness coordination is centralized. Breakdown regime: If W_c = 1 and R_p = 1, data integrity is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's document lifecycle management kernel with policy-driven access control. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Roots in formal legal document theory and information-theoretic models of privilege, tracing back to early 20th-century jurisprudence on attorney-client confidentiality and modern digital forensics frameworks. Retrocausal Genealogy: Rooted in Baxley_Exhibit_Index_v2.docx (6cc811b351a7c446), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Baxley_Exhibit_Index_v2.docx (6cc811b351a7c446), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Opposing agents include the legal team enforcing retention policies and the HR department managing personnel decisions. Their interaction creates a dynamic tension between transparency and protection, modeled through conditional probability distributions over document states. Theory of Mind & Decision Maker Model: Rooted in Baxley_Exhibit_Index_v2.docx (6cc811b351a7c446), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that privileged data cannot be simultaneously retained and disclosed. Leakage vetoes prevent unauthorized access to sensitive metadata, maintaining the integrity of both GSI's probabilistic models and GSE's situational reasoning. Cross-Layer Veto & Anti-Leakage Check: Rooted in Baxley_Exhibit_Index_v2.docx (6cc811b351a7c446), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

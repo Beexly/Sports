@@ -1,0 +1,78 @@
+{
+  "book_id": "67f7e16c4c9d457c",
+  "source_status": "COMPLETE",
+  "title": "games-verify",
+  "file_name": "games-verify.md",
+  "sha256": "67f7e16c4c9d457cd2667e1d221294a22795daa5c29ffe723ffcd61803ec42c2",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Verification-aligned causal inference across multi-source claim tiers, with stochasticity in source reliability and temporal drift in game-state. Universal Lens: Rooted in games-verify (67f7e16c4c9d457c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on claim veracity using source confidence priors, with posterior corrections for multi-source agreement and temporal consistency. GSI Mapping: Rooted in games-verify (67f7e16c4c9d457c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in game environment models driven by injury confirmations, weather forecasts, and market odds adjustments, with dynamic active-player sets. GSE Mapping: Rooted in games-verify (67f7e16c4c9d457c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "injury_claim_veracity",
+      "name": "Injury Claim Veracity",
+      "verbatim_quote": "Injury / personnel claim audit | Claim | Source(s) | Date | Verdict | |---|---|---|---| | Cooper Rush starts for ATL; Tua doubtful (oblique); Penix OUT (ACL recovery) | Panthers",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Claim veracity score (0 to 1)', 'S': 'Source count (dimensionless)', 'T': 'Temporal proximity to event (days)'}",
+      "assumptions": "Claims with S ≥ 2 or authoritative sources yield C > 0.7; stale claims have C < 0.3.",
+      "breakdown_regime": "C = 0.5 when S = 1 and T > 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each injury claim maps to a probabilistic node in GSI belief network with source-weighted likelihood.",
+        "source_operator": "injury_claim_veracity",
+        "telemetry": "Confirmed vs single-source injury status"
+      }
+    },
+    {
+      "primitive_id": "weather_forecast_confidence",
+      "name": "Weather Forecast Confidence",
+      "verbatim_quote": "Weather cross-check | Game | Claim | Source | Verdict | |---|---|---|---| | MIN@CHI: gusts to 30 mph, ~0.5\" rain possible | NWS-derived reporting | 9/19 | SINGLE-SOURCE (secondary reporting of NWS data; no direct NWS page fetched).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'Wind speed (mph)', 'R': 'Rain probability (0 to 1)', 'F': 'Forecast confidence (0 to 1)'}",
+      "assumptions": "F = 1 for primary NWS data, F = 0.5 for secondary reports.",
+      "breakdown_regime": "F = 0.5 when source is secondary and W > 25",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Weather nodes in GSE model derive from forecast confidence and environmental thresholds.",
+        "source_operator": "weather_forecast_confidence",
+        "telemetry": "Wind gusts, precipitation probability"
+      }
+    },
+    {
+      "primitive_id": "player_transfer_correction",
+      "name": "Player Transfer Correction",
+      "verbatim_quote": "Walker→KC, Javonte→DAL) | USA Today rankings | 9/19 | SINGLE-SOURCE (rankings bylines; treat as likely-correct, low stakes for game environments) | **Adversarial note on Pittman:** the Phase-1/2 lane carried \"Michael Pittman Jr.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Player team assignment (team ID)', 'T': 'Time window (days)', 'C': 'Correction flag (0 or 1)'}",
+      "assumptions": "C = 1 if P ≠ P_prev and T ≤ 2; otherwise C = 0.",
+      "breakdown_regime": "C = 1 when T = 0 and P ≠ P_prev",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Player transfer corrections map to state updates in GSE player roster kernel.",
+        "source_operator": "player_transfer_correction",
+        "telemetry": "Player team change flag"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "67f7e16c4c9d457c_t0",
+      "think": "The core derivation involves constructing a layered belief graph where each claim is a node with veracity score C derived from source count S and temporal proximity T. Injury claims are modeled as binary events with stochastic transitions based on source reliability. Weather forecasts are treated as probabilistic variables with confidence weights F, affecting game outcome models. Player transfers are mapped through time-series correction flags C, updating active rosters in GSE. Failure modes include stale claims (T > 1) and secondary-source drift (F < 0.7). Dualities emerge between source consensus and temporal freshness, with temporal drift causing belief decay. The system enforces retroactive correction via C = 1 when new data contradicts prior assumptions.\n\nDeep epistemic analysis for games-verify (67f7e16c4c9d457c, domain=other, pages_read=4/4): Operator 'Injury Claim Veracity' (page 1, domain other) captures: Injury / personnel claim audit | Claim | Source(s) | Date | Verdict | |---|---|---|---| | Cooper Rush starts for ATL; Tua doubtful (oblique); Penix OUT (ACL recovery) | Panthers Assumptions: Claims with S ≥ 2 or authoritative sources yield C > 0.7; stale claims have C < 0.3. Breakdown regime: C = 0.5 when S = 1 and T > 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each injury claim maps to a probabilistic node in GSI belief network with source-weighted likelihood. Operator 'Weather Forecast Confidence' (page 2, domain other) captures: Weather cross-check | Game | Claim | Source | Verdict | |---|---|---|---| | MIN@CHI: gusts to 30 mph, ~0.5\" rain possible | NWS-derived reporting | 9/19 | SINGLE-SOURCE (secondary reporting of NWS data; no direct NWS page fetched). Assumptions: F = 1 for primary NWS data, F = 0.5 for secondary reports. Breakdown regime: F = 0.5 when source is secondary and W > 25 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Weather nodes in GSE model derive from forecast confidence and environmental thresholds. Operator 'Player Transfer Correction' (page 2, domain other) captures: Walker→KC, Javonte→DAL) | USA Today rankings | 9/19 | SINGLE-SOURCE (rankings bylines; treat as likely-correct, low stakes for game environments) | **Adversarial note on Pittman:** the Phase-1/2 lane carried \"Michael Pittman Jr. Assumptions: C = 1 if P ≠ P_prev and T ≤ 2; otherwise C = 0. Breakdown regime: C = 1 when T = 0 and P ≠ P_prev Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Player transfer corrections map to state updates in GSE player roster kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for games-verify (67f7e16c4c9d457c, domain=other, pages_read=4/4): Operator 'Injury Claim Veracity' (page 1, domain other) captures: Injury / personnel claim audit | Claim | Source(s) | Date | Verdict | |---|---|---|---| | Cooper Rush starts for ATL; Tua doubtful (oblique); Penix OUT (ACL recovery) | Panthers Assumptions: Claims with S ≥ 2 or authoritative sources yield C > 0.7; stale claims have C < 0.3. Breakdown regime: C = 0.5 when S = 1 and T > 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each injury claim maps to a probabilistic node in GSI belief network with source-weighted likelihood. Operator 'Weather Forecast Confidence' (page 2, domain other) captures: Weather cross-check | Game | Claim | Source | Verdict | |---|---|---|---| | MIN@CHI: gusts to 30 mph, ~0.5\" rain possible | NWS-derived reporting | 9/19 | SINGLE-SOURCE (secondary reporting of NWS data; no direct NWS page fetched). Assumptions: F = 1 for primary NWS data, F = 0.5 for secondary reports. Breakdown regime: F = 0.5 when source is secondary and W > 25 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Weather nodes in GSE model derive from forecast confidence and environmental thresholds. Operator 'Player Transfer Correction' (page 2, domain other) captures: Walker→KC, Javonte→DAL) | USA Today rankings | 9/19 | SINGLE-SOURCE (rankings bylines; treat as likely-correct, low stakes for game environments) | **Adversarial note on Pittman:** the Phase-1/2 lane carried \"Michael Pittman Jr. Assumptions: C = 1 if P ≠ P_prev and T ≤ 2; otherwise C = 0. Breakdown regime: C = 1 when T = 0 and P ≠ P_prev Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Player transfer corrections map to state updates in GSE player roster kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian belief networks (Pearl, 1988) and temporal logic (Prior, 1967), extended with adversarial verification principles from formal epistemology (Kahneman, 2011). Retrocausal Genealogy: Rooted in games-verify (67f7e16c4c9d457c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in games-verify (67f7e16c4c9d457c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include source reporters (e.g., Steel Curtain Network), market analysts (e.g., SBR), and internal GSI validators. Each agent has distinct priors and update rules, leading to divergent beliefs unless cross-checked. Theory of Mind & Decision Maker Model: Rooted in games-verify (67f7e16c4c9d457c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring at least two independent sources for CONFIRMED verdicts. Leakage is mitigated by flagging secondary-source weather forecasts for re-verification. Temporal drift is countered by time-weighted belief decay. Cross-Layer Veto & Anti-Leakage Check: Rooted in games-verify (67f7e16c4c9d457c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

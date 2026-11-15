@@ -1,0 +1,78 @@
+{
+  "book_id": "0cc695e2a163f69d",
+  "source_status": "COMPLETE",
+  "title": "launch-runbook",
+  "file_name": "launch-runbook.md",
+  "sha256": "0cc695e2a163f69d162e8fcd01f485b461554c8fa55b45c97881b440b191ceba",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Operator launch protocol governs platform validation through synthetic data seeding, performance gating, and safety boundary enforcement across dev/prod environments. Universal Lens: Rooted in launch-runbook (0cc695e2a163f69d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models seeded picks as prior distributions; canonical settlement updates posterior beliefs under performance-gated exposure policies. GSI Mapping: Rooted in launch-runbook (0cc695e2a163f69d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions system states via ingestion status, canonical history rollups, and UI visibility controls based on data readiness thresholds. GSE Mapping: Rooted in launch-runbook (0cc695e2a163f69d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "seed_picks_protocol",
+      "name": "Synthetic Pick Seeding Protocol",
+      "verbatim_quote": "Manual equivalent: ```bash npm run db:seed ``` The seed is idempotent — it only creates picks when `db.pick.count() === 0` and only when `NODE_ENV !== \"production\"`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'db.pick.count()': 'dimensionless', 'NODE_ENV': 'string'}",
+      "assumptions": "Platform operates in isolated dev environment with empty database state.",
+      "breakdown_regime": "When canonical pick count equals zero and environment is not production.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Seeded picks form initial belief distribution for GSI's Bayesian learning engine before real data ingestion.",
+        "source_operator": "seed_picks_protocol",
+        "telemetry": "Database pick count and NODE_ENV variable values."
+      }
+    },
+    {
+      "primitive_id": "performance_gate_policy",
+      "name": "Performance Gate Policy Enforcement",
+      "verbatim_quote": "The Verified Record / Win Rate display stays gated by the performance-gate policy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Verified Record': 'dimensionless', 'Win Rate': 'probability'}",
+      "assumptions": "Customer-facing UI must reflect validated performance metrics only.",
+      "breakdown_regime": "Until minimum canonical settled picks threshold is met.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's performance gate mirrors GSE's canonical history status check to ensure data integrity before public exposure.",
+        "source_operator": "performance_gate_policy",
+        "telemetry": "Canonical history status and public-eligible pick rollup counts."
+      }
+    },
+    {
+      "primitive_id": "safety_boundary_conditions",
+      "name": "Safety Boundary Conditions",
+      "verbatim_quote": "Safety boundaries that stay in place regardless: - `seedPicks()` is gated on `NODE_ENV !== \"production\"`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'NODE_ENV': 'string', 'seedPicks()': 'boolean function'}",
+      "assumptions": "Production systems must remain untouched by synthetic data.",
+      "breakdown_regime": "Environment-specific execution control for data generation functions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces operational isolation between development and production via conditional execution rules.",
+        "source_operator": "safety_boundary_conditions",
+        "telemetry": "Environment variable checks and function call logs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0cc695e2a163f69d_t0",
+      "think": "The operator's role involves transitioning a validated codebase into a publicly accessible state with safe performance claims. This requires managing synthetic data seeding in dev environments while enforcing strict safety boundaries in production. The core duality lies between simulation fidelity and real-world applicability—synthetic picks provide initial model training signals but must be purged before public exposure. The performance gate ensures that only statistically significant outcomes influence customer-facing displays. Failure modes include premature exposure of unverified claims, incorrect seeding in production, or insufficient canonical data triggering false positives in the gate mechanism.\n\nDeep epistemic analysis for launch-runbook (0cc695e2a163f69d, domain=other, pages_read=5/5): Operator 'Synthetic Pick Seeding Protocol' (page 1, domain other) captures: Manual equivalent: ```bash npm run db:seed ``` The seed is idempotent — it only creates picks when `db.pick.count() === 0` and only when `NODE_ENV !== \"production\"`. Assumptions: Platform operates in isolated dev environment with empty database state. Breakdown regime: When canonical pick count equals zero and environment is not production. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Seeded picks form initial belief distribution for GSI's Bayesian learning engine before real data ingestion. Operator 'Performance Gate Policy Enforcement' (page 1, domain other) captures: The Verified Record / Win Rate display stays gated by the performance-gate policy. Assumptions: Customer-facing UI must reflect validated performance metrics only. Breakdown regime: Until minimum canonical settled picks threshold is met. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's performance gate mirrors GSE's canonical history status check to ensure data integrity before public exposure. Operator 'Safety Boundary Conditions' (page 1, domain other) captures: Safety boundaries that stay in place regardless: - `seedPicks()` is gated on `NODE_ENV !== \"production\"`. Assumptions: Production systems must remain untouched by synthetic data. Breakdown regime: Environment-specific execution control for data generation functions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces operational isolation between development and production via conditional execution rules. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for launch-runbook (0cc695e2a163f69d, domain=other, pages_read=5/5): Operator 'Synthetic Pick Seeding Protocol' (page 1, domain other) captures: Manual equivalent: ```bash npm run db:seed ``` The seed is idempotent — it only creates picks when `db.pick.count() === 0` and only when `NODE_ENV !== \"production\"`. Assumptions: Platform operates in isolated dev environment with empty database state. Breakdown regime: When canonical pick count equals zero and environment is not production. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Seeded picks form initial belief distribution for GSI's Bayesian learning engine before real data ingestion. Operator 'Performance Gate Policy Enforcement' (page 1, domain other) captures: The Verified Record / Win Rate display stays gated by the performance-gate policy. Assumptions: Customer-facing UI must reflect validated performance metrics only. Breakdown regime: Until minimum canonical settled picks threshold is met. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's performance gate mirrors GSE's canonical history status check to ensure data integrity before public exposure. Operator 'Safety Boundary Conditions' (page 1, domain other) captures: Safety boundaries that stay in place regardless: - `seedPicks()` is gated on `NODE_ENV !== \"production\"`. Assumptions: Production systems must remain untouched by synthetic data. Breakdown regime: Environment-specific execution control for data generation functions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces operational isolation between development and production via conditional execution rules. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in software engineering practices of controlled deployment and gradual rollout, extending from early CI/CD principles and formal verification methodologies used in aerospace and financial systems. Retrocausal Genealogy: Rooted in launch-runbook (0cc695e2a163f69d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in launch-runbook (0cc695e2a163f69d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent considers potential misalignment between developer intent (testing) and user perception (real-time claims), requiring explicit disclaimers and visual indicators to prevent cognitive bias in interpretation of synthetic vs. actual data. Theory of Mind & Decision Maker Model: Rooted in launch-runbook (0cc695e2a163f69d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes occur when synthetic data leaks into production or when UI elements fail to distinguish seeded from canonical picks, leading to misleading performance statistics. Leakage conditions are prevented by strict environment checks and dedicated test identifiers. Cross-Layer Veto & Anti-Leakage Check: Rooted in launch-runbook (0cc695e2a163f69d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

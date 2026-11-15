@@ -56,6 +56,59 @@ HERMES_ENV_FILES: Tuple[Path, ...] = (
 )
 
 WT_PRIMITIVES_DIR = REPO_ROOT / "foundry" / "artifacts" / "primitives"
+DEFAULT_SHARD_B_CATALOG = (
+    REPO_ROOT
+    / "docs"
+    / "engine"
+    / "research"
+    / "2026-11-13"
+    / "corpus_compilation"
+    / "shard_b_operators_and_vetoes_catalog.json"
+)
+
+
+def _normalize_source_stem(name_or_path: str) -> str:
+    stem = Path(str(name_or_path or "")).stem.lower()
+    return re.sub(r"[^a-z0-9]+", "", stem)
+
+
+def _load_shard_b_source_sets(
+    catalog_path: Path,
+    *,
+    completed_dirs: Sequence[Path] = (SHARED_PRIMITIVES_DIR, WT_PRIMITIVES_DIR),
+) -> Tuple[set, set, set]:
+    """Return (done_shas, exact_basenames, normalized_stems) already settled on disk or Shard-B."""
+    done_shas: set = set()
+    for d in completed_dirs:
+        pdir = Path(d)
+        if not pdir.is_dir():
+            continue
+        for p in pdir.glob("*.json"):
+            try:
+                payload = json.loads(p.read_text(encoding="utf-8", errors="replace"))
+                sha = str(payload.get("sha256") or "").strip().lower()
+                if sha:
+                    done_shas.add(sha)
+            except Exception:
+                continue
+
+    exact_basenames: set = set()
+    norm_stems: set = set()
+    cpath = Path(catalog_path)
+    if cpath.is_file():
+        try:
+            catalog = json.loads(cpath.read_text(encoding="utf-8", errors="replace"))
+            for entry in catalog.get("entries") or ():
+                src = str((entry or {}).get("source") or "").strip()
+                if not src:
+                    continue
+                exact_basenames.add(Path(src).name.lower())
+                ns = _normalize_source_stem(src)
+                if len(ns) >= 8:
+                    norm_stems.add(ns)
+        except Exception:
+            pass
+    return done_shas, exact_basenames, norm_stems
 OCR_RESCUE_DIR = (
     REPO_ROOT / "docs" / "engine" / "research" / "2026-11-13" / "ocr_rescue"
 )
@@ -144,9 +197,10 @@ PII_QUARANTINE_SUBSTRINGS = (
     "missing credential",
     "missing employment",
     "tax return",
-    "w-2",
     "form 1099",
+    "cp_575",
     "bank statement",
+    "statement 10_26_26",
     "passport",
     "social security",
     "driver license",
@@ -155,7 +209,109 @@ PII_QUARANTINE_SUBSTRINGS = (
     "pay stub",
     "03_quarantine",
     "do_not_ingest",
+    "turner construction archive",
+    "landry_casinotech_matter",
+    "saved from chrome/",
+    "g baxley 2018 dismissal",
+    "g baxley birth certificate",
+    "final divorce decree",
+    "hr manager offer letter",
+    "adp background screening",
+    "garrett baxley 3.19.25",
+    "ada_letter-gb",
+    "ada-gb.pdf",
+    "newada13.pdf",
+    "usssaclaimform",
+    "medical release",
+    "eeoc6",
+    "eeoc7",
+    "eeoc8",
+    "eeoc9",
+    "eeoc10",
+    "eeoc11",
+    "craftco_truck_sheet",
+    "order_01kyxv9d886t9p984m4ysqkc14",
+    "55b66e9edd9b4969b98b9f77bf45120b",
+    "severance.pdf",
+    "rejection_letter_notice",
+    "originaldocument_.pdf",
+    "2026 christmas dinner",
+    "2026 thanksgiving dinner",
+    "charcuterie-chick-final",
+    "(6) instagram_files/",
+    "brain/local_vault/",
+    "turner construction",
+    "2025 turner benefits",
+    "turner8.4",
+    "cts lonestar",
+    "baxley_turner",
+    "baxley pos with exhibits",
+    "baxley_exhibit_packet",
+    "baxley_project_file_audit",
+    "garrett_baxley_turner",
+    "garrett_baxley_attorney",
+    "garrett_baxley_ats",
+    "garrett_baxley_hr_ats",
+    "garrett_baxley_resume",
+    "460-2026-09584",
+    "position statement cover letter",
+    "rob-wiley",
+    "case-notes-2026-09-16",
+    "docs/predictions/research/2026-10-13/case_file.md",
+    "docs/arxiv-program/research/2026-10-13/memo_to_counsel.md",
+    "docs/engine/research/2026-10-13/jordyn_final_audit.txt",
+    "docs/engine/research/2026-10-13/hashes.txt",
+    "docs/engine/research/2026-10-13/manifest.md",
+    "docs/engine/research/2026-10-13/robots.txt",
+    "docs/engine/research/2026-10-13/sienna_matter",
+    "docs/engine/research/2026-10-13/clio_message_to_madeline_garza",
+    "docs/engine/research/2026-10-13/copy_paste_email_for_doug",
+    "docs/engine/research/2026-10-13/client_ready_final_audit",
+    "docs/engine/research/2026-10-13/family_runway_command_center",
+    "docs/engine/research/2026-10-13/garrett-resource-dump",
+    "docs/engine/research/2026-10-13/lumera_brand",
+    "docs/engine/research/2026-10-13/codex_lumera_brand",
+    "docs/predictions/research/2026-10-13/gemini-code-1785883288657.txt",
+    "docs/predictions/research/2026-10-13/gb master - 1.0 inputs.pdf",
+    "docs/predictions/research/2026-10-13/gb_5_4_full_text.txt",
+    "docs/predictions/research/2026-10-13/may_4_memorandum_full_text.txt",
+    "docs/predictions/research/2026-10-13/email-to-client.md",
+    "docs/predictions/research/2026-10-13/email_to_ashley_blair.txt",
+    "docs/data-sources/research/2026-10-13/ready_to_send_emails.md",
+    "docs/predictions/research/2026-10-13/11207 mattina lease",
+    "docs/predictions/research/2026-10-13/13235 dairy asford striping",
+    "docs/predictions/research/2026-10-13/acctappmarginandcustagmt",
+    "docs/predictions/research/2026-10-13/alpaca+securities",
+    "docs/predictions/research/2026-10-13/alpaca_master+securities",
+    "docs/predictions/research/2026-10-13/document.pdf",
+    "docs/predictions/research/2026-10-13/document (1).pdf",
+    "docs/predictions/research/2026-10-13/document (2).pdf",
+    "docs/predictions/research/2026-10-13/generate.pdf",
+    "docs/predictions/research/2026-10-13/doug houston lead engine",
+    "docs/predictions/research/2026-10-13/doug_craftco_sales_kit",
+    "doug-as-builders",
+    "as_builders",
+    "heb_pharmacy",
+    "inv147853250",
+    "woodway_collection",
+    "charcuterie-chick",
+    "vytalus",
+    "fsa-reimbursement-sweep",
+    "fsa-money-resolution",
+    "hsa-reimbursement",
+    "wells-fargo-financial-deep-dive",
+    "financial-deep-dive-2026-09-19",
+    "payday-loan-borrower-protections",
+    "snap-reapply-worksheet",
+    "peri-peri-night-recipe",
+    "proactive_messages/research/proactive_notification_phase-",
+    "eeoc_charge",
+    "gse_system_and_repo_review",
+    "gse system and repo review",
+    "gdoc_1pta6_bakeoff-report",
 )
+
+_W2_TAX_FORM_RE = re.compile(r"(?<![a-z0-9])w-2(?![a-z0-9])", re.I)
 
 
 _SECRET_SNIPPET_PATTERNS = (
@@ -177,14 +333,14 @@ def _scrub_stub_snippet(snippet: str) -> str:
 
 def is_pii_or_correspondence_row(book_row: Mapping[str, Any]) -> bool:
     """Return True if metadata indicates personal correspondence (.eml/.msg) or identity/financial PII."""
-    fname = str(book_row.get("file_name") or "").strip().lower()
-    fpath = str(book_row.get("file_path") or "").strip().lower()
-    title = str(book_row.get("title") or "").strip().lower()
+    fname = str(book_row.get("file_name") or "").replace("\\", "/").strip().lower()
+    fpath = str(book_row.get("file_path") or "").replace("\\", "/").strip().lower()
+    title = str(book_row.get("title") or "").replace("\\", "/").strip().lower()
     for candidate in (fname, fpath):
         if any(candidate.endswith(ext) for ext in PII_QUARANTINE_SUFFIXES):
             return True
     combined = f"{fname} {fpath} {title}"
-    return any(tok in combined for tok in PII_QUARANTINE_SUBSTRINGS)
+    return bool(_W2_TAX_FORM_RE.search(combined)) or any(tok in combined for tok in PII_QUARANTINE_SUBSTRINGS)
 
 
 def is_complete_artifact_present(
@@ -296,21 +452,23 @@ def build_book_rows_from_explicit_pdfs(
         seen_ids.add(bid)
         if skip_existing and is_complete_artifact_present(bid, completed_dirs):
             continue
-        rows.append(
-            {
-                "book_id": bid,
-                "file_path": str(p),
-                "sha256": sha,
-                "file_name": p.name,
-                "title": _clean_pdf_title(p, bid),
-                "year": None,
-                "primary_domain": infer_domain_from_filename(p.name),
-                "tier": "A",
-                "status": "PENDING",
-                "pages_total": None,
-                "is_ocr_classic": False,
-            }
-        )
+        ocr_txt = OCR_RESCUE_DIR / f"{bid}_vision_ocr_core.txt"
+        row_obj: Dict[str, Any] = {
+            "book_id": bid,
+            "file_path": str(p),
+            "sha256": sha,
+            "file_name": p.name,
+            "title": _clean_pdf_title(p, bid),
+            "year": None,
+            "primary_domain": infer_domain_from_filename(p.name),
+            "tier": "A",
+            "status": "PENDING",
+            "pages_total": None,
+            "is_ocr_classic": ocr_txt.exists(),
+        }
+        if ocr_txt.exists():
+            row_obj["ocr_rescue_path"] = str(ocr_txt)
+        rows.append(row_obj)
     return rows
 
 
@@ -376,6 +534,8 @@ def select_eligible_books_ro(
     include_ocr_classics: bool = True,
     max_books: int = 20,
     completed_dirs: Sequence[Path] = (SHARED_PRIMITIVES_DIR, WT_PRIMITIVES_DIR),
+    include_unmatched_delegated_gcp: bool = False,
+    shard_b_catalog_path: Path = DEFAULT_SHARD_B_CATALOG,
 ) -> List[Dict[str, Any]]:
     """Query `foundry.db` in strict URI `mode=ro` without overlapping Hermes (`0..3`) or GCP (`8..f`)."""
     resolved_db = Path(db_path).resolve()
@@ -410,19 +570,34 @@ def select_eligible_books_ro(
 
         normalized_tiers = tuple(str(t).upper() for t in tiers if str(t).strip()) or ("A",)
         tier_marks = ",".join("?" * len(normalized_tiers))
+        status_sql = (
+            "status IN ('PENDING', 'DELEGATED_GCP')"
+            if include_unmatched_delegated_gcp
+            else "status = 'PENDING'"
+        )
         rows_pending = conn.execute(
             f"""
             SELECT book_id, file_path, sha256, file_name, title, year, primary_domain, tier, status, pages_total
             FROM corpus_queue
-            WHERE status = 'PENDING' AND tier IN ({tier_marks})
+            WHERE {status_sql} AND tier IN ({tier_marks})
             ORDER BY
               CASE tier WHEN 'A' THEN 0 WHEN 'B' THEN 1 ELSE 2 END ASC,
+              CASE status WHEN 'PENDING' THEN 0 ELSE 1 END ASC,
               CASE WHEN primary_domain IN ('football', 'sports', 'math', 'stats', 'probability', 'psych', 'cs', 'ml') THEN 0 ELSE 1 END,
               COALESCE(file_size, 0) ASC,
               book_id ASC
             """,
             normalized_tiers,
         ).fetchall()
+
+        done_shas: set = set()
+        exact_basenames: set = set()
+        norm_stems: set = set()
+        if include_unmatched_delegated_gcp:
+            done_shas, exact_basenames, norm_stems = _load_shard_b_source_sets(
+                shard_b_catalog_path,
+                completed_dirs=completed_dirs,
+            )
 
         allowed_chars = {c.lower() for c in partition_prefixes}
         for r in rows_pending:
@@ -435,6 +610,15 @@ def select_eligible_books_ro(
                 continue
             if is_complete_artifact_present(bid, completed_dirs):
                 continue
+            if str(d.get("status") or "").upper() == "DELEGATED_GCP":
+                fn = str(d.get("file_name") or Path(str(d["file_path"])).name)
+                ns = _normalize_source_stem(fn)
+                if (
+                    (sha and sha in done_shas)
+                    or fn.lower() in exact_basenames
+                    or (len(ns) >= 8 and ns in norm_stems)
+                ):
+                    continue
             if not Path(str(d["file_path"])).exists():
                 continue
             ocr_txt = OCR_RESCUE_DIR / f"{bid}_vision_ocr_core.txt"
@@ -526,7 +710,27 @@ def extract_pdf_pages_fast(file_path: Path, max_pages: int = 36) -> Tuple[int, D
     return int(parsed["total_pages"]), {int(k): v for k, v in parsed["pages"].items()}
 
 
-PLAIN_TEXT_SUFFIXES = {".txt", ".md", ".markdown", ".rst", ".csv", ".json", ".html", ".htm"}
+PLAIN_TEXT_SUFFIXES = {".txt", ".md", ".markdown", ".rst", ".csv", ".json", ".html", ".htm", ".tex"}
+
+
+def _pretty_print_json_blocks(raw: str) -> str:
+    """Pretty-print raw minified JSON or fenced ```json``` blocks so quote extraction finds tokens."""
+    stripped = raw.lstrip()
+    if stripped.startswith(("{", "[")):
+        try:
+            return json.dumps(json.loads(stripped), indent=2, ensure_ascii=False)
+        except Exception:
+            pass
+
+    def _replace_fence(match: re.Match[str]) -> str:
+        body = match.group(1).strip()
+        try:
+            pretty = json.dumps(json.loads(body), indent=2, ensure_ascii=False)
+            return f"```json\n{pretty}\n```"
+        except Exception:
+            return match.group(0)
+
+    return re.sub(r"```json\s*(.*?)\s*```", _replace_fence, raw, flags=re.DOTALL | re.IGNORECASE)
 
 
 def _load_plain_text_virtual_pages(file_path: Path, max_pages: Optional[int] = None) -> Tuple[int, Dict[int, str]]:
@@ -539,6 +743,7 @@ def _load_plain_text_virtual_pages(file_path: Path, max_pages: Optional[int] = N
         return 1, {}
     if not raw:
         return 1, {}
+    raw = _pretty_print_json_blocks(raw)
     chunk_size = 3000
     chunks = [raw[i : i + chunk_size] for i in range(0, len(raw), chunk_size)]
     total = len(chunks)
@@ -1725,7 +1930,16 @@ def process_single_book(
     total_chars = sum(len(norm_text(v)) for v in pages.values())
     candidates = build_candidate_quotes_by_page(pages, max_candidates=14) if pages else []
 
-    if int(pages_total) <= 3 and (total_chars < 400 or len(candidates) < 3):
+    source_suffix = Path(str(book_row.get("file_path") or "")).suffix.lower()
+    is_plain_text = source_suffix in PLAIN_TEXT_SUFFIXES
+    if (int(pages_total) <= 3 and (total_chars < 400 or len(candidates) < 3)) or (
+        is_plain_text and len(candidates) < 3
+    ):
+        source_kind_label = (
+            f"Non-PDF plain-text/crawl ({source_suffix or 'text'})"
+            if is_plain_text
+            else "Download-bait/title-only stub PDF"
+        )
         snippet = _scrub_stub_snippet(" | ".join(norm_text(v)[:140] for _, v in sorted(pages.items()))[:280])
         raw_domain = str(book_row.get("primary_domain") or "other")
         valid_domains = _valid_domains(gatekeeper_mod)
@@ -1743,7 +1957,7 @@ def process_single_book(
             "ocr_rescued": False,
             "source_status": "INSUFFICIENT_SOURCE_ACCESS",
             "refusal_reason": (
-                f"Download-bait/title-only stub PDF ({pages_total} pages, {total_chars} extracted chars, "
+                f"{source_kind_label} ({pages_total} pages, {total_chars} extracted chars, "
                 f"{len(candidates)} candidate quotes < 3 minimum): {snippet!r}. "
                 "Fail-closed under Foundry Gatekeeper zero-fabrication contract."
             ),
@@ -1980,6 +2194,17 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         action="store_true",
         help="Re-extract even if a valid cached artifact already exists in --output-dir.",
     )
+    parser.add_argument(
+        "--include-unmatched-delegated-gcp",
+        action="store_true",
+        help="Also include corpus_queue status='DELEGATED_GCP' items not matched on disk or in Shard-B catalog.",
+    )
+    parser.add_argument(
+        "--shard-b-catalog",
+        type=Path,
+        default=DEFAULT_SHARD_B_CATALOG,
+        help="Path to Shard-B catalog JSON used to deduplicate DELEGATED_GCP items.",
+    )
     return parser.parse_args(argv)
 
 
@@ -2007,6 +2232,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             tiers=selected_tiers,
             include_ocr_classics=bool(args.include_ocr_classics),
             max_books=5 if args.ocr_only else args.max_books,
+            include_unmatched_delegated_gcp=bool(args.include_unmatched_delegated_gcp),
+            shard_b_catalog_path=args.shard_b_catalog,
         )
     if not books:
         print(json.dumps({"ok": True, "processed": 0, "note": "No eligible pending books found"}))

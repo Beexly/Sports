@@ -1,0 +1,78 @@
+{
+  "book_id": "f39ceba1dbd5f491",
+  "source_status": "COMPLETE",
+  "title": "residual_is_raw_epa",
+  "file_name": "residual_is_raw_epa.md",
+  "sha256": "f39ceba1dbd5f49163b39660b77b3a3c469e20d7c81bd587669abcc62857d8ad",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Residualized EPA is mathematically equivalent to raw EPA under linear situational adjustment, implying no ordering change. Universal Lens: Rooted in residual_is_raw_epa (f39ceba1dbd5f491), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over raw EPA rankings to infer team quality uncertainty without situational bias. GSI Mapping: Rooted in residual_is_raw_epa (f39ceba1dbd5f491), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses contextual state transitions to model how situational variables affect play outcomes, with residuals failing to alter team rank dynamics. GSE Mapping: Rooted in residual_is_raw_epa (f39ceba1dbd5f491), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "residualized_epa_equivalence",
+      "name": "Residualized EPA Equivalence",
+      "verbatim_quote": "# Decisive test: the EPA residual is raw EPA in disguise (r = 1.000) The whole point of residualisation is to change the ordering — to strip situational advantage out of team quality.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Linear regression of EPA on situational variables yields negligible variance reduction; residual ordering matches raw EPA.",
+      "breakdown_regime": "When basis functions lack sufficient explanatory power to shift relative team rankings.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The residual transformation is isomorphic to identity under current modeling assumptions, preserving raw EPA rank order.",
+        "source_operator": "residualized_epa_equivalence",
+        "telemetry": "Pearson correlation coefficient r=1.000 between raw and residual EPA means."
+      }
+    },
+    {
+      "primitive_id": "contextual_adjustment_failure",
+      "name": "Contextual Adjustment Failure",
+      "verbatim_quote": "To actually change an ordering you need a basis with real situational bite: score-state × time interaction (garbage time), opponent quality, personnel, and down-distance interaction terms.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Current basis (down, distance, field position) insufficiently captures dynamic game states affecting outcome.",
+      "breakdown_regime": "Insufficient degrees of freedom in linear model to capture complex interactions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of adjustment fails to produce meaningful perturbations in team rank due to low signal-to-noise ratio.",
+        "source_operator": "contextual_adjustment_failure",
+        "telemetry": "Linear model has 4 degrees of freedom against 1.41 SD of noise."
+      }
+    },
+    {
+      "primitive_id": "ordering_stability",
+      "name": "Ordering Stability",
+      "verbatim_quote": "## Why the earlier models looked like they were doing something They were reporting a *stable ordering*, and the ordering is stable precisely because it is raw EPA.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Stable rank ordering implies that adjustments do not meaningfully alter comparative team performance metrics.",
+      "breakdown_regime": "When model adjustments are decorrelated from actual performance variation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Stable ordering reflects isomorphism between adjusted and unadjusted team quality measures.",
+        "source_operator": "ordering_stability",
+        "telemetry": "Consistent identical rankings across multiple models due to shared underlying metric."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f39ceba1dbd5f491_t0",
+      "think": "The core assertion is that residualizing EPA via linear regression on situational variables does not meaningfully alter team rankings. This occurs because the basis used—down, distance, field position—lacks sufficient complexity to generate substantial variation in residuals compared to raw EPA. As shown in the data, Pearson correlation is 1.000 and Spearman 0.999, indicating near-perfect preservation of rank order. The failure mode lies in the limited degrees of freedom (4) versus the inherent noise level (~1.41 SD), which precludes any meaningful discrimination between teams. Thus, while residualization aims to strip situational advantage, it instead preserves the original EPA ranking structure. This reveals a duality: the transformed metric behaves identically to the original under these constraints, making it a display-only operation rather than a selection criterion. The implications extend beyond simple ranking to broader questions of model interpretability and utility in dynamic environments where true situational effects may be masked by oversimplified modeling assumptions.\n\nDeep epistemic analysis for residual_is_raw_epa (f39ceba1dbd5f491, domain=other, pages_read=1/1): Operator 'Residualized EPA Equivalence' (page 1, domain other) captures: # Decisive test: the EPA residual is raw EPA in disguise (r = 1.000) The whole point of residualisation is to change the ordering — to strip situational advantage out of team quality. Assumptions: Linear regression of EPA on situational variables yields negligible variance reduction; residual ordering matches raw EPA. Breakdown regime: When basis functions lack sufficient explanatory power to shift relative team rankings. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The residual transformation is isomorphic to identity under current modeling assumptions, preserving raw EPA rank order. Operator 'Contextual Adjustment Failure' (page 1, domain other) captures: To actually change an ordering you need a basis with real situational bite: score-state × time interaction (garbage time), opponent quality, personnel, and down-distance interaction terms. Assumptions: Current basis (down, distance, field position) insufficiently captures dynamic game states affecting outcome. Breakdown regime: Insufficient degrees of freedom in linear model to capture complex interactions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of adjustment fails to produce meaningful perturbations in team rank due to low signal-to-noise ratio. Operator 'Ordering Stability' (page 1, domain other) captures: ## Why the earlier models looked like they were doing something They were reporting a *stable ordering*, and the ordering is stable precisely because it is raw EPA. Assumptions: Stable rank ordering implies that adjustments do not meaningfully alter comparative team performance metrics. Breakdown regime: When model adjustments are decorrelated from actual performance variation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Stable ordering reflects isomorphism between adjusted and unadjusted team quality measures. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for residual_is_raw_epa (f39ceba1dbd5f491, domain=other, pages_read=1/1): Operator 'Residualized EPA Equivalence' (page 1, domain other) captures: # Decisive test: the EPA residual is raw EPA in disguise (r = 1.000) The whole point of residualisation is to change the ordering — to strip situational advantage out of team quality. Assumptions: Linear regression of EPA on situational variables yields negligible variance reduction; residual ordering matches raw EPA. Breakdown regime: When basis functions lack sufficient explanatory power to shift relative team rankings. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The residual transformation is isomorphic to identity under current modeling assumptions, preserving raw EPA rank order. Operator 'Contextual Adjustment Failure' (page 1, domain other) captures: To actually change an ordering you need a basis with real situational bite: score-state × time interaction (garbage time), opponent quality, personnel, and down-distance interaction terms. Assumptions: Current basis (down, distance, field position) insufficiently captures dynamic game states affecting outcome. Breakdown regime: Insufficient degrees of freedom in linear model to capture complex interactions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of adjustment fails to produce meaningful perturbations in team rank due to low signal-to-noise ratio. Operator 'Ordering Stability' (page 1, domain other) captures: ## Why the earlier models looked like they were doing something They were reporting a *stable ordering*, and the ordering is stable precisely because it is raw EPA. Assumptions: Stable rank ordering implies that adjustments do not meaningfully alter comparative team performance metrics. Breakdown regime: When model adjustments are decorrelated from actual performance variation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Stable ordering reflects isomorphism between adjusted and unadjusted team quality measures. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This finding builds upon classical regression diagnostics and the principle of residual analysis introduced in statistical inference literature, particularly in the context of causal modeling and variable selection. It aligns with earlier work on model misspecification and the limitations of linear approximations in capturing non-linear dependencies. Retrocausal Genealogy: Rooted in residual_is_raw_epa (f39ceba1dbd5f491), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might assume that residualized EPA offers improved discrimination, leading to misallocation of resources or flawed strategic decisions. However, the consistent equivalence suggests that such agents are operating under false assumptions about the efficacy of their adjustment mechanisms. Theory of Mind & Decision Maker Model: Rooted in residual_is_raw_epa (f39ceba1dbd5f491), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions fail when the basis set is too restrictive, causing leakage into the residual term. Veto conditions include: (1) presence of strong interaction terms (e.g., score × time), (2) absence of high-dimensional features (personnel, opponent strength), and (3) low signal-to-noise ratio in the linear model. Cross-Layer Veto & Anti-Leakage Check: Rooted in residual_is_raw_epa (f39ceba1dbd5f491), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

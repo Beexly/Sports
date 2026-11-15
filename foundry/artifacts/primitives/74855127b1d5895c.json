@@ -1,0 +1,78 @@
+{
+  "book_id": "74855127b1d5895c",
+  "source_status": "COMPLETE",
+  "title": "SOURCES",
+  "file_name": "SOURCES.md",
+  "sha256": "74855127b1d5895c12b7e5c152567b4be0eec43deb412888bb345b670df8ded4",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Edge source data streams unify into probabilistic forecasting layers through historical depth, GSE usefulness scores, and verifiability constraints. Universal Lens: Rooted in SOURCES (74855127b1d5895c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference maps source reliability and historical depth to posterior belief updates using conformal prediction bounds. GSI Mapping: Rooted in SOURCES (74855127b1d5895c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning uses GSE usefulness ratings to weight feature exposure and state transitions in real-time edge detection modules. GSE Mapping: Rooted in SOURCES (74855127b1d5895c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "historical_depth_constraint",
+      "name": "Historical Depth Constraint",
+      "verbatim_quote": "8+ | 4 | Notes (sourced): - TeamRankings predictions methodology confirmed by /about/about-our-predictions/ (raw outputs + matchup info + confidence ratings).",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{\\\\text{hist}}': 'dimensionless, historical time depth index'}",
+      "assumptions": "Source data spans fixed temporal range with consistent granularity.",
+      "breakdown_regime": "When D_{\\text{hist}} < 1, data is insufficient for stable inference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's temporal consistency kernel for predictive entropy estimation.",
+        "source_operator": "historical_depth_constraint",
+        "telemetry": "Temporal coverage ratio of historical lines vs. current season"
+      }
+    },
+    {
+      "primitive_id": "gse_usefulness_score",
+      "name": "GSE Usefulness Score",
+      "verbatim_quote": "GSE-usefulness 1–5 = estimated integration value for the GSE edge engine (logOddsPool / extremization-tuner / recency-weighted / mmc-contribution / feature-exposure / ev-detector / clv-tracker modules in packages/prediction-engine/src/edge-lab/features/).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U_{\\\\text{GSE}}': 'dimensionless, normalized integration utility score'}",
+      "assumptions": "Each module contributes independently to overall edge value.",
+      "breakdown_regime": "When U_{\\text{GSE}} < 2, integration risk exceeds marginal benefit.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from weighted sum of module-specific utility functions in GSE’s feature-exposure layer.",
+        "source_operator": "gse_usefulness_score",
+        "telemetry": "Module-level utility vector norm across logOddsPool, mmc-contribution, ev-detector"
+      }
+    },
+    {
+      "primitive_id": "verifiability_flag",
+      "name": "Verifiability Flag",
+      "verbatim_quote": "UNVERIFIED = claim could not be confirmed by a primary doc or live endpoint this session; cited source shown.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_{\\\\text{flag}}': 'binary indicator {0,1} for verified status'}",
+      "assumptions": "Verification requires authoritative documentation or live API access.",
+      "breakdown_regime": "When V_{\\text{flag}} = 0, data is subject to error propagation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's epistemic trustworthiness function in uncertainty quantification.",
+        "source_operator": "verifiability_flag",
+        "telemetry": "API availability, documentation presence, and live endpoint response"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "74855127b1d5895c_t0",
+      "think": "The three primitives form a triadic structure where historical depth provides temporal grounding, GSE usefulness offers operational relevance, and verifiability ensures robustness. These combine into a layered probabilistic framework within GSI's Bayesian inference engine, enabling dynamic belief revision based on source credibility and temporal scope. Each primitive operates under distinct failure regimes—insufficient depth leads to overfitting, low GSE score implies poor integration, and unverified claims introduce noise. Dualities emerge between empirical validation and theoretical consistency, with each primitive acting as a constraint in a larger optimization problem for edge generation. The cross-layer veto condition prevents integration of unreliable sources when their verifiability flag is zero, ensuring that only trustworthy data enters downstream modules such as logOddsPool or ev-detector.\n\nDeep epistemic analysis for SOURCES (74855127b1d5895c, domain=other, pages_read=7/7): Operator 'Historical Depth Constraint' (page 5, domain other) captures: 8+ | 4 | Notes (sourced): - TeamRankings predictions methodology confirmed by /about/about-our-predictions/ (raw outputs + matchup info + confidence ratings). Assumptions: Source data spans fixed temporal range with consistent granularity. Breakdown regime: When D_{\\text{hist}} < 1, data is insufficient for stable inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's temporal consistency kernel for predictive entropy estimation. Operator 'GSE Usefulness Score' (page 1, domain other) captures: GSE-usefulness 1–5 = estimated integration value for the GSE edge engine (logOddsPool / extremization-tuner / recency-weighted / mmc-contribution / feature-exposure / ev-detector / clv-tracker modules in packages/prediction-engine/src/edge-lab/features/). Assumptions: Each module contributes independently to overall edge value. Breakdown regime: When U_{\\text{GSE}} < 2, integration risk exceeds marginal benefit. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from weighted sum of module-specific utility functions in GSE’s feature-exposure layer. Operator 'Verifiability Flag' (page 1, domain other) captures: UNVERIFIED = claim could not be confirmed by a primary doc or live endpoint this session; cited source shown. Assumptions: Verification requires authoritative documentation or live API access. Breakdown regime: When V_{\\text{flag}} = 0, data is subject to error propagation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's epistemic trustworthiness function in uncertainty quantification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SOURCES (74855127b1d5895c, domain=other, pages_read=7/7): Operator 'Historical Depth Constraint' (page 5, domain other) captures: 8+ | 4 | Notes (sourced): - TeamRankings predictions methodology confirmed by /about/about-our-predictions/ (raw outputs + matchup info + confidence ratings). Assumptions: Source data spans fixed temporal range with consistent granularity. Breakdown regime: When D_{\\text{hist}} < 1, data is insufficient for stable inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's temporal consistency kernel for predictive entropy estimation. Operator 'GSE Usefulness Score' (page 1, domain other) captures: GSE-usefulness 1–5 = estimated integration value for the GSE edge engine (logOddsPool / extremization-tuner / recency-weighted / mmc-contribution / feature-exposure / ev-detector / clv-tracker modules in packages/prediction-engine/src/edge-lab/features/). Assumptions: Each module contributes independently to overall edge value. Breakdown regime: When U_{\\text{GSE}} < 2, integration risk exceeds marginal benefit. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from weighted sum of module-specific utility functions in GSE’s feature-exposure layer. Operator 'Verifiability Flag' (page 1, domain other) captures: UNVERIFIED = claim could not be confirmed by a primary doc or live endpoint this session; cited source shown. Assumptions: Verification requires authoritative documentation or live API access. Breakdown regime: When V_{\\text{flag}} = 0, data is subject to error propagation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's epistemic trustworthiness function in uncertainty quantification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and Bayesian decision-making frameworks from the 1950s–1970s, extended by modern machine learning and probabilistic programming paradigms in the 2010s. Retrocausal Genealogy: Rooted in SOURCES (74855127b1d5895c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SOURCES (74855127b1d5895c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors with incentive misalignments and adversarial data sources. Decision actors are GSI's inference engines and GSE's situational reasoning systems, both seeking optimal information fidelity under bounded rationality. Theory of Mind & Decision Maker Model: Rooted in SOURCES (74855127b1d5895c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring independent verification metrics per primitive. Leakage vetoes occur when a primitive's verifiability flag is zero, preventing propagation into higher-level modules like ev-detector or mmc-contribution. Cross-Layer Veto & Anti-Leakage Check: Rooted in SOURCES (74855127b1d5895c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

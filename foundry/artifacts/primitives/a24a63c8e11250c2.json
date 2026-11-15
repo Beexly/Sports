@@ -1,0 +1,78 @@
+{
+  "book_id": "a24a63c8e11250c2",
+  "source_status": "COMPLETE",
+  "title": "reverse-engineering-intake",
+  "file_name": "reverse-engineering-intake.md",
+  "sha256": "a24a63c8e11250c2e2e12f00902a5d3241d2f1297af27bc234d9f52ff6366daf",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified mathematical framework integrating opponent-adjusted efficiency, turnover regression, and explosive-play differentials into a blended scalar efficiency metric. Universal Lens: Rooted in reverse-engineering-intake (a24a63c8e11250c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on weekly player and team efficiency using shrinkage estimators and historical baselines to generate posterior distributions over performance outcomes. GSI Mapping: Rooted in reverse-engineering-intake (a24a63c8e11250c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps real-time game states to probabilistic action-value functions via state-transition kernels informed by historical regressions and contextual features. GSE Mapping: Rooted in reverse-engineering-intake (a24a63c8e11250c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "opponent_adjusted_efficiency",
+      "name": "Opponent-Adjusted Efficiency",
+      "verbatim_quote": "| Rank | Upgrade | Status | |---|---|---| | 1 | Opponent-adjusted efficiency | Wired for week 3.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'EPA_{adj}': 'Expected Points Added, adjusted for opponent strength (dimensionless)', 'EPA_{def}^{2025}': 'Defensive Expected Points Allowed in 2025 (dimensionless)', 'EPA_{obs}^{2026}': 'Observed Expected Points in Weeks 1–2 of 2026 (dimensionless)'}",
+      "assumptions": "Linear adjustment of observed efficiency based on opponent's historical defensive strength; assumes stationarity of defensive performance.",
+      "breakdown_regime": "Weeks 1–2 of 2026 season with 2025 defensive EPA as baseline.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps observed EPA to opponent-adjusted EPA via shrinkage toward historical defensive baseline.",
+        "source_operator": "opponent_adjusted_efficiency",
+        "telemetry": "Difference between raw EPA and opponent-adjusted EPA."
+      }
+    },
+    {
+      "primitive_id": "turnover_regression",
+      "name": "Turnover Regression",
+      "verbatim_quote": "| | 2 | Turnover regression | Wired as interceptions versus the 2025 rate, shrunk, 5% of the efficiency blend.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{reg}': 'Turnover regression component (dimensionless)', 'I_{2025}': 'Interception rate in 2025 (dimensionless)', 'I_{obs}': 'Observed interception rate (dimensionless)', 'w': 'Shrinkage weight (0 ≤ w ≤ 1)'}",
+      "assumptions": "Turnover events are regressive; observed rates are shrunk toward historical average.",
+      "breakdown_regime": "Interceptions vs. 2025 rate with 5% weighting in efficiency blend.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Combines observed interception rate with 2025 baseline using shrinkage estimator.",
+        "source_operator": "turnover_regression",
+        "telemetry": "Deviation of observed from expected interception rate."
+      }
+    },
+    {
+      "primitive_id": "explosive_play_differential",
+      "name": "Explosive Play Differential",
+      "verbatim_quote": "| | 4 | Explosive-play differential | Wired as pass plays of 20+ yards over attempts, 10% of the blend.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{diff}': 'Explosive play differential (dimensionless)', 'P_{20+}': 'Passes of 20+ yards (count)', 'A_{pass}': 'Total pass attempts (count)'}",
+      "assumptions": "Explosive plays are defined as passes ≥20 yards; normalized by attempt count.",
+      "breakdown_regime": "Pass attempts with ≥20-yard plays, weighted at 10% in efficiency blend.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Normalizes explosive pass plays relative to total attempts and blends with other metrics.",
+        "source_operator": "explosive_play_differential",
+        "telemetry": "Ratio of explosive pass plays to total pass attempts."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a24a63c8e11250c2_t0",
+      "think": "The three core primitives—opponent-adjusted efficiency, turnover regression, and explosive-play differential—are designed to capture distinct aspects of performance variation. Opponent-adjusted efficiency uses a linear shrinkage model to correct for variance due to defensive strength, assuming that observed performance can be decomposed into skill and luck components. Turnover regression applies a similar shrinkage approach to intercept rate, leveraging historical averages to reduce noise in small-sample estimates. Explosive-play differential isolates high-leverage plays through a ratio-based normalization, capturing strategic impact. These primitives form a coherent kernel for Bayesian updating in GSI, where each contributes a dimensionally consistent signal to a composite efficiency score. Dualities emerge in how each primitive balances empirical data against prior expectations, with failure modes including overfitting to short-term trends or underweighting rare but impactful events such as turnovers or explosive plays. The system must maintain coherence across these signals to avoid spurious correlations or misalignment in predictive models.\n\nDeep epistemic analysis for reverse-engineering-intake (a24a63c8e11250c2, domain=other, pages_read=1/1): Operator 'Opponent-Adjusted Efficiency' (page 1, domain other) captures: | Rank | Upgrade | Status | |---|---|---| | 1 | Opponent-adjusted efficiency | Wired for week 3. Assumptions: Linear adjustment of observed efficiency based on opponent's historical defensive strength; assumes stationarity of defensive performance. Breakdown regime: Weeks 1–2 of 2026 season with 2025 defensive EPA as baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps observed EPA to opponent-adjusted EPA via shrinkage toward historical defensive baseline. Operator 'Turnover Regression' (page 1, domain other) captures: | | 2 | Turnover regression | Wired as interceptions versus the 2025 rate, shrunk, 5% of the efficiency blend. Assumptions: Turnover events are regressive; observed rates are shrunk toward historical average. Breakdown regime: Interceptions vs. 2025 rate with 5% weighting in efficiency blend. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines observed interception rate with 2025 baseline using shrinkage estimator. Operator 'Explosive Play Differential' (page 1, domain other) captures: | | 4 | Explosive-play differential | Wired as pass plays of 20+ yards over attempts, 10% of the blend. Assumptions: Explosive plays are defined as passes ≥20 yards; normalized by attempt count. Breakdown regime: Pass attempts with ≥20-yard plays, weighted at 10% in efficiency blend. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Normalizes explosive pass plays relative to total attempts and blends with other metrics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for reverse-engineering-intake (a24a63c8e11250c2, domain=other, pages_read=1/1): Operator 'Opponent-Adjusted Efficiency' (page 1, domain other) captures: | Rank | Upgrade | Status | |---|---|---| | 1 | Opponent-adjusted efficiency | Wired for week 3. Assumptions: Linear adjustment of observed efficiency based on opponent's historical defensive strength; assumes stationarity of defensive performance. Breakdown regime: Weeks 1–2 of 2026 season with 2025 defensive EPA as baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps observed EPA to opponent-adjusted EPA via shrinkage toward historical defensive baseline. Operator 'Turnover Regression' (page 1, domain other) captures: | | 2 | Turnover regression | Wired as interceptions versus the 2025 rate, shrunk, 5% of the efficiency blend. Assumptions: Turnover events are regressive; observed rates are shrunk toward historical average. Breakdown regime: Interceptions vs. 2025 rate with 5% weighting in efficiency blend. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines observed interception rate with 2025 baseline using shrinkage estimator. Operator 'Explosive Play Differential' (page 1, domain other) captures: | | 4 | Explosive-play differential | Wired as pass plays of 20+ yards over attempts, 10% of the blend. Assumptions: Explosive plays are defined as passes ≥20 yards; normalized by attempt count. Breakdown regime: Pass attempts with ≥20-yard plays, weighted at 10% in efficiency blend. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Normalizes explosive pass plays relative to total attempts and blends with other metrics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical shrinkage estimation techniques from econometrics and Bayesian hierarchical modeling, with influences from sports analytics frameworks pioneered by NFL Analytics and the nflverse project. Retrocausal Genealogy: Rooted in reverse-engineering-intake (a24a63c8e11250c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in reverse-engineering-intake (a24a63c8e11250c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing teams' strategic behavior through inverse inference of their defensive strengths and offensive tendencies, enabling counter-strategy prediction. Assumes agents optimize within bounded rationality constraints. Theory of Mind & Decision Maker Model: Rooted in reverse-engineering-intake (a24a63c8e11250c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in reverse-engineering-intake (a24a63c8e11250c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity checks ensure that explosive plays and turnover regression do not redundantly encode similar information. Leakage vetoes prevent inclusion of non-predictive features like PFF grades or weather unless directly tied to outcome variables. Cross-Layer Veto & Anti-Leakage Check: Rooted in reverse-engineering-intake (a24a63c8e11250c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

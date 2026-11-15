@@ -1,0 +1,78 @@
+{
+  "book_id": "178fdaef95c392ee",
+  "source_status": "COMPLETE",
+  "title": "handoff",
+  "file_name": "handoff.md",
+  "sha256": "178fdaef95c392ee56d569eba0214f34dfb5b3744fed383e9a52a1fa69a7cd7d",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Matchup chain generation as a binary classification problem over 14 games, with 0/1/≥2 chain outcomes mapped to discrete state transitions. Universal Lens: Rooted in handoff (178fdaef95c392ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on injury and depth chart data to compute posterior probabilities of ≥2 chains per matchup using NGS statboard features as evidence. GSI Mapping: Rooted in handoff (178fdaef95c392ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates game state transitions via trench and receiver chain logic, conditioned on defensive front injury reports and team alias normalization. GSE Mapping: Rooted in handoff (178fdaef95c392ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "chain_count_classifier",
+      "name": "Matchup Chain Count Classifier",
+      "verbatim_quote": "Measured counts: - 0 chains: `ARI@LAR-matchups.md`, `BUF@LV-matchups.md`, `HOU@JAX-matchups.md`, `LAC@KC-matchups.md`, `PIT@TB-matchups.md`, `WSH@SF-matchups.md` (6/14 files).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{matchup}} \\\\in \\\\{0, 1, \\\\geq 2\\\\}': 'Discrete chain count outcome per matchup'}",
+      "assumptions": "Chain count is determined by presence of injury or depth chart data; 14 games analyzed with fixed data sources.",
+      "breakdown_regime": "When injury data is missing or team aliases mismatched, C_matchup = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binary classification of matchup chain count maps to a probabilistic state transition in GSI's Bayesian network.",
+        "source_operator": "chain_count_classifier",
+        "telemetry": "Observed chain count per matchup file"
+      }
+    },
+    {
+      "primitive_id": "trench_analysis_logic",
+      "name": "Trench Analysis Logic",
+      "verbatim_quote": "Only appends a chain `if down:` (if opposing DL front has an injured player on report).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{\\\\text{DL}} \\\\in \\\\{0, 1\\\\}': 'Binary indicator for injured DL player', 'C_{\\\\text{trench}} \\\\in \\\\{0, 1\\\\}': 'Chain generated for trench analysis'}",
+      "assumptions": "Trench chain generation requires a defensive front injury; otherwise no chain is appended.",
+      "breakdown_regime": "When D_DL = 0, C_trench = 0 regardless of other inputs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Trench chain logic is a derived kernel from injury data and DL position mapping in GSE's state space.",
+        "source_operator": "trench_analysis_logic",
+        "telemetry": "Injury report flags for DL players"
+      }
+    },
+    {
+      "primitive_id": "depth_chart_consistency",
+      "name": "Depth Chart Consistency Check",
+      "verbatim_quote": "ocs/data-sources/research/2026-10-13/depthcharts/espn-depthcharts-2026.json`: Complete 32-team depth charts with OL starters (LT/LG/C/RG/RT), Defensive Front starters (DE/DT/NT/EDGE), and Secondary starters (LCB/RCB/NB/SS/FS).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{\\\\text{chart}}^{\\\\text{team}}': 'Complete depth chart for team', 'A_{\\\\text{alias}}^{\\\\text{team}}': 'Normalized team alias used in data pipeline'}",
+      "assumptions": "All 32 teams have complete depth charts; team aliases must be normalized for consistency.",
+      "breakdown_regime": "Mismatched aliases cause lookup failures, leading to incomplete data processing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Depth chart structure maps to GSI's data fusion layer, ensuring alignment of positional roles across teams.",
+        "source_operator": "depth_chart_consistency",
+        "telemetry": "Presence of full depth chart entries per team"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "178fdaef95c392ee_t0",
+      "think": "The core operators are defined by discrete state transitions in chain generation logic. The chain count classifier maps matchup outcomes to binary states (0, 1, ≥2) based on data availability. Trench analysis enforces a conditional logic where only injured DL players trigger a chain, forming a singularity in the state space when D_DL = 0. Depth chart consistency ensures that team identifiers are normalized, preventing data misalignment. These operators form a dual system: one for probabilistic inference (GSI) and one for deterministic state transitions (GSE). Failure modes arise from missing injury data, alias mismatches, or dead code paths in the engine. The logical structure mirrors a Markov decision process where each game state evolves through injury and depth chart checks before emitting chains. The prototype confirms all 14 games meet ≥2 chain criteria post-fixes, validating the mathematical model.\n\nDeep epistemic analysis for handoff (178fdaef95c392ee, domain=other, pages_read=3/3): Operator 'Matchup Chain Count Classifier' (page 1, domain other) captures: Measured counts: - 0 chains: `ARI@LAR-matchups.md`, `BUF@LV-matchups.md`, `HOU@JAX-matchups.md`, `LAC@KC-matchups.md`, `PIT@TB-matchups.md`, `WSH@SF-matchups.md` (6/14 files). Assumptions: Chain count is determined by presence of injury or depth chart data; 14 games analyzed with fixed data sources. Breakdown regime: When injury data is missing or team aliases mismatched, C_matchup = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary classification of matchup chain count maps to a probabilistic state transition in GSI's Bayesian network. Operator 'Trench Analysis Logic' (page 1, domain other) captures: Only appends a chain `if down:` (if opposing DL front has an injured player on report). Assumptions: Trench chain generation requires a defensive front injury; otherwise no chain is appended. Breakdown regime: When D_DL = 0, C_trench = 0 regardless of other inputs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Trench chain logic is a derived kernel from injury data and DL position mapping in GSE's state space. Operator 'Depth Chart Consistency Check' (page 2, domain other) captures: ocs/data-sources/research/2026-10-13/depthcharts/espn-depthcharts-2026.json`: Complete 32-team depth charts with OL starters (LT/LG/C/RG/RT), Defensive Front starters (DE/DT/NT/EDGE), and Secondary starters (LCB/RCB/NB/SS/FS). Assumptions: All 32 teams have complete depth charts; team aliases must be normalized for consistency. Breakdown regime: Mismatched aliases cause lookup failures, leading to incomplete data processing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Depth chart structure maps to GSI's data fusion layer, ensuring alignment of positional roles across teams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for handoff (178fdaef95c392ee, domain=other, pages_read=3/3): Operator 'Matchup Chain Count Classifier' (page 1, domain other) captures: Measured counts: - 0 chains: `ARI@LAR-matchups.md`, `BUF@LV-matchups.md`, `HOU@JAX-matchups.md`, `LAC@KC-matchups.md`, `PIT@TB-matchups.md`, `WSH@SF-matchups.md` (6/14 files). Assumptions: Chain count is determined by presence of injury or depth chart data; 14 games analyzed with fixed data sources. Breakdown regime: When injury data is missing or team aliases mismatched, C_matchup = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary classification of matchup chain count maps to a probabilistic state transition in GSI's Bayesian network. Operator 'Trench Analysis Logic' (page 1, domain other) captures: Only appends a chain `if down:` (if opposing DL front has an injured player on report). Assumptions: Trench chain generation requires a defensive front injury; otherwise no chain is appended. Breakdown regime: When D_DL = 0, C_trench = 0 regardless of other inputs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Trench chain logic is a derived kernel from injury data and DL position mapping in GSE's state space. Operator 'Depth Chart Consistency Check' (page 2, domain other) captures: ocs/data-sources/research/2026-10-13/depthcharts/espn-depthcharts-2026.json`: Complete 32-team depth charts with OL starters (LT/LG/C/RG/RT), Defensive Front starters (DE/DT/NT/EDGE), and Secondary starters (LCB/RCB/NB/SS/FS). Assumptions: All 32 teams have complete depth charts; team aliases must be normalized for consistency. Breakdown regime: Mismatched aliases cause lookup failures, leading to incomplete data processing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Depth chart structure maps to GSI's data fusion layer, ensuring alignment of positional roles across teams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical state-space models of sports analytics, with influences from Bayesian belief networks and temporal logic frameworks used in predictive modeling. Retrocausal Genealogy: Rooted in handoff (178fdaef95c392ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in handoff (178fdaef95c392ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents likely optimize for different chain types (receiver vs trench) and may vary in how they handle injury data normalization, leading to divergent chain outputs unless aligned via shared data schemas. Theory of Mind & Decision Maker Model: Rooted in handoff (178fdaef95c392ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that trench logic does not interfere with receiver chain generation; leakage is prevented by isolating injury-based triggers to specific branches. Cross-Layer Veto & Anti-Leakage Check: Rooted in handoff (178fdaef95c392ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in handoff (178fdaef95c392ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

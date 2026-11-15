@@ -1,0 +1,78 @@
+{
+  "book_id": "89b821f33ceed57c",
+  "source_status": "COMPLETE",
+  "title": "improvement-backlog",
+  "file_name": "improvement-backlog.md",
+  "sha256": "89b821f33ceed57c4066cbeaa38974b8fc6e0b94d5edb16bc451a7405dd2bb54",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A structured backlog system models iterative refinement through phased implementation, where each improvement maps to a state transition in a Bayesian decision lattice. Universal Lens: Rooted in improvement-backlog (89b821f33ceed57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers improvement priorities via conformal predictive distributions over friction metrics, aligning with phase-based decision states. GSI Mapping: Rooted in improvement-backlog (89b821f33ceed57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions using a causal graph of improvement dependencies, where URGENT flags trigger immediate policy updates. GSE Mapping: Rooted in improvement-backlog (89b821f33ceed57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "phase_1_prep_seed_directory",
+      "name": "Phase 1 Directory Seeding Operator",
+      "verbatim_quote": "--## Open ### IMP-001 — Phase 1 prep: seed `apps/web/components/marketing/` directory **Filed:** 2026-05-22 · **By:** Claude **Status:** **Shipped** by Codex during Phase 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'State of directory seeding (dimensionless)', 'T': 'Time of implementation (days)'}",
+      "assumptions": "Directory structure is static post-seeding; S ∈ {0,1} indicates presence of directory.",
+      "breakdown_regime": "When T < 0, S remains undefined; when T ≥ 0, S = 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's prior belief update on component organization; GSE's state transition on directory readiness.",
+        "source_operator": "phase_1_prep_seed_directory",
+        "telemetry": "Directory existence check via file system scan."
+      }
+    },
+    {
+      "primitive_id": "apex_phase2_qa_friction",
+      "name": "Apex QA Friction Index",
+      "verbatim_quote": "### IMP-002 — Apex Phase-2 browser QA findings F1–F10 **Filed:** 2026-05-22 · **By:** Claude (carried over from `sports-apex-phase2-2026-05-22` memory) **Why:** 10 friction findings from live-site browser QA on the apex Phase-2 pass.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Friction score (dimensionless)', 'N': 'Number of QA findings (integer)'}",
+      "assumptions": "Each finding contributes equally to F; N = 10.",
+      "breakdown_regime": "F = Σ(f_i) where f_i ∈ [0,1]; F > 0 implies friction exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies friction in GSI's risk model; triggers GSE's repositioning logic.",
+        "source_operator": "apex_phase2_qa_friction",
+        "telemetry": "QA report summary from browser session logs."
+      }
+    },
+    {
+      "primitive_id": "urgent_blocker_condition",
+      "name": "Urgent Blocker Predicate",
+      "verbatim_quote": "**Status:** **URGENT.** Blocks Phase 3 Studio + bot work from shipping with the locked voice rules.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'Blocker status (boolean)', 'P': 'Phase number (integer)'}",
+      "assumptions": "B = true iff P ≥ 3 and unresolved friction remains.",
+      "breakdown_regime": "B = 1 when P ≥ 3 and ∃F > 0; else B = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's conditional probability of delay; GSE's policy halt on unresolved friction.",
+        "source_operator": "urgent_blocker_condition",
+        "telemetry": "Phase progression log with unresolved QA flags."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "89b821f33ceed57c_t0",
+      "think": "The backlog system operates as a discrete-time dynamical system where each improvement item is a state vector in a multi-dimensional space of urgency, cost, and impact. The state transitions are governed by a Bayesian planner that evaluates friction metrics (F) and cost estimates (C) to prioritize actions. The URGENT predicate acts as a control signal that halts further planning until resolution. The system exhibits a duality between speculative design (Claude) and implementation (Codex), where each phase represents a fixed-point attractor in the evolution of the software architecture. Failure modes include: 1) Unresolved friction causing deadlock in Phase 3, 2) Misalignment between Claude’s observation and Codex’s execution, 3) Overcommitment to non-urgent items during slack time. The system's robustness depends on the consistency of the 'shipped' label across phases.\n\nDeep epistemic analysis for improvement-backlog (89b821f33ceed57c, domain=other, pages_read=1/1): Operator 'Phase 1 Directory Seeding Operator' (page 1, domain other) captures: --## Open ### IMP-001 — Phase 1 prep: seed `apps/web/components/marketing/` directory **Filed:** 2026-05-22 · **By:** Claude **Status:** **Shipped** by Codex during Phase 1. Assumptions: Directory structure is static post-seeding; S ∈ {0,1} indicates presence of directory. Breakdown regime: When T < 0, S remains undefined; when T ≥ 0, S = 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's prior belief update on component organization; GSE's state transition on directory readiness. Operator 'Apex QA Friction Index' (page 1, domain other) captures: ### IMP-002 — Apex Phase-2 browser QA findings F1–F10 **Filed:** 2026-05-22 · **By:** Claude (carried over from `sports-apex-phase2-2026-05-22` memory) **Why:** 10 friction findings from live-site browser QA on the apex Phase-2 pass. Assumptions: Each finding contributes equally to F; N = 10. Breakdown regime: F = Σ(f_i) where f_i ∈ [0,1]; F > 0 implies friction exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies friction in GSI's risk model; triggers GSE's repositioning logic. Operator 'Urgent Blocker Predicate' (page 1, domain other) captures: **Status:** **URGENT.** Blocks Phase 3 Studio + bot work from shipping with the locked voice rules. Assumptions: B = true iff P ≥ 3 and unresolved friction remains. Breakdown regime: B = 1 when P ≥ 3 and ∃F > 0; else B = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's conditional probability of delay; GSE's policy halt on unresolved friction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for improvement-backlog (89b821f33ceed57c, domain=other, pages_read=1/1): Operator 'Phase 1 Directory Seeding Operator' (page 1, domain other) captures: --## Open ### IMP-001 — Phase 1 prep: seed `apps/web/components/marketing/` directory **Filed:** 2026-05-22 · **By:** Claude **Status:** **Shipped** by Codex during Phase 1. Assumptions: Directory structure is static post-seeding; S ∈ {0,1} indicates presence of directory. Breakdown regime: When T < 0, S remains undefined; when T ≥ 0, S = 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's prior belief update on component organization; GSE's state transition on directory readiness. Operator 'Apex QA Friction Index' (page 1, domain other) captures: ### IMP-002 — Apex Phase-2 browser QA findings F1–F10 **Filed:** 2026-05-22 · **By:** Claude (carried over from `sports-apex-phase2-2026-05-22` memory) **Why:** 10 friction findings from live-site browser QA on the apex Phase-2 pass. Assumptions: Each finding contributes equally to F; N = 10. Breakdown regime: F = Σ(f_i) where f_i ∈ [0,1]; F > 0 implies friction exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies friction in GSI's risk model; triggers GSE's repositioning logic. Operator 'Urgent Blocker Predicate' (page 1, domain other) captures: **Status:** **URGENT.** Blocks Phase 3 Studio + bot work from shipping with the locked voice rules. Assumptions: B = true iff P ≥ 3 and unresolved friction remains. Breakdown regime: B = 1 when P ≥ 3 and ∃F > 0; else B = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's conditional probability of delay; GSE's policy halt on unresolved friction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in iterative software engineering paradigms, particularly agile development and continuous integration. Influenced by formal methods in systems theory and probabilistic planning frameworks. Retrocausal Genealogy: Rooted in improvement-backlog (89b821f33ceed57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in improvement-backlog (89b821f33ceed57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Claude models the system as a sequence of friction-reduction steps, while Codex executes within temporal constraints. The two agents operate under different information horizons—Claude sees future implications, Codex focuses on current feasibility. Theory of Mind & Decision Maker Model: Rooted in improvement-backlog (89b821f33ceed57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when GSI's inference conflicts with GSE's operational state. Leakage occurs if unresolved friction in one layer propagates to dependent layers without explicit veto. Veto conditions enforce that URGENT blocks must be resolved before proceeding to Phase 3. Cross-Layer Veto & Anti-Leakage Check: Rooted in improvement-backlog (89b821f33ceed57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

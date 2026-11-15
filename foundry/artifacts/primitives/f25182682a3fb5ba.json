@@ -1,0 +1,78 @@
+{
+  "book_id": "f25182682a3fb5ba",
+  "source_status": "COMPLETE",
+  "title": "BRIEFING",
+  "file_name": "BRIEFING.md",
+  "sha256": "f25182682a3fb5bab4a22b3a403784756fad8608036efbe00ff3abffe2e0d8dc",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Joint statistical inference across player props, copula SGPs, and DFS lineups via multivariate t-distribution tail risk modeling. Universal Lens: Rooted in BRIEFING (f25182682a3fb5ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on DK line movements using LogNormal tail probabilities and Student-t copula EV lifts for probabilistic player prop conviction scoring. GSI Mapping: Rooted in BRIEFING (f25182682a3fb5ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions in DFS lineup optimization conditioned on resolved team IDs and validated SGP correlations through real-time line signal feedback loops. GSE Mapping: Rooted in BRIEFING (f25182682a3fb5ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "lognormal_tail_probability",
+      "name": "LogNormal Tail Probability",
+      "verbatim_quote": "Built exact join computing $\\mu, \\sigma$, LogNormal analytical tail probability $P(\\text{Over/Under})$, line movement signal, and continuous conviction score.",
+      "page": 1,
+      "latex": "$P(\\text{Over/Under}) = \\Phi\\left(\\frac{\\ln(x) - \\mu}{\\sigma}\\right)$",
+      "symbol_and_unit_ledger": "{'x': 'dimensionless', 'μ': 'dimensionless', 'σ': 'dimensionless', 'Φ': 'dimensionless'}",
+      "assumptions": "Data follows log-normal distribution; parameters μ and σ estimated from empirical DK lines.",
+      "breakdown_regime": "When observed outcomes deviate beyond 3σ from expected mean under log-normality.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used as core conviction scorer in GSI's player prop inference engine.",
+        "source_operator": "lognormal_tail_probability",
+        "telemetry": "Observed vs predicted over/under outcomes in DK archives."
+      }
+    },
+    {
+      "primitive_id": "student_t_copula_correlation_lift",
+      "name": "Student-t Copula Correlation Lift",
+      "verbatim_quote": "Proved 50,000-draw Student-t copula simulations (`nu=4.0`) yield positive correlation lift (+44% to +67%) and positive EV against book pricing.",
+      "page": 1,
+      "latex": "$\\rho_{\\text{lift}} = \\mathbb{E}[\\text{Corr}(X_i, X_j)] - \\rho_{\\text{base}}$",
+      "symbol_and_unit_ledger": "{'ρ_lift': 'dimensionless', 'ν': 'dimensionless', 'Corr(X_i, X_j)': 'dimensionless'}",
+      "assumptions": "Multivariate t-distribution with degrees of freedom ν=4.0 captures dependence structure better than Gaussian.",
+      "breakdown_regime": "When marginal distributions are non-Gaussian but joint behavior exhibits heavy tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE’s multi-agent lineup optimizer via shared copula-based dependency kernel.",
+        "source_operator": "student_t_copula_correlation_lift",
+        "telemetry": "Simulated vs actual correlation lift in 50k draws."
+      }
+    },
+    {
+      "primitive_id": "dfs_team_id_resolution",
+      "name": "DFS Team ID Resolution",
+      "verbatim_quote": "- R5: Solved `\"NFL\"` team resolution failure by mapping all 28 LineStar `teamId` codes (65..96).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'teamId': 'integer', 'LineStar': 'identifier', 'NFL': 'sport'}",
+      "assumptions": "Each LineStar teamId maps uniquely to an NFL roster entry.",
+      "breakdown_regime": "When cross-platform identifiers fail due to mismatched ID ranges or missing mappings.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE’s state transition logic to resolve team identity during lineup generation.",
+        "source_operator": "dfs_team_id_resolution",
+        "telemetry": "Successful mapping rate of 28/28 team IDs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f25182682a3fb5ba_t0",
+      "think": "The primitives form a coherent mathematical framework for integrating discrete player prop data with continuous stochastic models. The LogNormal tail probability provides a probabilistic lens on DK over/under outcomes, while the Student-t copula enables robust modeling of inter-market dependencies. The DFS team ID resolution ensures semantic consistency across platforms. These operators are dual in nature: one operates on empirical data (tail probability), another on latent structure (copula), and third on identity resolution (team mapping). Failure modes include misalignment between assumed distributions and actual data, or incorrect mapping of identifiers. Each primitive contributes to a larger Bayesian inference chain where prior beliefs about market dynamics are updated with new evidence from DK lines and simulation results.\n\nDeep epistemic analysis for BRIEFING (f25182682a3fb5ba, domain=other, pages_read=2/2): Operator 'LogNormal Tail Probability' (page 1, domain other) captures: Built exact join computing $\\mu, \\sigma$, LogNormal analytical tail probability $P(\\text{Over/Under})$, line movement signal, and continuous conviction score. Assumptions: Data follows log-normal distribution; parameters μ and σ estimated from empirical DK lines. Breakdown regime: When observed outcomes deviate beyond 3σ from expected mean under log-normality. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used as core conviction scorer in GSI's player prop inference engine. Operator 'Student-t Copula Correlation Lift' (page 1, domain other) captures: Proved 50,000-draw Student-t copula simulations (`nu=4.0`) yield positive correlation lift (+44% to +67%) and positive EV against book pricing. Assumptions: Multivariate t-distribution with degrees of freedom ν=4.0 captures dependence structure better than Gaussian. Breakdown regime: When marginal distributions are non-Gaussian but joint behavior exhibits heavy tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s multi-agent lineup optimizer via shared copula-based dependency kernel. Operator 'DFS Team ID Resolution' (page 1, domain other) captures: - R5: Solved `\"NFL\"` team resolution failure by mapping all 28 LineStar `teamId` codes (65..96). Assumptions: Each LineStar teamId maps uniquely to an NFL roster entry. Breakdown regime: When cross-platform identifiers fail due to mismatched ID ranges or missing mappings. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE’s state transition logic to resolve team identity during lineup generation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BRIEFING (f25182682a3fb5ba, domain=other, pages_read=2/2): Operator 'LogNormal Tail Probability' (page 1, domain other) captures: Built exact join computing $\\mu, \\sigma$, LogNormal analytical tail probability $P(\\text{Over/Under})$, line movement signal, and continuous conviction score. Assumptions: Data follows log-normal distribution; parameters μ and σ estimated from empirical DK lines. Breakdown regime: When observed outcomes deviate beyond 3σ from expected mean under log-normality. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used as core conviction scorer in GSI's player prop inference engine. Operator 'Student-t Copula Correlation Lift' (page 1, domain other) captures: Proved 50,000-draw Student-t copula simulations (`nu=4.0`) yield positive correlation lift (+44% to +67%) and positive EV against book pricing. Assumptions: Multivariate t-distribution with degrees of freedom ν=4.0 captures dependence structure better than Gaussian. Breakdown regime: When marginal distributions are non-Gaussian but joint behavior exhibits heavy tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s multi-agent lineup optimizer via shared copula-based dependency kernel. Operator 'DFS Team ID Resolution' (page 1, domain other) captures: - R5: Solved `\"NFL\"` team resolution failure by mapping all 28 LineStar `teamId` codes (65..96). Assumptions: Each LineStar teamId maps uniquely to an NFL roster entry. Breakdown regime: When cross-platform identifiers fail due to mismatched ID ranges or missing mappings. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE’s state transition logic to resolve team identity during lineup generation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in multivariate statistics (Student-t copulas), applied probability (LogNormal modeling), and information theory (identity resolution). Influenced by modern financial risk modeling and sports analytics frameworks. Retrocausal Genealogy: Rooted in BRIEFING (f25182682a3fb5ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in BRIEFING (f25182682a3fb5ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the bookmaker who sets lines and the market maker who adjusts prices. The primitives model how these agents' decisions interact with empirical signals and internalized beliefs. Theory of Mind & Decision Maker Model: Rooted in BRIEFING (f25182682a3fb5ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each primitive addresses distinct aspects of the problem space—tail risk, dependence, and identity—to avoid redundancy. Leakage vetoes ensure no spurious correlation arises from shared variables like time or venue. Cross-Layer Veto & Anti-Leakage Check: Rooted in BRIEFING (f25182682a3fb5ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

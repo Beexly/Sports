@@ -1,78 +1,16 @@
 {
   "book_id": "098e32f37022a68d",
-  "source_status": "COMPLETE",
-  "title": "ada_letter-gb (1)",
-  "file_name": "ada_letter-gb (1).pdf",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_098e32f37022a68d",
+  "file_name": "098e32f37022a68d.quarantined",
   "sha256": "098e32f37022a68d92b6f88a9dd7253e5e82b21ee1b3c6e95267675d98d2ad52",
   "primary_domain": "other",
-  "pages_total": 2,
-  "pages_read": 2,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Health data confidentiality and workplace accommodation policies form a dual-space regulatory and operational manifold. Universal Lens: Rooted in ada_letter-gb (1) (098e32f37022a68d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian risk assessment models for PHI exposure and ergonomic compliance using conformal predictive intervals. GSI Mapping: Rooted in ada_letter-gb (1) (098e32f37022a68d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situationally adaptive state transitions from office to remote work based on symptom severity thresholds and temporal duration kernels. GSE Mapping: Rooted in ada_letter-gb (1) (098e32f37022a68d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "confidentiality_boundary",
-      "name": "Data Access Control Barrier",
-      "verbatim_quote": "VYTALUS MEDICAL GROUP PLLC • 23330 HIGHWAY 59 N STE 300, KINGWOOD TX 77339-4471 BAXLEY, Garrett R (id #51612, dob: 01/13/1994) This fax may contain sensitive and confidential personal health information that is being sent for the sole use of the intended recipient.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'C': 'Confidentiality level (dimensionless)', 'R': 'Recipient identity (binary)', 'T': 'Transmission time (seconds)'}",
-      "assumptions": "Information is transmitted via fax with inherent non-repudiation constraints.",
-      "breakdown_regime": "Unauthorized access occurs when R=0 or T>threshold.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "The boundary function maps to GSI's access control kernel with conditional entropy H(C|R).",
-        "source_operator": "confidentiality_boundary",
-        "telemetry": "Access logs and audit trail verification"
-      }
-    },
-    {
-      "primitive_id": "symptom_severity_kernel",
-      "name": "Mental Health Symptom Duration Kernel",
-      "verbatim_quote": "Based on my years of evaluation, these symptoms are particularly severe for a few hours up to 2 days.",
-      "page": 2,
-      "latex": "\\tau_{\\text{severe}} \\in [3 \\text{h}, 2 \\text{days}]",
-      "symbol_and_unit_ledger": "{'\\\\tau_{\\\\text{severe}}': 'Severity duration (seconds)'}",
-      "assumptions": "Symptom intensity follows a stochastic process over time with periodic peaks.",
-      "breakdown_regime": "Kernel becomes invalid when \\tau_{\\text{severe}} < 3h or \\tau_{\\text{severe}} > 2\\text{days}.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Maps to GSE's dynamic adjustment module where work-from-home allowance is triggered.",
-        "source_operator": "symptom_severity_kernel",
-        "telemetry": "Daily symptom log and productivity metrics"
-      }
-    },
-    {
-      "primitive_id": "remote_work_adaptation",
-      "name": "Workplace Adaptation Function",
-      "verbatim_quote": "To manage these episodes and maintain his work performance, I recommend that Garrett be allowed to work from home during these periods.",
-      "page": 2,
-      "latex": "W_{\\text{home}}(t) = \\begin{cases} 1 & \\text{if } t \\in [\\tau_{\\text{severe}}, \\tau_{\\text{recovery}}] \\\\ 0 & \\text{otherwise} \\end{cases}",
-      "symbol_and_unit_ledger": "{'W_{\\\\text{home}}(t)': 'Remote work activation (binary)', 't': 'Time (seconds)', '\\\\tau_{\\\\text{severe}}': 'Start of episode (seconds)', '\\\\tau_{\\\\text{recovery}}': 'End of episode (seconds)'}",
-      "assumptions": "Remote work reduces environmental stressors and increases cognitive stability.",
-      "breakdown_regime": "Function fails if W_{\\text{home}}(t) is not properly synchronized with \\tau_{\\text{severe}}.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps to GSE's adaptive scheduling engine with temporal state transitions.",
-        "source_operator": "remote_work_adaptation",
-        "telemetry": "Work location tracking and task completion rate"
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "098e32f37022a68d_t0",
-      "think": "The document presents a dual structure: one layer enforcing data confidentiality through legal and technical barriers (confidentiality_boundary), and another layer defining clinical symptomatology and its impact on work capacity (symptom_severity_kernel). These layers interact via a third primitive (remote_work_adaptation) that enables policy-based adaptation. The mathematical framework treats confidentiality as a binary constraint C(t) ∈ {0,1}, where C=1 indicates secure transmission. Symptom severity is modeled as a bounded temporal kernel τ_severe ∈ [3h, 2days], which triggers a state transition in the GSE system. The adaptation function W_home(t) is a step function that activates remote work during symptom episodes. Failure modes include unauthorized disclosure due to weak access controls or misalignment between symptom duration and work policy.\n\nDeep epistemic analysis for ada_letter-gb (1) (098e32f37022a68d, domain=other, pages_read=2/2): Operator 'Data Access Control Barrier' (page 1, domain other) captures: VYTALUS MEDICAL GROUP PLLC • 23330 HIGHWAY 59 N STE 300, KINGWOOD TX 77339-4471 BAXLEY, Garrett R (id #51612, dob: 01/13/1994) This fax may contain sensitive and confidential personal health information that is being sent for the sole use of the intended recipient. Assumptions: Information is transmitted via fax with inherent non-repudiation constraints. Breakdown regime: Unauthorized access occurs when R=0 or T>threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The boundary function maps to GSI's access control kernel with conditional entropy H(C|R). Operator 'Mental Health Symptom Duration Kernel' (page 2, domain other) captures: Based on my years of evaluation, these symptoms are particularly severe for a few hours up to 2 days. Assumptions: Symptom intensity follows a stochastic process over time with periodic peaks. Breakdown regime: Kernel becomes invalid when \\tau_{\\text{severe}} < 3h or \\tau_{\\text{severe}} > 2\\text{days}. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's dynamic adjustment module where work-from-home allowance is triggered. Operator 'Workplace Adaptation Function' (page 2, domain other) captures: To manage these episodes and maintain his work performance, I recommend that Garrett be allowed to work from home during these periods. Assumptions: Remote work reduces environmental stressors and increases cognitive stability. Breakdown regime: Function fails if W_{\\text{home}}(t) is not properly synchronized with \\tau_{\\text{severe}}. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's adaptive scheduling engine with temporal state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ada_letter-gb (1) (098e32f37022a68d, domain=other, pages_read=2/2): Operator 'Data Access Control Barrier' (page 1, domain other) captures: VYTALUS MEDICAL GROUP PLLC • 23330 HIGHWAY 59 N STE 300, KINGWOOD TX 77339-4471 BAXLEY, Garrett R (id #51612, dob: 01/13/1994) This fax may contain sensitive and confidential personal health information that is being sent for the sole use of the intended recipient. Assumptions: Information is transmitted via fax with inherent non-repudiation constraints. Breakdown regime: Unauthorized access occurs when R=0 or T>threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The boundary function maps to GSI's access control kernel with conditional entropy H(C|R). Operator 'Mental Health Symptom Duration Kernel' (page 2, domain other) captures: Based on my years of evaluation, these symptoms are particularly severe for a few hours up to 2 days. Assumptions: Symptom intensity follows a stochastic process over time with periodic peaks. Breakdown regime: Kernel becomes invalid when \\tau_{\\text{severe}} < 3h or \\tau_{\\text{severe}} > 2\\text{days}. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's dynamic adjustment module where work-from-home allowance is triggered. Operator 'Workplace Adaptation Function' (page 2, domain other) captures: To manage these episodes and maintain his work performance, I recommend that Garrett be allowed to work from home during these periods. Assumptions: Remote work reduces environmental stressors and increases cognitive stability. Breakdown regime: Function fails if W_{\\text{home}}(t) is not properly synchronized with \\tau_{\\text{severe}}. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's adaptive scheduling engine with temporal state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in HIPAA regulations and occupational health frameworks, extending into modern digital privacy models and adaptive workforce management systems. Retrocausal Genealogy: Rooted in ada_letter-gb (1) (098e32f37022a68d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ada_letter-gb (1) (098e32f37022a68d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "The physician acts as an informed agent with probabilistic knowledge of symptom patterns; the employer must balance compliance with employee needs, modeling a dual-agent decision space. Theory of Mind & Decision Maker Model: Rooted in ada_letter-gb (1) (098e32f37022a68d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity exists between confidentiality and accessibility; leakage occurs if C=0 while W_home(t)=1. Veto conditions require strict adherence to both data integrity and symptom-driven policy alignment. Cross-Layer Veto & Anti-Leakage Check: Rooted in ada_letter-gb (1) (098e32f37022a68d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in ada_letter-gb (1) (098e32f37022a68d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

@@ -118,3 +118,131 @@ def test_corpus_wired_calibration_fails_closed_when_db_or_prims_missing(tmp_path
     assert res["all_invariants_satisfied"] is False
     assert res["pendingTierACount"] == -1
     assert res["pendingAllTiersCount"] == -1
+
+
+def test_corpus_wired_calibration_handles_page_extracts_and_disk_completion(tmp_path: Path) -> None:
+    import json
+    import sqlite3
+    from intelligence.foundry_bridge.corpus_wired_calibration_and_ablation import (
+        run_calibration_and_hold_gate,
+    )
+
+    prim_dir = tmp_path / "wt_prims"
+    shared_dir = tmp_path / "shared_prims"
+    prim_dir.mkdir()
+    shared_dir.mkdir()
+    for i in range(21):
+        (prim_dir / f"book_{i:02d}.json").write_text(
+            json.dumps({"book_id": f"book_{i:02d}", "primitives": [{"id": f"p{i}"}]}),
+            encoding="utf-8",
+        )
+
+    db_path = tmp_path / "foundry.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.execute(
+        """
+        CREATE TABLE corpus_queue (
+            book_id TEXT PRIMARY KEY,
+            sha256 TEXT,
+            file_name TEXT,
+            file_path TEXT,
+            tier TEXT,
+            status TEXT
+        )
+        """
+    )
+    conn.executemany(
+        "INSERT INTO corpus_queue VALUES (?,?,?,?,?,?)",
+        [
+            ("pend_settled", "1" * 64, "pend_settled.pdf", "/tmp/pend_settled.pdf", "A", "PENDING"),
+            ("deleg_matched", "8" * 64, "matched_book.md", "/tmp/matched_book.md", "B", "DELEGATED_GCP"),
+            ("deleg_unmatched", "9" * 64, "missing_book.tex", "/tmp/missing_book.tex", "A", "DELEGATED_GCP"),
+        ],
+    )
+    conn.commit()
+    conn.close()
+
+    (shared_dir / "pend_settled.json").write_text(
+        json.dumps({"book_id": "pend_settled", "sha256": "1" * 64}),
+        encoding="utf-8",
+    )
+
+    # Shard-B catalog total_markdown_files=500 is inflated by per-page extracts (p0001.txt),
+    # while entries only matches deleg_matched -> deleg_unmatched MUST remain pending (=1).
+    sb_path = tmp_path / "shard_b.json"
+    entries = [{"doc_hash": f"page_{i}", "source": f"p{i:04d}.txt"} for i in range(499)]
+    entries.append({"doc_hash": "match_1", "source": "matched_book.md"})
+    sb_path.write_text(
+        json.dumps(
+            {
+                "total_markdown_files": 500,
+                "files_with_xml_sections": 500,
+                "total_extracted_equations": 1000,
+                "family_counts": {"pressure": 50},
+                "entries": entries,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(json.dumps({"six_situational_families": {}}), encoding="utf-8")
+    drive_path = tmp_path / "drive.json"
+    drive_path.write_text(json.dumps({"equations_family_counts": {}, "situational_family_counts": {}}), encoding="utf-8")
+    oof_path = tmp_path / "oof.json"
+    oof_path.write_text(json.dumps({"acceptance": {"hard_pass": False}}), encoding="utf-8")
+    out_path = tmp_path / "receipt.json"
+
+    res1 = run_calibration_and_hold_gate(
+        db_path=db_path,
+        worktree_primitives_dir=prim_dir,
+        shared_primitives_dir=shared_dir,
+        wiring_manifest_path=manifest_path,
+        shard_b_catalog_path=sb_path,
+        drive_index_path=drive_path,
+        oof_cal_path=oof_path,
+        out_path=out_path,
+    )
+    assert res1["rawPendingAllTiersCount"] == 1
+    assert res1["effectivePendingAllTiersCount"] == 0
+    assert res1["effectiveDelegatedGcpUnmatchedCount"] == 1
+    assert res1["pendingTierACount"] == 1
+    assert res1["pendingAllTiersCount"] == 1
+    assert res1["shardBAccountingMode"] == "entries_source_match"
+    assert res1["slate_hold_status"] == "WEEK10_HELD_FOR_CORPUS_COMPLETION"
+    for gate_key in (
+        "LIVE_BOARD",
+        "PUBLISH_LEDGER",
+        "PUBLIC_PICKS",
+        "PERFORMANCE_STATS",
+        "CALIBRATION_ADJUSTMENTS_ENABLED",
+    ):
+        assert res1["public_gates"][gate_key] == "FAIL_CLOSED_UNCHANGED"
+    assert res1["public_gates"]["signal_path_generate_signal_slate_ts"] == "UNTOUCHED_PER_DOCTRINE"
+
+    # Settle the last unmatched item on disk -> gate transitions to READY while public_gates stay fail-closed.
+    (shared_dir / "deleg_unmatched.json").write_text(
+        json.dumps({"book_id": "deleg_unmatched", "sha256": "9" * 64}),
+        encoding="utf-8",
+    )
+    res2 = run_calibration_and_hold_gate(
+        db_path=db_path,
+        worktree_primitives_dir=prim_dir,
+        shared_primitives_dir=shared_dir,
+        wiring_manifest_path=manifest_path,
+        shard_b_catalog_path=sb_path,
+        drive_index_path=drive_path,
+        oof_cal_path=oof_path,
+        out_path=out_path,
+    )
+    assert res2["pendingTierACount"] == 0
+    assert res2["pendingAllTiersCount"] == 0
+    assert res2["slate_hold_status"] == "CORPUS_DRAIN_COMPLETE_READY_FOR_GATE"
+    for gate_key in (
+        "LIVE_BOARD",
+        "PUBLISH_LEDGER",
+        "PUBLIC_PICKS",
+        "PERFORMANCE_STATS",
+        "CALIBRATION_ADJUSTMENTS_ENABLED",
+    ):
+        assert res2["public_gates"][gate_key] == "FAIL_CLOSED_UNCHANGED"

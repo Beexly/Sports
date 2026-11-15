@@ -1,0 +1,78 @@
+{
+  "book_id": "09659b01500bbc14",
+  "source_status": "COMPLETE",
+  "title": "1083-scoring-rules-rps-vs-ignorance",
+  "file_name": "1083-scoring-rules-rps-vs-ignorance.md",
+  "sha256": "09659b01500bbc147b8e642a3581d11784bb8617960a53bee4cf6779c35f06e1",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Ignorance score as a proper local scoring rule uniquely quantifies mean relative information gain, enabling robust system comparison via 2^Δ = mean multiplicative probability increase on outcomes. Universal Lens: Rooted in 1083-scoring-rules-rps-vs-ignorance (09659b01500bbc14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework where ignorance score maps to posterior entropy reduction; conforms to probabilistic consistency and calibration via log-probability divergence. GSI Mapping: Rooted in 1083-scoring-rules-rps-vs-ignorance (09659b01500bbc14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine selects forecasting variants based on mean ignorance reduction; transitions state through empirical validation using 95% confidence intervals for system discrimination. GSE Mapping: Rooted in 1083-scoring-rules-rps-vs-ignorance (09659b01500bbc14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "mean_relative_ignorance",
+      "name": "Mean Relative Ignorance",
+      "verbatim_quote": "The mean relative ignorance between two systems has a direct interpretation GSE can publish: 2^{Δ} = mean multiplicative increase in probability placed on the outcome.",
+      "page": 1,
+      "latex": "\\Delta = \\mathbb{E}[\\log \\frac{q(y)}{p(y)}]",
+      "symbol_and_unit_ledger": "{'Δ': 'bits, mean relative information gain', 'q(y)': 'forecasted probability density', 'p(y)': 'true outcome probability'}",
+      "assumptions": "Forecasting systems are probabilistic; outcomes follow known distribution p(y).",
+      "breakdown_regime": "When q(y) → 0 for any y such that p(y) > 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies average information gain from forecast update; enables system ranking via minimal expected divergence.",
+        "source_operator": "mean_relative_ignorance",
+        "telemetry": "2^Δ = mean probability-on-outcome multiplier"
+      }
+    },
+    {
+      "primitive_id": "proper_local_scoring_rule",
+      "name": "Proper Local Scoring Rule",
+      "verbatim_quote": "Recommendation: use the ignorance score — the only proper local score (Bernardo 1979; Bröcker & Smith 2007) — with its bits interpretation: mean relative ignorance Δ in bits ⟺ 2^Δ = mean increase in probability density placed on the outcome.",
+      "page": 2,
+      "latex": "S_{\\text{ign}}(p, y) = -\\log p(y)",
+      "symbol_and_unit_ledger": "{'S_{\\\\text{ign}}': 'score value, bits', 'p(y)': 'predicted probability of outcome y', 'y': 'outcome event'}",
+      "assumptions": "Forecasting system must be strictly proper and locally defined.",
+      "breakdown_regime": "Undefined when p(y) = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to negative log-likelihood; aligns with maximum likelihood estimation under correct model specification.",
+        "source_operator": "proper_local_scoring_rule",
+        "telemetry": "Bits of information gained per forecast"
+      }
+    },
+    {
+      "primitive_id": "system_discrimination_hierarchy",
+      "name": "System Discrimination Hierarchy",
+      "verbatim_quote": "Result: clear hierarchy ignorance > Brier > RPS at low imperfection (δ=0.01, 0.025; 95% resampling intervals exclude zero for large n); ignorance still significantly better at δ=0.05, 0.1.",
+      "page": 2,
+      "latex": "H_{\\text{ign}} < H_{\\text{Brier}} < H_{\\text{RPS}}",
+      "symbol_and_unit_ledger": "{'H_{\\\\text{ign}}': 'mean ignorance score', 'H_{\\\\text{Brier}}': 'mean Brier score', 'H_{\\\\text{RPS}}': 'mean Ranked Probability Score'}",
+      "assumptions": "Multiple forecasting systems evaluated over identical sequence of outcomes.",
+      "breakdown_regime": "At high δ, performance gap narrows due to increased noise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables statistical selection of best-performing forecasting engine via ordered score convergence.",
+        "source_operator": "system_discrimination_hierarchy",
+        "telemetry": "Statistical significance of score difference across n samples"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "09659b01500bbc14_t0",
+      "think": "The core insight is that traditional metrics like RPS reward proximity of predictions to actual outcomes rather than system-wide accuracy. In contrast, the ignorance score evaluates how much a forecast increases probability mass on the true outcome, making it a superior tool for identifying better forecasting systems. It is derived from information theory as the expectation of negative log-likelihood, ensuring it is both proper and local. The hierarchy emerges from simulation studies showing that even small deviations from perfect forecasts lead to faster identification of the superior system using ignorance over Brier or RPS. This supports adopting mean ignorance as the primary selection criterion in GSE, especially given its direct interpretation in terms of bits of information gained.\n\nDeep epistemic analysis for 1083-scoring-rules-rps-vs-ignorance (09659b01500bbc14, domain=other, pages_read=4/4): Operator 'Mean Relative Ignorance' (page 1, domain other) captures: The mean relative ignorance between two systems has a direct interpretation GSE can publish: 2^{Δ} = mean multiplicative increase in probability placed on the outcome. Assumptions: Forecasting systems are probabilistic; outcomes follow known distribution p(y). Breakdown regime: When q(y) → 0 for any y such that p(y) > 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies average information gain from forecast update; enables system ranking via minimal expected divergence. Operator 'Proper Local Scoring Rule' (page 2, domain other) captures: Recommendation: use the ignorance score — the only proper local score (Bernardo 1979; Bröcker & Smith 2007) — with its bits interpretation: mean relative ignorance Δ in bits ⟺ 2^Δ = mean increase in probability density placed on the outcome. Assumptions: Forecasting system must be strictly proper and locally defined. Breakdown regime: Undefined when p(y) = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to negative log-likelihood; aligns with maximum likelihood estimation under correct model specification. Operator 'System Discrimination Hierarchy' (page 2, domain other) captures: Result: clear hierarchy ignorance > Brier > RPS at low imperfection (δ=0.01, 0.025; 95% resampling intervals exclude zero for large n); ignorance still significantly better at δ=0.05, 0.1. Assumptions: Multiple forecasting systems evaluated over identical sequence of outcomes. Breakdown regime: At high δ, performance gap narrows due to increased noise. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables statistical selection of best-performing forecasting engine via ordered score convergence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1083-scoring-rules-rps-vs-ignorance (09659b01500bbc14, domain=other, pages_read=4/4): Operator 'Mean Relative Ignorance' (page 1, domain other) captures: The mean relative ignorance between two systems has a direct interpretation GSE can publish: 2^{Δ} = mean multiplicative increase in probability placed on the outcome. Assumptions: Forecasting systems are probabilistic; outcomes follow known distribution p(y). Breakdown regime: When q(y) → 0 for any y such that p(y) > 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies average information gain from forecast update; enables system ranking via minimal expected divergence. Operator 'Proper Local Scoring Rule' (page 2, domain other) captures: Recommendation: use the ignorance score — the only proper local score (Bernardo 1979; Bröcker & Smith 2007) — with its bits interpretation: mean relative ignorance Δ in bits ⟺ 2^Δ = mean increase in probability density placed on the outcome. Assumptions: Forecasting system must be strictly proper and locally defined. Breakdown regime: Undefined when p(y) = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to negative log-likelihood; aligns with maximum likelihood estimation under correct model specification. Operator 'System Discrimination Hierarchy' (page 2, domain other) captures: Result: clear hierarchy ignorance > Brier > RPS at low imperfection (δ=0.01, 0.025; 95% resampling intervals exclude zero for large n); ignorance still significantly better at δ=0.05, 0.1. Assumptions: Multiple forecasting systems evaluated over identical sequence of outcomes. Breakdown regime: At high δ, performance gap narrows due to increased noise. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables statistical selection of best-performing forecasting engine via ordered score convergence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Shannon entropy and Bayesian decision theory, with formalized by Bernardo (1979) and Bröcker & Smith (2007) as a proper scoring rule. Historically linked to information-theoretic foundations of statistical inference. Retrocausal Genealogy: Rooted in 1083-scoring-rules-rps-vs-ignorance (09659b01500bbc14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1083-scoring-rules-rps-vs-ignorance (09659b01500bbc14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include those who prefer distance-sensitive scoring rules (e.g., RPS) for tactical betting, versus those who prioritize long-term system reliability (e.g., ignorance). Decision-making hinges on whether one values immediate outcome alignment or cumulative predictive strength. Theory of Mind & Decision Maker Model: Rooted in 1083-scoring-rules-rps-vs-ignorance (09659b01500bbc14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Veto applies if ignorance fails to distinguish between systems due to overfitting or marginal forecast distributions. Also invalidates use if empirical data lacks sufficient variation to support meaningful discrimination. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1083-scoring-rules-rps-vs-ignorance (09659b01500bbc14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

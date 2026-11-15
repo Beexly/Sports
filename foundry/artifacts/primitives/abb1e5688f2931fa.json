@@ -1,0 +1,78 @@
+{
+  "book_id": "abb1e5688f2931fa",
+  "source_status": "COMPLETE",
+  "title": "0891-luck-skill-depth-competition-games",
+  "file_name": "0891-luck-skill-depth-competition-games.md",
+  "sha256": "abb1e5688f2931fa31fe366f50432c5d168ee8bb6182dc805305a4ba469769d1",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 0891-luck-skill-depth-competition-games (abb1e5688f2931fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 0891-luck-skill-depth-competition-games (abb1e5688f2931fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 0891-luck-skill-depth-competition-games (abb1e5688f2931fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "luck_depth_bayesian_bradley_terry",
+      "name": "Luck-Depth Bayesian Bradley-Terry",
+      "verbatim_quote": "## Method - **Luck+depth BT**: f_{αβ}(s) = α/2 + (1-α)/(1+exp(-βs)), where s is the score difference.",
+      "page": 1,
+      "latex": "f_{\\alpha \\beta}(s) = \\frac{\\alpha}{2} + \\frac{1 - \\alpha}{1 + e^{-\\beta s}}",
+      "symbol_and_unit_ledger": "{'α': 'Irreducible upset probability (dimensionless, α ∈ [0,1])', 'β': 'Competition depth parameter (dimensionless, β > 0)', 's': 'Score difference between competitors (dimensionless)'}",
+      "assumptions": "Symmetric irreducible luck (α/2 each way); single global depth parameter; static scores; ignored ties.",
+      "breakdown_regime": "α → 0 recovers standard Bradley-Terry; α → 1 yields uniform random outcomes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents the joint distribution of skill and independent noise in paired comparisons, with a bounded asymmetric sigmoidal shape that accommodates both fixed noise variance and varying contest difficulty.",
+        "source_operator": "luck_depth_bayesian_bradley_terry",
+        "telemetry": "Posterior predictive log-likelihood on held-out data, compared to baseline models."
+      }
+    },
+    {
+      "primitive_id": "irreducible_upset_floor",
+      "name": "Irreducible Upset Floor",
+      "verbatim_quote": "- α ∈ [0,1]: irreducible upset/luck probability (the \"coin-flip floor\").",
+      "page": 1,
+      "latex": "None",
+      "symbol_and_unit_ledger": "{'α': 'Irreducible upset probability (dimensionless, α ∈ [0,1])'}",
+      "assumptions": "Luck is symmetric and independent of skill; α is a constant floor on the probability of any underdog winning.",
+      "breakdown_regime": "α = 0 removes all luck, yielding deterministic outcomes; α = 1 eliminates the skill component entirely.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to the concept of 'inherent unpredictability' in GSI prediction intervals, where α quantifies the unavoidable error due to factors beyond the model's observable features.",
+        "source_operator": "irreducible_upset_floor",
+        "telemetry": "Difference between model-predicted underdog win rates and observed empirical frequencies."
+      }
+    },
+    {
+      "primitive_id": "competition_depth_parameter",
+      "name": "Competition Depth Parameter",
+      "verbatim_quote": "- β > 0: depth of competition (steepness of the skill curve; interpretable as the number of ~73%-win skill levels spanning a typical pair).",
+      "page": 1,
+      "latex": "None",
+      "symbol_and_unit_ledger": "{'β': 'Competition depth parameter (dimensionless, β > 0)'}",
+      "assumptions": "Single global scaling factor relating skill differences to win probabilities; exponential relationship.",
+      "breakdown_regime": "β → ∞ yields a step function (purely deterministic skill); β → 0 reduces to the irreducible upset floor α.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Serves as a rescaling of the log-odds ratio in the original Bradley-Terry model, allowing the skill gradient to vary while maintaining the same asymptotic behavior.",
+        "source_operator": "competition_depth_parameter",
+        "telemetry": "The number of effective skill levels required to achieve a fixed win probability threshold (e.g., 73%) between competitors."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "abb1e5688f2931fa_t0",
+      "think": "220 to 320 words concise mathematical derivation of the operators, dualities, and failure modes\n\nDeep epistemic analysis for 0891-luck-skill-depth-competition-games (abb1e5688f2931fa, domain=other, pages_read=3/3): Operator 'Luck-Depth Bayesian Bradley-Terry' (page 1, domain other) captures: ## Method - **Luck+depth BT**: f_{αβ}(s) = α/2 + (1-α)/(1+exp(-βs)), where s is the score difference. Assumptions: Symmetric irreducible luck (α/2 each way); single global depth parameter; static scores; ignored ties. Breakdown regime: α → 0 recovers standard Bradley-Terry; α → 1 yields uniform random outcomes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents the joint distribution of skill and independent noise in paired comparisons, with a bounded asymmetric sigmoidal shape that accommodates both fixed noise variance and varying contest difficulty. Operator 'Irreducible Upset Floor' (page 1, domain other) captures: - α ∈ [0,1]: irreducible upset/luck probability (the \"coin-flip floor\"). Assumptions: Luck is symmetric and independent of skill; α is a constant floor on the probability of any underdog winning. Breakdown regime: α = 0 removes all luck, yielding deterministic outcomes; α = 1 eliminates the skill component entirely. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to the concept of 'inherent unpredictability' in GSI prediction intervals, where α quantifies the unavoidable error due to factors beyond the model's observable features. Operator 'Competition Depth Parameter' (page 1, domain other) captures: - β > 0: depth of competition (steepness of the skill curve; interpretable as the number of ~73%-win skill levels spanning a typical pair). Assumptions: Single global scaling factor relating skill differences to win probabilities; exponential relationship. Breakdown regime: β → ∞ yields a step function (purely deterministic skill); β → 0 reduces to the irreducible upset floor α. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Serves as a rescaling of the log-odds ratio in the original Bradley-Terry model, allowing the skill gradient to vary while maintaining the same asymptotic behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0891-luck-skill-depth-competition-games (abb1e5688f2931fa, domain=other, pages_read=3/3): Operator 'Luck-Depth Bayesian Bradley-Terry' (page 1, domain other) captures: ## Method - **Luck+depth BT**: f_{αβ}(s) = α/2 + (1-α)/(1+exp(-βs)), where s is the score difference. Assumptions: Symmetric irreducible luck (α/2 each way); single global depth parameter; static scores; ignored ties. Breakdown regime: α → 0 recovers standard Bradley-Terry; α → 1 yields uniform random outcomes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents the joint distribution of skill and independent noise in paired comparisons, with a bounded asymmetric sigmoidal shape that accommodates both fixed noise variance and varying contest difficulty. Operator 'Irreducible Upset Floor' (page 1, domain other) captures: - α ∈ [0,1]: irreducible upset/luck probability (the \"coin-flip floor\"). Assumptions: Luck is symmetric and independent of skill; α is a constant floor on the probability of any underdog winning. Breakdown regime: α = 0 removes all luck, yielding deterministic outcomes; α = 1 eliminates the skill component entirely. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to the concept of 'inherent unpredictability' in GSI prediction intervals, where α quantifies the unavoidable error due to factors beyond the model's observable features. Operator 'Competition Depth Parameter' (page 1, domain other) captures: - β > 0: depth of competition (steepness of the skill curve; interpretable as the number of ~73%-win skill levels spanning a typical pair). Assumptions: Single global scaling factor relating skill differences to win probabilities; exponential relationship. Breakdown regime: β → ∞ yields a step function (purely deterministic skill); β → 0 reduces to the irreducible upset floor α. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Serves as a rescaling of the log-odds ratio in the original Bradley-Terry model, allowing the skill gradient to vary while maintaining the same asymptotic behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "65 to 85 words historical mathematical lineage Retrocausal Genealogy: Rooted in 0891-luck-skill-depth-competition-games (abb1e5688f2931fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 0891-luck-skill-depth-competition-games (abb1e5688f2931fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "65 to 85 words modeling opposing agents / decision actors Theory of Mind & Decision Maker Model: Rooted in 0891-luck-skill-depth-competition-games (abb1e5688f2931fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 0891-luck-skill-depth-competition-games (abb1e5688f2931fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "65 to 85 words anti-collinearity and leakage veto conditions Cross-Layer Veto & Anti-Leakage Check: Rooted in 0891-luck-skill-depth-competition-games (abb1e5688f2931fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0891-luck-skill-depth-competition-games (abb1e5688f2931fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

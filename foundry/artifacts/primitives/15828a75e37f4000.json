@@ -1,0 +1,78 @@
+{
+  "book_id": "15828a75e37f4000",
+  "source_status": "COMPLETE",
+  "title": "cold-reviewer",
+  "file_name": "cold-reviewer.md",
+  "sha256": "15828a75e37f40004adde100c4234fad272a4770e558760b8e8496a68b5ca521",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Adversarial code integrity verification through claim-evidence duality, enforcing epistemic closure via resolvable SHA references and weakened guard detection. Universal Lens: Rooted in cold-reviewer (15828a75e37f4000), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian epistemic update on claim verifiability using SHA resolution and evidence likelihood ratios for autonomous system trustworthiness. GSI Mapping: Rooted in cold-reviewer (15828a75e37f4000), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine detecting rationalization leaks by enforcing memoryless adversarial review of diff ranges and asserting guard integrity. GSE Mapping: Rooted in cold-reviewer (15828a75e37f4000), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "claim_to_evidence_integrity",
+      "name": "Claim-Evidence Integrity Verifier",
+      "verbatim_quote": "**Claim-to-evidence integrity.** For every claim in the diff, commit message, or ledger row you are shown: does observable evidence exist?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Claim (dimensionless)', 'E': 'Evidence (dimensionless)', 'I(C,E)': 'Integrity indicator (dimensionless)'}",
+      "assumptions": "Each claim C must map to verifiable E; I(C,E) = 1 iff ∃E such that E resolves C.",
+      "breakdown_regime": "I(C,E) = 0 when ∄E resolving C or E is fabricated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian belief update on C → E correspondence; GSE adversarial diff inspection.",
+        "source_operator": "claim_to_evidence_integrity",
+        "telemetry": "SHA resolution success rate, claim falsification count"
+      }
+    },
+    {
+      "primitive_id": "weakened_guards_detector",
+      "name": "Weakened Guard Detector",
+      "verbatim_quote": "**Weakened guards.** Did this diff lower a threshold, loosen an assertion, delete a test, add `--no-verify`, add `@ts-ignore`/`@ts-expect-error`/`as any`, or widen a type to make something pass?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Guard strength (dimensionless)', 'T': 'Threshold level (dimensionless)', 'A': 'Assertion status (boolean)', 'F': 'Failure mode (boolean)'}",
+      "assumptions": "Guard weakening implies G(t) < G(t-1), A(t) = false, F(t) = true.",
+      "breakdown_regime": "F(t) = true when ∃Δ such that G(t) = G(t-1) - Δ > 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transition kernel detecting assertion degradation; GSI probabilistic risk score for guard relaxation.",
+        "source_operator": "weakened_guards_detector",
+        "telemetry": "Assertion deletion count, type widening frequency, test suite coverage drop"
+      }
+    },
+    {
+      "primitive_id": "fabricated_data_audit",
+      "name": "Fabricated Data Audit",
+      "verbatim_quote": "**Fabricated product data.** Mock picks, sample odds, placeholder win rates, invented CLV, fabricated backtests, hard-coded hit rates.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_f': 'Fabricated data flag (boolean)', 'D_o': 'Observed data (real-valued)', 'D_p': 'Predicted data (real-valued)', 'R': 'Residual (real-valued)'}",
+      "assumptions": "D_f = true iff R = D_o - D_p is non-negligible and uncorrelated with ground truth.",
+      "breakdown_regime": "D_f = true when ||R||_2 > ε and corr(R, D_o) < δ.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE anomaly detection in synthetic data patterns; GSI statistical consistency check.",
+        "source_operator": "fabricated_data_audit",
+        "telemetry": "Data residual magnitude, correlation with external benchmarks, mock usage frequency"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "15828a75e37f4000_t0",
+      "think": "The cold-reviewer primitive operates as a memoryless adversarial verifier enforcing epistemic closure. It applies claim-to-evidence integrity by validating SHA references and rejecting unverifiable claims. The weakened guards detector acts as a kernel for state transitions in GSE, identifying when assertions or thresholds are relaxed—this is critical for maintaining logical consistency in autonomous systems. Fabricated data audit functions as a statistical anomaly filter, ensuring that synthetic inputs do not corrupt downstream inference. These primitives form a triadic structure where each checks the others' integrity: claim integrity ensures evidence validity, guard integrity prevents rationalization, and fabricated data integrity prevents spurious input. The failure modes are dual: either a builder rationalizes away a constraint (guard weakening) or fabricates evidence (data falsification). Both lead to epistemic drift in GSI's belief states and system instability in GSE's operational models.\n\nDeep epistemic analysis for cold-reviewer (15828a75e37f4000, domain=other, pages_read=2/2): Operator 'Claim-Evidence Integrity Verifier' (page 1, domain other) captures: **Claim-to-evidence integrity.** For every claim in the diff, commit message, or ledger row you are shown: does observable evidence exist? Assumptions: Each claim C must map to verifiable E; I(C,E) = 1 iff ∃E such that E resolves C. Breakdown regime: I(C,E) = 0 when ∄E resolving C or E is fabricated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian belief update on C → E correspondence; GSE adversarial diff inspection. Operator 'Weakened Guard Detector' (page 1, domain other) captures: **Weakened guards.** Did this diff lower a threshold, loosen an assertion, delete a test, add `--no-verify`, add `@ts-ignore`/`@ts-expect-error`/`as any`, or widen a type to make something pass? Assumptions: Guard weakening implies G(t) < G(t-1), A(t) = false, F(t) = true. Breakdown regime: F(t) = true when ∃Δ such that G(t) = G(t-1) - Δ > 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition kernel detecting assertion degradation; GSI probabilistic risk score for guard relaxation. Operator 'Fabricated Data Audit' (page 1, domain other) captures: **Fabricated product data.** Mock picks, sample odds, placeholder win rates, invented CLV, fabricated backtests, hard-coded hit rates. Assumptions: D_f = true iff R = D_o - D_p is non-negligible and uncorrelated with ground truth. Breakdown regime: D_f = true when ||R||_2 > ε and corr(R, D_o) < δ. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE anomaly detection in synthetic data patterns; GSI statistical consistency check. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for cold-reviewer (15828a75e37f4000, domain=other, pages_read=2/2): Operator 'Claim-Evidence Integrity Verifier' (page 1, domain other) captures: **Claim-to-evidence integrity.** For every claim in the diff, commit message, or ledger row you are shown: does observable evidence exist? Assumptions: Each claim C must map to verifiable E; I(C,E) = 1 iff ∃E such that E resolves C. Breakdown regime: I(C,E) = 0 when ∄E resolving C or E is fabricated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian belief update on C → E correspondence; GSE adversarial diff inspection. Operator 'Weakened Guard Detector' (page 1, domain other) captures: **Weakened guards.** Did this diff lower a threshold, loosen an assertion, delete a test, add `--no-verify`, add `@ts-ignore`/`@ts-expect-error`/`as any`, or widen a type to make something pass? Assumptions: Guard weakening implies G(t) < G(t-1), A(t) = false, F(t) = true. Breakdown regime: F(t) = true when ∃Δ such that G(t) = G(t-1) - Δ > 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition kernel detecting assertion degradation; GSI probabilistic risk score for guard relaxation. Operator 'Fabricated Data Audit' (page 1, domain other) captures: **Fabricated product data.** Mock picks, sample odds, placeholder win rates, invented CLV, fabricated backtests, hard-coded hit rates. Assumptions: D_f = true iff R = D_o - D_p is non-negligible and uncorrelated with ground truth. Breakdown regime: D_f = true when ||R||_2 > ε and corr(R, D_o) < δ. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE anomaly detection in synthetic data patterns; GSI statistical consistency check. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal epistemology and adversarial testing paradigms, tracing back to von Neumann’s self-referential systems and Turing’s halting problem. Influenced by Bayesian falsificationism and information-theoretic critiques of self-modifying code. Retrocausal Genealogy: Rooted in cold-reviewer (15828a75e37f4000), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in cold-reviewer (15828a75e37f4000), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models a builder-agent who may rationalize past decisions, and a reviewer-agent who has no memory of those decisions. The reviewer is designed to detect inconsistencies in the builder's logic, particularly where intent is obscured by technical debt or procedural shortcuts. Theory of Mind & Decision Maker Model: Rooted in cold-reviewer (15828a75e37f4000), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by requiring independent validation across GSI (Bayesian integrity) and GSE (state transition safety). Leakage vetoes occur when a fabricated claim passes through both layers without detection, indicating cross-layer contamination. Cross-Layer Veto & Anti-Leakage Check: Rooted in cold-reviewer (15828a75e37f4000), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

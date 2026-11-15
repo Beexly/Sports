@@ -1,95 +1,16 @@
 {
   "book_id": "75483b7e3ec3c364",
-  "source_status": "COMPLETE",
-  "title": "OWNER_SALES_KIT",
-  "file_name": "OWNER_SALES_KIT.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_75483b7e3ec3c364",
+  "file_name": "75483b7e3ec3c364.quarantined",
   "sha256": "75483b7e3ec3c3648eacf254918b0fb21388b45a61e278cc8d1a894a65a918b5",
   "primary_domain": "other",
-  "pages_total": 3,
-  "pages_read": 3,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Universal Lens: Rooted in OWNER_SALES_KIT (75483b7e3ec3c364), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in OWNER_SALES_KIT (75483b7e3ec3c364), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "GSI Mapping: Rooted in OWNER_SALES_KIT (75483b7e3ec3c364), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in OWNER_SALES_KIT (75483b7e3ec3c364), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "GSE Mapping: Rooted in OWNER_SALES_KIT (75483b7e3ec3c364), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in OWNER_SALES_KIT (75483b7e3ec3c364), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "content_operations_launch_sprint",
-      "name": "AI Content Operations Launch Sprint",
-      "verbatim_quote": "## One-page offer ### AI Content Operations Launch Sprint For small businesses, ecommerce brands, local service companies, and creators that need a usable month of content direction without hiring an ongoing agency.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Small business operational constraints, limited internal resources, no existing dedicated content infrastructure.",
-      "breakdown_regime": "High uncertainty in initial content strategy alignment, potential miscommunication between client and provider.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps the discrete event of 'launch sprint' to a conformal prediction framework where the 30-day calendar acts as a predictive region for content performance. The twelve production-ready briefs serve as calibration sets, ensuring coverage over unseen platform dynamics. The fixed-price structure introduces a loss function penalty for scope creep, aligning incentives with the client's primary goal.",
-        "source_operator": "content_operations_launch_sprint",
-        "telemetry": "Primary goal confirmation rate, platform-specific engagement metrics, rights-compliance audit pass/fail"
-      }
-    },
-    {
-      "primitive_id": "manual_cta_workflow",
-      "name": "Manual Call-to-Action Workflow",
-      "verbatim_quote": "Manual CTA: complete the local intake, then the owner reviews fit and sends a proposal manually.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Human oversight as a gatekeeper, preventing automated system errors and unauthorized data flows.",
-      "breakdown_regime": "Single-point failure at the manual review stage, potential delay in execution due to human processing time.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Replicates the manual workflow as a Bayesian updating process. The intake forms posterior beliefs about client needs, while the owner review updates the prior distribution over acceptable content parameters. The manual proposal serves as a deterministic policy derived from maximizing expected utility under information asymmetry, effectively filtering out incompatible requests before resource allocation.",
-        "source_operator": "manual_cta_workflow",
-        "telemetry": "Review cycle time, error detection rate, client satisfaction score"
-      }
-    },
-    {
-      "primitive_id": "rights_consent_review",
-      "name": "Rights and Consent Review",
-      "verbatim_quote": "Every client-provided fact, claim, asset, likeness, and voice remains subject to rights, consent, disclosure, and owner review.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Legal compliance as a hard constraint, zero tolerance for intellectual property violations.",
-      "breakdown_regime": "Strict adherence to licensing terms, potential rejection of assets with unclear provenance.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Encodes the review process as a hypothesis test where the null hypothesis is 'the asset is compliant'. The review generates evidence (or lack thereof) to either accept or reject the null. This maps to a conformal classifier that outputs validity intervals for each asset, ensuring that the family-wise error rate of violating multiple rights is controlled. The owner's signature provides the final verdict, analogous to a significance threshold in statistical testing.",
-        "source_operator": "rights_consent_review",
-        "telemetry": "Compliance pass percentage, rejected asset volume, resolution time per dispute"
-      }
-    },
-    {
-      "primitive_id": "sfw_content_validation",
-      "name": "SFW Content Validation",
-      "verbatim_quote": "Confirmation that the request is SFW and excludes adult/intimate content, impersonation, deepfakes, non-consensual media, fake reviews, and invented results.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Moral hazard mitigation, protecting brand reputation and avoiding regulatory sanctions.",
-      "breakdown_regime": "Stringent prohibitions create sharp boundaries in the input space, leading to discontinuous risk profiles.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Transforms the qualitative SFW requirement into a binary classification task within a high-dimensional feature space of content attributes. The validation acts as a pre-processing filter that projects the input onto a safe subspace. This is mathematically equivalent to applying a truncation operator to a probabilistic model of content generation, ensuring that all subsequent predictions lie within the validated domain. The prohibition on invented results enforces that the model cannot generate outcomes that contradict empirical reality.",
-        "source_operator": "sfw_content_validation",
-        "telemetry": "Prohibited content detection rate, false negative rate, false positive rate"
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "75483b7e3ec3c364_t0",
-      "think": "The core challenge is converting uncertain, high-variability client demands into a finite set of deliverables with bounded risk. We treat the launch sprint as a sequential decision problem under uncertainty. The five-business-day deadline imposes a computational budget constraint. The twelve briefs serve as a minimal sufficient statistic for characterizing the content landscape, reducing the infinite-dimensional space of possible posts to a manageable set of instructions. The KPI tracker implements a control-theoretic feedback loop, continuously monitoring engagement metrics and adjusting the calendar in response to drift. The manual CTA prevents runaway automation; it forces a deliberate reset when the posterior distribution over project feasibility shifts significantly. The fulfillment checklist ensures that each step is verifiable, creating a chain of custody that propagates rights and consent through the entire lifecycle. The Bayesian mapping interprets these steps as a sequential Monte Carlo sampler over the space of feasible content strategies, with the owner review acting as a proposal distribution that adapts based on past interactions. The conformal mapping embeds this adaptive procedure into a nonparametric predictive framework, providing finite-sample coverage guarantees for future performance.\n\nDeep epistemic analysis for OWNER_SALES_KIT (75483b7e3ec3c364, domain=other, pages_read=3/3): Operator 'AI Content Operations Launch Sprint' (page 1, domain other) captures: ## One-page offer ### AI Content Operations Launch Sprint For small businesses, ecommerce brands, local service companies, and creators that need a usable month of content direction without hiring an ongoing agency. Assumptions: Small business operational constraints, limited internal resources, no existing dedicated content infrastructure. Breakdown regime: High uncertainty in initial content strategy alignment, potential miscommunication between client and provider. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the discrete event of 'launch sprint' to a conformal prediction framework where the 30-day calendar acts as a predictive region for content performance. The twelve production-ready briefs serve as calibration sets, ensuring coverage over unseen platform dynamics. The fixed-price structure introduces a loss function penalty for scope creep, aligning incentives with the client's primary goal. Operator 'Manual Call-to-Action Workflow' (page 1, domain other) captures: Manual CTA: complete the local intake, then the owner reviews fit and sends a proposal manually. Assumptions: Human oversight as a gatekeeper, preventing automated system errors and unauthorized data flows. Breakdown regime: Single-point failure at the manual review stage, potential delay in execution due to human processing time. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Replicates the manual workflow as a Bayesian updating process. The intake forms posterior beliefs about client needs, while the owner review updates the prior distribution over acceptable content parameters. The manual proposal serves as a deterministic policy derived from maximizing expected utility under information asymmetry, effectively filtering out incompatible requests before resource allocation. Operator 'Rights and Consent Review' (page 1, domain other) captures: Every client-provided fact, claim, asset, likeness, and voice remains subject to rights, consent, disclosure, and owner review. Assumptions: Legal compliance as a hard constraint, zero tolerance for intellectual property violations. Breakdown regime: Strict adherence to licensing terms, potential rejection of assets with unclear provenance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes the review process as a hypothesis test where the null hypothesis is 'the asset is compliant'. The review generates evidence (or lack thereof) to either accept or reject the null. This maps to a conformal classifier that outputs validity intervals for each asset, ensuring that the family-wise error rate of violating multiple rights is controlled. The owner's signature provides the final verdict, analogous to a significance threshold in statistical testing. Operator 'SFW Content Validation' (page 1, domain other) captures: Confirmation that the request is SFW and excludes adult/intimate content, impersonation, deepfakes, non-consensual media, fake reviews, and invented results. Assumptions: Moral hazard mitigation, protecting brand reputation and avoiding regulatory sanctions. Breakdown regime: Stringent prohibitions create sharp boundaries in the input space, leading to discontinuous risk profiles. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Transforms the qualitative SFW requirement into a binary classification task within a high-dimensional feature space of content attributes. The validation acts as a pre-processing filter that projects the input onto a safe subspace. This is mathematically equivalent to applying a truncation operator to a probabilistic model of content generation, ensuring that all subsequent predictions lie within the validated domain. The prohibition on invented results enforces that the model cannot generate outcomes that contradict empirical reality. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in OWNER_SALES_KIT (75483b7e3ec3c364), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in OWNER_SALES_KIT (75483b7e3ec3c364), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Opposing agents include the client who may underestimate the complexity of scaling content and the provider who must manage expectations while minimizing exposure. The owner's review reflects a bounded rationality actor who uses heuristics to evaluate technical feasibility. The SFW restriction models a principal-agent problem where the principal (brand) delegates content creation to an agent (provider) but retains ultimate liability for image damage.",
-      "cross_layer_veto": "Anti-collinearity conditions require that the twelve briefs span a basis that is incoherent with the platform-specific algorithms (e.g., Instagram's edgeRank). Leakage occurs if the calendar contains patterns that can be reverse-engineered to reveal proprietary customer lists. The veto condition is that the mutual information between the calendar and the customer data must be below a threshold set by contractual obligations. Additionally, the method fails if the client-provided facts contain systematic biases that corrupt the posterior distribution."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

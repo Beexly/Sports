@@ -1,0 +1,95 @@
+{
+  "book_id": "5745924c253f05bb",
+  "source_status": "COMPLETE",
+  "title": "FANTASY_DATA_LAUNCH_BLOCKERS",
+  "file_name": "FANTASY_DATA_LAUNCH_BLOCKERS.md",
+  "sha256": "5745924c253f05bb0e3a7478ac606d44687389eeb7da53d95bb3b778b109eec7",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A four-layered fantasy scoring pipeline maps fact ingestion to predictive modeling, with Layer 4 (model-driven projections) absent, creating a bifurcation between public-data ranking and proprietary score generation. Universal Lens: Rooted in FANTASY_DATA_LAUNCH_BLOCKERS (5745924c253f05bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference over layered fact confidence to compute posterior belief states for player selection; Layer 4 absence implies lack of calibrated error surfaces in probabilistic scoring. GSI Mapping: Rooted in FANTASY_DATA_LAUNCH_BLOCKERS (5745924c253f05bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies conformal prediction to maintain state transitions in lineup optimization; missing Layer 4 introduces non-ergodicity in pick ranking due to reliance on static public inputs rather than adaptive feedback loops.",
+  "primitives": [
+    {
+      "primitive_id": "layer_1_fact_ingestion",
+      "name": "Real-Time Fact Ingestion Layer",
+      "verbatim_quote": "a Real Fantasy-Primary Proprietary Score A \"real\" fantasy-primary proprietary score pipeline needs four layers.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All facts are rights-cleared and sourced from public APIs without proprietary bias.",
+      "breakdown_regime": "Public data ingestion is complete but lacks integration with internal models.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic fact validation framework where each source contributes a likelihood weight to the overall belief state.",
+        "source_operator": "layer_1_fact_ingestion",
+        "telemetry": "Source clearance status and ingestion latency metrics."
+      }
+    },
+    {
+      "primitive_id": "layer_2_adp_cross_validation",
+      "name": "ADP Cross-Validation Layer",
+      "verbatim_quote": "ADP cross-validation** | ≥2 independent ADP sources, refreshed on a schedule, with discrepancy alerts | `ffc-adp` only — single source, lazy refresh (on-demand only, no cron) | **Medium** — no freshness guard, no discrepancy detection | | **3.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Multiple ADP sources provide consistent signals; discrepancies indicate data integrity issues.",
+      "breakdown_regime": "Single-source ADP pipeline leads to underestimation of uncertainty in player value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives variance in projected player performance via inter-source disagreement; feeds into GSE's confidence kernel for lineup selection.",
+        "source_operator": "layer_2_adp_cross_validation",
+        "telemetry": "Discrepancy rate between ADP providers and alert frequency."
+      }
+    },
+    {
+      "primitive_id": "layer_3_rankings_persistence",
+      "name": "Rankings Persistence Layer",
+      "verbatim_quote": "Rankings persistence** | Poll rankings ingested and persisted on a schedule, wired into the pick-ranking pipeline | `espn-rankings.ts` adapter exists and is tested, but has **zero live consumers** — `getCfbSnapshot` and `apTop25` are only called from tests | **Medium** — dead code, not wired | | **4.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Poll rankings are stable indicators of player performance and influence pick ordering.",
+      "breakdown_regime": "Dead code prevents integration of rankings into active scoring logic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides temporal consistency in player valuation; GSE uses this as a polarity signal in its ranking kernel.",
+        "source_operator": "layer_3_rankings_persistence",
+        "telemetry": "Number of live consumers and cron execution success rate."
+      }
+    },
+    {
+      "primitive_id": "layer_4_projection_model",
+      "name": "Projection Model Layer",
+      "verbatim_quote": "Closing the gap to a real proprietary score requires (1) scheduling ADP + rankings ingestion, (2) adding a second ADP provider, and (3) building/train a projection model with a result-feedback loop.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "A trained model can predict outcomes better than static public data alone.",
+      "breakdown_regime": "Absence of model training and feedback loop results in static, non-adaptive scoring.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI’s error surface calibration; GSE uses this layer to dynamically adjust pick weights based on outcome feedback.",
+        "source_operator": "layer_4_projection_model",
+        "telemetry": "Model accuracy over time and feedback loop convergence rate."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5745924c253f05bb_t0",
+      "think": "The fantasy scoring pipeline exhibits a hierarchical structure defined by four distinct layers. Layer 1 is operational, providing access to rights-cleared public data. Layers 2 and 3 are partially implemented but functionally inert due to lack of scheduling and integration. Layer 4, which defines the core proprietary scoring mechanism, is entirely absent. This creates a failure mode where predictions rely on static, externally-derived inputs rather than an internally trained model. The bifurcation manifests as a loss of adaptability and error correction capability. The system's inability to self-calibrate undermines both GSI's Bayesian inference and GSE's state-transition logic, leading to suboptimal lineup generation. The root cause lies in the absence of a feedback loop in the projection pipeline, which is essential for maintaining dynamic calibration against observed outcomes.\n\nDeep epistemic analysis for FANTASY_DATA_LAUNCH_BLOCKERS (5745924c253f05bb, domain=other, pages_read=3/3): Operator 'Real-Time Fact Ingestion Layer' (page 1, domain other) captures: a Real Fantasy-Primary Proprietary Score A \"real\" fantasy-primary proprietary score pipeline needs four layers. Assumptions: All facts are rights-cleared and sourced from public APIs without proprietary bias. Breakdown regime: Public data ingestion is complete but lacks integration with internal models. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic fact validation framework where each source contributes a likelihood weight to the overall belief state. Operator 'ADP Cross-Validation Layer' (page 1, domain other) captures: ADP cross-validation** | ≥2 independent ADP sources, refreshed on a schedule, with discrepancy alerts | `ffc-adp` only — single source, lazy refresh (on-demand only, no cron) | **Medium** — no freshness guard, no discrepancy detection | | **3. Assumptions: Multiple ADP sources provide consistent signals; discrepancies indicate data integrity issues. Breakdown regime: Single-source ADP pipeline leads to underestimation of uncertainty in player value. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives variance in projected player performance via inter-source disagreement; feeds into GSE's confidence kernel for lineup selection. Operator 'Rankings Persistence Layer' (page 1, domain other) captures: Rankings persistence** | Poll rankings ingested and persisted on a schedule, wired into the pick-ranking pipeline | `espn-rankings.ts` adapter exists and is tested, but has **zero live consumers** — `getCfbSnapshot` and `apTop25` are only called from tests | **Medium** — dead code, not wired | | **4. Assumptions: Poll rankings are stable indicators of player performance and influence pick ordering. Breakdown regime: Dead code prevents integration of rankings into active scoring logic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides temporal consistency in player valuation; GSE uses this as a polarity signal in its ranking kernel. Operator 'Projection Model Layer' (page 1, domain other) captures: Closing the gap to a real proprietary score requires (1) scheduling ADP + rankings ingestion, (2) adding a second ADP provider, and (3) building/train a projection model with a result-feedback loop. Assumptions: A trained model can predict outcomes better than static public data alone. Breakdown regime: Absence of model training and feedback loop results in static, non-adaptive scoring. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI’s error surface calibration; GSE uses this layer to dynamically adjust pick weights based on outcome feedback. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FANTASY_DATA_LAUNCH_BLOCKERS (5745924c253f05bb, domain=other, pages_read=3/3): Operator 'Real-Time Fact Ingestion Layer' (page 1, domain other) captures: a Real Fantasy-Primary Proprietary Score A \"real\" fantasy-primary proprietary score pipeline needs four layers. Assumptions: All facts are rights-cleared and sourced from public APIs without proprietary bias. Breakdown regime: Public data ingestion is complete but lacks integration with internal models. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic fact validation framework where each source contributes a likelihood weight to the overall belief state. Operator 'ADP Cross-Validation Layer' (page 1, domain other) captures: ADP cross-validation** | ≥2 independent ADP sources, refreshed on a schedule, with discrepancy alerts | `ffc-adp` only — single source, lazy refresh (on-demand only, no cron) | **Medium** — no freshness guard, no discrepancy detection | | **3. Assumptions: Multiple ADP sources provide consistent signals; discrepancies indicate data integrity issues. Breakdown regime: Single-source ADP pipeline leads to underestimation of uncertainty in player value. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives variance in projected player performance via inter-source disagreement; feeds into GSE's confidence kernel for lineup selection. Operator 'Rankings Persistence Layer' (page 1, domain other) captures: Rankings persistence** | Poll rankings ingested and persisted on a schedule, wired into the pick-ranking pipeline | `espn-rankings.ts` adapter exists and is tested, but has **zero live consumers** — `getCfbSnapshot` and `apTop25` are only called from tests | **Medium** — dead code, not wired | | **4. Assumptions: Poll rankings are stable indicators of player performance and influence pick ordering. Breakdown regime: Dead code prevents integration of rankings into active scoring logic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides temporal consistency in player valuation; GSE uses this as a polarity signal in its ranking kernel. Operator 'Projection Model Layer' (page 1, domain other) captures: Closing the gap to a real proprietary score requires (1) scheduling ADP + rankings ingestion, (2) adding a second ADP provider, and (3) building/train a projection model with a result-feedback loop. Assumptions: A trained model can predict outcomes better than static public data alone. Breakdown regime: Absence of model training and feedback loop results in static, non-adaptive scoring. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI’s error surface calibration; GSE uses this layer to dynamically adjust pick weights based on outcome feedback. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Historically rooted in early-stage data aggregation systems that prioritized speed over quality. The separation of concerns between data ingestion and modeling reflects a legacy architecture where predictive modeling was deferred until later stages. Retrocausal Genealogy: Rooted in FANTASY_DATA_LAUNCH_BLOCKERS (5745924c253f05bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the product owner who may prioritize short-term stability over long-term adaptability, and the engineering team constrained by resource allocation. The system assumes that external data suffices for scoring, ignoring the need for internal model ownership and calibration. Theory of Mind & Decision Maker Model: Rooted in FANTASY_DATA_LAUNCH_BLOCKERS (5745924c253f05bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is violated because Layer 2 and 3 do not independently validate each other, leading to potential redundancy and false confidence. Leakage occurs when unused data from Layer 3 is not properly gated, introducing noise into the pick-ranking process. Veto conditions require explicit validation of data flow paths and enforcement of model-driven decision-making at Layer 4. Cross-Layer Veto & Anti-Leakage Check: Rooted in FANTASY_DATA_LAUNCH_BLOCKERS (5745924c253f05bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

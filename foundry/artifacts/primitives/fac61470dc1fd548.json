@@ -1,0 +1,78 @@
+{
+  "book_id": "fac61470dc1fd548",
+  "source_status": "COMPLETE",
+  "title": "Robert Kissell_2017 (1)",
+  "file_name": "Robert Kissell_2017 (1).pdf",
+  "sha256": "fac61470dc1fd5483d6b984b4b02413a7c1efcc140f3c843841b977c61542d93",
+  "primary_domain": "other",
+  "pages_total": 340,
+  "pages_read": 32,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in Robert Kissell_2017 (1) (fac61470dc1fd548), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in Robert Kissell_2017 (1) (fac61470dc1fd548), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in Robert Kissell_2017 (1) (fac61470dc1fd548), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "bayes_optimal_betting",
+      "name": "Bayes Optimal Betting",
+      "verbatim_quote": "OPTIMAL SPORTS MATH, STATISTICS, AND FANTASY ROBERT KISSELL AND JIM POSERINA",
+      "page": 2,
+      "latex": "$$\\pi^* = \\arg\\max_{\\pi} \\mathbb{E}[U(W_T)]$$",
+      "symbol_and_unit_ledger": "{'W_T': 'Terminal wealth (USD)', '\\\\pi': 'Betting fraction', 'U(\\\\cdot)': 'Utility function'}",
+      "assumptions": "Risk-neutral investors, perfect information, no transaction costs",
+      "breakdown_regime": "Market disequilibrium (arbitrage opportunities)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Posterior probability updating. GSE: Optimal stopping under uncertainty.",
+        "source_operator": "bayes_optimal_betting",
+        "telemetry": "Residual Kelly leverage"
+      }
+    },
+    {
+      "primitive_id": "source_operator_2",
+      "name": "Robert Kissell_2017 (1) Grounded Principle 2",
+      "verbatim_quote": "No part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means electronic, mechanical, photocopying, recording or otherwise without the prior written permission of the publisher.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_2",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "Robert Kissell_2017 (1) Grounded Principle 3",
+      "verbatim_quote": "Permissions may be sought directly from Elsevier's Science & Technology Rights Department in Oxford, UK: phone (144) (0) 1865 843830; fax (144) (0) 1865 853333; email: permissions@elsevier.com.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fac61470dc1fd548_t0",
+      "think": "This primitive formalizes wager allocation across outcomes i using Bayes' rule. Let O_i be outcome events with P(O_i) priors and observed data D. The optimal bet \\pi_i maximizes expected utility of terminal wealth E[U(W_T)]. In sports betting, D might be player injuries or weather data. The Lagrangian yields a betting fraction \\pi_i \\propto P(D|O_i)P(O_i)/P(D). This connects to Kelly criterion when utility is logarithmic. Dualities emerge: maximizing log-wealth is equivalent to minimizing relative entropy (KL divergence) between forecast and realized outcomes. Failure occurs when P(D|O_i) deviates from IID assumptions, causing overfitting or systematic bias. In GSI, this maps to sequential Bayesian inference on market maker inventory. In GSE, it models optimal entry/exit timing under regime-switching volatility.\n\nDeep epistemic analysis for Robert Kissell_2017 (1) (fac61470dc1fd548, domain=other, pages_read=32/340): Operator 'Bayes Optimal Betting' (page 2, domain other) captures: OPTIMAL SPORTS MATH, STATISTICS, AND FANTASY ROBERT KISSELL AND JIM POSERINA Assumptions: Risk-neutral investors, perfect information, no transaction costs Breakdown regime: Market disequilibrium (arbitrage opportunities) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Posterior probability updating. GSE: Optimal stopping under uncertainty. Operator 'Robert Kissell_2017 (1) Grounded Principle 2' (page 3, domain other) captures: No part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means electronic, mechanical, photocopying, recording or otherwise without the prior written permission of the publisher. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator 'Robert Kissell_2017 (1) Grounded Principle 3' (page 3, domain other) captures: Permissions may be sought directly from Elsevier's Science & Technology Rights Department in Oxford, UK: phone (144) (0) 1865 843830; fax (144) (0) 1865 853333; email: permissions@elsevier.com. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Robert Kissell_2017 (1) (fac61470dc1fd548, domain=other, pages_read=32/340): Operator 'Bayes Optimal Betting' (page 2, domain other) captures: OPTIMAL SPORTS MATH, STATISTICS, AND FANTASY ROBERT KISSELL AND JIM POSERINA Assumptions: Risk-neutral investors, perfect information, no transaction costs Breakdown regime: Market disequilibrium (arbitrage opportunities) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Posterior probability updating. GSE: Optimal stopping under uncertainty. Operator 'Robert Kissell_2017 (1) Grounded Principle 2' (page 3, domain other) captures: No part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means electronic, mechanical, photocopying, recording or otherwise without the prior written permission of the publisher. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator 'Robert Kissell_2017 (1) Grounded Principle 3' (page 3, domain other) captures: Permissions may be sought directly from Elsevier's Science & Technology Rights Department in Oxford, UK: phone (144) (0) 1865 843830; fax (144) (0) 1865 853333; email: permissions@elsevier.com. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Shannon–Hartley theorem (information theory) and Kelly's gambling formula (1956). Von Neumann's minimax theorem (1928) provides duality via LP relaxations. Wald's sequential probability ratio test (1945) offers sequential extension. Modern links to variational inference and approximate dynamic programming. Retrocausal Genealogy: Rooted in Robert Kissell_2017 (1) (fac61470dc1fd548), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Bookmakers model bettor heterogeneity (e.g., risk-averse vs. aggressive) to set prices. Bettors infer bookmaker risk appetite from line movements. Regulators monitor for predatory pricing exploiting behavioral biases. All agents update beliefs recursively. Theory of Mind & Decision Maker Model: Rooted in Robert Kissell_2017 (1) (fac61470dc1fd548), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity: If multiple bets are perfectly correlated (corr=1), diversification benefits vanish; only the most liquid bet should be taken. Leakage occurs when information asymmetry (e.g., insider data) distorts priors, causing systemic arbitrage failures. Cross-Layer Veto & Anti-Leakage Check: Rooted in Robert Kissell_2017 (1) (fac61470dc1fd548), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

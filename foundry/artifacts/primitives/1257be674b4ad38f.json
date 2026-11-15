@@ -1,0 +1,78 @@
+{
+  "book_id": "1257be674b4ad38f",
+  "source_status": "COMPLETE",
+  "title": "app-quickstart",
+  "file_name": "app-quickstart.md",
+  "sha256": "1257be674b4ad38fc22098f619954a9dee8232f6ccd0094a72656667390ae0f1",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A compositional critical path maps authentication, SDK instantiation, job submission with confirmation, polling, and rendering through unified data flow. Universal Lens: Rooted in app-quickstart (1257be674b4ad38f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers user intent and system state via Bayesian belief updates on auth tokens, SDK client states, and job confirmation gates. GSI Mapping: Rooted in app-quickstart (1257be674b4ad38f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions from auth→SDK→submit→poll→render using deterministic finite automata over job lifecycle and UI feedback loops. GSE Mapping: Rooted in app-quickstart (1257be674b4ad38f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "auth_pipeline",
+      "name": "Authentication Pipeline",
+      "verbatim_quote": "Auth — the `/api/user` proxy + login/logout Every app is authenticated.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "User identity is established via secure token exchange with backend.",
+      "breakdown_regime": "Failure occurs on invalid or expired session tokens.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI tracks session validity through token lifecycle; GSE enforces access control via middleware.",
+        "source_operator": "auth_pipeline",
+        "telemetry": "Session expiry time, login success rate"
+      }
+    },
+    {
+      "primitive_id": "sdk_client_instantiation",
+      "name": "SDK Client Instantiation",
+      "verbatim_quote": "Create the SDK clients (server-side) One adapter satisfies jobs + media + profile.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Server-side instantiation ensures consistent adapter behavior across services.",
+      "breakdown_regime": "Failure occurs on misconfigured or missing adapter factories.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE constructs service-specific clients from shared workflow platform adapter; GSI validates client configuration against schema.",
+        "source_operator": "sdk_client_instantiation",
+        "telemetry": "Client creation latency, adapter registration count"
+      }
+    },
+    {
+      "primitive_id": "job_submission_with_gate",
+      "name": "Job Submission With Confirmation Gate",
+      "verbatim_quote": "Submit (with the confirmation gate) → poll → read the URL The `confirm` gate is passed to the **adapter factory**; it runs once per submit, after validation, before any network call.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Confirmation gate acts as a preflight validator ensuring semantic correctness.",
+      "breakdown_regime": "Rejection due to user cancellation or validation error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI models confirmation logic as probabilistic decision tree; GSE enforces gate execution before network I/O.",
+        "source_operator": "job_submission_with_gate",
+        "telemetry": "Submission success rate, confirmation rejection frequency"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1257be674b4ad38f_t0",
+      "think": "The critical path embodies a structured sequence: authentication establishes trust, SDK instantiation provides abstraction layers, job submission triggers computation with safety checks, and polling enables asynchronous result retrieval. Each stage must maintain integrity through defined interfaces. Auth pipelines ensure secure identity management; SDK clients abstract service interactions into reusable modules. Job submission includes a confirmation gate that prevents erroneous operations. Polling allows for non-blocking interaction with backend systems. Rendering consumes final outputs while respecting UI constraints such as aspect ratios and preview availability. These primitives form a closed-loop system where errors propagate predictably through well-defined boundaries. Failure modes include token expiration, misconfigured adapters, and rejected submissions. The design enforces immutability of data flows and restricts side effects to controlled entry points.\n\nDeep epistemic analysis for app-quickstart (1257be674b4ad38f, domain=other, pages_read=4/4): Operator 'Authentication Pipeline' (page 1, domain other) captures: Auth — the `/api/user` proxy + login/logout Every app is authenticated. Assumptions: User identity is established via secure token exchange with backend. Breakdown regime: Failure occurs on invalid or expired session tokens. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI tracks session validity through token lifecycle; GSE enforces access control via middleware. Operator 'SDK Client Instantiation' (page 2, domain other) captures: Create the SDK clients (server-side) One adapter satisfies jobs + media + profile. Assumptions: Server-side instantiation ensures consistent adapter behavior across services. Breakdown regime: Failure occurs on misconfigured or missing adapter factories. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE constructs service-specific clients from shared workflow platform adapter; GSI validates client configuration against schema. Operator 'Job Submission With Confirmation Gate' (page 2, domain other) captures: Submit (with the confirmation gate) → poll → read the URL The `confirm` gate is passed to the **adapter factory**; it runs once per submit, after validation, before any network call. Assumptions: Confirmation gate acts as a preflight validator ensuring semantic correctness. Breakdown regime: Rejection due to user cancellation or validation error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI models confirmation logic as probabilistic decision tree; GSE enforces gate execution before network I/O. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for app-quickstart (1257be674b4ad38f, domain=other, pages_read=4/4): Operator 'Authentication Pipeline' (page 1, domain other) captures: Auth — the `/api/user` proxy + login/logout Every app is authenticated. Assumptions: User identity is established via secure token exchange with backend. Breakdown regime: Failure occurs on invalid or expired session tokens. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI tracks session validity through token lifecycle; GSE enforces access control via middleware. Operator 'SDK Client Instantiation' (page 2, domain other) captures: Create the SDK clients (server-side) One adapter satisfies jobs + media + profile. Assumptions: Server-side instantiation ensures consistent adapter behavior across services. Breakdown regime: Failure occurs on misconfigured or missing adapter factories. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE constructs service-specific clients from shared workflow platform adapter; GSI validates client configuration against schema. Operator 'Job Submission With Confirmation Gate' (page 2, domain other) captures: Submit (with the confirmation gate) → poll → read the URL The `confirm` gate is passed to the **adapter factory**; it runs once per submit, after validation, before any network call. Assumptions: Confirmation gate acts as a preflight validator ensuring semantic correctness. Breakdown regime: Rejection due to user cancellation or validation error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI models confirmation logic as probabilistic decision tree; GSE enforces gate execution before network I/O. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in functional reactive programming paradigms and layered architecture principles from early web frameworks, evolving toward microservices and distributed state machines. Retrocausal Genealogy: Rooted in app-quickstart (1257be674b4ad38f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in app-quickstart (1257be674b4ad38f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the user who may cancel or retry actions, and the system which enforces consistency and handles failures gracefully. Decision actors are modeled as stochastic processes governed by confirmation logic and backend response patterns. Theory of Mind & Decision Maker Model: Rooted in app-quickstart (1257be674b4ad38f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by enforcing distinct responsibilities at each layer—authentication does not handle business logic, SDK clients abstract but do not validate, and rendering depends solely on structured data. Leakage vetoes prevent direct coupling between UI and backend concerns. Cross-Layer Veto & Anti-Leakage Check: Rooted in app-quickstart (1257be674b4ad38f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

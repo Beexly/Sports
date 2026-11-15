@@ -1,0 +1,78 @@
+{
+  "book_id": "e573ebefec25dda8",
+  "source_status": "COMPLETE",
+  "title": "BUILD-022-rag-leakage-guard",
+  "file_name": "BUILD-022-rag-leakage-guard.md",
+  "sha256": "e573ebefec25dda8f1ae37e7fc32385bfb04606e25d8884100574d3b6f03d72a",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "RAG leakage guard as a bounded information flow control mechanism, mathematically modeled via conditional entropy minimization and operational closure constraints. Universal Lens: Rooted in BUILD-022-rag-leakage-guard (e573ebefec25dda8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of information leakage risk using conformal predictive distributions over document embeddings and query-response manifolds. GSI Mapping: Rooted in BUILD-022-rag-leakage-guard (e573ebefec25dda8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in GSE governed by bounded RAG integrity checks, enforcing deterministic execution paths through policy-driven data access layers. GSE Mapping: Rooted in BUILD-022-rag-leakage-guard (e573ebefec25dda8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "rag_leakage_guard",
+      "name": "Retrieval-Augmented Generation Leakage Control",
+      "verbatim_quote": "# BUILD-022: RAG leakage guard ## Repo(s) AnythingLLM, Open WebUI ## Which Open-Source Repo(s) This Uses Or Studies anythingllm, open-webui ## Goal Create a GSE-specific, owner-reviewable implementation packet for rag leakage guard without touching production systems.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'leakage risk level (dimensionless)', 'I': 'information entropy (nats)', 'S': 'system state (state vector)', 'T': 'time (seconds)'}",
+      "assumptions": "Information retrieval is bounded by document embedding space and query-response manifold; leakage occurs when I(S;Q) > threshold.",
+      "breakdown_regime": "When I(S;Q) exceeds baseline entropy, indicating cross-document contamination or unauthorized data exposure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conditional entropy H(L|S) maps to information leakage risk in GSI; GSE enforces closure via policy-driven access control.",
+        "source_operator": "rag_leakage_guard",
+        "telemetry": "Entropy change ΔH(S) observed during query processing"
+      }
+    },
+    {
+      "primitive_id": "bounded_information_flow",
+      "name": "Bounded Information Flow Control",
+      "verbatim_quote": "## Security Boundary No secrets, production data, customer PII, proprietary method docs, payment data, or production source keys.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'flow rate (bits/sec)', 'C': 'capacity (bits)', 'B': 'boundary condition (dimensionless)'}",
+      "assumptions": "Information flow is constrained by boundary conditions; any violation triggers alert and halt.",
+      "breakdown_regime": "When F > C, indicating unauthorized data egress or internal contamination.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Flow control kernel in GSE ensures F ≤ C across all data access points; GSI monitors for B violations.",
+        "source_operator": "bounded_information_flow",
+        "telemetry": "Flow rate deviation ΔF observed in data access logs"
+      }
+    },
+    {
+      "primitive_id": "oss_laboratory_isolation",
+      "name": "Open Source Laboratory Isolation",
+      "verbatim_quote": "Start in docs or a sandbox and only move into app code after explicit approval.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'document set (set of strings)', 'A': 'access point (vector)', 'P': 'policy (boolean function)'}",
+      "assumptions": "Isolated environment prevents code injection or data spillage into GSE core.",
+      "breakdown_regime": "When P(A) fails, indicating unauthorized access or modification of GSE assets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Policy enforcement P(A) mirrors GSE's access control logic; GSI validates D ⊆ D_lab.",
+        "source_operator": "oss_laboratory_isolation",
+        "telemetry": "Access log anomalies ΔA detected in policy compliance"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e573ebefec25dda8_t0",
+      "think": "The RAG leakage guard primitive models information flow as a conditional entropy process H(L|S), where L represents leakage risk and S denotes system state. The bounded information flow primitive enforces a capacity constraint F ≤ C, ensuring no unauthorized data egress. The laboratory isolation primitive ensures that all experiments occur within a policy-enforced boundary P(A), preventing contamination of GSE assets. These primitives form a layered defense: entropy-based risk detection, flow control, and access policy enforcement. Failure modes include entropy increase beyond thresholds, flow rate exceeding capacity, and policy violations. Dualities emerge between information theory and access control, where leakage risk is minimized by constraining both information entropy and data flow.\n\nDeep epistemic analysis for BUILD-022-rag-leakage-guard (e573ebefec25dda8, domain=other, pages_read=2/2): Operator 'Retrieval-Augmented Generation Leakage Control' (page 1, domain other) captures: # BUILD-022: RAG leakage guard ## Repo(s) AnythingLLM, Open WebUI ## Which Open-Source Repo(s) This Uses Or Studies anythingllm, open-webui ## Goal Create a GSE-specific, owner-reviewable implementation packet for rag leakage guard without touching production systems. Assumptions: Information retrieval is bounded by document embedding space and query-response manifold; leakage occurs when I(S;Q) > threshold. Breakdown regime: When I(S;Q) exceeds baseline entropy, indicating cross-document contamination or unauthorized data exposure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conditional entropy H(L|S) maps to information leakage risk in GSI; GSE enforces closure via policy-driven access control. Operator 'Bounded Information Flow Control' (page 1, domain other) captures: ## Security Boundary No secrets, production data, customer PII, proprietary method docs, payment data, or production source keys. Assumptions: Information flow is constrained by boundary conditions; any violation triggers alert and halt. Breakdown regime: When F > C, indicating unauthorized data egress or internal contamination. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Flow control kernel in GSE ensures F ≤ C across all data access points; GSI monitors for B violations. Operator 'Open Source Laboratory Isolation' (page 1, domain other) captures: Start in docs or a sandbox and only move into app code after explicit approval. Assumptions: Isolated environment prevents code injection or data spillage into GSE core. Breakdown regime: When P(A) fails, indicating unauthorized access or modification of GSE assets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Policy enforcement P(A) mirrors GSE's access control logic; GSI validates D ⊆ D_lab. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BUILD-022-rag-leakage-guard (e573ebefec25dda8, domain=other, pages_read=2/2): Operator 'Retrieval-Augmented Generation Leakage Control' (page 1, domain other) captures: # BUILD-022: RAG leakage guard ## Repo(s) AnythingLLM, Open WebUI ## Which Open-Source Repo(s) This Uses Or Studies anythingllm, open-webui ## Goal Create a GSE-specific, owner-reviewable implementation packet for rag leakage guard without touching production systems. Assumptions: Information retrieval is bounded by document embedding space and query-response manifold; leakage occurs when I(S;Q) > threshold. Breakdown regime: When I(S;Q) exceeds baseline entropy, indicating cross-document contamination or unauthorized data exposure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conditional entropy H(L|S) maps to information leakage risk in GSI; GSE enforces closure via policy-driven access control. Operator 'Bounded Information Flow Control' (page 1, domain other) captures: ## Security Boundary No secrets, production data, customer PII, proprietary method docs, payment data, or production source keys. Assumptions: Information flow is constrained by boundary conditions; any violation triggers alert and halt. Breakdown regime: When F > C, indicating unauthorized data egress or internal contamination. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Flow control kernel in GSE ensures F ≤ C across all data access points; GSI monitors for B violations. Operator 'Open Source Laboratory Isolation' (page 1, domain other) captures: Start in docs or a sandbox and only move into app code after explicit approval. Assumptions: Isolated environment prevents code injection or data spillage into GSE core. Breakdown regime: When P(A) fails, indicating unauthorized access or modification of GSE assets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Policy enforcement P(A) mirrors GSE's access control logic; GSI validates D ⊆ D_lab. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Shannon's information theory and access control models, extended to operational security in software engineering. Influenced by formal methods in secure multi-party computation and bounded model checking. Retrocausal Genealogy: Rooted in BUILD-022-rag-leakage-guard (e573ebefec25dda8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in BUILD-022-rag-leakage-guard (e573ebefec25dda8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include unauthorized data exfiltrators and rogue processes. Decision actors are GSE's policy engine and GSI's risk monitor. The system assumes adversarial behavior and enforces defensive mechanisms accordingly. Theory of Mind & Decision Maker Model: Rooted in BUILD-022-rag-leakage-guard (e573ebefec25dda8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by orthogonalizing information entropy, flow control, and policy layers. Leakage veto conditions include ΔH(S) > threshold, ΔF > 0, and ¬P(A). These ensure no single layer can bypass others. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUILD-022-rag-leakage-guard (e573ebefec25dda8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

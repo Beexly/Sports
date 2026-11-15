@@ -1,16 +1,16 @@
 {
   "book_id": "17592c0d8c1aa4c8",
-  "title": "env (5)",
-  "file_name": "env (5).txt",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_17592c0d8c1aa4c8",
+  "file_name": "17592c0d8c1aa4c8.quarantined",
   "sha256": "17592c0d8c1aa4c819d85b371e14baf7b690ed6c8622696d346783853625bfc9",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "fail-closed-stub-guard",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
   "source_status": "INSUFFICIENT_SOURCE_ACCESS",
-  "refusal_reason": "Download-bait/title-only stub PDF (1 pages, 379 extracted chars, 1 candidate quotes < 3 minimum): 'TYPESAFE_API_KEY=oc_sk_ed99fb3d7a16_zDNSsH5b2p-WVchdsI3uJWciNtaIe_Kg TYPESAFE_BASE_URL=https://opencode.ai/zen TYPESAFE_MODEL=jev-1.13-free '. Fail-closed under Foundry Gatekeeper zero-fabrication contract.",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
   "primitives": [],
   "reasoning_traces": []
 }

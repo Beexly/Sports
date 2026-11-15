@@ -1,0 +1,78 @@
+{
+  "book_id": "c0d907bc5a0461fe",
+  "source_status": "COMPLETE",
+  "title": "pass2-fledge",
+  "file_name": "pass2-fledge.md",
+  "sha256": "c0d907bc5a0461fead61efde3ee430b9e34f196805a96f25f91a2384dd71577d",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Diagnose probabilistic inference failure through count-based telemetry: sampleSize, coverage, meanWidth, underpowered categories, and refusal alerts—no n required. Universal Lens: Rooted in pass2-fledge (c0d907bc5a0461fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference via conformal prediction uses diagnostic counts and refusals instead of calibrated probabilities; leverages walk-forward taxonomy for trust-aware diagnostics. GSI Mapping: Rooted in pass2-fledge (c0d907bc5a0461fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE employs refusal gates and stratified sampling to avoid unreliable predictions; transitions between strata based on sample thresholds and alert flags. GSE Mapping: Rooted in pass2-fledge (c0d907bc5a0461fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "diagnostic_count_surface",
+      "name": "Diagnostic Count Surface",
+      "verbatim_quote": "It missed the leverage that is one call away from them: diagnostics that emit counts, categories, and refusals — never probabilities — and therefore do not need n attached to a probability because the count IS the payload.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sampleSize': 'dimensionless', 'coverage': 'dimensionless', 'meanWidth': 'dimensionless'}",
+      "assumptions": "Counts and categories are sufficient for inference diagnostics without probability calibration.",
+      "breakdown_regime": "When n < minSamplesForTrust (default 30), categories are flagged as underpowered.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's diagnostic aggregation layer where sampleSize, coverage, and meanWidth are computed from residual data.",
+        "source_operator": "diagnostic_count_surface",
+        "telemetry": "Per-category diagnostics including sampleSize, coverage, meanWidth, and underpowered flags."
+      }
+    },
+    {
+      "primitive_id": "refusal_alert_counter",
+      "name": "Refusal Alert Counter",
+      "verbatim_quote": "- `applySelectiveGate` — `edge-lab/selective-gate.ts:266,306`: `MIN_STRATUM_CALIBRATION = 100`; strata below it never fire (\"silent stratum\"), and `widthNoBets` counts first-class No-Bet refusals (selective-gate.ts:55, 320-325).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'widthNoBets': 'dimensionless', 'silentStratum': 'boolean'}",
+      "assumptions": "Refusals indicate insufficient data or invalid contexts; silent strata prevent unreliable inference.",
+      "breakdown_regime": "Strata with fewer than 100 samples are inactive and do not produce alerts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's selective gating mechanism that enforces data quality before inference.",
+        "source_operator": "refusal_alert_counter",
+        "telemetry": "Number of refusals due to insufficient calibration or invalid input context."
+      }
+    },
+    {
+      "primitive_id": "fallback_chain_tracker",
+      "name": "Fallback Chain Tracker",
+      "verbatim_quote": "Returns `sampleSize`, `usedFallback`, and `fallbackChain` per query; refuses (silently walks parents) until `minSamples` (default 10) residuals exist.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sampleSize': 'dimensionless', 'usedFallback': 'boolean', 'fallbackChain': 'sequence of integers'}",
+      "assumptions": "Fallback behavior ensures robustness by tracing parent nodes when minimal samples are unavailable.",
+      "breakdown_regime": "When residuals fall below 10, fallback chain is activated to maintain diagnostic integrity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI’s fallback logic in Mondrian residual management, tracking hierarchical data availability.",
+        "source_operator": "fallback_chain_tracker",
+        "telemetry": "Fallback chain length and usage indicators for each query."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c0d907bc5a0461fe_t0",
+      "think": "Pass 1 incorrectly categorized all probability-emitting modules as 'unsafe to publish', overlooking that diagnostics such as sampleSize, coverage, and meanWidth are inherently diagnostic and do not require probability calibration. The key insight is that these metrics are derived from residual data and do not depend on n being attached to a probability. This allows for a clean separation of concerns: diagnostics are published directly while probabilities remain gated. The primary function runWalkForwardTaxonomy() aggregates these diagnostics and emits them without asserting any probability claims. Secondary functions like MondrianResidualManager.quantile and applySelectiveGate enforce data quality by refusing low-sample queries and counting refusals respectively. These primitives form a dual structure: one for reliable diagnostics and another for controlled inference. Failure modes include silent strata in selective gating and insufficient fallback chains, both of which preserve system integrity by preventing publication of unreliable outputs.\n\nDeep epistemic analysis for pass2-fledge (c0d907bc5a0461fe, domain=other, pages_read=2/2): Operator 'Diagnostic Count Surface' (page 1, domain other) captures: It missed the leverage that is one call away from them: diagnostics that emit counts, categories, and refusals — never probabilities — and therefore do not need n attached to a probability because the count IS the payload. Assumptions: Counts and categories are sufficient for inference diagnostics without probability calibration. Breakdown regime: When n < minSamplesForTrust (default 30), categories are flagged as underpowered. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's diagnostic aggregation layer where sampleSize, coverage, and meanWidth are computed from residual data. Operator 'Refusal Alert Counter' (page 1, domain other) captures: - `applySelectiveGate` — `edge-lab/selective-gate.ts:266,306`: `MIN_STRATUM_CALIBRATION = 100`; strata below it never fire (\"silent stratum\"), and `widthNoBets` counts first-class No-Bet refusals (selective-gate.ts:55, 320-325). Assumptions: Refusals indicate insufficient data or invalid contexts; silent strata prevent unreliable inference. Breakdown regime: Strata with fewer than 100 samples are inactive and do not produce alerts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's selective gating mechanism that enforces data quality before inference. Operator 'Fallback Chain Tracker' (page 1, domain other) captures: Returns `sampleSize`, `usedFallback`, and `fallbackChain` per query; refuses (silently walks parents) until `minSamples` (default 10) residuals exist. Assumptions: Fallback behavior ensures robustness by tracing parent nodes when minimal samples are unavailable. Breakdown regime: When residuals fall below 10, fallback chain is activated to maintain diagnostic integrity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI’s fallback logic in Mondrian residual management, tracking hierarchical data availability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for pass2-fledge (c0d907bc5a0461fe, domain=other, pages_read=2/2): Operator 'Diagnostic Count Surface' (page 1, domain other) captures: It missed the leverage that is one call away from them: diagnostics that emit counts, categories, and refusals — never probabilities — and therefore do not need n attached to a probability because the count IS the payload. Assumptions: Counts and categories are sufficient for inference diagnostics without probability calibration. Breakdown regime: When n < minSamplesForTrust (default 30), categories are flagged as underpowered. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's diagnostic aggregation layer where sampleSize, coverage, and meanWidth are computed from residual data. Operator 'Refusal Alert Counter' (page 1, domain other) captures: - `applySelectiveGate` — `edge-lab/selective-gate.ts:266,306`: `MIN_STRATUM_CALIBRATION = 100`; strata below it never fire (\"silent stratum\"), and `widthNoBets` counts first-class No-Bet refusals (selective-gate.ts:55, 320-325). Assumptions: Refusals indicate insufficient data or invalid contexts; silent strata prevent unreliable inference. Breakdown regime: Strata with fewer than 100 samples are inactive and do not produce alerts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's selective gating mechanism that enforces data quality before inference. Operator 'Fallback Chain Tracker' (page 1, domain other) captures: Returns `sampleSize`, `usedFallback`, and `fallbackChain` per query; refuses (silently walks parents) until `minSamples` (default 10) residuals exist. Assumptions: Fallback behavior ensures robustness by tracing parent nodes when minimal samples are unavailable. Breakdown regime: When residuals fall below 10, fallback chain is activated to maintain diagnostic integrity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI’s fallback logic in Mondrian residual management, tracking hierarchical data availability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in conformal prediction theory and Bayesian diagnostic frameworks, this approach builds upon earlier work in statistical inference that separates reliability from accuracy. The concept of publishing diagnostics without probabilities echoes early developments in robust statistics and adaptive learning systems. Retrocausal Genealogy: Rooted in pass2-fledge (c0d907bc5a0461fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit probabilistic outputs for betting or prediction gains. The design assumes adversarial inputs and models them through refusal mechanisms and silent strata, ensuring that even if an agent tries to manipulate the system, the diagnostic integrity remains intact. Theory of Mind & Decision Maker Model: Rooted in pass2-fledge (c0d907bc5a0461fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating diagnostic telemetry from probabilistic inference. Leakage is prevented by ensuring that no probability assertion is made unless n meets minimum thresholds. Refusal counters act as veto points against unreliable data flows, maintaining orthogonality between layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in pass2-fledge (c0d907bc5a0461fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

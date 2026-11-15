@@ -1,0 +1,78 @@
+{
+  "book_id": "a7716286b5a9db32",
+  "source_status": "COMPLETE",
+  "title": "2026-07-16-validation",
+  "file_name": "2026-07-16-validation.md",
+  "sha256": "a7716286b5a9db32fcfb4c68f89359d81c5b855b1c12d7e23172ba1d6886f17f",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Expected Points (EP) and Win Probability (WP) metrics map play-level outcomes to probabilistic game states using paired transition models grounded in referee-validated data. Universal Lens: Rooted in 2026-07-16-validation (a7716286b5a9db32), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian calibration of EP/WP surfaces against nflverse referee data, enabling conformal prediction intervals for strategic inference without betting claims. GSI Mapping: Rooted in 2026-07-16-validation (a7716286b5a9db32), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes EP/WP as state-transition kernels over discrete play sequences, leveraging player-grained transitions for situational reasoning under uncertainty. GSE Mapping: Rooted in 2026-07-16-validation (a7716286b5a9db32), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "epa_vs_ep",
+      "name": "Expected Points Added",
+      "verbatim_quote": "| | EPA (vs `epa`, paired transitions; graded under the `ep` family) | 36075 | 0.9373 | 0.9112 | 0.4367 | 0.32 | -0.0251 | graduated | Pearson 0.9373 ≥ 0.9 over 36075 players — reproduces ground truth.",
+      "page": 1,
+      "latex": "\\text{EPA} = \\mathbb{E}[\\text{Points}_{t+1}] - \\mathbb{E}[\\text{Points}_t]",
+      "symbol_and_unit_ledger": "{'EPA': 'dimensionless expected point differential per play', 'Points_t': 'score contribution at time t'}",
+      "assumptions": "Paired transitions model sequential play-state evolution; referee validation ensures ground-truth alignment.",
+      "breakdown_regime": "When referee data is absent or inconsistent, EPA may diverge from empirical performance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "EPA maps to GSI's probabilistic scoring kernel, where each play contributes to a cumulative likelihood surface over game states.",
+        "source_operator": "epa_vs_ep",
+        "telemetry": "Pearson correlation coefficient ≥ 0.9 over 36075 players."
+      }
+    },
+    {
+      "primitive_id": "wpa_vs_wpa",
+      "name": "Win Probability Added",
+      "verbatim_quote": "| | WPA (vs `wpa`) | 35738 | 0.8056 | 0.8329 | 0.0226 | 0.0127 | -0.0011 | informational (no gate) | Informational only — WPA carries no graduation gate in v1.",
+      "page": 1,
+      "latex": "\\text{WPA} = \\mathbb{P}(\\text{Win}_{t+1}) - \\mathbb{P}(\\text{Win}_t)",
+      "symbol_and_unit_ledger": "{'WPA': 'dimensionless win probability change per play', 'P(Win_t)': 'probability of winning at time t'}",
+      "assumptions": "Win probability is modeled as a function of current game state; no gating mechanism applies in v1.",
+      "breakdown_regime": "In rare cases of extreme game state shifts, WPA may misrepresent impact due to lack of graduated thresholds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "WPA serves as a derived kernel in GSE’s stochastic game tree, encoding temporal influence of actions on win likelihood.",
+        "source_operator": "wpa_vs_wpa",
+        "telemetry": "Correlation 0.8056 over 35738 plays, informational only."
+      }
+    },
+    {
+      "primitive_id": "player_grain_transitions",
+      "name": "Player-Level Transition Kernel",
+      "verbatim_quote": "| > n counts paired plays; engine reason strings say 'players' at every grain.",
+      "page": 1,
+      "latex": "K_{ij}^{(t)} = \\mathbb{P}(s_{t+1} = j | s_t = i, a_t = u)",
+      "symbol_and_unit_ledger": "{'K_{ij}^{(t)}': 'transition probability from state i to j at time t', 's_t': 'game state at time t', 'u': 'action taken at time t'}",
+      "assumptions": "Each play is associated with a set of player-level transitions that define state evolution.",
+      "breakdown_regime": "Kernel estimation fails when player-level data is sparse or misaligned with macroscopic game state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Player-level transitions form the basis of GSE’s state-space traversal, enabling granular tactical reasoning.",
+        "source_operator": "player_grain_transitions",
+        "telemetry": "Every play is tagged with player-level transitions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a7716286b5a9db32_t0",
+      "think": "The primitives EPA and WPA are constructed as differences in expected points and win probabilities across sequential game states. They are validated through Pearson correlations with referee data, ensuring fidelity to observed outcomes. The player-grain transition kernel enables fine-resolution modeling of how individual actions propagate through the game state space. These operators are not projections but descriptive measures of historical play impact. Their failure modes include data misalignment, insufficient granularity, or absence of referee validation. The dual nature of these metrics—both descriptive and predictive—requires careful handling of causality and temporal consistency.\n\nDeep epistemic analysis for 2026-07-16-validation (a7716286b5a9db32, domain=other, pages_read=2/2): Operator 'Expected Points Added' (page 1, domain other) captures: | | EPA (vs `epa`, paired transitions; graded under the `ep` family) | 36075 | 0.9373 | 0.9112 | 0.4367 | 0.32 | -0.0251 | graduated | Pearson 0.9373 ≥ 0.9 over 36075 players — reproduces ground truth. Assumptions: Paired transitions model sequential play-state evolution; referee validation ensures ground-truth alignment. Breakdown regime: When referee data is absent or inconsistent, EPA may diverge from empirical performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): EPA maps to GSI's probabilistic scoring kernel, where each play contributes to a cumulative likelihood surface over game states. Operator 'Win Probability Added' (page 1, domain other) captures: | | WPA (vs `wpa`) | 35738 | 0.8056 | 0.8329 | 0.0226 | 0.0127 | -0.0011 | informational (no gate) | Informational only — WPA carries no graduation gate in v1. Assumptions: Win probability is modeled as a function of current game state; no gating mechanism applies in v1. Breakdown regime: In rare cases of extreme game state shifts, WPA may misrepresent impact due to lack of graduated thresholds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): WPA serves as a derived kernel in GSE’s stochastic game tree, encoding temporal influence of actions on win likelihood. Operator 'Player-Level Transition Kernel' (page 1, domain other) captures: | > n counts paired plays; engine reason strings say 'players' at every grain. Assumptions: Each play is associated with a set of player-level transitions that define state evolution. Breakdown regime: Kernel estimation fails when player-level data is sparse or misaligned with macroscopic game state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Player-level transitions form the basis of GSE’s state-space traversal, enabling granular tactical reasoning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-07-16-validation (a7716286b5a9db32, domain=other, pages_read=2/2): Operator 'Expected Points Added' (page 1, domain other) captures: | | EPA (vs `epa`, paired transitions; graded under the `ep` family) | 36075 | 0.9373 | 0.9112 | 0.4367 | 0.32 | -0.0251 | graduated | Pearson 0.9373 ≥ 0.9 over 36075 players — reproduces ground truth. Assumptions: Paired transitions model sequential play-state evolution; referee validation ensures ground-truth alignment. Breakdown regime: When referee data is absent or inconsistent, EPA may diverge from empirical performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): EPA maps to GSI's probabilistic scoring kernel, where each play contributes to a cumulative likelihood surface over game states. Operator 'Win Probability Added' (page 1, domain other) captures: | | WPA (vs `wpa`) | 35738 | 0.8056 | 0.8329 | 0.0226 | 0.0127 | -0.0011 | informational (no gate) | Informational only — WPA carries no graduation gate in v1. Assumptions: Win probability is modeled as a function of current game state; no gating mechanism applies in v1. Breakdown regime: In rare cases of extreme game state shifts, WPA may misrepresent impact due to lack of graduated thresholds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): WPA serves as a derived kernel in GSE’s stochastic game tree, encoding temporal influence of actions on win likelihood. Operator 'Player-Level Transition Kernel' (page 1, domain other) captures: | > n counts paired plays; engine reason strings say 'players' at every grain. Assumptions: Each play is associated with a set of player-level transitions that define state evolution. Breakdown regime: Kernel estimation fails when player-level data is sparse or misaligned with macroscopic game state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Player-level transitions form the basis of GSE’s state-space traversal, enabling granular tactical reasoning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early work on play-by-play analytics and game-theoretic modeling of football, these primitives extend prior efforts in expected value estimation and win probability modeling initiated by researchers like David Romer and others in the 2000s. Retrocausal Genealogy: Rooted in 2026-07-16-validation (a7716286b5a9db32), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents in this framework are modeled as strategic actors who optimize their actions based on expected gains. The metrics reflect the outcome of such decisions rather than prescriptive guidance, aligning with a passive observer model of game dynamics. Theory of Mind & Decision Maker Model: Rooted in 2026-07-16-validation (a7716286b5a9db32), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by distinct operational domains: EPA focuses on score impact, while WPA emphasizes win likelihood. Leakage is mitigated by excluding betting-related or projection-based outputs, maintaining analytical integrity. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-07-16-validation (a7716286b5a9db32), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

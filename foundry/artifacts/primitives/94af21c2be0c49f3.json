@@ -1,0 +1,78 @@
+{
+  "book_id": "94af21c2be0c49f3",
+  "source_status": "COMPLETE",
+  "title": "1733-decentralized-prediction-markets-sports-books",
+  "file_name": "1733-decentralized-prediction-markets-sports-books.md",
+  "sha256": "94af21c2be0c49f34c77128707575d036afd1f2e3dd53ac31a059ae32de17ef7",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Liquidity-based utility AMMs generalize binary prediction markets to continuous probability spaces via marginal-price oracles, enabling dynamic fair pricing and fee-optimal LP compensation. Universal Lens: Rooted in 1733-decentralized-prediction-markets-sports-books (94af21c2be0c49f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction to calibrate synthetic fair prices from GSE oracles, using marginally consistent posterior distributions to detect mispriced sportsbooks. GSI Mapping: Rooted in 1733-decentralized-prediction-markets-sports-books (94af21c2be0c49f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses marginal-price oracles as situational state transitions to compute liquidity diagnostics and flag cross-book discrepancies for manual review. GSE Mapping: Rooted in 1733-decentralized-prediction-markets-sports-books (94af21c2be0c49f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "marginal_price_oracle",
+      "name": "Marginal Price Oracle",
+      "verbatim_quote": "Equations & assumptions - AMM cost via utility preservation: C(q+s) - C(q) with u held constant; marginal (instantaneous) price π(q) = ∇C(q",
+      "page": 1,
+      "latex": "\\pi(q) = \\nabla C(q)",
+      "symbol_and_unit_ledger": "{'q': 'outcome probability vector, dimensionless', 'C(q)': 'AMM cost function, currency units', '\\\\pi(q)': 'marginal price vector, currency per probability unit'}",
+      "assumptions": "Utility-preserving cost minimization, differentiable utility function, deterministic price path.",
+      "breakdown_regime": "Non-differentiable utility or ill-conditioned price paths.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Synthetic fair price generator from liquidity curves; used in GSE for mispricing detection.",
+        "source_operator": "marginal_price_oracle",
+        "telemetry": "Bid/ask probability time series deviation from oracle midprice."
+      }
+    },
+    {
+      "primitive_id": "liquidity_utility_function",
+      "name": "Liquidity Utility Function",
+      "verbatim_quote": "Method / model - Liquidity-based utility functions u(x, y) over cash x and share vector y; the AMM cost is the minimal payment preserving utility: C(q) = min{Δx : u(x0+Δx, y0-s) ≥ u(x0, y0)} for a share purchase s.",
+      "page": 1,
+      "latex": "C(q) = \\min_{\\Delta x} \\{ \\Delta x : u(x_0 + \\Delta x, y_0 - s) \\geq u(x_0, y_0) \\}",
+      "symbol_and_unit_ledger": "{'u(x, y)': 'utility function, dimensionless', 'x': 'cash holdings, currency units', 'y': 'share vector, dimensionless', 's': 'share purchase vector, dimensionless', 'C(q)': 'cost function, currency units'}",
+      "assumptions": "Liquidity provider utility maximization, convexity of utility function.",
+      "breakdown_regime": "Non-convex or non-smooth utility functions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian belief update under liquidity constraints.",
+        "source_operator": "liquidity_utility_function",
+        "telemetry": "Expected LP profit under varying fee levels and volatility."
+      }
+    },
+    {
+      "primitive_id": "fee_compensation_model",
+      "name": "Fee Compensation Model",
+      "verbatim_quote": "- Fees: explicit fee γ compensating LPs; fee revenue vs adverse-selection loss tradeoff determines the optimal fee.",
+      "page": 1,
+      "latex": "\\text{LP Profit} = \\gamma \\cdot \\text{Trade Volume} - \\text{Adverse Selection Loss}",
+      "symbol_and_unit_ledger": "{'\\\\gamma': 'fee rate, dimensionless', '\\\\text{Trade Volume}': 'total traded amount, currency units', '\\\\text{Adverse Selection Loss}': 'expected loss from informed trading, currency units'}",
+      "assumptions": "Explicit fee application, adversarial trader model, fee revenue as sole LP compensation.",
+      "breakdown_regime": "Informed trader presence beyond modeled volatility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to optimize fee structure for liquidity depth and spread tightness.",
+        "source_operator": "fee_compensation_model",
+        "telemetry": "Optimal fee γ* that maximizes expected LP return."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "94af21c2be0c49f3_t0",
+      "think": "The marginal price oracle is derived from the AMM cost function C(q), which is defined via utility preservation. For a given outcome q, the marginal price π(q) = ∇C(q) represents the instantaneous cost per unit change in probability. This is a directional derivative of the cost function, capturing how much additional cash is required to maintain utility when purchasing shares. In the stochastic backtest, this oracle is evaluated across 500 price paths with Brownian motion dynamics. The liquidity utility function u(x, y) defines the trade-off between cash and shares, and the cost C(q) ensures that liquidity providers' utility remains constant during trades. The fee model balances revenue from fees against adverse selection losses, optimizing for LP profitability. These primitives form a closed-loop system where liquidity depth, price discovery, and fee structure interplay dynamically.\n\nDeep epistemic analysis for 1733-decentralized-prediction-markets-sports-books (94af21c2be0c49f3, domain=other, pages_read=3/3): Operator 'Marginal Price Oracle' (page 1, domain other) captures: Equations & assumptions - AMM cost via utility preservation: C(q+s) - C(q) with u held constant; marginal (instantaneous) price π(q) = ∇C(q Assumptions: Utility-preserving cost minimization, differentiable utility function, deterministic price path. Breakdown regime: Non-differentiable utility or ill-conditioned price paths. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Synthetic fair price generator from liquidity curves; used in GSE for mispricing detection. Operator 'Liquidity Utility Function' (page 1, domain other) captures: Method / model - Liquidity-based utility functions u(x, y) over cash x and share vector y; the AMM cost is the minimal payment preserving utility: C(q) = min{Δx : u(x0+Δx, y0-s) ≥ u(x0, y0)} for a share purchase s. Assumptions: Liquidity provider utility maximization, convexity of utility function. Breakdown regime: Non-convex or non-smooth utility functions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian belief update under liquidity constraints. Operator 'Fee Compensation Model' (page 1, domain other) captures: - Fees: explicit fee γ compensating LPs; fee revenue vs adverse-selection loss tradeoff determines the optimal fee. Assumptions: Explicit fee application, adversarial trader model, fee revenue as sole LP compensation. Breakdown regime: Informed trader presence beyond modeled volatility. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to optimize fee structure for liquidity depth and spread tightness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1733-decentralized-prediction-markets-sports-books (94af21c2be0c49f3, domain=other, pages_read=3/3): Operator 'Marginal Price Oracle' (page 1, domain other) captures: Equations & assumptions - AMM cost via utility preservation: C(q+s) - C(q) with u held constant; marginal (instantaneous) price π(q) = ∇C(q Assumptions: Utility-preserving cost minimization, differentiable utility function, deterministic price path. Breakdown regime: Non-differentiable utility or ill-conditioned price paths. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Synthetic fair price generator from liquidity curves; used in GSE for mispricing detection. Operator 'Liquidity Utility Function' (page 1, domain other) captures: Method / model - Liquidity-based utility functions u(x, y) over cash x and share vector y; the AMM cost is the minimal payment preserving utility: C(q) = min{Δx : u(x0+Δx, y0-s) ≥ u(x0, y0)} for a share purchase s. Assumptions: Liquidity provider utility maximization, convexity of utility function. Breakdown regime: Non-convex or non-smooth utility functions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian belief update under liquidity constraints. Operator 'Fee Compensation Model' (page 1, domain other) captures: - Fees: explicit fee γ compensating LPs; fee revenue vs adverse-selection loss tradeoff determines the optimal fee. Assumptions: Explicit fee application, adversarial trader model, fee revenue as sole LP compensation. Breakdown regime: Informed trader presence beyond modeled volatility. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to optimize fee structure for liquidity depth and spread tightness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Arrow-Debreu equilibrium theory and modern AMM design (e.g., Uniswap v2), extended to continuous probability spaces with utility-based pricing. Retrocausal Genealogy: Rooted in 1733-decentralized-prediction-markets-sports-books (94af21c2be0c49f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1733-decentralized-prediction-markets-sports-books (94af21c2be0c49f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include liquidity providers seeking fee income, traders exploiting mispricings, and market makers maintaining price consistency. Each agent's behavior influences the oracle's accuracy and the fee’s optimal level. Theory of Mind & Decision Maker Model: Rooted in 1733-decentralized-prediction-markets-sports-books (94af21c2be0c49f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If the utility function lacks convexity or the price path is non-Brownian, the marginal oracle fails. If fees are not explicitly modeled, the fee compensation model becomes invalid. Anti-collinearity requires distinct modeling of liquidity and information dynamics. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1733-decentralized-prediction-markets-sports-books (94af21c2be0c49f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

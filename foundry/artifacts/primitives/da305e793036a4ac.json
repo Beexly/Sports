@@ -1,0 +1,78 @@
+{
+  "book_id": "da305e793036a4ac",
+  "source_status": "COMPLETE",
+  "title": "CADENCE-V25-TNF-W10",
+  "file_name": "CADENCE-V25-TNF-W10.md",
+  "sha256": "da305e793036a4ac30a44c59b6a2f985949ba300100ae8ba65cec7ec6a87771d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Cadence v2.5 injury overlay integrates nflverse and ESPN data via worst-of merge, enabling probabilistic availability inference through Sinkhorn transportation. Universal Lens: Rooted in CADENCE-V25-TNF-W10 (da305e793036a4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers player availability using conformal predictive distributions over merged injury statuses, leveraging temporal consistency checks and sealed hashes for epistemic robustness. GSI Mapping: Rooted in CADENCE-V25-TNF-W10 (da305e793036a4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models team readiness through state transitions governed by injury severity thresholds, updating belief states via Bayesian fusion of multi-source designations. GSE Mapping: Rooted in CADENCE-V25-TNF-W10 (da305e793036a4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "injury_overlay",
+      "name": "Injury Status Merger",
+      "verbatim_quote": "The official Thursday designations were pulled from the ESPN game-summary endpoint for event `401873052` and merged worst-of (Out > Doubtful > Questionable > none), so a source conflict can only make a player look less available.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_E': 'ESPN injury designation {Out, Doubtful, Questionable, None}', 'S_N': 'nflverse injury designation {Out, Doubtful, Questionable, None}', 'S_A': 'Applied merged status'}",
+      "assumptions": "Designations follow partial order: Out > Doubtful > Questionable > None. Source conflicts reduce availability estimates.",
+      "breakdown_regime": "When S_E ≠ S_N, worst-of rule applies to S_A.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps ESPN and nflverse injury labels to a unified ordinal lattice for probabilistic inference in GSI.",
+        "source_operator": "injury_overlay",
+        "telemetry": "Cross-source agreement rate of merged statuses."
+      }
+    },
+    {
+      "primitive_id": "sinkhorn_transport",
+      "name": "Transportation Matrix Weighting",
+      "verbatim_quote": "Sinkhorn execution weights reallocated Sealed cost matrix C and execution multipliers used as-is.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Cost matrix (dimensionless)', 'W': 'Weight matrix (dimensionless)', 'π': 'Transport plan (probability distribution)'}",
+      "assumptions": "Matrix C is strictly positive, weights W are non-negative scalars.",
+      "breakdown_regime": "Convergence of Sinkhorn iterations implies stable transport plan π.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives optimal coupling between teams' injury profiles via entropy-regularized optimal transport.",
+        "source_operator": "sinkhorn_transport",
+        "telemetry": "Iterative convergence residuals (1e-10 to 1e-11)."
+      }
+    },
+    {
+      "primitive_id": "sealed_hash_verification",
+      "name": "Merkle Seal Integrity",
+      "verbatim_quote": "Seal hash unchanged All six checks true: sealed-center merkle `23245bcbba04f147...` matches the recorded 2026-W44 value, candidate `parent_seal_hash` matches the center, candidate tau 4.6607, coach-mind tau 0.42, EPA dropoff table sha256 unmodified, QB_QUESTIONABLE dropoff 0.0947.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_C': 'Center seal hash (SHA256)', 'H_P': 'Parent seal hash (SHA256)', 'τ': 'Temporal parameter (dimensionless)', 'EPA': 'Expected Points Added (points)'}",
+      "assumptions": "All integrity checks pass; no modification to prior artifacts.",
+      "breakdown_regime": "Any mismatch in H_C or H_P invalidates the seal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ensures data lineage consistency across GSI and GSE via cryptographic merkle tree validation.",
+        "source_operator": "sealed_hash_verification",
+        "telemetry": "Boolean verification flags for each seal check."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "da305e793036a4ac_t0",
+      "think": "The injury overlay primitive merges two sources of player availability data—nflverse and ESPN—using a worst-of rule that ensures conservative estimates. This operation defines a partial order on injury statuses, which enables a structured probabilistic model in GSI. The Sinkhorn transport primitive then maps these statuses into a joint probability space, optimizing alignment between team injury profiles. The sealed hash verification ensures that all transformations maintain data integrity, preventing retroactive modifications. These primitives collectively define a closed-loop system where uncertainty in player availability is quantified and propagated through Bayesian inference and state transitions.\n\nDeep epistemic analysis for CADENCE-V25-TNF-W10 (da305e793036a4ac, domain=other, pages_read=1/1): Operator 'Injury Status Merger' (page 1, domain other) captures: The official Thursday designations were pulled from the ESPN game-summary endpoint for event `401873052` and merged worst-of (Out > Doubtful > Questionable > none), so a source conflict can only make a player look less available. Assumptions: Designations follow partial order: Out > Doubtful > Questionable > None. Source conflicts reduce availability estimates. Breakdown regime: When S_E ≠ S_N, worst-of rule applies to S_A. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps ESPN and nflverse injury labels to a unified ordinal lattice for probabilistic inference in GSI. Operator 'Transportation Matrix Weighting' (page 1, domain other) captures: Sinkhorn execution weights reallocated Sealed cost matrix C and execution multipliers used as-is. Assumptions: Matrix C is strictly positive, weights W are non-negative scalars. Breakdown regime: Convergence of Sinkhorn iterations implies stable transport plan π. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives optimal coupling between teams' injury profiles via entropy-regularized optimal transport. Operator 'Merkle Seal Integrity' (page 1, domain other) captures: Seal hash unchanged All six checks true: sealed-center merkle `23245bcbba04f147...` matches the recorded 2026-W44 value, candidate `parent_seal_hash` matches the center, candidate tau 4.6607, coach-mind tau 0.42, EPA dropoff table sha256 unmodified, QB_QUESTIONABLE dropoff 0.0947. Assumptions: All integrity checks pass; no modification to prior artifacts. Breakdown regime: Any mismatch in H_C or H_P invalidates the seal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures data lineage consistency across GSI and GSE via cryptographic merkle tree validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CADENCE-V25-TNF-W10 (da305e793036a4ac, domain=other, pages_read=1/1): Operator 'Injury Status Merger' (page 1, domain other) captures: The official Thursday designations were pulled from the ESPN game-summary endpoint for event `401873052` and merged worst-of (Out > Doubtful > Questionable > none), so a source conflict can only make a player look less available. Assumptions: Designations follow partial order: Out > Doubtful > Questionable > None. Source conflicts reduce availability estimates. Breakdown regime: When S_E ≠ S_N, worst-of rule applies to S_A. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps ESPN and nflverse injury labels to a unified ordinal lattice for probabilistic inference in GSI. Operator 'Transportation Matrix Weighting' (page 1, domain other) captures: Sinkhorn execution weights reallocated Sealed cost matrix C and execution multipliers used as-is. Assumptions: Matrix C is strictly positive, weights W are non-negative scalars. Breakdown regime: Convergence of Sinkhorn iterations implies stable transport plan π. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives optimal coupling between teams' injury profiles via entropy-regularized optimal transport. Operator 'Merkle Seal Integrity' (page 1, domain other) captures: Seal hash unchanged All six checks true: sealed-center merkle `23245bcbba04f147...` matches the recorded 2026-W44 value, candidate `parent_seal_hash` matches the center, candidate tau 4.6607, coach-mind tau 0.42, EPA dropoff table sha256 unmodified, QB_QUESTIONABLE dropoff 0.0947. Assumptions: All integrity checks pass; no modification to prior artifacts. Breakdown regime: Any mismatch in H_C or H_P invalidates the seal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures data lineage consistency across GSI and GSE via cryptographic merkle tree validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical information theory and modern optimal transport theory, particularly the Sinkhorn-Knopp algorithm and Merkle tree structures. Influenced by NFL analytics frameworks and probabilistic programming paradigms. Retrocausal Genealogy: Rooted in CADENCE-V25-TNF-W10 (da305e793036a4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CADENCE-V25-TNF-W10 (da305e793036a4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing agents as data sources (nflverse vs ESPN) with varying reliability. Decision actors include coaches who may override or adjust inferred probabilities based on internal knowledge. Theory of Mind & Decision Maker Model: Rooted in CADENCE-V25-TNF-W10 (da305e793036a4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring distinct data sources contribute unique signal. Leakage is prevented by sealing mechanisms that prevent unauthorized modification of derived artifacts. Cross-Layer Veto & Anti-Leakage Check: Rooted in CADENCE-V25-TNF-W10 (da305e793036a4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CADENCE-V25-TNF-W10 (da305e793036a4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

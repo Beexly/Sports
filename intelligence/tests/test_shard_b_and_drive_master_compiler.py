@@ -135,3 +135,15 @@ def test_compile_drive_masters_and_run_compile(tmp_path: Path) -> None:
     assert res["drive_situational_rows"] == 1
     assert res["trainer_feed_rows"] == 3
     assert feed.exists()
+
+
+def test_compile_shard_b_filters_quarantined_and_keeps_gdoc_midday(tmp_path: Path) -> None:
+    (tmp_path / "85d0eb49ef_CP_575_E.pdf.md").write_text("---\nsource: \"CP_575_E.pdf\"\nfolder: \"/CorpusRoot\"\n---\n<think>Redacted.</think>", encoding="utf-8")
+    (tmp_path / "09d91a0ac3_Charcuterie-Chick-Final_1_.pdf.md").write_text("---\nsource: \"Charcuterie-Chick-Final (1).pdf\"\nfolder: \"/CorpusRoot\"\n---\n<think>Redacted.</think>", encoding="utf-8")
+    (tmp_path / "gdoc_1W-2Z_2026-10-30-MIDDAY-IG50.md.md").write_text("---\nsource: \"2026-10-30-MIDDAY-IG50.md\"\nfolder: \"/CorpusRoot\"\n---\n<think>NFL EPA signal note.</think>", encoding="utf-8")
+
+    summary, trainer = compile_shard_b_directory(sync_dir=tmp_path)
+    assert summary["total_markdown_files"] == 1
+    assert summary["files_with_xml_sections"] == 1
+    assert [e["file_name"] for e in summary["entries"]] == ["gdoc_1W-2Z_2026-10-30-MIDDAY-IG50.md.md"]
+    assert len(trainer) == 1

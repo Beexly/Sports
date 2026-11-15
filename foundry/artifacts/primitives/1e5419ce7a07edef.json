@@ -1,0 +1,78 @@
+{
+  "book_id": "1e5419ce7a07edef",
+  "source_status": "COMPLETE",
+  "title": "founder-outreach-onepager",
+  "file_name": "founder-outreach-onepager.md",
+  "sha256": "1e5419ce7a07edef276d728fe3e10074f132b6227633e65a5a318b3c30c626e3",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A Bayesian calibration framework for sports intelligence where signal integrity is enforced through verifiable factor trails and gated performance metrics. Universal Lens: Rooted in founder-outreach-onepager (1e5419ce7a07edef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions to map observed market signals into calibrated edge estimates, conditioned on full factor trails and delayed public validation. GSI Mapping: Rooted in founder-outreach-onepager (1e5419ce7a07edef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions in situational reasoning by evaluating signal authenticity via traceable market depth and freshness, deferring public win-rate until sufficient settled history supports statistical validity. GSE Mapping: Rooted in founder-outreach-onepager (1e5419ce7a07edef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "calibrated_signal",
+      "name": "Calibrated Signal",
+      "verbatim_quote": "--## The TL;DR (one paragraph — for cold DMs) > Built a sports intelligence platform that does the opposite of a tout > service.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Signal value (dimensionless)', 'F': 'Factor trail vector (consensus, line movement, depth, freshness)'}",
+      "assumptions": "Signals must be traceable to real market lines; no synthetic data allowed.",
+      "breakdown_regime": "When F is undefined or incomplete, S is marked as uncalibrated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each signal S maps to a posterior distribution over edge, conditioned on F.",
+        "source_operator": "calibrated_signal",
+        "telemetry": "Traceability of F and consistency of S across time"
+      }
+    },
+    {
+      "primitive_id": "gated_performance",
+      "name": "Gated Performance",
+      "verbatim_quote": "The public win-rate > stays gated until enough settled history exists to publish a defensible > number.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'Win rate (dimensionless)', 'H': 'Settled history count (integer)'}",
+      "assumptions": "Performance metrics are only published when H exceeds threshold T.",
+      "breakdown_regime": "When H < T, W remains undefined and inaccessible.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "W is derived from H using a cumulative validation kernel.",
+        "source_operator": "gated_performance",
+        "telemetry": "Number of settled signals and time since last update"
+      }
+    },
+    {
+      "primitive_id": "factor_trail",
+      "name": "Factor Trail",
+      "verbatim_quote": "Every signal exposes its full factor trail (consensus, line > movement, depth, freshness).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Factor trail vector (consensus, line movement, depth, freshness)', 'C': 'Consensus score (0–1)', 'M': 'Line movement magnitude (odds units)', 'D': 'Market depth (volume units)', 'F': 'Freshness indicator (time since last update)'}",
+      "assumptions": "All components of T are measurable and timestamped.",
+      "breakdown_regime": "When any component of T is missing, trail is incomplete.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "T maps to a multi-dimensional feature space used for signal scoring.",
+        "source_operator": "factor_trail",
+        "telemetry": "Timestamped completeness of each factor in T"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1e5419ce7a07edef_t0",
+      "think": "The core duality lies between transparency and trust—wherein the system enforces a dual regime: one where signals are fully traceable (factor trail), and another where performance is only revealed once sufficient empirical grounding exists (gated performance). This creates a mathematical constraint on information disclosure, modeled as a conditional probability P(S|F) and P(W|H). The failure mode occurs when either F is incomplete or H insufficiently large, leading to invalidation of S or W respectively. The system avoids synthetic data by enforcing that every S must originate from an actual market line, ensuring that the factor trail T is always anchored in real-time odds data. The calibration process thus becomes a recursive Bayesian update over T, where prior beliefs are refined with new evidence from D, M, C, and F. The gating mechanism ensures that W is not prematurely exposed, maintaining the integrity of the probabilistic model until convergence criteria are met.\n\nDeep epistemic analysis for founder-outreach-onepager (1e5419ce7a07edef, domain=other, pages_read=3/3): Operator 'Calibrated Signal' (page 1, domain other) captures: --## The TL;DR (one paragraph — for cold DMs) > Built a sports intelligence platform that does the opposite of a tout > service. Assumptions: Signals must be traceable to real market lines; no synthetic data allowed. Breakdown regime: When F is undefined or incomplete, S is marked as uncalibrated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each signal S maps to a posterior distribution over edge, conditioned on F. Operator 'Gated Performance' (page 1, domain other) captures: The public win-rate > stays gated until enough settled history exists to publish a defensible > number. Assumptions: Performance metrics are only published when H exceeds threshold T. Breakdown regime: When H < T, W remains undefined and inaccessible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): W is derived from H using a cumulative validation kernel. Operator 'Factor Trail' (page 1, domain other) captures: Every signal exposes its full factor trail (consensus, line > movement, depth, freshness). Assumptions: All components of T are measurable and timestamped. Breakdown regime: When any component of T is missing, trail is incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): T maps to a multi-dimensional feature space used for signal scoring. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for founder-outreach-onepager (1e5419ce7a07edef, domain=other, pages_read=3/3): Operator 'Calibrated Signal' (page 1, domain other) captures: --## The TL;DR (one paragraph — for cold DMs) > Built a sports intelligence platform that does the opposite of a tout > service. Assumptions: Signals must be traceable to real market lines; no synthetic data allowed. Breakdown regime: When F is undefined or incomplete, S is marked as uncalibrated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each signal S maps to a posterior distribution over edge, conditioned on F. Operator 'Gated Performance' (page 1, domain other) captures: The public win-rate > stays gated until enough settled history exists to publish a defensible > number. Assumptions: Performance metrics are only published when H exceeds threshold T. Breakdown regime: When H < T, W remains undefined and inaccessible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): W is derived from H using a cumulative validation kernel. Operator 'Factor Trail' (page 1, domain other) captures: Every signal exposes its full factor trail (consensus, line > movement, depth, freshness). Assumptions: All components of T are measurable and timestamped. Breakdown regime: When any component of T is missing, trail is incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): T maps to a multi-dimensional feature space used for signal scoring. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and conformal prediction, this approach builds upon principles of uncertainty quantification and delayed validation found in modern machine learning systems and financial risk models. Retrocausal Genealogy: Rooted in founder-outreach-onepager (1e5419ce7a07edef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in founder-outreach-onepager (1e5419ce7a07edef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit early access to W or manipulate T to appear credible. The system counters this by embedding verification layers within the factor trail and enforcing temporal delays before W is made public. Theory of Mind & Decision Maker Model: Rooted in founder-outreach-onepager (1e5419ce7a07edef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by requiring distinct factors in T to avoid redundancy. Leakage vetoes occur when any part of T is inferred without explicit observation, preventing synthetic signal generation. Cross-Layer Veto & Anti-Leakage Check: Rooted in founder-outreach-onepager (1e5419ce7a07edef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

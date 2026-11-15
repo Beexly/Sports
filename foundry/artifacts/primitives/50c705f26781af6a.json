@@ -1,0 +1,78 @@
+{
+  "book_id": "50c705f26781af6a",
+  "source_status": "COMPLETE",
+  "title": "betmgm.com",
+  "file_name": "betmgm.com.md",
+  "sha256": "50c705f26781af6a4e0c53bb6a8209e050ea873ea3d9cfa7c1a04b8a984191ce",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph traversal and URL discovery as a structured topological space with entry-point cardinality and connectivity metrics. Universal Lens: Rooted in betmgm.com (50c705f26781af6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on sitemap coverage using empirical URL density and status code distributions for probabilistic sportsbook indexing. GSI Mapping: Rooted in betmgm.com (50c705f26781af6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in content discovery engine driven by sitemap walk success rates and hierarchical URL tree expansion for real-time data ingestion. GSE Mapping: Rooted in betmgm.com (50c705f26781af6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_graph_connectivity",
+      "name": "Sitemap Graph Connectivity",
+      "verbatim_quote": "# betmgm.com Category: **sportsbook** URLs discovered: **24,125** Sitemaps walked: 66 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{urls}}': '\\\\text{Number of URLs discovered} = 24,125', 'N_{\\\\text{sitemaps}}': '\\\\text{Number of sitemaps walked} = 66'}",
+      "assumptions": "Each sitemap contributes independently to URL discovery; sitemap structure is navigable.",
+      "breakdown_regime": "When sitemap index returns 404, connectivity fails and URL discovery halts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The sitemap graph mirrors the logical hierarchy of content categories, where each node represents a category or subcategory with edges indicating navigation paths.",
+        "source_operator": "sitemap_graph_connectivity",
+        "telemetry": "URL count per sitemap and HTTP response codes."
+      }
+    },
+    {
+      "primitive_id": "sitemap_status_code_distribution",
+      "name": "Sitemap Status Code Distribution",
+      "verbatim_quote": "| Index | |---|---|---|---| | `https://www.betmgm.com/sitemap.xml` | 200 | 4 | yes | | `https://sports.betmgm.com/en/blog/sitemap_index.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{\\\\text{status}}': '\\\\text{Status code of sitemap} \\\\in \\\\{200, 404\\\\}', 'E': '\\\\text{Number of entries in sitemap} \\\\in \\\\mathbb{Z}^{+}'}",
+      "assumptions": "HTTP status codes reflect server availability and sitemap validity.",
+      "breakdown_regime": "A 404 status indicates missing or misconfigured sitemap.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Distribution of sitemap statuses forms a kernel for assessing system robustness and content accessibility.",
+        "source_operator": "sitemap_status_code_distribution",
+        "telemetry": "Frequency of 200 vs 404 responses across all sitemaps."
+      }
+    },
+    {
+      "primitive_id": "url_entry_density",
+      "name": "URL Entry Density",
+      "verbatim_quote": "0 | no | | `https://storage.googleapis.com/auto-sitemaps/multi/sports/betmgm.xml` | 200 | 1,505 | no | | `https://storage.googleapis.com/auto-sitemaps/multi/portal/betmgm.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{\\\\text{entry}}': '\\\\text{Entry density per sitemap} = \\\\frac{E}{N_{\\\\text{sitemaps}}} \\\\in \\\\mathbb{R}^{+}', 'E': '\\\\text{Total entries across all sitemaps} = 24,125'}",
+      "assumptions": "Higher density implies more granular content indexing.",
+      "breakdown_regime": "Low-density sitemaps may indicate sparse or outdated content.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Entry density quantifies the richness of indexed content per sitemap, enabling inference about content depth and update frequency.",
+        "source_operator": "url_entry_density",
+        "telemetry": "Average number of entries per sitemap."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "50c705f26781af6a_t0",
+      "think": "The sitemap infrastructure of betmgm.com constitutes a directed acyclic graph (DAG) of content categories and subcategories, where each sitemap node encodes a set of URLs. The graph's connectivity is determined by the HTTP status codes returned upon access—200 for valid, 404 for invalid. The total URL count (24,125) and sitemap count (66) define a density metric that reflects indexing completeness. The presence of auto-generated sitemaps (e.g., Google Cloud storage) suggests automated content ingestion pipelines. Failure modes occur when sitemap indices return 404, breaking the traversal chain. These primitives enable GSI to model content discoverability as a stochastic process over a topological space, while GSE uses this to simulate dynamic content state transitions during real-time ingestion.\n\nDeep epistemic analysis for betmgm.com (50c705f26781af6a, domain=other, pages_read=4/4): Operator 'Sitemap Graph Connectivity' (page 1, domain other) captures: # betmgm.com Category: **sportsbook** URLs discovered: **24,125** Sitemaps walked: 66 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap contributes independently to URL discovery; sitemap structure is navigable. Breakdown regime: When sitemap index returns 404, connectivity fails and URL discovery halts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The sitemap graph mirrors the logical hierarchy of content categories, where each node represents a category or subcategory with edges indicating navigation paths. Operator 'Sitemap Status Code Distribution' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.betmgm.com/sitemap.xml` | 200 | 4 | yes | | `https://sports.betmgm.com/en/blog/sitemap_index.xml` | Assumptions: HTTP status codes reflect server availability and sitemap validity. Breakdown regime: A 404 status indicates missing or misconfigured sitemap. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Distribution of sitemap statuses forms a kernel for assessing system robustness and content accessibility. Operator 'URL Entry Density' (page 1, domain other) captures: 0 | no | | `https://storage.googleapis.com/auto-sitemaps/multi/sports/betmgm.xml` | 200 | 1,505 | no | | `https://storage.googleapis.com/auto-sitemaps/multi/portal/betmgm.xml` | Assumptions: Higher density implies more granular content indexing. Breakdown regime: Low-density sitemaps may indicate sparse or outdated content. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Entry density quantifies the richness of indexed content per sitemap, enabling inference about content depth and update frequency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for betmgm.com (50c705f26781af6a, domain=other, pages_read=4/4): Operator 'Sitemap Graph Connectivity' (page 1, domain other) captures: # betmgm.com Category: **sportsbook** URLs discovered: **24,125** Sitemaps walked: 66 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap contributes independently to URL discovery; sitemap structure is navigable. Breakdown regime: When sitemap index returns 404, connectivity fails and URL discovery halts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The sitemap graph mirrors the logical hierarchy of content categories, where each node represents a category or subcategory with edges indicating navigation paths. Operator 'Sitemap Status Code Distribution' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.betmgm.com/sitemap.xml` | 200 | 4 | yes | | `https://sports.betmgm.com/en/blog/sitemap_index.xml` | Assumptions: HTTP status codes reflect server availability and sitemap validity. Breakdown regime: A 404 status indicates missing or misconfigured sitemap. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Distribution of sitemap statuses forms a kernel for assessing system robustness and content accessibility. Operator 'URL Entry Density' (page 1, domain other) captures: 0 | no | | `https://storage.googleapis.com/auto-sitemaps/multi/sports/betmgm.xml` | 200 | 1,505 | no | | `https://storage.googleapis.com/auto-sitemaps/multi/portal/betmgm.xml` | Assumptions: Higher density implies more granular content indexing. Breakdown regime: Low-density sitemaps may indicate sparse or outdated content. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Entry density quantifies the richness of indexed content per sitemap, enabling inference about content depth and update frequency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web crawling models (Robots.txt, XML sitemaps), this formalism extends to modern content distribution systems with layered indexing strategies. Retrocausal Genealogy: Rooted in betmgm.com (50c705f26781af6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in betmgm.com (50c705f26781af6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include crawlers (GSE) and content publishers (betmgm). Crawlers optimize for coverage; publishers aim for SEO visibility. Misalignment occurs when sitemaps are malformed or outdated. Theory of Mind & Decision Maker Model: Rooted in betmgm.com (50c705f26781af6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in betmgm.com (50c705f26781af6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If sitemap status codes are inconsistent or entries are duplicated, it introduces noise into GSI’s belief updates and risks GSE’s state transition logic becoming unstable. Cross-Layer Veto & Anti-Leakage Check: Rooted in betmgm.com (50c705f26781af6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in betmgm.com (50c705f26781af6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

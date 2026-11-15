@@ -1,0 +1,95 @@
+{
+  "book_id": "e89d36a9856d5c7a",
+  "source_status": "COMPLETE",
+  "title": "GSE_SHADOW_METRIC_EVIDENCE_REPORTS",
+  "file_name": "GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md",
+  "sha256": "e89d36a9856d5c7ab9c33cd2d5555621931d253fdc95f0efc3e803760bf8e4fa",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Shadow metrics operate under internal governance constraints; their drift cards monitor statistical stability via PSI thresholds, enabling situational reasoning without public exposure. Universal Lens: Rooted in GSE_SHADOW_METRIC_EVIDENCE_REPORTS (e89d36a9856d5c7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over shadow metric evidence to infer uncertainty bounds, leveraging PSI-based drift detection for Bayesian calibration adjustments. GSI Mapping: Rooted in GSE_SHADOW_METRIC_EVIDENCE_REPORTS (e89d36a9856d5c7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes shadow metric telemetry to transition states within internal models, applying PSI-driven thresholds to manage risk and maintain operational integrity through non-public pathways. GSE Mapping: Rooted in GSE_SHADOW_METRIC_EVIDENCE_REPORTS (e89d36a9856d5c7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "stale_line_risk_score",
+      "name": "Stale Line Risk Score",
+      "verbatim_quote": "- Summary: DRAFT model card for Stale Line Risk Score (`stale-line-risk-score`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'psi': 'dimensionless, PSI value measuring market freshness deviation'}",
+      "assumptions": "Market freshness is quantified by deviation from historical baseline; synthetic validation only.",
+      "breakdown_regime": "When psi > 0.30, severe staleness detected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps market staleness to internal risk state using PSI drift thresholds.",
+        "source_operator": "stale_line_risk_score",
+        "telemetry": "market_freshness_psi"
+      }
+    },
+    {
+      "primitive_id": "qb_burden_index",
+      "name": "QB Burden Index",
+      "verbatim_quote": "- Summary: DRAFT model card for QB Burden Index (`qb-burden-index`).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'psi': 'dimensionless, PSI value measuring burden distribution deviation'}",
+      "assumptions": "Burden is contextual, not quarterback quality; proxy inputs used for estimation.",
+      "breakdown_regime": "When psi > 0.28, severe burden distribution shift detected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies contextual burden on QB via distributional PSI drift.",
+        "source_operator": "qb_burden_index",
+        "telemetry": "burden_distribution_psi"
+      }
+    },
+    {
+      "primitive_id": "drift_pressure_index",
+      "name": "Drift Pressure Index",
+      "verbatim_quote": "Summary: DRAFT model card for Drift Pressure Index (`drift-pressure-index`).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'psi': 'dimensionless, PSI value measuring drift pressure deviation'}",
+      "assumptions": "Drift pressure reflects model instability; synthetic validation only.",
+      "breakdown_regime": "When psi > 0.12, drift pressure exceeds acceptable threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Monitors model drift via PSI-based deviation from stable reference.",
+        "source_operator": "drift_pressure_index",
+        "telemetry": "drift_pressure_psi"
+      }
+    },
+    {
+      "primitive_id": "no_bet_pressure",
+      "name": "No-Bet Pressure",
+      "verbatim_quote": "Summary: DRAFT model card for No-Bet Pressure (`no-bet-pressure`).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'delta': 'dimensionless, rate of refusal pressure deviation'}",
+      "assumptions": "Refusal pressure indicates external constraint; synthetic validation only.",
+      "breakdown_regime": "When delta > 0.28, high refusal pressure detected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Measures refusal pressure via deviation in hard pass rate.",
+        "source_operator": "no_bet_pressure",
+        "telemetry": "no_bet_hard_pass_rate_delta"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e89d36a9856d5c7a_t0",
+      "think": "Each shadow metric operates under a shared governance framework enforcing internal-only lifecycle and API exposure. The core operators—Stale Line Risk Score, QB Burden Index, Drift Pressure Index, and No-Bet Pressure—are defined by PSI or delta thresholds derived from synthetic fixtures. These metrics do not produce public probabilities or betting advice but instead provide internal risk signals. Their mathematical structure relies on statistical stability checks (PSI), distributional shifts (burden), and behavioral drifts (refusal pressure). Failure modes occur when thresholds exceed watch/severe limits, indicating potential degradation in model fidelity or data integrity. Dualities exist between these metrics: e.g., QB Burden Index mirrors Stale Line Risk Score in its reliance on PSI, while Drift Pressure Index and No-Bet Pressure both track deviation from normative baselines. Each metric's breakdown regime defines critical failure points where internal governance triggers corrective action.\n\nDeep epistemic analysis for GSE_SHADOW_METRIC_EVIDENCE_REPORTS (e89d36a9856d5c7a, domain=other, pages_read=5/5): Operator 'Stale Line Risk Score' (page 1, domain other) captures: - Summary: DRAFT model card for Stale Line Risk Score (`stale-line-risk-score`). Assumptions: Market freshness is quantified by deviation from historical baseline; synthetic validation only. Breakdown regime: When psi > 0.30, severe staleness detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps market staleness to internal risk state using PSI drift thresholds. Operator 'QB Burden Index' (page 2, domain other) captures: - Summary: DRAFT model card for QB Burden Index (`qb-burden-index`). Assumptions: Burden is contextual, not quarterback quality; proxy inputs used for estimation. Breakdown regime: When psi > 0.28, severe burden distribution shift detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies contextual burden on QB via distributional PSI drift. Operator 'Drift Pressure Index' (page 3, domain other) captures: Summary: DRAFT model card for Drift Pressure Index (`drift-pressure-index`). Assumptions: Drift pressure reflects model instability; synthetic validation only. Breakdown regime: When psi > 0.12, drift pressure exceeds acceptable threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Monitors model drift via PSI-based deviation from stable reference. Operator 'No-Bet Pressure' (page 3, domain other) captures: Summary: DRAFT model card for No-Bet Pressure (`no-bet-pressure`). Assumptions: Refusal pressure indicates external constraint; synthetic validation only. Breakdown regime: When delta > 0.28, high refusal pressure detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Measures refusal pressure via deviation in hard pass rate. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GSE_SHADOW_METRIC_EVIDENCE_REPORTS (e89d36a9856d5c7a, domain=other, pages_read=5/5): Operator 'Stale Line Risk Score' (page 1, domain other) captures: - Summary: DRAFT model card for Stale Line Risk Score (`stale-line-risk-score`). Assumptions: Market freshness is quantified by deviation from historical baseline; synthetic validation only. Breakdown regime: When psi > 0.30, severe staleness detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps market staleness to internal risk state using PSI drift thresholds. Operator 'QB Burden Index' (page 2, domain other) captures: - Summary: DRAFT model card for QB Burden Index (`qb-burden-index`). Assumptions: Burden is contextual, not quarterback quality; proxy inputs used for estimation. Breakdown regime: When psi > 0.28, severe burden distribution shift detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies contextual burden on QB via distributional PSI drift. Operator 'Drift Pressure Index' (page 3, domain other) captures: Summary: DRAFT model card for Drift Pressure Index (`drift-pressure-index`). Assumptions: Drift pressure reflects model instability; synthetic validation only. Breakdown regime: When psi > 0.12, drift pressure exceeds acceptable threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Monitors model drift via PSI-based deviation from stable reference. Operator 'No-Bet Pressure' (page 3, domain other) captures: Summary: DRAFT model card for No-Bet Pressure (`no-bet-pressure`). Assumptions: Refusal pressure indicates external constraint; synthetic validation only. Breakdown regime: When delta > 0.28, high refusal pressure detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Measures refusal pressure via deviation in hard pass rate. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical process control theory and conformal prediction frameworks, these metrics evolve from early 2020s developments in internal risk modeling for sports analytics systems. Retrocausal Genealogy: Rooted in GSE_SHADOW_METRIC_EVIDENCE_REPORTS (e89d36a9856d5c7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in GSE_SHADOW_METRIC_EVIDENCE_REPORTS (e89d36a9856d5c7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data drift sources, model instability, and external interference. Decision actors are internal governance systems that enforce shadow lifecycle rules and prevent unauthorized exposure. Theory of Mind & Decision Maker Model: Rooted in GSE_SHADOW_METRIC_EVIDENCE_REPORTS (e89d36a9856d5c7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in GSE_SHADOW_METRIC_EVIDENCE_REPORTS (e89d36a9856d5c7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures each metric addresses distinct aspects of operational risk. Leakage vetoes prevent cross-layer contamination by enforcing strict internal-only telemetry and disabling public APIs. Cross-Layer Veto & Anti-Leakage Check: Rooted in GSE_SHADOW_METRIC_EVIDENCE_REPORTS (e89d36a9856d5c7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in GSE_SHADOW_METRIC_EVIDENCE_REPORTS (e89d36a9856d5c7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

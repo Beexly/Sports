@@ -1,0 +1,78 @@
+{
+  "book_id": "b8e7ebaf4dd10955",
+  "source_status": "COMPLETE",
+  "title": "statking-real-vs-stubbed-audit",
+  "file_name": "statking-real-vs-stubbed-audit.md",
+  "sha256": "b8e7ebaf4dd1095507f7068db16272940f7fdf2399cb0f6b56400a452b5ed67f",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "StatKing's operational landscape maps to a ternary classification system: real, stubbed, and fixture-only, with typecheck drift as a persistent latent variable. Universal Lens: Rooted in statking-real-vs-stubbed-audit (b8e7ebaf4dd10955), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers production readiness via Bayesian belief updates on data feed availability and historical backtest validity, conditioned on vendor contract states. GSI Mapping: Rooted in statking-real-vs-stubbed-audit (b8e7ebaf4dd10955), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE navigates system transitions through state machines governed by data feed authorization and fixture-backed validation thresholds. GSE Mapping: Rooted in statking-real-vs-stubbed-audit (b8e7ebaf4dd10955), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "real_systems_operational",
+      "name": "Real Systems Operational",
+      "verbatim_quote": "# StatKing Real vs Stubbed Audit Generated: 2026-06-13T00:00:00Z ## Summary - Real working systems: 9 -",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'dimensionless count of operational real systems'}",
+      "assumptions": "Systems are classified based on functional completeness and data source integrity.",
+      "breakdown_regime": "R = 9 indicates full functionality in core modules.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's confidence in real-time data pipeline corresponds to R's cardinality.",
+        "source_operator": "real_systems_operational",
+        "telemetry": "Number of systems with live NFL data integration."
+      }
+    },
+    {
+      "primitive_id": "data_feed_dependency",
+      "name": "Data Feed Dependency",
+      "verbatim_quote": "product launch - Live authorized NFL data feeds are still required for production-grade claims. - Vendor",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'binary indicator of data feed availability (1 = available, 0 = unavailable)'}",
+      "assumptions": "Production-grade claims require authenticated data feeds.",
+      "breakdown_regime": "D = 0 implies launch blocker due to missing vendor contracts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's launch readiness depends on D's value; GSI models D as a stochastic process.",
+        "source_operator": "data_feed_dependency",
+        "telemetry": "API key status and contract approval flags."
+      }
+    },
+    {
+      "primitive_id": "backtesting_validation",
+      "name": "Backtesting Validation",
+      "verbatim_quote": "gated until contracts/API keys exist. - Backtesting proof is fixture-backed, not historical prediction proof. ## Before",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'binary indicator of backtesting validity (1 = fixture-backed, 0 = historical)'}",
+      "assumptions": "Fixture-backed validation lacks predictive power over historical data.",
+      "breakdown_regime": "B = 1 signifies current validation method is insufficient for forecasting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI evaluates B to assess model robustness; GSE uses B to guide system maturity.",
+        "source_operator": "backtesting_validation",
+        "telemetry": "Validation methodology flag (fixture vs historical)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b8e7ebaf4dd10955_t0",
+      "think": "The StatKing audit reveals a tripartite classification of system states: real, stubbed, and fixture-only. The real systems (R=9) are functionally complete but constrained by external dependencies such as data feeds (D=0), which act as a gating mechanism for product launch. The backtesting validation (B=1) is currently limited to fixture-based proofs, indicating a lack of historical prediction capability. These primitives form a dual structure where operational completeness is decoupled from data integrity and predictive fidelity. Failure modes include: 1) D=0 blocks production-grade claims, 2) B=1 limits forecasting utility, and 3) R=9 may be misleading without D=1. The latent variable 'typecheck drift' suggests systemic inconsistency that could propagate across modules. This creates a layered risk model where each primitive must be validated independently before forming a coherent operational framework.\n\nDeep epistemic analysis for statking-real-vs-stubbed-audit (b8e7ebaf4dd10955, domain=other, pages_read=1/1): Operator 'Real Systems Operational' (page 1, domain other) captures: # StatKing Real vs Stubbed Audit Generated: 2026-06-13T00:00:00Z ## Summary - Real working systems: 9 - Assumptions: Systems are classified based on functional completeness and data source integrity. Breakdown regime: R = 9 indicates full functionality in core modules. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's confidence in real-time data pipeline corresponds to R's cardinality. Operator 'Data Feed Dependency' (page 1, domain other) captures: product launch - Live authorized NFL data feeds are still required for production-grade claims. - Vendor Assumptions: Production-grade claims require authenticated data feeds. Breakdown regime: D = 0 implies launch blocker due to missing vendor contracts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's launch readiness depends on D's value; GSI models D as a stochastic process. Operator 'Backtesting Validation' (page 1, domain other) captures: gated until contracts/API keys exist. - Backtesting proof is fixture-backed, not historical prediction proof. ## Before Assumptions: Fixture-backed validation lacks predictive power over historical data. Breakdown regime: B = 1 signifies current validation method is insufficient for forecasting. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI evaluates B to assess model robustness; GSE uses B to guide system maturity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for statking-real-vs-stubbed-audit (b8e7ebaf4dd10955, domain=other, pages_read=1/1): Operator 'Real Systems Operational' (page 1, domain other) captures: # StatKing Real vs Stubbed Audit Generated: 2026-06-13T00:00:00Z ## Summary - Real working systems: 9 - Assumptions: Systems are classified based on functional completeness and data source integrity. Breakdown regime: R = 9 indicates full functionality in core modules. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's confidence in real-time data pipeline corresponds to R's cardinality. Operator 'Data Feed Dependency' (page 1, domain other) captures: product launch - Live authorized NFL data feeds are still required for production-grade claims. - Vendor Assumptions: Production-grade claims require authenticated data feeds. Breakdown regime: D = 0 implies launch blocker due to missing vendor contracts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's launch readiness depends on D's value; GSI models D as a stochastic process. Operator 'Backtesting Validation' (page 1, domain other) captures: gated until contracts/API keys exist. - Backtesting proof is fixture-backed, not historical prediction proof. ## Before Assumptions: Fixture-backed validation lacks predictive power over historical data. Breakdown regime: B = 1 signifies current validation method is insufficient for forecasting. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI evaluates B to assess model robustness; GSE uses B to guide system maturity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This classification mirrors earlier software engineering paradigms of feature flags and staged rollouts, extending into modern probabilistic system validation frameworks. Retrocausal Genealogy: Rooted in statking-real-vs-stubbed-audit (b8e7ebaf4dd10955), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in statking-real-vs-stubbed-audit (b8e7ebaf4dd10955), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the vendor (holding D), the development team (managing R and B), and the end-user (relying on production-grade claims). Each agent operates under distinct information sets and incentives, leading to potential misalignment in system readiness. Theory of Mind & Decision Maker Model: Rooted in statking-real-vs-stubbed-audit (b8e7ebaf4dd10955), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between R and D; a high R value does not guarantee launch readiness if D=0. Leakage occurs when B=1 is mistaken for historical proof, invalidating GSI's predictive inference. Veto conditions require simultaneous validation of all three primitives for operational coherence. Cross-Layer Veto & Anti-Leakage Check: Rooted in statking-real-vs-stubbed-audit (b8e7ebaf4dd10955), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

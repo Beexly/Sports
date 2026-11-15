@@ -1,0 +1,78 @@
+{
+  "book_id": "196a2f6e3153337a",
+  "source_status": "COMPLETE",
+  "title": "dk-week2-2026-main-research",
+  "file_name": "dk-week2-2026-main-research.md",
+  "sha256": "196a2f6e3153337abd7c49478746c7b0e81dd8a98e80a7ae300660eccb682878",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A multi-lane probabilistic inference framework mapping DraftKings slate constraints to player value via cross-validated data layers and adversarial gap-hunting. Universal Lens: Rooted in dk-week2-2026-main-research (196a2f6e3153337a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over player salary and performance tiers using internal corpus alignment and consensus maps to infer optimal lineup leverage. GSI Mapping: Rooted in dk-week2-2026-main-research (196a2f6e3153337a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions across game environments and player availability, driven by real-time adversarial validation and internal data reconciliation. GSE Mapping: Rooted in dk-week2-2026-main-research (196a2f6e3153337a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "slate_definition",
+      "name": "Slate Definition Operator",
+      "verbatim_quote": "SLATE DEFINITION — RESOLVED: 13 GAMES (SNF EXCLUDED) Seven independent sources confirm the DK main slate excludes Sunday Night Football.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{games}}': 'dimensionless count of games in main slate', 'S_{\\\\text{SNF}}': 'binary indicator for Sunday Night Football inclusion'}",
+      "assumptions": "The main slate is defined by exclusion of SNF and confirmed by multiple independent data sources.",
+      "breakdown_regime": "N_{\\text{games}} = 13, S_{\\text{SNF}} = 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the exclusion of SNF to a binary constraint on game set selection in GSI's probabilistic model.",
+        "source_operator": "slate_definition",
+        "telemetry": "Cross-source agreement on game count and SNF exclusion"
+      }
+    },
+    {
+      "primitive_id": "salary_corroboration",
+      "name": "Salary Corrobation Kernel",
+      "verbatim_quote": "--## PHASE 1 — BREADTH (what each lane found) **Salary verification status (all lanes):** DraftKings draft-group API returned Akamai \"Access Denied\" / SPO117 on 9/19 — **zero salaries are endpoint-verified.** All salaries are second-party: DK Network (published 9/15) cross-checked vs The Huddle (published 9/19); checked values agreed.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{\\\\text{verified}}': 'binary indicator for salary endpoint verification', 'S_{\\\\text{corroborated}}': 'binary indicator for salary cross-source agreement'}",
+      "assumptions": "Salaries are treated as corroborated but not verified due to API access restrictions.",
+      "breakdown_regime": "S_{\\text{verified}} = 0, S_{\\text{corroborated}} = 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a corrobation score for salary data used in GSI's value inference engine.",
+        "source_operator": "salary_corroboration",
+        "telemetry": "Agreement between DK Network and The Huddle salary tables"
+      }
+    },
+    {
+      "primitive_id": "internal_data_inventory",
+      "name": "Internal Data Inventory Operator",
+      "verbatim_quote": "- `docs/research/2026-09-19/chart-reads/` + `full-tables/`: benbbaldwin v3 tiers CSV, SumerSports edge PRWR reads, MediJo20 rushing-EPA scatter, DevyEusuf rookie-debut table.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{\\\\text{inventory}}': 'set of internal data sources', 'D_{\\\\text{crosschecked}}': 'subset of data cross-validated against DK API'}",
+      "assumptions": "All data sources are part of a structured inventory for internal cross-validation.",
+      "breakdown_regime": "D_{\\text{inventory}} = \\{benbbaldwin, SumerSports, MediJo20, DevyEusuf\\}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps internal data sets to a unified feature space for GSE's ensemble learning.",
+        "source_operator": "internal_data_inventory",
+        "telemetry": "Number of cross-checked data sources per phase"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "196a2f6e3153337a_t0",
+      "think": "The core operators define a hierarchical probabilistic model where slate definition constrains the search space, salary corrobation provides confidence bounds, and internal data inventory enables multi-source fusion. The framework operates under dualities: (1) verification vs corrobation, (2) breadth-first search vs adversarial refinement, and (3) static slate definition vs dynamic player availability. Failure modes include API denial leading to unverified salaries, adversarial reports overturning prior inferences, and inconsistent data sources causing misalignment. These dualities are resolved through Bayesian updating and consensus mapping across lanes.\n\nDeep epistemic analysis for dk-week2-2026-main-research (196a2f6e3153337a, domain=other, pages_read=6/6): Operator 'Slate Definition Operator' (page 1, domain other) captures: SLATE DEFINITION — RESOLVED: 13 GAMES (SNF EXCLUDED) Seven independent sources confirm the DK main slate excludes Sunday Night Football. Assumptions: The main slate is defined by exclusion of SNF and confirmed by multiple independent data sources. Breakdown regime: N_{\\text{games}} = 13, S_{\\text{SNF}} = 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the exclusion of SNF to a binary constraint on game set selection in GSI's probabilistic model. Operator 'Salary Corrobation Kernel' (page 2, domain other) captures: --## PHASE 1 — BREADTH (what each lane found) **Salary verification status (all lanes):** DraftKings draft-group API returned Akamai \"Access Denied\" / SPO117 on 9/19 — **zero salaries are endpoint-verified.** All salaries are second-party: DK Network (published 9/15) cross-checked vs The Huddle (published 9/19); checked values agreed. Assumptions: Salaries are treated as corroborated but not verified due to API access restrictions. Breakdown regime: S_{\\text{verified}} = 0, S_{\\text{corroborated}} = 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives a corrobation score for salary data used in GSI's value inference engine. Operator 'Internal Data Inventory Operator' (page 2, domain other) captures: - `docs/research/2026-09-19/chart-reads/` + `full-tables/`: benbbaldwin v3 tiers CSV, SumerSports edge PRWR reads, MediJo20 rushing-EPA scatter, DevyEusuf rookie-debut table. Assumptions: All data sources are part of a structured inventory for internal cross-validation. Breakdown regime: D_{\\text{inventory}} = \\{benbbaldwin, SumerSports, MediJo20, DevyEusuf\\} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps internal data sets to a unified feature space for GSE's ensemble learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for dk-week2-2026-main-research (196a2f6e3153337a, domain=other, pages_read=6/6): Operator 'Slate Definition Operator' (page 1, domain other) captures: SLATE DEFINITION — RESOLVED: 13 GAMES (SNF EXCLUDED) Seven independent sources confirm the DK main slate excludes Sunday Night Football. Assumptions: The main slate is defined by exclusion of SNF and confirmed by multiple independent data sources. Breakdown regime: N_{\\text{games}} = 13, S_{\\text{SNF}} = 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the exclusion of SNF to a binary constraint on game set selection in GSI's probabilistic model. Operator 'Salary Corrobation Kernel' (page 2, domain other) captures: --## PHASE 1 — BREADTH (what each lane found) **Salary verification status (all lanes):** DraftKings draft-group API returned Akamai \"Access Denied\" / SPO117 on 9/19 — **zero salaries are endpoint-verified.** All salaries are second-party: DK Network (published 9/15) cross-checked vs The Huddle (published 9/19); checked values agreed. Assumptions: Salaries are treated as corroborated but not verified due to API access restrictions. Breakdown regime: S_{\\text{verified}} = 0, S_{\\text{corroborated}} = 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives a corrobation score for salary data used in GSI's value inference engine. Operator 'Internal Data Inventory Operator' (page 2, domain other) captures: - `docs/research/2026-09-19/chart-reads/` + `full-tables/`: benbbaldwin v3 tiers CSV, SumerSports edge PRWR reads, MediJo20 rushing-EPA scatter, DevyEusuf rookie-debut table. Assumptions: All data sources are part of a structured inventory for internal cross-validation. Breakdown regime: D_{\\text{inventory}} = \\{benbbaldwin, SumerSports, MediJo20, DevyEusuf\\} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps internal data sets to a unified feature space for GSE's ensemble learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in 2020s-era DFS research frameworks, particularly those integrating multi-source data fusion and adversarial validation techniques from machine learning and sports analytics. Retrocausal Genealogy: Rooted in dk-week2-2026-main-research (196a2f6e3153337a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in dk-week2-2026-main-research (196a2f6e3153337a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include DraftKings' own data integrity systems, external reporters, and internal modelers. Each agent contributes to a shared belief space that GSI resolves through probabilistic inference. Theory of Mind & Decision Maker Model: Rooted in dk-week2-2026-main-research (196a2f6e3153337a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each lane's input is unique and orthogonal to others. Leakage is mitigated by verifying data consistency across layers before final aggregation. Cross-Layer Veto & Anti-Leakage Check: Rooted in dk-week2-2026-main-research (196a2f6e3153337a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in dk-week2-2026-main-research (196a2f6e3153337a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

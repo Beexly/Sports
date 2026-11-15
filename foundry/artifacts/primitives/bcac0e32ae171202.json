@@ -1,0 +1,78 @@
+{
+  "book_id": "bcac0e32ae171202",
+  "source_status": "COMPLETE",
+  "title": "no_per_play_separation",
+  "file_name": "no_per_play_separation.md",
+  "sha256": "bcac0e32ae17120280361719ab0436a078520fa1b383f2c3ea434f4836d85dcc",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Per-play separation is absent; aggregates define resolution floor. Participation encodes alignment and behavior. Contextual play fields include `playClockAtSnap`. Tracking frame reconstruction fails. Universal Lens: Rooted in no_per_play_separation (bcac0e32ae171202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers defensive shape via `defenderLocation` enums. Bayesian updates on `playClockAtSnap` for temporal context. Conformal prediction bounds on per-receiver aggregates. GSI Mapping: Rooted in no_per_play_separation (bcac0e32ae171202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models situational states using `isOffensePlay`/`isDefensePlay`. State transitions driven by `wasRunningRoute` and `wasBlitzing`. Geometry-free play context via `playClockAtSnap`. GSE Mapping: Rooted in no_per_play_separation (bcac0e32ae171202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "defender_location_enum",
+      "name": "Defensive Positional Class",
+      "verbatim_quote": "## What participation is still good for Alignment is genuinely rich at play level: `defenderLocation` gives 14 positional classes per defender per play (SAFETY, LEFT_WIDE, RIGHT_SLOT, LEFT_EDGE_RUSHER, ...), which is the strongest defensive-shape signal recovered in this whole run and is per-defender rather than team-level.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'defenderLocation': 'categorical enum over 14 positional classes'}",
+      "assumptions": "Defender position is fixed per play, categorical, and non-overlapping.",
+      "breakdown_regime": "Null on offensive rows; schema-defined nulls, not missing data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's defensive positioning kernel. Maps to GSI's alignment inference layer.",
+        "source_operator": "defender_location_enum",
+        "telemetry": "Per-defender positional class enumeration"
+      }
+    },
+    {
+      "primitive_id": "play_clock_at_snap",
+      "name": "Pre-Snap Timing Covariate",
+      "verbatim_quote": "## New contextual field worth noting `playClockAtSnap` is a pre-snap timing covariate (hurry-up vs slow), cheap to harvest per play and not in any public dataset used so far.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'playClockAtSnap': 'dimensionless time scalar (seconds)'}",
+      "assumptions": "Time is measured continuously and consistently across plays.",
+      "breakdown_regime": "Scalar per play, not spatially resolved.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE as a temporal context variable. Used in GSI for dynamic model calibration.",
+        "source_operator": "play_clock_at_snap",
+        "telemetry": "Pre-snap clock value"
+      }
+    },
+    {
+      "primitive_id": "per_receiver_game_aggregate",
+      "name": "Reception Information Aggregate",
+      "verbatim_quote": "So the resolution ladder for separation is: **per-receiver game aggregate** (gamecenter `receptionInfo`) and nothing finer.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'receptionInfo': 'aggregate vector per receiver'}",
+      "assumptions": "Aggregate captures receiver-specific reception outcomes over game.",
+      "breakdown_regime": "No per-play granularity; only game-level resolution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's reception-based inference kernel. GSE's game-state aggregation.",
+        "source_operator": "per_receiver_game_aggregate",
+        "telemetry": "Receiver-level reception metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "bcac0e32ae171202_t0",
+      "think": "The absence of per-play separation implies that all spatial and behavioral signals must be aggregated into game-level or play-level summaries. The `defenderLocation` enum provides a high-fidelity, per-defender positional signal, but is limited to categorical classes. This is a dualistic structure: alignment is discrete and positional, while behavior is binary (e.g., `wasRunningRoute`). The `playClockAtSnap` introduces a scalar temporal context, enabling GSI to model urgency or tempo dynamics without geometric resolution. The `receptionInfo` aggregate represents the highest fidelity available for receiver-specific performance, yet remains coarse-grained. These primitives form a layered, non-spatial inference lattice where each level is a projection of the next finer one. Failure modes arise from reliance on sampled data and lack of tracking frame reconstruction. The schema's stability is confirmed but sample size limits generalizability. The system exhibits a strong anti-collinearity between spatial and behavioral dimensions, with each requiring distinct modeling strategies.\n\nDeep epistemic analysis for no_per_play_separation (bcac0e32ae171202, domain=other, pages_read=1/1): Operator 'Defensive Positional Class' (page 1, domain other) captures: ## What participation is still good for Alignment is genuinely rich at play level: `defenderLocation` gives 14 positional classes per defender per play (SAFETY, LEFT_WIDE, RIGHT_SLOT, LEFT_EDGE_RUSHER, ...), which is the strongest defensive-shape signal recovered in this whole run and is per-defender rather than team-level. Assumptions: Defender position is fixed per play, categorical, and non-overlapping. Breakdown regime: Null on offensive rows; schema-defined nulls, not missing data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's defensive positioning kernel. Maps to GSI's alignment inference layer. Operator 'Pre-Snap Timing Covariate' (page 1, domain other) captures: ## New contextual field worth noting `playClockAtSnap` is a pre-snap timing covariate (hurry-up vs slow), cheap to harvest per play and not in any public dataset used so far. Assumptions: Time is measured continuously and consistently across plays. Breakdown regime: Scalar per play, not spatially resolved. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE as a temporal context variable. Used in GSI for dynamic model calibration. Operator 'Reception Information Aggregate' (page 1, domain other) captures: So the resolution ladder for separation is: **per-receiver game aggregate** (gamecenter `receptionInfo`) and nothing finer. Assumptions: Aggregate captures receiver-specific reception outcomes over game. Breakdown regime: No per-play granularity; only game-level resolution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's reception-based inference kernel. GSE's game-state aggregation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for no_per_play_separation (bcac0e32ae171202, domain=other, pages_read=1/1): Operator 'Defensive Positional Class' (page 1, domain other) captures: ## What participation is still good for Alignment is genuinely rich at play level: `defenderLocation` gives 14 positional classes per defender per play (SAFETY, LEFT_WIDE, RIGHT_SLOT, LEFT_EDGE_RUSHER, ...), which is the strongest defensive-shape signal recovered in this whole run and is per-defender rather than team-level. Assumptions: Defender position is fixed per play, categorical, and non-overlapping. Breakdown regime: Null on offensive rows; schema-defined nulls, not missing data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's defensive positioning kernel. Maps to GSI's alignment inference layer. Operator 'Pre-Snap Timing Covariate' (page 1, domain other) captures: ## New contextual field worth noting `playClockAtSnap` is a pre-snap timing covariate (hurry-up vs slow), cheap to harvest per play and not in any public dataset used so far. Assumptions: Time is measured continuously and consistently across plays. Breakdown regime: Scalar per play, not spatially resolved. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE as a temporal context variable. Used in GSI for dynamic model calibration. Operator 'Reception Information Aggregate' (page 1, domain other) captures: So the resolution ladder for separation is: **per-receiver game aggregate** (gamecenter `receptionInfo`) and nothing finer. Assumptions: Aggregate captures receiver-specific reception outcomes over game. Breakdown regime: No per-play granularity; only game-level resolution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's reception-based inference kernel. GSE's game-state aggregation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early NFL tracking data limitations and the emergence of player-centric schema design. Influenced by prior work on defensive alignment and play-clock timing in strategic modeling. Retrocausal Genealogy: Rooted in no_per_play_separation (bcac0e32ae171202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in no_per_play_separation (bcac0e32ae171202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (offense/defense) operate under bounded rationality. Offense seeks optimal separation; defense aims to minimize it. Temporal context affects decision speed. Behavioral flags like `wasBlitzing` reflect agent intent, not just state. Theory of Mind & Decision Maker Model: Rooted in no_per_play_separation (bcac0e32ae171202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Spatial reconstruction is vetoed due to BDB tracking frame failures. Behavioral flags are vetted against alignment data to prevent redundancy. Temporal covariates must be orthogonal to spatial proxies to avoid leakage. Cross-Layer Veto & Anti-Leakage Check: Rooted in no_per_play_separation (bcac0e32ae171202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

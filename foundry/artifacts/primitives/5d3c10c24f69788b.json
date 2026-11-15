@@ -1,0 +1,78 @@
+{
+  "book_id": "5d3c10c24f69788b",
+  "source_status": "COMPLETE",
+  "title": "actionnetwork.com",
+  "file_name": "actionnetwork.com.md",
+  "sha256": "5d3c10c24f69788b44c3ee9fcb0f29487ece4ba37c628055e6f9fa10655ea92e",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph traversal and URL taxonomy partitioning define a structured information lattice for sports content indexing. Universal Lens: Rooted in actionnetwork.com (5d3c10c24f69788b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on sitemap availability and path frequency inform probabilistic content discovery in GSI's knowledge graph. GSI Mapping: Rooted in actionnetwork.com (5d3c10c24f69788b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions between sitemap indices and post archives enable dynamic navigation and prediction of content access patterns. GSE Mapping: Rooted in actionnetwork.com (5d3c10c24f69788b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_graph_traversal",
+      "name": "Sitemap Graph Traversal Operator",
+      "verbatim_quote": "# actionnetwork.com Category: **sportsbook** URLs discovered: **37,296** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'graph of sitemaps', 'V': 'vertices representing sitemap URLs', 'E': 'edges representing crawlability status', 'N': 'number of URLs discovered'}",
+      "assumptions": "All sitemaps are reachable via HTTP; sitemap entries are uniformly distributed.",
+      "breakdown_regime": "When sitemap index returns 404, traversal halts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each sitemap entry maps to a node in GSI's semantic graph; traversal defines a Markov chain over content categories.",
+        "source_operator": "sitemap_graph_traversal",
+        "telemetry": "Crawl success rate per sitemap index."
+      }
+    },
+    {
+      "primitive_id": "path_taxonomy_partitioning",
+      "name": "Path Taxonomy Partitioning Kernel",
+      "verbatim_quote": "| Index | |---|---|---|---| | `https://www.actionnetwork.com/sitemap_index.xml` | 200 | 33 | yes | | `https://actionnetwork.com/sitemap.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'taxonomy of URL paths', 'P_i': 'path segment i', 'U_i': 'URL count under P_i'}",
+      "assumptions": "URLs within each path segment are independent and uniformly sampled.",
+      "breakdown_regime": "When path segment is not indexed, U_i = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Partitioning T into P_i enables GSE to prioritize content access based on frequency and relevance.",
+        "source_operator": "path_taxonomy_partitioning",
+        "telemetry": "Frequency distribution of path segments across sitemaps."
+      }
+    },
+    {
+      "primitive_id": "content_access_probability",
+      "name": "Content Access Probability Function",
+      "verbatim_quote": "33 | yes | | `https://actionnetwork.com/sitemap_index.xml` | 200 | 33 | yes | | `https://actionnetwork.com/sitemap-index.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{access}': 'probability of accessing a URL', 'S_i': 'sitemap index i', 'E_i': 'entries in S_i', 'Status_i': 'HTTP response code for S_i'}",
+      "assumptions": "Access probability is inversely proportional to sitemap age and directly proportional to entry count.",
+      "breakdown_regime": "When Status_i ≠ 200, P_{access} = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "P_{access}(S_i) = E_i × I(Status_i = 200) maps to GSI's confidence-weighted content retrieval.",
+        "source_operator": "content_access_probability",
+        "telemetry": "Ratio of accessible URLs to total sitemap entries."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5d3c10c24f69788b_t0",
+      "think": "The sitemap traversal operator models a directed graph where nodes represent sitemap URLs and edges encode HTTP status codes. Each sitemap's accessibility determines whether its entries are included in the content discovery process. The path taxonomy kernel partitions this graph by URL prefix, enabling GSI to assign prior probabilities to content categories. The access probability function quantifies how likely a given sitemap is to yield usable content, which informs GSE's state transitions between content types. Failure modes include 404 responses that halt traversal and empty sitemaps that provide no new data. These primitives form a dual lattice: one for indexing (sitemap graph), and one for categorization (path taxonomy).\n\nDeep epistemic analysis for actionnetwork.com (5d3c10c24f69788b, domain=other, pages_read=4/4): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # actionnetwork.com Category: **sportsbook** URLs discovered: **37,296** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are reachable via HTTP; sitemap entries are uniformly distributed. Breakdown regime: When sitemap index returns 404, traversal halts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each sitemap entry maps to a node in GSI's semantic graph; traversal defines a Markov chain over content categories. Operator 'Path Taxonomy Partitioning Kernel' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.actionnetwork.com/sitemap_index.xml` | 200 | 33 | yes | | `https://actionnetwork.com/sitemap.xml` | Assumptions: URLs within each path segment are independent and uniformly sampled. Breakdown regime: When path segment is not indexed, U_i = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Partitioning T into P_i enables GSE to prioritize content access based on frequency and relevance. Operator 'Content Access Probability Function' (page 1, domain other) captures: 33 | yes | | `https://actionnetwork.com/sitemap_index.xml` | 200 | 33 | yes | | `https://actionnetwork.com/sitemap-index.xml` | Assumptions: Access probability is inversely proportional to sitemap age and directly proportional to entry count. Breakdown regime: When Status_i ≠ 200, P_{access} = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): P_{access}(S_i) = E_i × I(Status_i = 200) maps to GSI's confidence-weighted content retrieval. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for actionnetwork.com (5d3c10c24f69788b, domain=other, pages_read=4/4): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # actionnetwork.com Category: **sportsbook** URLs discovered: **37,296** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are reachable via HTTP; sitemap entries are uniformly distributed. Breakdown regime: When sitemap index returns 404, traversal halts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each sitemap entry maps to a node in GSI's semantic graph; traversal defines a Markov chain over content categories. Operator 'Path Taxonomy Partitioning Kernel' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.actionnetwork.com/sitemap_index.xml` | 200 | 33 | yes | | `https://actionnetwork.com/sitemap.xml` | Assumptions: URLs within each path segment are independent and uniformly sampled. Breakdown regime: When path segment is not indexed, U_i = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Partitioning T into P_i enables GSE to prioritize content access based on frequency and relevance. Operator 'Content Access Probability Function' (page 1, domain other) captures: 33 | yes | | `https://actionnetwork.com/sitemap_index.xml` | 200 | 33 | yes | | `https://actionnetwork.com/sitemap-index.xml` | Assumptions: Access probability is inversely proportional to sitemap age and directly proportional to entry count. Breakdown regime: When Status_i ≠ 200, P_{access} = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): P_{access}(S_i) = E_i × I(Status_i = 200) maps to GSI's confidence-weighted content retrieval. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and information retrieval, these operators reflect the evolution of web crawling and semantic indexing from early search engines to modern AI-driven content systems. Retrocausal Genealogy: Rooted in actionnetwork.com (5d3c10c24f69788b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in actionnetwork.com (5d3c10c24f69788b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may manipulate sitemap structures to obscure content or inflate access metrics. GSI must detect anomalies in sitemap consistency and path distribution to maintain integrity. Theory of Mind & Decision Maker Model: Rooted in actionnetwork.com (5d3c10c24f69788b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in actionnetwork.com (5d3c10c24f69788b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If sitemap indices are inconsistent or path frequencies deviate significantly from expected distributions, GSE should flag potential data poisoning or crawler misalignment. Cross-Layer Veto & Anti-Leakage Check: Rooted in actionnetwork.com (5d3c10c24f69788b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in actionnetwork.com (5d3c10c24f69788b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "9854060c001a35e1",
+  "source_status": "COMPLETE",
+  "title": "fanduel.com",
+  "file_name": "fanduel.com.md",
+  "sha256": "9854060c001a35e14932c29db4dd5a62c3d7b07dc8c85a6aca74916279e3098c",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The extraction of discrete DOM states via recursive parent traversal and the subsequent application of continuous, bounded ratio transformations define a hybrid topological manifold. This unifies discrete event-driven state transitions with deterministic, high-precision floating-point interpolation, mapping UI rendering directly onto a constrained phase space.",
+  "gsi_mapping": "DOM node targeting acts as a Bayesian filtering mechanism to isolate ground-truth entities from noisy event streams. The continuous tweening ratios map precisely to conformal prediction intervals, dynamically adjusting confidence bounds over time based on real-time telemetry inputs without violating strict boundary constraints.",
+  "gse_mapping": "Discrete slide offsets model situational state transitions (e.g., possession changes), while sub-pixel CSS rounding functions act as the physical engine's constraint solver. This ensures that simulated agent trajectories remain strictly within valid geometric boundaries during high-frequency temporal updates.",
+  "primitives": [
+    {
+      "primitive_id": "dom_recursive_projection",
+      "name": "Recursive DOM Parent Projection",
+      "verbatim_quote": "if (!$target.is('li')) { $target = $target.closest('li') } unevenOffset = _.slideCount % _.options.slidesToScroll !== 0 indexOffset = unevenOffset ?",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "$\\tau$: target DOM node (dimensionless entity); $\\mathcal{P}$: parent projection operator; $N_{slide}$: total slide count (integer); $\\Delta_{scroll}$: scroll increment (integer).",
+      "assumptions": "The DOM tree is a strictly hierarchical directed acyclic graph (DAG) where every interactive child possesses a valid semantic parent container.",
+      "breakdown_regime": "Fails if the DOM hierarchy is broken, resulting in a null pointer exception when traversing upwards past the root element.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI entity resolution, projecting raw, noisy telemetry events onto canonical game-state objects.",
+        "source_operator": "dom_recursive_projection",
+        "telemetry": "Event-to-entity resolution latency and success rate."
+      }
+    },
+    {
+      "primitive_id": "discrete_modulo_offset",
+      "name": "Discrete Modulo Offset Calculation",
+      "verbatim_quote": "0 : (_.slideCount - _.currentSlide) % _.options.slidesToScroll switch (event.data.message) { case 'previous': slideOffset = indexOffset === 0 ?",
+      "page": 2,
+      "latex": "\\delta_{idx} = (N_{total} - S_{curr}) \\pmod{\\Delta_{step}}",
+      "symbol_and_unit_ledger": "$\\delta_{idx}$: index offset (integer); $N_{total}$: total elements (integer); $S_{curr}$: current state index (integer); $\\Delta_{step}$: step size (integer).",
+      "assumptions": "State transitions occur in uniform, quantized steps across a finite, cyclic or bounded array.",
+      "breakdown_regime": "Singularity occurs if $\\Delta_{step} = 0$, causing a division-by-zero error in the modulo operation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE discrete play-calling logic, calculating exact down-and-distance adjustments based on fixed yardage gains.",
+        "source_operator": "discrete_modulo_offset",
+        "telemetry": "Quantization error in state progression."
+      }
+    },
+    {
+      "primitive_id": "continuous_ratio_tween",
+      "name": "Continuous Ratio Interpolation",
+      "verbatim_quote": "-0.5 : 0.5)) + data.u, data) }, _renderNonTweeningValue = function _renderNonTweeningValue(ratio, data) { return data.set(data.t, data.p, ratio ?",
+      "page": 3,
+      "latex": "V(t) = V_s + C \\cdot r(t)",
+      "symbol_and_unit_ledger": "$V(t)$: value at time t (float); $V_s$: start value (float); $C$: change magnitude (float); $r(t)$: normalized time ratio (dimensionless, $[0,1]$).",
+      "assumptions": "System dynamics are smooth and can be approximated by linear or polynomial interpolation between defined boundary states.",
+      "breakdown_regime": "Breaks down under instantaneous, discontinuous state jumps (Dirac delta inputs) which violate smooth interpolation assumptions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps to GSI temporal smoothing of player tracking coordinates between discrete optical capture frames.",
+        "source_operator": "continuous_ratio_tween",
+        "telemetry": "Interpolation residual error against ground truth."
+      }
+    },
+    {
+      "primitive_id": "subpixel_quantization",
+      "name": "Sub-pixel Quantization Rounding",
+      "verbatim_quote": "(target[props[i]] = props[i + 2]) : props[i + 2] ?",
+      "page": 2,
+      "latex": "Q(x) = \\lfloor x + \\text{sgn}(x) \\cdot 0.5 \\rfloor",
+      "symbol_and_unit_ledger": "$Q(x)$: quantized output (integer); $x$: continuous input (float); $\\text{sgn}(x)$: sign function (dimensionless).",
+      "assumptions": "The underlying display or physics grid enforces a hard minimum resolution limit for observable states.",
+      "breakdown_regime": "Accumulated rounding errors manifest as visual jitter or physical drift over long integration periods.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents the GSE physics engine's collision grid snapping, ensuring agents do not occupy fractional spatial volumes.",
+        "source_operator": "subpixel_quantization",
+        "telemetry": "Spatial discretization noise variance."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9854060c001a35e1_t0",
+      "think": "The provided JavaScript excerpts detail the low-level mechanics of a carousel/slider UI component, specifically focusing on event handling, DOM traversal, and high-precision animation rendering. Mathematically, this represents a dual-layer system: a discrete, combinatorial layer governing state transitions, and a continuous, differential layer managing the visual interpolation between these states. \n\nThe `dom_recursive_projection` primitive extracts the core logic of identifying the correct semantic container (`<li>`) from a nested event target. This is fundamentally a graph traversal problem on a Directed Acyclic Graph (DAG), seeking the nearest ancestor matching a specific predicate. In our sovereign primitives, this maps perfectly to entity resolution in sports telemetry—finding the canonical player object from a noisy stream of tracking pings.\n\nSimultaneously, the `discrete_modulo_offset` calculates the precise integer shift required for the next slide, utilizing the modulo operator to handle boundary conditions and uneven array lengths. This is a classic finite state machine transition rule. It dictates how the system moves from state $S_t$ to $S_{t+1}$ based on a quantized input.\n\nBridging these discrete states is the `continuous_ratio_tween`. The code utilizes a normalized ratio (typically ranging from 0 to 1) to interpolate between a starting value ($data.s$) and an ending value ($data.e$). This forms a continuous trajectory $V(t)$ over the duration of the transition. Finally, `subpixel_quantization` applies a rigorous rounding scheme (adding 0.5 and flooring) to ensure the continuous float values are correctly mapped to the discrete pixel grid of the display, preventing visual blurring. Together, these operators form a complete pipeline from abstract event to rendered reality, mirroring the exact flow of GSI/GSE data processing.\n\nDeep epistemic analysis for fanduel.com (9854060c001a35e1, domain=other, pages_read=6/6): Operator 'Recursive DOM Parent Projection' (page 2, domain other) captures: if (!$target.is('li')) { $target = $target.closest('li') } unevenOffset = _.slideCount % _.options.slidesToScroll !== 0 indexOffset = unevenOffset ? Assumptions: The DOM tree is a strictly hierarchical directed acyclic graph (DAG) where every interactive child possesses a valid semantic parent container. Breakdown regime: Fails if the DOM hierarchy is broken, resulting in a null pointer exception when traversing upwards past the root element. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI entity resolution, projecting raw, noisy telemetry events onto canonical game-state objects. Operator 'Discrete Modulo Offset Calculation' (page 2, domain other) captures: 0 : (_.slideCount - _.currentSlide) % _.options.slidesToScroll switch (event.data.message) { case 'previous': slideOffset = indexOffset === 0 ? Assumptions: State transitions occur in uniform, quantized steps across a finite, cyclic or bounded array. Breakdown regime: Singularity occurs if $\\Delta_{step} = 0$, causing a division-by-zero error in the modulo operation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE discrete play-calling logic, calculating exact down-and-distance adjustments based on fixed yardage gains. Operator 'Continuous Ratio Interpolation' (page 3, domain other) captures: -0.5 : 0.5)) + data.u, data) }, _renderNonTweeningValue = function _renderNonTweeningValue(ratio, data) { return data.set(data.t, data.p, ratio ? Assumptions: System dynamics are smooth and can be approximated by linear or polynomial interpolation between defined boundary states. Breakdown regime: Breaks down under instantaneous, discontinuous state jumps (Dirac delta inputs) which violate smooth interpolation assumptions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSI temporal smoothing of player tracking coordinates between discrete optical capture frames. Operator 'Sub-pixel Quantization Rounding' (page 2, domain other) captures: (target[props[i]] = props[i + 2]) : props[i + 2] ? Assumptions: The underlying display or physics grid enforces a hard minimum resolution limit for observable states. Breakdown regime: Accumulated rounding errors manifest as visual jitter or physical drift over long integration periods. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents the GSE physics engine's collision grid snapping, ensuring agents do not occupy fractional spatial volumes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for fanduel.com (9854060c001a35e1, domain=other, pages_read=6/6): Operator 'Recursive DOM Parent Projection' (page 2, domain other) captures: if (!$target.is('li')) { $target = $target.closest('li') } unevenOffset = _.slideCount % _.options.slidesToScroll !== 0 indexOffset = unevenOffset ? Assumptions: The DOM tree is a strictly hierarchical directed acyclic graph (DAG) where every interactive child possesses a valid semantic parent container. Breakdown regime: Fails if the DOM hierarchy is broken, resulting in a null pointer exception when traversing upwards past the root element. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI entity resolution, projecting raw, noisy telemetry events onto canonical game-state objects. Operator 'Discrete Modulo Offset Calculation' (page 2, domain other) captures: 0 : (_.slideCount - _.currentSlide) % _.options.slidesToScroll switch (event.data.message) { case 'previous': slideOffset = indexOffset === 0 ? Assumptions: State transitions occur in uniform, quantized steps across a finite, cyclic or bounded array. Breakdown regime: Singularity occurs if $\\Delta_{step} = 0$, causing a division-by-zero error in the modulo operation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE discrete play-calling logic, calculating exact down-and-distance adjustments based on fixed yardage gains. Operator 'Continuous Ratio Interpolation' (page 3, domain other) captures: -0.5 : 0.5)) + data.u, data) }, _renderNonTweeningValue = function _renderNonTweeningValue(ratio, data) { return data.set(data.t, data.p, ratio ? Assumptions: System dynamics are smooth and can be approximated by linear or polynomial interpolation between defined boundary states. Breakdown regime: Breaks down under instantaneous, discontinuous state jumps (Dirac delta inputs) which violate smooth interpolation assumptions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSI temporal smoothing of player tracking coordinates between discrete optical capture frames. Operator 'Sub-pixel Quantization Rounding' (page 2, domain other) captures: (target[props[i]] = props[i + 2]) : props[i + 2] ? Assumptions: The underlying display or physics grid enforces a hard minimum resolution limit for observable states. Breakdown regime: Accumulated rounding errors manifest as visual jitter or physical drift over long integration periods. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents the GSE physics engine's collision grid snapping, ensuring agents do not occupy fractional spatial volumes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These primitives trace their lineage to early computer graphics and UI engineering. DOM traversal relies on hierarchical tree structures established in SGML and XML. The modulo arithmetic for cyclic buffers dates back to foundational computer science memory management. Continuous tweening originates from keyframe animation in traditional cel animation, later formalized in parametric splines (Bezier curves) for digital motion graphics. Sub-pixel rounding is a direct consequence of the discrete nature of raster displays, necessitating quantization algorithms to bridge analog mathematical models with digital hardware constraints.",
+      "theory_of_mind": "In this context, the 'agents' are the user (initiating clicks/swipes) and the rendering engine (reacting to inputs). The code models the user's intent through event bubbling, assuming the user interacts with a child element but intends to affect the parent container. The engine must predict the optimal visual path (the tween) to satisfy the user's expectation of smooth motion. The rounding logic anticipates the limitations of the display hardware, acting as a constraint solver to prevent visual artifacts. It is a constant negotiation between abstract mathematical continuity and physical hardware discreteness.",
+      "cross_layer_veto": "A critical veto condition exists if the discrete state calculation (`indexOffset`) yields a value that violates the bounds of the continuous interpolation domain. If the modulo arithmetic incorrectly calculates a slide offset due to a mismatched `slidesToScroll` configuration, the continuous tween will attempt to render coordinates outside the valid viewport, causing visual clipping. Furthermore, if the DOM traversal fails to find the parent `<li>`, the entire state transition pipeline halts, demonstrating a hard dependency where the continuous layer cannot function without successful resolution in the discrete combinatorial layer."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "95a0bce183cd3679",
+  "source_status": "COMPLETE",
+  "title": "LineFreshnessBadge.prompt",
+  "file_name": "LineFreshnessBadge.prompt.md",
+  "sha256": "95a0bce183cd3679c4cb4a79fbf0293124a87e013c1c86665c5b5962c77cfcd2",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The LineFreshnessBadge formalizes the temporal decay of market information. By decoupling the immutable upstream ISO timestamp from the client-side evaluation clock, it establishes a rigorous boundary between static historical state and dynamic present observation, ensuring the trust signal remains an unbiased estimator of data staleness.",
+  "gsi_mapping": "In GSI, this maps to a conformal inference window where the predictive validity of a sportsbook line degrades over time. The badge acts as a real-time calibration monitor, dynamically adjusting the epistemic weight assigned to the underlying odds based on the elapsed interval since the last observed market update.",
+  "gse_mapping": "For GSE, this primitive governs situational state transitions within the decision engine. It dictates when a cached strategic state must be invalidated and re-fetched. If the computed age exceeds a predefined threshold, the engine triggers a fresh query to prevent acting on stale environmental priors.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_decay_operator",
+      "name": "Line Age Decay Operator",
+      "verbatim_quote": "Shows how old the freshest bookmaker line behind today's published picks is (\"Lines updated 12m ago\").",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "t_now: current client time (ISO 8601), t_line: timestamp of freshest bookmaker line (ISO 8601), \\Delta\\tau: elapsed time (dimensionless minutes).",
+      "assumptions": "Client system clock is reasonably synchronized with UTC; network latency for fetching the initial ISO string is negligible compared to the decay interval.",
+      "breakdown_regime": "Fails if the client clock is severely desynchronized or if the upstream provider fails to emit a valid ISO timestamp upon market updates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the half-life calculation in radioactive decay, measuring the distance from the ground truth event.",
+        "source_operator": "temporal_decay_operator",
+        "telemetry": "Average computed age displayed to users per session."
+      }
+    },
+    {
+      "primitive_id": "client_side_evaluation_kernel",
+      "name": "Client-Side Evaluation Kernel",
+      "verbatim_quote": "Here the ISO timestamp is the only thing that crosses the boundary; the age is computed on the visitor's clock and refreshed every minute.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "T_iso: invariant timestamp string, f(t): periodic evaluation function (frequency = 1 Hz / 60).",
+      "assumptions": "The browser environment supports continuous execution of timers; the page remains active in the DOM.",
+      "breakdown_regime": "Breaks if the browser aggressively throttles background tabs, causing the refresh rate to drop below the required resolution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's local state updater, continuously evaluating environmental variables against a fixed prior without server round-trips.",
+        "source_operator": "client_side_evaluation_kernel",
+        "telemetry": "Timer execution consistency and UI re-render frequency."
+      }
+    },
+    {
+      "primitive_id": "honesty_rendering_constraint",
+      "name": "Honesty Rendering Constraint",
+      "verbatim_quote": "Honesty rules (CLAUDE.md #5): render only when a real upstream timestamp exists; show the true age even when unflattering.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "I_{valid}: indicator variable for valid timestamp existence (Boolean), U: unfiltered utility function.",
+      "assumptions": "System prioritizes transparency over aesthetic optimization; missing data is treated as a distinct state from zero-age data.",
+      "breakdown_regime": "Violated if business logic introduces artificial smoothing or hides extreme staleness to preserve user confidence artificially.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps to GSI's anti-collusion and transparency protocols, enforcing raw data exposure regardless of negative sentiment impact.",
+        "source_operator": "honesty_rendering_constraint",
+        "telemetry": "Frequency of 'unflattering' age displays versus suppressed displays."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "95a0bce183cd3679_t0",
+      "think": "The derivation of the LineFreshnessBadge stems from the fundamental tension between static caching architectures and dynamic informational reality. In a standard server-rendered environment, relative timestamps are baked into the HTML at build time, creating a frozen illusion of freshness that decays into falsehood. To mathematically resolve this, we introduce a strict boundary condition: the server transmits only the invariant absolute coordinate $t_{line}$ (the ISO timestamp), while the client assumes the burden of calculating the differential $\\Delta\\tau = t_{now} - t_{line}$. This operator effectively transforms a static cache into a dynamic observatory. The duality lies in separating the *state* (the line itself) from the *metadata of its provenance* (its age). Failure modes emerge primarily from clock skew—if the visitor's local oscillator drifts significantly from UTC, the calculated age becomes an unreliable metric. Furthermore, the 'honesty constraint' acts as a hard filter, preventing the system from applying heuristic smoothing to mask high-latency data. This ensures the output remains a pure, unadulterated reflection of the upstream market's recency, preserving the integrity of the Bayesian priors used by downstream quantitative models.\n\nDeep epistemic analysis for LineFreshnessBadge.prompt (95a0bce183cd3679, domain=other, pages_read=1/1): Operator 'Line Age Decay Operator' (page 1, domain other) captures: Shows how old the freshest bookmaker line behind today's published picks is (\"Lines updated 12m ago\"). Assumptions: Client system clock is reasonably synchronized with UTC; network latency for fetching the initial ISO string is negligible compared to the decay interval. Breakdown regime: Fails if the client clock is severely desynchronized or if the upstream provider fails to emit a valid ISO timestamp upon market updates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the half-life calculation in radioactive decay, measuring the distance from the ground truth event. Operator 'Client-Side Evaluation Kernel' (page 1, domain other) captures: Here the ISO timestamp is the only thing that crosses the boundary; the age is computed on the visitor's clock and refreshed every minute. Assumptions: The browser environment supports continuous execution of timers; the page remains active in the DOM. Breakdown regime: Breaks if the browser aggressively throttles background tabs, causing the refresh rate to drop below the required resolution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's local state updater, continuously evaluating environmental variables against a fixed prior without server round-trips. Operator 'Honesty Rendering Constraint' (page 1, domain other) captures: Honesty rules (CLAUDE.md #5): render only when a real upstream timestamp exists; show the true age even when unflattering. Assumptions: System prioritizes transparency over aesthetic optimization; missing data is treated as a distinct state from zero-age data. Breakdown regime: Violated if business logic introduces artificial smoothing or hides extreme staleness to preserve user confidence artificially. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSI's anti-collusion and transparency protocols, enforcing raw data exposure regardless of negative sentiment impact. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LineFreshnessBadge.prompt (95a0bce183cd3679, domain=other, pages_read=1/1): Operator 'Line Age Decay Operator' (page 1, domain other) captures: Shows how old the freshest bookmaker line behind today's published picks is (\"Lines updated 12m ago\"). Assumptions: Client system clock is reasonably synchronized with UTC; network latency for fetching the initial ISO string is negligible compared to the decay interval. Breakdown regime: Fails if the client clock is severely desynchronized or if the upstream provider fails to emit a valid ISO timestamp upon market updates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the half-life calculation in radioactive decay, measuring the distance from the ground truth event. Operator 'Client-Side Evaluation Kernel' (page 1, domain other) captures: Here the ISO timestamp is the only thing that crosses the boundary; the age is computed on the visitor's clock and refreshed every minute. Assumptions: The browser environment supports continuous execution of timers; the page remains active in the DOM. Breakdown regime: Breaks if the browser aggressively throttles background tabs, causing the refresh rate to drop below the required resolution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's local state updater, continuously evaluating environmental variables against a fixed prior without server round-trips. Operator 'Honesty Rendering Constraint' (page 1, domain other) captures: Honesty rules (CLAUDE.md #5): render only when a real upstream timestamp exists; show the true age even when unflattering. Assumptions: System prioritizes transparency over aesthetic optimization; missing data is treated as a distinct state from zero-age data. Breakdown regime: Violated if business logic introduces artificial smoothing or hides extreme staleness to preserve user confidence artificially. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSI's anti-collusion and transparency protocols, enforcing raw data exposure regardless of negative sentiment impact. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces its lineage to the development of distributed systems clocks and NTP (Network Time Protocol). Historically, the need to synchronize disparate nodes led to the realization that transmitting absolute time is more robust than transmitting relative deltas across unstable networks. In financial markets, the concept of 'time-and-sale' data relies heavily on precise millisecond tagging to reconstruct order flow. The LineFreshnessBadge adapts these rigorous timestamping principles to the consumer-facing layer of sports intelligence, acknowledging that trust is a function of transparent temporal accounting.",
+      "theory_of_mind": "From the perspective of the end-user (the bettor), seeing a constantly updating '12m ago' provides psychological reassurance that the platform is live and connected to the bleeding edge of market action. Conversely, for the opposing agent—the sportsbook—a rapidly aging line might indicate a lack of sharp money movement or a paused market. The badge models this asymmetry by providing a shared, objective metric of market activity. It prevents the user from assuming a stale pick is backed by recent consensus, thereby aligning the user's risk assessment with the actual informational decay of the underlying odds.",
+      "cross_layer_veto": "A critical veto condition exists if the backend attempts to pre-calculate the age string to save client CPU cycles. Doing so would immediately reintroduce the caching paradox, freezing the age at the moment of the CDN edge cache population. Additionally, any attempt to cap the displayed age (e.g., showing '< 1 hour' instead of '58 minutes') constitutes a leakage of bias, violating the honesty constraint. The system must strictly enforce the transmission of raw ISO strings and forbid any server-side interpolation of the delta, ensuring complete anti-collinearity between the rendering engine and the data freshness."
+    }
+  ]
+}

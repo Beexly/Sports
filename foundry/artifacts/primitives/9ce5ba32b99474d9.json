@@ -1,0 +1,78 @@
+{
+  "book_id": "9ce5ba32b99474d9",
+  "source_status": "COMPLETE",
+  "title": "prisma",
+  "file_name": "prisma.md",
+  "sha256": "9ce5ba32b99474d96675cf75d287e00a50af75e816aaa0a00c3ce193ddd366ee",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Prisma schema-migration discipline enforces idempotent database evolution through timestamped migrations, validated by CI replay and constrained by immutable ledger principles. Universal Lens: Rooted in prisma (9ce5ba32b99474d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps schema changes to migration deltas; conformal prediction ensures CI validation of schema-migration consistency via diff-based replay. GSI Mapping: Rooted in prisma (9ce5ba32b99474d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models migration state transitions using discrete event logic; state-space exploration tracks applied vs. pending migrations with fail-closed deployment gates. GSE Mapping: Rooted in prisma (9ce5ba32b99474d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "migration_ledger_reconciliation",
+      "name": "Migration Ledger Reconciliation",
+      "verbatim_quote": "**CI replays the migration history, blocking.** `.github/workflows/ci.yml` runs `prisma migrate deploy` against the empty test database and then `prisma migrate diff --from-url \"$DATABASE_URL\" --to-schema-datamodel ...",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'migration sequence (ordered set)', 'S': 'schema state (datamodel)', 'D': 'database state (schema instance)'}",
+      "assumptions": "Migration history is deterministic and replayable; schema and DB states must align.",
+      "breakdown_regime": "When migration history diverges from schema, CI fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each migration step corresponds to a logical update in GSI's Bayesian model of schema evolution.",
+        "source_operator": "migration_ledger_reconciliation",
+        "telemetry": "Migration status diff between schema and DB"
+      }
+    },
+    {
+      "primitive_id": "schema_migration_invariant",
+      "name": "Schema-Migration Invariant",
+      "verbatim_quote": "A `schema.prisma` change without a migration, or a migration that drifts from the schema, fails CI.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ΔS': 'schema change vector', 'ΔM': 'migration change vector', 'I': 'invariant constraint (ΔS = ΔM)'}",
+      "assumptions": "Schema and migration must remain synchronized; any deviation invalidates CI.",
+      "breakdown_regime": "Mismatch between schema and migration leads to CI failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ensures GSE's internal state reflects schema evolution via invariant enforcement.",
+        "source_operator": "schema_migration_invariant",
+        "telemetry": "CI pass/fail on schema-migration alignment"
+      }
+    },
+    {
+      "primitive_id": "production_deployment_gate",
+      "name": "Production Deployment Gate",
+      "verbatim_quote": "On the normal path that script is fail-closed: if migration application is misconfigured, the build fails rather than deploying app code against a schema it doesn't match.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'deployment gate (boolean)', 'E': 'environment (prod/test)', 'S': 'schema version', 'D': 'DB schema version'}",
+      "assumptions": "Deployment gate enforces schema consistency; mismatch triggers build failure.",
+      "breakdown_regime": "Gate fails when S ≠ D in production.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's deployment logic mirrors this gate as a conditional state transition.",
+        "source_operator": "production_deployment_gate",
+        "telemetry": "Build success/failure based on schema consistency check"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9ce5ba32b99474d9_t0",
+      "think": "The core mathematical structure of Prisma’s schema-migration discipline is a discrete-time dynamical system where each migration is a state update function. The schema.prisma file defines the target state space, while migrations define the evolution path. The CI replay acts as a consistency checker, enforcing a homomorphism between schema and database states. Any deviation violates the invariant ΔS = ΔM, triggering a failure mode. The fail-closed gate ensures that only consistent schemas propagate to production. The system exhibits idempotency through timestamped migrations and a squash operation that reduces history to a single baseline. This structure supports Bayesian inference in GSI by providing a clean signal for schema drift and migration fidelity. The agent-bash-guard prevents destructive operations that could break the invariant, enforcing a topological constraint on the state space. The system's robustness stems from its reliance on immutable logs and deterministic replay.\n\nDeep epistemic analysis for prisma (9ce5ba32b99474d9, domain=other, pages_read=2/2): Operator 'Migration Ledger Reconciliation' (page 1, domain other) captures: **CI replays the migration history, blocking.** `.github/workflows/ci.yml` runs `prisma migrate deploy` against the empty test database and then `prisma migrate diff --from-url \"$DATABASE_URL\" --to-schema-datamodel ... Assumptions: Migration history is deterministic and replayable; schema and DB states must align. Breakdown regime: When migration history diverges from schema, CI fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each migration step corresponds to a logical update in GSI's Bayesian model of schema evolution. Operator 'Schema-Migration Invariant' (page 2, domain other) captures: A `schema.prisma` change without a migration, or a migration that drifts from the schema, fails CI. Assumptions: Schema and migration must remain synchronized; any deviation invalidates CI. Breakdown regime: Mismatch between schema and migration leads to CI failure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures GSE's internal state reflects schema evolution via invariant enforcement. Operator 'Production Deployment Gate' (page 1, domain other) captures: On the normal path that script is fail-closed: if migration application is misconfigured, the build fails rather than deploying app code against a schema it doesn't match. Assumptions: Deployment gate enforces schema consistency; mismatch triggers build failure. Breakdown regime: Gate fails when S ≠ D in production. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's deployment logic mirrors this gate as a conditional state transition. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prisma (9ce5ba32b99474d9, domain=other, pages_read=2/2): Operator 'Migration Ledger Reconciliation' (page 1, domain other) captures: **CI replays the migration history, blocking.** `.github/workflows/ci.yml` runs `prisma migrate deploy` against the empty test database and then `prisma migrate diff --from-url \"$DATABASE_URL\" --to-schema-datamodel ... Assumptions: Migration history is deterministic and replayable; schema and DB states must align. Breakdown regime: When migration history diverges from schema, CI fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each migration step corresponds to a logical update in GSI's Bayesian model of schema evolution. Operator 'Schema-Migration Invariant' (page 2, domain other) captures: A `schema.prisma` change without a migration, or a migration that drifts from the schema, fails CI. Assumptions: Schema and migration must remain synchronized; any deviation invalidates CI. Breakdown regime: Mismatch between schema and migration leads to CI failure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures GSE's internal state reflects schema evolution via invariant enforcement. Operator 'Production Deployment Gate' (page 1, domain other) captures: On the normal path that script is fail-closed: if migration application is misconfigured, the build fails rather than deploying app code against a schema it doesn't match. Assumptions: Deployment gate enforces schema consistency; mismatch triggers build failure. Breakdown regime: Gate fails when S ≠ D in production. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's deployment logic mirrors this gate as a conditional state transition. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in relational algebra and formal verification principles, evolving from early ORM practices into modern schema-first design patterns. Influenced by database transaction theory and version control systems. Retrocausal Genealogy: Rooted in prisma (9ce5ba32b99474d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in prisma (9ce5ba32b99474d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include developers who may attempt shortcuts (e.g., direct DB edits) and automated CI systems enforcing compliance. The system models these as competing information flows, with the gate acting as a decision boundary. Theory of Mind & Decision Maker Model: Rooted in prisma (9ce5ba32b99474d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when schema and migration drift; leakage occurs if CI bypasses validation. The system vetoes such violations by enforcing strict replay and invariant checks across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in prisma (9ce5ba32b99474d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in prisma (9ce5ba32b99474d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

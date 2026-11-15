@@ -1,0 +1,78 @@
+{
+  "book_id": "2981b90726f80d88",
+  "source_status": "COMPLETE",
+  "title": "fci_zhang2008_rules_verbatim",
+  "file_name": "fci_zhang2008_rules_verbatim.md",
+  "sha256": "2981b90726f80d8862c5c77c435357d6a28d741bfc48c416ea692a7967fa6329",
+  "primary_domain": "other",
+  "pages_total": 18,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "FCI orientation rules unify causal graph inference via directed/undirected edge resolution under uncovered path constraints. Universal Lens: Rooted in fci_zhang2008_rules_verbatim (2981b90726f80d88), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian causal discovery using GSI infers ancestral graph structures through probabilistic orientation of undirected edges based on uncovered paths. GSI Mapping: Rooted in fci_zhang2008_rules_verbatim (2981b90726f80d88), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies state transitions to orient FCI paths, resolving ambiguities in causal directionality via iterative rule application. GSE Mapping: Rooted in fci_zhang2008_rules_verbatim (2981b90726f80d88), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "r5_uncovered_circle_path",
+      "name": "Uncovered Circle Path Rule",
+      "verbatim_quote": "_α,θ_ are not adjacent and β,γ are not adjacent, then orient α◦--◦β and every edge on _p_ as undirected edges (—).",
+      "page": 1,
+      "latex": "\\alpha \\circ -- \\beta \\text{ and } \\forall e \\in p, e = --",
+      "symbol_and_unit_ledger": "{'α, β, γ, θ': 'vertices in a partially directed graph', 'p': 'path from α to γ', '--': 'undirected edge'}",
+      "assumptions": "Vertices α, θ are not adjacent; vertices β, γ are not adjacent.",
+      "breakdown_regime": "When adjacency exists between α, θ or β, γ, rule does not apply.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps uncovered circle paths to undirected edges in ancestral graph inference.",
+        "source_operator": "r5_uncovered_circle_path",
+        "telemetry": "Edge orientation consistency across uncovered paths."
+      }
+    },
+    {
+      "primitive_id": "r10_conflict_resolution",
+      "name": "Conflict Resolution Rule",
+      "verbatim_quote": "ightarrow\\gamma` ### R10 (verbatim prose) > **R10** Suppose α◦→ _γ, β_ → _γ_ ← _θ, _p_ 1is an uncovered p.d.",
+      "page": 2,
+      "latex": "\\alpha \\circ \\rightarrow \\gamma \\Rightarrow \\alpha \\rightarrow \\gamma \\text{ if } \\mu \\neq \\omega \\text{ and } \\mu \\nleftrightarrow \\omega",
+      "symbol_and_unit_ledger": "{'α, β, γ, θ': 'vertices in a partially directed graph', 'p₁, p₂': 'uncovered potentially directed paths', 'μ, ω': 'adjacent vertices to α on p₁ and p₂ respectively', '\\\\rightarrow': 'directed edge'}",
+      "assumptions": "Paths p₁ and p₂ are uncovered and potentially directed; μ and ω are distinct and non-adjacent.",
+      "breakdown_regime": "When μ and ω are adjacent or identical, rule fails to resolve orientation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Resolves conflicting orientations in ancestral graph inference via conflict detection.",
+        "source_operator": "r10_conflict_resolution",
+        "telemetry": "Consistency of edge orientations after conflict resolution."
+      }
+    },
+    {
+      "primitive_id": "pd_path_definition",
+      "name": "Potentially Directed Path Definition",
+      "verbatim_quote": "> **Definition 10 (potentially directed path).** In a PMG, a path p =〈V0,...,Vn〉 is said to be potentially directed (abbreviated as **p.d.**) fromV0to Vnif for every 0 _i n_ - 1, the edge between Viand _V_ i+1is not into Vior out of _V_ i+1.",
+      "page": 2,
+      "latex": "\\text{Path } p = \\langle V_0, ..., V_n \\rangle \\text{ is p.d. if } \\forall i, \\text{ edge } (V_i, V_{i+1}) \\text{ is not into or out of } V_i \\text{ or } V_{i+1}",
+      "symbol_and_unit_ledger": "{'p': 'path in a partially directed graph', 'V₀...Vₙ': 'sequence of vertices', 'i': 'index in path'}",
+      "assumptions": "Each edge in the path is neither incoming nor outgoing from its endpoints.",
+      "breakdown_regime": "When any edge violates the condition, path is not potentially directed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphs to directed path structures in causal graph inference.",
+        "source_operator": "pd_path_definition",
+        "telemetry": "Path validity under potential directionality constraints."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2981b90726f80d88_t0",
+      "think": "The FCI orientation rules define a systematic method for orienting edges in partially directed graphs (PDGs) to infer ancestral graphs. R5 resolves uncovered circle paths by making all edges undirected, assuming non-adjacency of endpoints. R10 handles conflicts when multiple paths lead to ambiguous orientations, resolving them based on adjacency of adjacent vertices. The definition of potentially directed paths ensures that orientations can be consistently applied without violating graph structure. These rules form a kernel of causal inference where each rule acts as a constraint on allowable edge directions, enabling robust identification of causal relationships in observational data. Failure modes occur when adjacency conditions are violated or when conflicting paths cannot be resolved due to shared vertices.\n\nDeep epistemic analysis for fci_zhang2008_rules_verbatim (2981b90726f80d88, domain=other, pages_read=18/18): Operator 'Uncovered Circle Path Rule' (page 1, domain other) captures: _α,θ_ are not adjacent and β,γ are not adjacent, then orient α◦--◦β and every edge on _p_ as undirected edges (—). Assumptions: Vertices α, θ are not adjacent; vertices β, γ are not adjacent. Breakdown regime: When adjacency exists between α, θ or β, γ, rule does not apply. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps uncovered circle paths to undirected edges in ancestral graph inference. Operator 'Conflict Resolution Rule' (page 2, domain other) captures: ightarrow\\gamma` ### R10 (verbatim prose) > **R10** Suppose α◦→ _γ, β_ → _γ_ ← _θ, _p_ 1is an uncovered p.d. Assumptions: Paths p₁ and p₂ are uncovered and potentially directed; μ and ω are distinct and non-adjacent. Breakdown regime: When μ and ω are adjacent or identical, rule fails to resolve orientation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Resolves conflicting orientations in ancestral graph inference via conflict detection. Operator 'Potentially Directed Path Definition' (page 2, domain other) captures: > **Definition 10 (potentially directed path).** In a PMG, a path p =〈V0,...,Vn〉 is said to be potentially directed (abbreviated as **p.d.**) fromV0to Vnif for every 0 _i n_ - 1, the edge between Viand _V_ i+1is not into Vior out of _V_ i+1. Assumptions: Each edge in the path is neither incoming nor outgoing from its endpoints. Breakdown regime: When any edge violates the condition, path is not potentially directed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs to directed path structures in causal graph inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for fci_zhang2008_rules_verbatim (2981b90726f80d88, domain=other, pages_read=18/18): Operator 'Uncovered Circle Path Rule' (page 1, domain other) captures: _α,θ_ are not adjacent and β,γ are not adjacent, then orient α◦--◦β and every edge on _p_ as undirected edges (—). Assumptions: Vertices α, θ are not adjacent; vertices β, γ are not adjacent. Breakdown regime: When adjacency exists between α, θ or β, γ, rule does not apply. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps uncovered circle paths to undirected edges in ancestral graph inference. Operator 'Conflict Resolution Rule' (page 2, domain other) captures: ightarrow\\gamma` ### R10 (verbatim prose) > **R10** Suppose α◦→ _γ, β_ → _γ_ ← _θ, _p_ 1is an uncovered p.d. Assumptions: Paths p₁ and p₂ are uncovered and potentially directed; μ and ω are distinct and non-adjacent. Breakdown regime: When μ and ω are adjacent or identical, rule fails to resolve orientation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Resolves conflicting orientations in ancestral graph inference via conflict detection. Operator 'Potentially Directed Path Definition' (page 2, domain other) captures: > **Definition 10 (potentially directed path).** In a PMG, a path p =〈V0,...,Vn〉 is said to be potentially directed (abbreviated as **p.d.**) fromV0to Vnif for every 0 _i n_ - 1, the edge between Viand _V_ i+1is not into Vior out of _V_ i+1. Assumptions: Each edge in the path is neither incoming nor outgoing from its endpoints. Breakdown regime: When any edge violates the condition, path is not potentially directed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs to directed path structures in causal graph inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Pearl's causal inference framework and Spirtes et al.'s PC algorithm, these rules extend to ancestral graph identification via FCI. They build upon earlier work in graphical models and Markov equivalence classes. Retrocausal Genealogy: Rooted in fci_zhang2008_rules_verbatim (2981b90726f80d88), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to introduce spurious edges or misinterpret uncovered paths. The rules enforce logical consistency against such adversarial manipulations by requiring strict adherence to path and adjacency conditions. Theory of Mind & Decision Maker Model: Rooted in fci_zhang2008_rules_verbatim (2981b90726f80d88), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when two paths share common vertices in ways that violate the uncovered path assumption. Leakage occurs if orientation rules do not properly account for shared adjacencies, leading to incorrect causal inferences. Cross-Layer Veto & Anti-Leakage Check: Rooted in fci_zhang2008_rules_verbatim (2981b90726f80d88), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

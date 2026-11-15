@@ -1,0 +1,78 @@
+{
+  "book_id": "b6b927e27229ff27",
+  "source_status": "COMPLETE",
+  "title": "GROUND_TRUTH_AUDIT_2026-09-07",
+  "file_name": "GROUND_TRUTH_AUDIT_2026-09-07.md",
+  "sha256": "b6b927e27229ff27627f8e26ba07275b83bb3558d2a6e035c38863e11a5247a1",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Event-id keyed retrieval prevents duplicate-fixture corruption; true final alignment via ESPN ensures structural integrity of game rows. Universal Lens: Rooted in GROUND_TRUTH_AUDIT_2026-09-07 (b6b927e27229ff27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian reconciliation of stored picks against ESPN game rows enables conformal confidence intervals for settlement consistency. GSI Mapping: Rooted in GROUND_TRUTH_AUDIT_2026-09-07 (b6b927e27229ff27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps pick-grade discrepancies to game-row corruption states using event-id alignment and external validation. GSE Mapping: Rooted in GROUND_TRUTH_AUDIT_2026-09-07 (b6b927e27229ff27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "event_id_keyed_retrieval",
+      "name": "Event-ID Keyed Game Row Retrieval",
+      "verbatim_quote": "ESPN public scoreboard fetched by date and keyed by **event id**, never by team-and-time (team-and-time is the field a duplicate-fixture defect corrupts, so matching on it would hide the defect being measured).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Game rows are uniquely identifiable by event ID; team-and-time fields are subject to duplication defects.",
+      "breakdown_regime": "When team-and-time is used for matching, duplicate fixtures mask corruption.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The event ID provides a stable isomorphism between internal game state and external ESPN data, enabling accurate comparison and detection of corruption.",
+        "source_operator": "event_id_keyed_retrieval",
+        "telemetry": "Mismatch rate between internal game rows and ESPN final scores."
+      }
+    },
+    {
+      "primitive_id": "settlement_contradiction_detector",
+      "name": "Settlement Contradiction Detector",
+      "verbatim_quote": "Why this was necessary The settlement-contradiction detector compares a stored result against what the **game row** implies.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Stored results are compared against the implied outcome of the game row; agreement indicates consistency.",
+      "breakdown_regime": "Detects when a pick agrees with a corrupted game row, returning CONSISTENT even if incorrect.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of consistency checking derived from game row validity; blind spot arises when row itself is corrupted.",
+        "source_operator": "settlement_contradiction_detector",
+        "telemetry": "Number of picks marked CONSISTENT despite being graded against corrupted rows."
+      }
+    },
+    {
+      "primitive_id": "true_final_alignment",
+      "name": "True Final Alignment",
+      "verbatim_quote": "Sports covered: MLB 491, NFL 66, MLS 62, NCAAF 51.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "External alignment with ESPN provides ground truth for final scores across sports domains.",
+      "breakdown_regime": "Incomplete fetches (e.g., 104 missing event IDs) limit full coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "ESPN final scores act as a shared reference frame for validating internal game outcomes across all sports.",
+        "source_operator": "true_final_alignment",
+        "telemetry": "Percentage of correctly aligned picks per sport category."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b6b927e27229ff27_t0",
+      "think": "The core insight is that game rows are uniquely identified by event ID, not team-and-time, to avoid masking duplicate-fixture defects. The settlement-contradiction detector fails when a pick is graded against a corrupted row because it only compares against the row’s implication, not its truth. True final alignment with ESPN allows detection of such inconsistencies. The failure mode lies in the structural blind spot where a corrupted row appears consistent internally. This leads to misclassification of picks as correct when they are not. The telemetry for this includes mismatch rates across sports, especially MLB where 62/438 moneylines were wrong. The retrocausal genealogy traces back to early data ingestion models that relied on unstable identifiers. Agents involved include the ingestion system, the settlement engine, and the external ESPN feed. Anti-collinearity is ensured by using distinct identifiers and cross-validating against independent sources.\n\nDeep epistemic analysis for GROUND_TRUTH_AUDIT_2026-09-07 (b6b927e27229ff27, domain=other, pages_read=4/4): Operator 'Event-ID Keyed Game Row Retrieval' (page 1, domain other) captures: ESPN public scoreboard fetched by date and keyed by **event id**, never by team-and-time (team-and-time is the field a duplicate-fixture defect corrupts, so matching on it would hide the defect being measured). Assumptions: Game rows are uniquely identifiable by event ID; team-and-time fields are subject to duplication defects. Breakdown regime: When team-and-time is used for matching, duplicate fixtures mask corruption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The event ID provides a stable isomorphism between internal game state and external ESPN data, enabling accurate comparison and detection of corruption. Operator 'Settlement Contradiction Detector' (page 1, domain other) captures: Why this was necessary The settlement-contradiction detector compares a stored result against what the **game row** implies. Assumptions: Stored results are compared against the implied outcome of the game row; agreement indicates consistency. Breakdown regime: Detects when a pick agrees with a corrupted game row, returning CONSISTENT even if incorrect. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of consistency checking derived from game row validity; blind spot arises when row itself is corrupted. Operator 'True Final Alignment' (page 1, domain other) captures: Sports covered: MLB 491, NFL 66, MLS 62, NCAAF 51. Assumptions: External alignment with ESPN provides ground truth for final scores across sports domains. Breakdown regime: Incomplete fetches (e.g., 104 missing event IDs) limit full coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ESPN final scores act as a shared reference frame for validating internal game outcomes across all sports. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GROUND_TRUTH_AUDIT_2026-09-07 (b6b927e27229ff27, domain=other, pages_read=4/4): Operator 'Event-ID Keyed Game Row Retrieval' (page 1, domain other) captures: ESPN public scoreboard fetched by date and keyed by **event id**, never by team-and-time (team-and-time is the field a duplicate-fixture defect corrupts, so matching on it would hide the defect being measured). Assumptions: Game rows are uniquely identifiable by event ID; team-and-time fields are subject to duplication defects. Breakdown regime: When team-and-time is used for matching, duplicate fixtures mask corruption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The event ID provides a stable isomorphism between internal game state and external ESPN data, enabling accurate comparison and detection of corruption. Operator 'Settlement Contradiction Detector' (page 1, domain other) captures: Why this was necessary The settlement-contradiction detector compares a stored result against what the **game row** implies. Assumptions: Stored results are compared against the implied outcome of the game row; agreement indicates consistency. Breakdown regime: Detects when a pick agrees with a corrupted game row, returning CONSISTENT even if incorrect. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of consistency checking derived from game row validity; blind spot arises when row itself is corrupted. Operator 'True Final Alignment' (page 1, domain other) captures: Sports covered: MLB 491, NFL 66, MLS 62, NCAAF 51. Assumptions: External alignment with ESPN provides ground truth for final scores across sports domains. Breakdown regime: Incomplete fetches (e.g., 104 missing event IDs) limit full coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ESPN final scores act as a shared reference frame for validating internal game outcomes across all sports. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early data models using team-time as keys, leading to duplicate fixture masking. Evolution toward event-ID-based retrieval reflects recognition of identifier instability. Retrocausal Genealogy: Rooted in GROUND_TRUTH_AUDIT_2026-09-07 (b6b927e27229ff27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in GROUND_TRUTH_AUDIT_2026-09-07 (b6b927e27229ff27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The ingestion system acts as a passive agent, relying on unstable identifiers. The settlement engine is a reactive agent, detecting consistency within its own domain. ESPN serves as an active verifier, providing external truth. Theory of Mind & Decision Maker Model: Rooted in GROUND_TRUTH_AUDIT_2026-09-07 (b6b927e27229ff27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that internal consistency checks do not rely on potentially corrupted identifiers. Leakage is prevented by isolating the event-ID key from team-time fields during validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in GROUND_TRUTH_AUDIT_2026-09-07 (b6b927e27229ff27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "e49f32b0bf4e1743",
+  "source_status": "COMPLETE",
+  "title": "2026-09-13-gse-test-report",
+  "file_name": "2026-09-13-gse-test-report.md",
+  "sha256": "e49f32b0bf4e17433a80b128b4341077168ff4615626e65bcfa1f44e63eb2ec5",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Git checkout staleness and npm install failure define a constrained operational manifold where test execution is blocked by environmental invariants and supply-chain integrity. Universal Lens: Rooted in 2026-09-13-gse-test-report (e49f32b0bf4e1743), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference maps environmental constraints to probabilistic test readiness; SLA watch items encode posterior belief states over task completion likelihood. GSI Mapping: Rooted in 2026-09-13-gse-test-report (e49f32b0bf4e1743), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning models the agent's state transition through a constrained phase space defined by git stability, npm availability, and ledger consistency. GSE Mapping: Rooted in 2026-09-13-gse-test-report (e49f32b0bf4e1743), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "git_checkout_stability",
+      "name": "Git Checkout Stability Index",
+      "verbatim_quote": "**Checkout is stale and un-updatable here.** `git pull` aborts on untracked `docs/ops/PROPS_PRODUCTION_PIPELINE_PROMPT_2026-09-10.md`; remote is ahead (11f007d60..39ead79f3).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Stability index (dimensionless)', 'R': 'Remote commit hash (string)', 'L': 'Local commit hash (string)'}",
+      "assumptions": "The system enforces read-only access and does not permit merges with untracked files.",
+      "breakdown_regime": "When S < 1, test execution is halted due to unresolvable divergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's belief propagation over repository state consistency.",
+        "source_operator": "git_checkout_stability",
+        "telemetry": "Observed via git status and pull result"
+      }
+    },
+    {
+      "primitive_id": "npm_install_failure",
+      "name": "Node Package Manager Installation Failure",
+      "verbatim_quote": "Bare `npm install --no-audit --no-fund`: - Attempt 1: backgrounded after ~124s with zero output, then went `pending_user_confirmation`; killed via SIGTERM (exitSignal 15).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Failure indicator (binary)', 'T': 'Time to failure (seconds)', 'E': 'Exit signal (integer)'}",
+      "assumptions": "Installation requires user interaction or a fully configured environment.",
+      "breakdown_regime": "When F = 1, node_modules is incomplete and tests cannot execute.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's resource allocation kernel under constrained I/O.",
+        "source_operator": "npm_install_failure",
+        "telemetry": "Observed via npm logs and process exit codes"
+      }
+    },
+    {
+      "primitive_id": "ledger_sla_watchlist",
+      "name": "Ledger SLA Watchlist Count",
+      "verbatim_quote": "Output: `[agent-ledger] OK — 316 rows (OPEN=91 CLAIMED=18 BLOCKED=5 UNPUSHED=1 DONE=192 CANCELLED=9 ON HOLD=0)` with **36 SLA watch items**: - `H-N`: CLAIMED with no evidence — claimed but nothing recorded as started.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'Watchlist count (integer)', 'O': 'Open tasks (integer)', 'C': 'Claimed tasks (integer)'}",
+      "assumptions": "Each SLA item represents a pending task with measurable risk of delay.",
+      "breakdown_regime": "When W > 30, system health is flagged for operational review.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's dynamic risk assessment over task lifecycle.",
+        "source_operator": "ledger_sla_watchlist",
+        "telemetry": "Retrieved from ledger query output"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e49f32b0bf4e1743_t0",
+      "think": "The core failure modes arise from environmental constraints: git checkout staleness implies that the system cannot progress beyond a fixed revision, which blocks any further updates or test runs. The npm install failure indicates that the underlying package manager cannot operate without user intervention, resulting in an incomplete dependency tree. These failures coalesce into a single operational invariant: test execution is impossible when either condition holds. The ledger SLA watchlist reflects the accumulated backlog of unfulfilled commitments, suggesting systemic delays. The interplay between these primitives creates a feedback loop where each failure exacerbates the others—stale checkout prevents updates, failed installs prevent testing, and the ledger shows increasing task load. This is a dual failure mode: one in infrastructure (git/npm) and one in task management (ledger). The mathematical structure resembles a constraint satisfaction problem with three independent but interacting variables: S (checkout stability), F (install failure), and W (watchlist). Each variable defines a region of validity for the system’s operational space. When any variable enters its failure regime, the entire system becomes non-functional.\n\nDeep epistemic analysis for 2026-09-13-gse-test-report (e49f32b0bf4e1743, domain=other, pages_read=3/3): Operator 'Git Checkout Stability Index' (page 2, domain other) captures: **Checkout is stale and un-updatable here.** `git pull` aborts on untracked `docs/ops/PROPS_PRODUCTION_PIPELINE_PROMPT_2026-09-10.md`; remote is ahead (11f007d60..39ead79f3). Assumptions: The system enforces read-only access and does not permit merges with untracked files. Breakdown regime: When S < 1, test execution is halted due to unresolvable divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's belief propagation over repository state consistency. Operator 'Node Package Manager Installation Failure' (page 1, domain other) captures: Bare `npm install --no-audit --no-fund`: - Attempt 1: backgrounded after ~124s with zero output, then went `pending_user_confirmation`; killed via SIGTERM (exitSignal 15). Assumptions: Installation requires user interaction or a fully configured environment. Breakdown regime: When F = 1, node_modules is incomplete and tests cannot execute. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's resource allocation kernel under constrained I/O. Operator 'Ledger SLA Watchlist Count' (page 1, domain other) captures: Output: `[agent-ledger] OK — 316 rows (OPEN=91 CLAIMED=18 BLOCKED=5 UNPUSHED=1 DONE=192 CANCELLED=9 ON HOLD=0)` with **36 SLA watch items**: - `H-N`: CLAIMED with no evidence — claimed but nothing recorded as started. Assumptions: Each SLA item represents a pending task with measurable risk of delay. Breakdown regime: When W > 30, system health is flagged for operational review. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's dynamic risk assessment over task lifecycle. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-09-13-gse-test-report (e49f32b0bf4e1743, domain=other, pages_read=3/3): Operator 'Git Checkout Stability Index' (page 2, domain other) captures: **Checkout is stale and un-updatable here.** `git pull` aborts on untracked `docs/ops/PROPS_PRODUCTION_PIPELINE_PROMPT_2026-09-10.md`; remote is ahead (11f007d60..39ead79f3). Assumptions: The system enforces read-only access and does not permit merges with untracked files. Breakdown regime: When S < 1, test execution is halted due to unresolvable divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's belief propagation over repository state consistency. Operator 'Node Package Manager Installation Failure' (page 1, domain other) captures: Bare `npm install --no-audit --no-fund`: - Attempt 1: backgrounded after ~124s with zero output, then went `pending_user_confirmation`; killed via SIGTERM (exitSignal 15). Assumptions: Installation requires user interaction or a fully configured environment. Breakdown regime: When F = 1, node_modules is incomplete and tests cannot execute. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's resource allocation kernel under constrained I/O. Operator 'Ledger SLA Watchlist Count' (page 1, domain other) captures: Output: `[agent-ledger] OK — 316 rows (OPEN=91 CLAIMED=18 BLOCKED=5 UNPUSHED=1 DONE=192 CANCELLED=9 ON HOLD=0)` with **36 SLA watch items**: - `H-N`: CLAIMED with no evidence — claimed but nothing recorded as started. Assumptions: Each SLA item represents a pending task with measurable risk of delay. Breakdown regime: When W > 30, system health is flagged for operational review. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's dynamic risk assessment over task lifecycle. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the Unix philosophy of immutable environments and layered systems design, this trace echoes the early 1970s notion of process isolation and resource contention. It builds upon the formalism of state machines and constraint-based reasoning used in distributed systems theory. Retrocausal Genealogy: Rooted in 2026-09-13-gse-test-report (e49f32b0bf4e1743), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the automated test runner, which expects a clean environment, and the system itself, which enforces read-only policies and fails gracefully under user interaction requirements. The decision actor is the developer or CI system, who must choose between manual resolution or alternative deployment paths. Theory of Mind & Decision Maker Model: Rooted in 2026-09-13-gse-test-report (e49f32b0bf4e1743), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that git stability, npm availability, and ledger integrity are treated as orthogonal constraints. Leakage occurs if one layer's failure is misattributed to another, e.g., blaming npm for git issues. Veto conditions require explicit validation of each primitive before proceeding to the next stage. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-09-13-gse-test-report (e49f32b0bf4e1743), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

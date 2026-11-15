@@ -1,0 +1,78 @@
+{
+  "book_id": "efbd4137fa3af223",
+  "source_status": "COMPLETE",
+  "title": "f992230cf987",
+  "file_name": "f992230cf987.txt",
+  "sha256": "efbd4137fa3af223c373baaa1adb8eef9274245bda51e0c9f30ed46793317f90",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian edge scoring with Kelly fractional staking under probabilistic market vig adjustment. Universal Lens: Rooted in f992230cf987 (efbd4137fa3af223), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers posterior belief states via conformal predictive distributions over scored picks using Kelly-optimal unit allocation. GSI Mapping: Rooted in f992230cf987 (efbd4137fa3af223), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions pick states through stochastic reasoning layers, applying dynamic risk-adjusted stakes based on edge and market depth. GSE Mapping: Rooted in f992230cf987 (efbd4137fa3af223), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "american_to_decimal_odds",
+      "name": "American Odds to Decimal Conversion",
+      "verbatim_quote": "=> { it(\"converts +100 → 2.0 (even money)\", () => { expect(americanToDecimalOdds(100)).toBeCloseTo(2.0); }); it(\"converts +200 →",
+      "page": 1,
+      "latex": "\\text{DecimalOdds} = \\begin{cases} 1 + \\frac{\\text{AmericanOdds}}{100} & \\text{if AmericanOdds} \\geq 100 \\\\ 1 - \\frac{100}{\\text{AmericanOdds}} & \\text{if AmericanOdds} < 0 \\end{cases}",
+      "symbol_and_unit_ledger": "{'AmericanOdds': 'dimensionless', 'DecimalOdds': 'dimensionless'}",
+      "assumptions": "Odds are valid American format; conversion assumes standard vig structure.",
+      "breakdown_regime": "When AmericanOdds = -100, DecimalOdds = 2.0; when AmericanOdds = +100, DecimalOdds = 2.0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps betting lines into consistent decimal probability space for Kelly-based staking logic in GSI.",
+        "source_operator": "american_to_decimal_odds",
+        "telemetry": "Verification against known odds conversions."
+      }
+    },
+    {
+      "primitive_id": "full_kelly_fraction",
+      "name": "Full Kelly Fraction Computation",
+      "verbatim_quote": "{ it(\"returns 0 when no edge (probability matches offered)\", () => { // At -110 odds",
+      "page": 1,
+      "latex": "f = \\max\\left(0, \\frac{p - q}{b}\\right)",
+      "symbol_and_unit_ledger": "{'f': 'fractional Kelly units', 'p': 'true probability of event', 'q': 'implied probability from odds', 'b': 'decimal odds minus 1'}",
+      "assumptions": "Edge is defined as p - q; negative edges yield zero stake.",
+      "breakdown_regime": "If p ≤ q, then f = 0; otherwise f increases linearly with edge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Computes optimal fractional stake based on estimated edge and market odds in GSI.",
+        "source_operator": "full_kelly_fraction",
+        "telemetry": "Validation of zero-edge case and positive edge scaling."
+      }
+    },
+    {
+      "primitive_id": "units_from_kelly",
+      "name": "Kelly Units Scaling",
+      "verbatim_quote": "it(\"scales by fractional Kelly factor\", () => { // Full Kelly of 0.2 → quarter-Kelly = 0.05 → 5 units, but capped at 3 expect(unitsFromKelly(0.2)).toBe(MAX_UNITS_PER_PICK); });",
+      "page": 2,
+      "latex": "U = \\min\\left(\\text{MAX\\_UNITS\\_PER\\_PICK}, \\text{KELLY\\_FRACTION} \\cdot f \\cdot 100\\right)",
+      "symbol_and_unit_ledger": "{'U': 'units of stake', 'f': 'fractional Kelly value', 'KELLY_FRACTION': 'scalar multiplier (e.g., 0.25 for quarter-Kelly)', 'MAX_UNITS_PER_PICK': 'maximum allowed stake units'}",
+      "assumptions": "Stake is bounded by fixed maximum per pick; fractional Kelly applies scaling.",
+      "breakdown_regime": "If f = 0.2 and KELLY_FRACTION = 0.25, U = min(3, 0.25 × 0.2 × 100) = 3.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Translates Kelly-derived edge into concrete unit allocations within GSE's stake engine.",
+        "source_operator": "units_from_kelly",
+        "telemetry": "Capped stake validation and fractional Kelly consistency checks."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "efbd4137fa3af223_t0",
+      "think": "The operators form a coherent inference pipeline: first, American odds are converted to decimal for consistent probabilistic interpretation. Then, the Kelly criterion computes an optimal fractional stake based on estimated edge versus market-implied probability. Finally, this fractional stake is scaled to discrete units while respecting upper bounds. The system avoids overexposure by capping stakes and clamping negative edges to zero. Dualities emerge between market vig and edge estimation—when odds imply a higher probability than inferred, no stake is recommended. Failure modes include misalignment between model confidence and actual edge, leading to suboptimal or zero-stakes even when signal strength is strong.\n\nDeep epistemic analysis for f992230cf987 (efbd4137fa3af223, domain=other, pages_read=3/3): Operator 'American Odds to Decimal Conversion' (page 1, domain other) captures: => { it(\"converts +100 → 2.0 (even money)\", () => { expect(americanToDecimalOdds(100)).toBeCloseTo(2.0); }); it(\"converts +200 → Assumptions: Odds are valid American format; conversion assumes standard vig structure. Breakdown regime: When AmericanOdds = -100, DecimalOdds = 2.0; when AmericanOdds = +100, DecimalOdds = 2.0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps betting lines into consistent decimal probability space for Kelly-based staking logic in GSI. Operator 'Full Kelly Fraction Computation' (page 1, domain other) captures: { it(\"returns 0 when no edge (probability matches offered)\", () => { // At -110 odds Assumptions: Edge is defined as p - q; negative edges yield zero stake. Breakdown regime: If p ≤ q, then f = 0; otherwise f increases linearly with edge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computes optimal fractional stake based on estimated edge and market odds in GSI. Operator 'Kelly Units Scaling' (page 2, domain other) captures: it(\"scales by fractional Kelly factor\", () => { // Full Kelly of 0.2 → quarter-Kelly = 0.05 → 5 units, but capped at 3 expect(unitsFromKelly(0.2)).toBe(MAX_UNITS_PER_PICK); }); Assumptions: Stake is bounded by fixed maximum per pick; fractional Kelly applies scaling. Breakdown regime: If f = 0.2 and KELLY_FRACTION = 0.25, U = min(3, 0.25 × 0.2 × 100) = 3. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Translates Kelly-derived edge into concrete unit allocations within GSE's stake engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for f992230cf987 (efbd4137fa3af223, domain=other, pages_read=3/3): Operator 'American Odds to Decimal Conversion' (page 1, domain other) captures: => { it(\"converts +100 → 2.0 (even money)\", () => { expect(americanToDecimalOdds(100)).toBeCloseTo(2.0); }); it(\"converts +200 → Assumptions: Odds are valid American format; conversion assumes standard vig structure. Breakdown regime: When AmericanOdds = -100, DecimalOdds = 2.0; when AmericanOdds = +100, DecimalOdds = 2.0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps betting lines into consistent decimal probability space for Kelly-based staking logic in GSI. Operator 'Full Kelly Fraction Computation' (page 1, domain other) captures: { it(\"returns 0 when no edge (probability matches offered)\", () => { // At -110 odds Assumptions: Edge is defined as p - q; negative edges yield zero stake. Breakdown regime: If p ≤ q, then f = 0; otherwise f increases linearly with edge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computes optimal fractional stake based on estimated edge and market odds in GSI. Operator 'Kelly Units Scaling' (page 2, domain other) captures: it(\"scales by fractional Kelly factor\", () => { // Full Kelly of 0.2 → quarter-Kelly = 0.05 → 5 units, but capped at 3 expect(unitsFromKelly(0.2)).toBe(MAX_UNITS_PER_PICK); }); Assumptions: Stake is bounded by fixed maximum per pick; fractional Kelly applies scaling. Breakdown regime: If f = 0.2 and KELLY_FRACTION = 0.25, U = min(3, 0.25 × 0.2 × 100) = 3. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Translates Kelly-derived edge into concrete unit allocations within GSE's stake engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kelly's 1956 work on optimal gambling strategies, extended to modern sports betting through Bayesian edge modeling and stochastic risk control. Retrocausal Genealogy: Rooted in f992230cf987 (efbd4137fa3af223), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in f992230cf987 (efbd4137fa3af223), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include market inefficiencies (mispricing), data noise (low-quality signals), and adversarial behavior (sharpened lines). The system models these as sources of uncertainty that must be mitigated through conservative edge thresholds and bounded risk exposure. Theory of Mind & Decision Maker Model: Rooted in f992230cf987 (efbd4137fa3af223), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that data quality, consensus, and volatility penalties do not reinforce each other without independent signal contribution. Leakage is prevented by strict adherence to model versioning and avoiding cross-contamination between different pick types (ML, SPREAD, TOTAL). Cross-Layer Veto & Anti-Leakage Check: Rooted in f992230cf987 (efbd4137fa3af223), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

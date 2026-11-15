@@ -1,0 +1,78 @@
+{
+  "book_id": "9b2d5cce747626e4",
+  "source_status": "COMPLETE",
+  "title": "c09-deep-d02",
+  "file_name": "c09-deep-d02.md",
+  "sha256": "9b2d5cce747626e4c0fa54690f7640824713c15fcd9f2bd532b673a2ac1b529e",
+  "primary_domain": "other",
+  "pages_total": 17,
+  "pages_read": 17,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Calibration spine: transformed probabilities, interval estimation, and decision-weighted combination unify uncertainty quantification and rating design. Universal Lens: Rooted in c09-deep-d02 (9b2d5cce747626e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction and Bayesian calibration to produce honest probabilistic forecasts, with transformed ratings serving as intermediates for decision-making. GSI Mapping: Rooted in c09-deep-d02 (9b2d5cce747626e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE integrates situational reasoning through state transitions guided by calibrated intervals and decision metrics, enabling adaptive response to evolving match dynamics. GSE Mapping: Rooted in c09-deep-d02 (9b2d5cce747626e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "calibration_formula",
+      "name": "Calibration Formula",
+      "verbatim_quote": "**0544 (BT regularization, ADAPT)** - Calibration formula: q = (1+δ)/(1+2δ), i.e.",
+      "page": 3,
+      "latex": "q = \\frac{1+\\delta}{1+2\\delta}",
+      "symbol_and_unit_ledger": "q: calibration factor, δ: regularization parameter",
+      "assumptions": "Transformed probabilities are unbiased under model correctness; decision metric is properly scored.",
+      "breakdown_regime": "When δ → 0, q → 1; when δ → ∞, q → 0.5.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw rating discrepancies to calibrated probability thresholds via BT regularization.",
+        "source_operator": "calibration_formula",
+        "telemetry": "Coverage accuracy of predicted intervals."
+      }
+    },
+    {
+      "primitive_id": "sqrt_k_law",
+      "name": "Square Root K Law",
+      "verbatim_quote": "The calibration spine: four papers, one doctrine.** 0564 (√K law: equilibrium rating error budget; and \"trust the transformed probabilities even when raw ratings look systematically biased\") + 0503 (i.i.d.",
+      "page": 7,
+      "latex": "E[|X_1 - \\rho_1|] \\leq \\sqrt{K}",
+      "symbol_and_unit_ledger": "X₁: estimated rating, ρ₁: true rating, K: skill variance parameter",
+      "assumptions": "Equilibrium error bounds hold for small K; ratings are unbiased under transformation.",
+      "breakdown_regime": "Linear growth in error beyond small K; convergence rate in time not established.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates rating error to skill variance via square root scaling in equilibrium.",
+        "source_operator": "sqrt_k_law",
+        "telemetry": "Mean absolute deviation of transformed ratings from true values."
+      }
+    },
+    {
+      "primitive_id": "interval_estimation",
+      "name": "Interval Estimation",
+      "verbatim_quote": "resampling lies: nominal 90% intervals cover at 0.60; game-clustered bootstrap restores honesty) + 0473 (MIS as the interval proper score; frequentist quantile/MIS heads for coverage, Bayesian posterior means for point forecasts) + 0791 (optimize combination weights on the decision metric, not the proper score).",
+      "page": 7,
+      "latex": "\\text{Coverage}(\\alpha) = P(y \\in [\\hat{y}_\\alpha^L, \\hat{y}_\\alpha^U])",
+      "symbol_and_unit_ledger": "α: confidence level, y: outcome, [\\hat{y}_\\alpha^L, \\hat{y}_\\alpha^U]: interval estimate",
+      "assumptions": "Intervals are constructed using proper scoring rules; resampling preserves coverage integrity.",
+      "breakdown_regime": "Nominal coverage fails without clustered bootstrap; misalignment between point and interval forecasts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ensures honest coverage of outcomes via MIS-based interval construction and decision-weighted aggregation.",
+        "source_operator": "interval_estimation",
+        "telemetry": "Empirical coverage rate of forecast intervals."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9b2d5cce747626e4_t0",
+      "think": "The calibration spine integrates multiple foundational works into a unified framework where transformed probabilities serve as the core deliverable. The √K law governs equilibrium error budgets, ensuring that rating discrepancies scale sublinearly with skill variance. The interval estimation mechanism ensures that these uncertainties are faithfully represented through proper scoring rules such as MIS, which aligns with decision-making objectives rather than point estimates alone. This architecture avoids conflating intermediate quantities like raw ratings with final outputs, maintaining clarity in both GSI’s probabilistic inference and GSE’s dynamic reasoning.\n\nDeep epistemic analysis for c09-deep-d02 (9b2d5cce747626e4, domain=other, pages_read=17/17): Operator 'Calibration Formula' (page 3, domain other) captures: **0544 (BT regularization, ADAPT)** - Calibration formula: q = (1+δ)/(1+2δ), i.e. Assumptions: Transformed probabilities are unbiased under model correctness; decision metric is properly scored. Breakdown regime: When δ → 0, q → 1; when δ → ∞, q → 0.5. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw rating discrepancies to calibrated probability thresholds via BT regularization. Operator 'Square Root K Law' (page 7, domain other) captures: The calibration spine: four papers, one doctrine.** 0564 (√K law: equilibrium rating error budget; and \"trust the transformed probabilities even when raw ratings look systematically biased\") + 0503 (i.i.d. Assumptions: Equilibrium error bounds hold for small K; ratings are unbiased under transformation. Breakdown regime: Linear growth in error beyond small K; convergence rate in time not established. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates rating error to skill variance via square root scaling in equilibrium. Operator 'Interval Estimation' (page 7, domain other) captures: resampling lies: nominal 90% intervals cover at 0.60; game-clustered bootstrap restores honesty) + 0473 (MIS as the interval proper score; frequentist quantile/MIS heads for coverage, Bayesian posterior means for point forecasts) + 0791 (optimize combination weights on the decision metric, not the proper score). Assumptions: Intervals are constructed using proper scoring rules; resampling preserves coverage integrity. Breakdown regime: Nominal coverage fails without clustered bootstrap; misalignment between point and interval forecasts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures honest coverage of outcomes via MIS-based interval construction and decision-weighted aggregation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for c09-deep-d02 (9b2d5cce747626e4, domain=other, pages_read=17/17): Operator 'Calibration Formula' (page 3, domain other) captures: **0544 (BT regularization, ADAPT)** - Calibration formula: q = (1+δ)/(1+2δ), i.e. Assumptions: Transformed probabilities are unbiased under model correctness; decision metric is properly scored. Breakdown regime: When δ → 0, q → 1; when δ → ∞, q → 0.5. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw rating discrepancies to calibrated probability thresholds via BT regularization. Operator 'Square Root K Law' (page 7, domain other) captures: The calibration spine: four papers, one doctrine.** 0564 (√K law: equilibrium rating error budget; and \"trust the transformed probabilities even when raw ratings look systematically biased\") + 0503 (i.i.d. Assumptions: Equilibrium error bounds hold for small K; ratings are unbiased under transformation. Breakdown regime: Linear growth in error beyond small K; convergence rate in time not established. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates rating error to skill variance via square root scaling in equilibrium. Operator 'Interval Estimation' (page 7, domain other) captures: resampling lies: nominal 90% intervals cover at 0.60; game-clustered bootstrap restores honesty) + 0473 (MIS as the interval proper score; frequentist quantile/MIS heads for coverage, Bayesian posterior means for point forecasts) + 0791 (optimize combination weights on the decision metric, not the proper score). Assumptions: Intervals are constructed using proper scoring rules; resampling preserves coverage integrity. Breakdown regime: Nominal coverage fails without clustered bootstrap; misalignment between point and interval forecasts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures honest coverage of outcomes via MIS-based interval construction and decision-weighted aggregation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical decision theory (0483), extended through modern conformal inference (0473) and Bayesian calibration (0544), culminating in structured uncertainty quantification (0564, 0791). Retrocausal Genealogy: Rooted in c09-deep-d02 (9b2d5cce747626e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in c09-deep-d02 (9b2d5cce747626e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include those who prioritize raw rating accuracy over calibrated intervals, and those who seek optimal decision performance through proper scoring. The framework models both perspectives to ensure robustness. Theory of Mind & Decision Maker Model: Rooted in c09-deep-d02 (9b2d5cce747626e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity prevents mixing point estimates with interval forecasts; leakage vetoes use of unverified numerical regimes beyond small-N simulations. Decision-weighted combination ensures no degradation from improper score optimization. Cross-Layer Veto & Anti-Leakage Check: Rooted in c09-deep-d02 (9b2d5cce747626e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in c09-deep-d02 (9b2d5cce747626e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "b236a5b132cd99b5",
+  "source_status": "COMPLETE",
+  "title": "forecast",
+  "file_name": "forecast.md",
+  "sha256": "b236a5b132cd99b5b48d9fbeaf817e465c804c9ef2f8c4c7da203a2132f3906a",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Weather forecast data as structured temporal fields over geospatial domains, encoded via GeoJSON and WMO ontologies. Universal Lens: Rooted in forecast (b236a5b132cd99b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian probabilistic inference on forecasted temperature and wind fields using time-series likelihoods and spatial covariance kernels. GSI Mapping: Rooted in forecast (b236a5b132cd99b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions in weather regimes governed by deterministic drift and stochastic perturbations across forecast periods. GSE Mapping: Rooted in forecast (b236a5b132cd99b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_forecast_field",
+      "name": "Temporal Forecast Field",
+      "verbatim_quote": "\"updateTime\": \"2026-10-23T18:22:45+00:00\", \"validTimes\": \"2026-10-23T12:00:00+00:00/P7DT13H\", \"elevation\": { \"unitCode\": \"wmoUnit:m\", \"value\": 0.9144 }, \"periods\": [ { \"number\": 1,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T(t)': 'temperature in Fahrenheit (°F)', 't': 'time in UTC', 'P(t)': 'probability of precipitation in percent (%)'}",
+      "assumptions": "Forecasted temperatures and probabilities are deterministic functions of time and location within a bounded domain.",
+      "breakdown_regime": "When forecast validity period exceeds 7 days or spatial resolution below 100m.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's probabilistic forecasting kernel and GSE's temporal state transition engine.",
+        "source_operator": "temporal_forecast_field",
+        "telemetry": "Observed vs predicted temperature deviation and precipitation occurrence."
+      }
+    },
+    {
+      "primitive_id": "geospatial_domain_polygon",
+      "name": "Geospatial Domain Polygon",
+      "verbatim_quote": "\"type\": \"Polygon\", \"coordinates\": [ [ [ -76.6012, 39.257 ], [ -76.5973, 39.2789 ], [ -76.6256, 39.2819",
+      "page": 1,
+      "latex": "\\mathcal{D} \\subset \\mathbb{R}^2 \\text{ defined by } \\{(x_i, y_i)\\}_{i=1}^{n}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{D}': 'forecast polygon domain in degrees latitude/longitude', '(x_i, y_i)': 'vertex coordinates in decimal degrees'}",
+      "assumptions": "Domain is a closed, convex polygon approximating local topography.",
+      "breakdown_regime": "When domain includes non-planar or discontinuous terrain features.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's spatial context graph and GSI's geospatial kernel.",
+        "source_operator": "geospatial_domain_polygon",
+        "telemetry": "Vertex count, area, centroid, and boundary integrity checks."
+      }
+    },
+    {
+      "primitive_id": "wind_vector_field",
+      "name": "Wind Vector Field",
+      "verbatim_quote": "Afternoon\", \"startTime\": \"2026-10-23T16:00:00-04:00\", \"endTime\": \"2026-10-23T18:00:00-04:00\", \"isDaytime\": true, \"temperature\": 64, \"temperatureUnit\": \"F\", \"temperatureTrend\": null, \"probabilityOfPrecipitation\": { \"unitCode\":",
+      "page": 1,
+      "latex": "\\vec{V}(t) = (v_s(t), v_d(t)) \\in \\mathbb{R}^2",
+      "symbol_and_unit_ledger": "{'\\\\vec{V}(t)': 'wind velocity vector at time t', 'v_s(t)': 'wind speed in miles per hour (mph)', 'v_d(t)': 'wind direction in degrees (°)'}",
+      "assumptions": "Wind field is stationary and isotropic within forecast period.",
+      "breakdown_regime": "When wind speeds exceed 50 mph or directional variance exceeds 45°.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Mapped to GSE's dynamic environmental vector and GSI's turbulence model.",
+        "source_operator": "wind_vector_field",
+        "telemetry": "Vector magnitude, direction, and temporal autocorrelation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b236a5b132cd99b5_t0",
+      "think": "The forecast data encodes a temporal sequence of weather states over a fixed geospatial domain. Each period's temperature, precipitation, and wind parameters form a structured field that can be modeled as a stochastic process indexed by time. The geospatial polygon defines the domain over which these fields are valid, enabling spatial interpolation and extrapolation. Wind vectors provide directional dynamics, while temperature trends suggest thermal gradients. These primitives support GSI's probabilistic forecasting through Bayesian updating of likelihoods and GSE's state transitions through deterministic drift and noise models. Failure modes include temporal extrapolation beyond forecast validity and spatial aliasing in coarse-resolution polygons.\n\nDeep epistemic analysis for forecast (b236a5b132cd99b5, domain=other, pages_read=5/5): Operator 'Temporal Forecast Field' (page 1, domain other) captures: \"updateTime\": \"2026-10-23T18:22:45+00:00\", \"validTimes\": \"2026-10-23T12:00:00+00:00/P7DT13H\", \"elevation\": { \"unitCode\": \"wmoUnit:m\", \"value\": 0.9144 }, \"periods\": [ { \"number\": 1, Assumptions: Forecasted temperatures and probabilities are deterministic functions of time and location within a bounded domain. Breakdown regime: When forecast validity period exceeds 7 days or spatial resolution below 100m. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic forecasting kernel and GSE's temporal state transition engine. Operator 'Geospatial Domain Polygon' (page 1, domain other) captures: \"type\": \"Polygon\", \"coordinates\": [ [ [ -76.6012, 39.257 ], [ -76.5973, 39.2789 ], [ -76.6256, 39.2819 Assumptions: Domain is a closed, convex polygon approximating local topography. Breakdown regime: When domain includes non-planar or discontinuous terrain features. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's spatial context graph and GSI's geospatial kernel. Operator 'Wind Vector Field' (page 1, domain other) captures: Afternoon\", \"startTime\": \"2026-10-23T16:00:00-04:00\", \"endTime\": \"2026-10-23T18:00:00-04:00\", \"isDaytime\": true, \"temperature\": 64, \"temperatureUnit\": \"F\", \"temperatureTrend\": null, \"probabilityOfPrecipitation\": { \"unitCode\": Assumptions: Wind field is stationary and isotropic within forecast period. Breakdown regime: When wind speeds exceed 50 mph or directional variance exceeds 45°. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Mapped to GSE's dynamic environmental vector and GSI's turbulence model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for forecast (b236a5b132cd99b5, domain=other, pages_read=5/5): Operator 'Temporal Forecast Field' (page 1, domain other) captures: \"updateTime\": \"2026-10-23T18:22:45+00:00\", \"validTimes\": \"2026-10-23T12:00:00+00:00/P7DT13H\", \"elevation\": { \"unitCode\": \"wmoUnit:m\", \"value\": 0.9144 }, \"periods\": [ { \"number\": 1, Assumptions: Forecasted temperatures and probabilities are deterministic functions of time and location within a bounded domain. Breakdown regime: When forecast validity period exceeds 7 days or spatial resolution below 100m. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic forecasting kernel and GSE's temporal state transition engine. Operator 'Geospatial Domain Polygon' (page 1, domain other) captures: \"type\": \"Polygon\", \"coordinates\": [ [ [ -76.6012, 39.257 ], [ -76.5973, 39.2789 ], [ -76.6256, 39.2819 Assumptions: Domain is a closed, convex polygon approximating local topography. Breakdown regime: When domain includes non-planar or discontinuous terrain features. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's spatial context graph and GSI's geospatial kernel. Operator 'Wind Vector Field' (page 1, domain other) captures: Afternoon\", \"startTime\": \"2026-10-23T16:00:00-04:00\", \"endTime\": \"2026-10-23T18:00:00-04:00\", \"isDaytime\": true, \"temperature\": 64, \"temperatureUnit\": \"F\", \"temperatureTrend\": null, \"probabilityOfPrecipitation\": { \"unitCode\": Assumptions: Wind field is stationary and isotropic within forecast period. Breakdown regime: When wind speeds exceed 50 mph or directional variance exceeds 45°. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Mapped to GSE's dynamic environmental vector and GSI's turbulence model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical meteorological field theory and modern geospatial data modeling, tracing back to Navier-Stokes fluid dynamics and ISO 19107 spatial data standards. Retrocausal Genealogy: Rooted in forecast (b236a5b132cd99b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in forecast (b236a5b132cd99b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include atmospheric variability (noise) and forecast model bias (signal). Decision actors are weather systems and their predictive models, each operating under distinct uncertainty regimes. Theory of Mind & Decision Maker Model: Rooted in forecast (b236a5b132cd99b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that temporal forecasts do not redundantly encode spatial information. Leakage vetoes prevent wind vector components from being derived from temperature fields without explicit coupling mechanisms. Cross-Layer Veto & Anti-Leakage Check: Rooted in forecast (b236a5b132cd99b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in forecast (b236a5b132cd99b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

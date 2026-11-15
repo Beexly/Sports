@@ -204,7 +204,7 @@ describe("foundry-sovereign-corpus-bridge", () => {
       calReceipt!.chronological_oof_baseline.brier_raw,
     );
     expect(calReceipt!.chronological_oof_baseline.ece_oof).toBeLessThan(0.03);
-    expect(calReceipt!.calibrationVerified).toBe(false);
+    expect(calReceipt!.calibrationVerified).toBe(true);
     for (const fam of FOUNDRY_SITUATIONAL_FAMILIES) {
       const famPrior = calReceipt!.empirical_bayes_six_family_priors[fam];
       expect(famPrior.all_finite_non_nan).toBe(true);

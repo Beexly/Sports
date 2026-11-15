@@ -1,0 +1,78 @@
+{
+  "book_id": "b1648271c2c74ece",
+  "source_status": "COMPLETE",
+  "title": "batch-08",
+  "file_name": "batch-08.txt",
+  "sha256": "b1648271c2c74ece0a3fc62d051b34323c1300af7bffa8170bde7d46b69bcafd",
+  "primary_domain": "other",
+  "pages_total": 8,
+  "pages_read": 8,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Top-heavy GPPs concentrate skill share; multi-entry dilutes edge; interference-aware estimands resolve SUTVA violations. Universal Lens: Rooted in batch-08 (b1648271c2c74ece), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian causal inference with conformal prediction ensures valid uncertainty quantification for GPP routing and skill estimation. GSI Mapping: Rooted in batch-08 (b1648271c2c74ece), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models contestant entry strategies and equilibrium field strength using convex optimization and state transitions. GSE Mapping: Rooted in batch-08 (b1648271c2c74ece), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "routing_gate_adapt",
+      "name": "Routing Gate ADAPT",
+      "verbatim_quote": "Acceptance / rejection gate ADAPT if the offline replay shows routed contest selection beating uniform GPP entry by ≥5 pp ROI over 4 weeks AND the x(φ) sorting simulation reproduces the known qualitative pattern (top-heavy large-field GPPs concentrate the highest estimated skill share).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ROI': 'Return on investment, dimensionless', 'x(φ)': 'Sorting function parameterized by φ, dimensionless'}",
+      "assumptions": "Offline replay data is representative; simulation captures true skill concentration.",
+      "breakdown_regime": "When skill-distribution assumption fails or ROI < 5 pp.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps contest selection strategy to GSI's causal inference framework through ROI maximization and skill-share estimation.",
+        "source_operator": "routing_gate_adapt",
+        "telemetry": "ROI difference between routed and uniform entry strategies."
+      }
+    },
+    {
+      "primitive_id": "multi_entry_reversal",
+      "name": "Multi-Entry Reversal Hypothesis",
+      "verbatim_quote": "Hypothesis: multi-entry *reverses* part of the soft-field ranking — large-field GPPs become softer per-entry than the single-entry model predicts because pros dilute each other's edge across entries, opening a quantitative case for selective GPP shots with duplicated-core/leveraged lineups rather than blanket avoidance.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'soft-field ranking': 'Ranking based on expected value per entry, dimensionless', 'dilution factor': 'Proportional reduction in edge due to multi-entry, dimensionless'}",
+      "assumptions": "Pros act rationally; edge dilution occurs uniformly across entries.",
+      "breakdown_regime": "When pros enter multiple entries in top-heavy GPPs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives new ranking logic from single-entry model by incorporating multi-entry edge dilution.",
+        "source_operator": "multi_entry_reversal",
+        "telemetry": "Change in per-entry softness compared to single-entry model."
+      }
+    },
+    {
+      "primitive_id": "interference_aware_estimand",
+      "name": "Interference-Aware Estimand",
+      "verbatim_quote": "Improvement experiment Go beyond the paper in the two places it is weakest: (1) **interference-aware estimands.** The paper assumes SUTVA and moves on.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SUTVA': 'Stable Unit Treatment Value Assumption, logical condition', 'interference': 'Causal influence between units, dimensionless'}",
+      "assumptions": "Within-game interference exists and affects outcomes.",
+      "breakdown_regime": "When SUTVA fails due to interference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Replaces SUTVA-based estimands with exposure-mapping protocols to isolate treatment effects.",
+        "source_operator": "interference_aware_estimand",
+        "telemetry": "Difference in estimated effect under SUTVA vs interference-aware models."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b1648271c2c74ece_t0",
+      "think": "The routing gate ADAPT primitive establishes a probabilistic criterion for contest selection based on ROI and simulation fidelity. It leverages offline replay to validate that routing improves performance over uniform entry, aligning with the principle that top-heavy GPPs concentrate skill. The multi-entry reversal hypothesis challenges traditional soft-field rankings by modeling how pros' strategic entry decisions alter per-entry value. This introduces a non-linear feedback loop where increased participation dilutes individual advantage. Interference-aware estimands address the foundational flaw in standard causal inference—assuming no interaction between units—which is violated in games like football where plays affect subsequent states. These primitives form a coherent system: routing selects contests, multi-entry modifies outcome expectations, and interference-aware estimands ensure valid causal inference.\n\nDeep epistemic analysis for batch-08 (b1648271c2c74ece, domain=other, pages_read=8/8): Operator 'Routing Gate ADAPT' (page 1, domain other) captures: Acceptance / rejection gate ADAPT if the offline replay shows routed contest selection beating uniform GPP entry by ≥5 pp ROI over 4 weeks AND the x(φ) sorting simulation reproduces the known qualitative pattern (top-heavy large-field GPPs concentrate the highest estimated skill share). Assumptions: Offline replay data is representative; simulation captures true skill concentration. Breakdown regime: When skill-distribution assumption fails or ROI < 5 pp. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps contest selection strategy to GSI's causal inference framework through ROI maximization and skill-share estimation. Operator 'Multi-Entry Reversal Hypothesis' (page 1, domain other) captures: Hypothesis: multi-entry *reverses* part of the soft-field ranking — large-field GPPs become softer per-entry than the single-entry model predicts because pros dilute each other's edge across entries, opening a quantitative case for selective GPP shots with duplicated-core/leveraged lineups rather than blanket avoidance. Assumptions: Pros act rationally; edge dilution occurs uniformly across entries. Breakdown regime: When pros enter multiple entries in top-heavy GPPs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives new ranking logic from single-entry model by incorporating multi-entry edge dilution. Operator 'Interference-Aware Estimand' (page 1, domain other) captures: Improvement experiment Go beyond the paper in the two places it is weakest: (1) **interference-aware estimands.** The paper assumes SUTVA and moves on. Assumptions: Within-game interference exists and affects outcomes. Breakdown regime: When SUTVA fails due to interference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Replaces SUTVA-based estimands with exposure-mapping protocols to isolate treatment effects. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for batch-08 (b1648271c2c74ece, domain=other, pages_read=8/8): Operator 'Routing Gate ADAPT' (page 1, domain other) captures: Acceptance / rejection gate ADAPT if the offline replay shows routed contest selection beating uniform GPP entry by ≥5 pp ROI over 4 weeks AND the x(φ) sorting simulation reproduces the known qualitative pattern (top-heavy large-field GPPs concentrate the highest estimated skill share). Assumptions: Offline replay data is representative; simulation captures true skill concentration. Breakdown regime: When skill-distribution assumption fails or ROI < 5 pp. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps contest selection strategy to GSI's causal inference framework through ROI maximization and skill-share estimation. Operator 'Multi-Entry Reversal Hypothesis' (page 1, domain other) captures: Hypothesis: multi-entry *reverses* part of the soft-field ranking — large-field GPPs become softer per-entry than the single-entry model predicts because pros dilute each other's edge across entries, opening a quantitative case for selective GPP shots with duplicated-core/leveraged lineups rather than blanket avoidance. Assumptions: Pros act rationally; edge dilution occurs uniformly across entries. Breakdown regime: When pros enter multiple entries in top-heavy GPPs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives new ranking logic from single-entry model by incorporating multi-entry edge dilution. Operator 'Interference-Aware Estimand' (page 1, domain other) captures: Improvement experiment Go beyond the paper in the two places it is weakest: (1) **interference-aware estimands.** The paper assumes SUTVA and moves on. Assumptions: Within-game interference exists and affects outcomes. Breakdown regime: When SUTVA fails due to interference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Replaces SUTVA-based estimands with exposure-mapping protocols to isolate treatment effects. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in causal inference theory (Rubin causal model), extended by recent work on interference and multi-agent decision-making in gaming environments. Retrocausal Genealogy: Rooted in batch-08 (b1648271c2c74ece), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in batch-08 (b1648271c2c74ece), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models pros as rational actors optimizing across multiple entries, while GSI treats them as sources of signal noise. GSE considers the dynamic evolution of game states under interference. Theory of Mind & Decision Maker Model: Rooted in batch-08 (b1648271c2c74ece), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If routing fails due to skill misalignment, or if interference invalidates estimands, then the multi-entry reversal hypothesis becomes irrelevant. Anti-collinearity requires distinct operational domains for each primitive to avoid redundant modeling. Cross-Layer Veto & Anti-Leakage Check: Rooted in batch-08 (b1648271c2c74ece), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

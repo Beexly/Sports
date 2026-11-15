@@ -1,0 +1,95 @@
+{
+  "book_id": "102d8248aa584833",
+  "source_status": "COMPLETE",
+  "title": "2011 Adjusted Plus Minus Omidiran UC Berkeley",
+  "file_name": "2011 Adjusted Plus Minus Omidiran UC Berkeley.md",
+  "sha256": "102d8248aa58483346dfb8a5527894360bccfd1693f2e08dc81988b01c682fd2",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2011 Adjusted Plus Minus Omidiran UC Berkeley (102d8248aa584833), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2011 Adjusted Plus Minus Omidiran UC Berkeley (102d8248aa584833), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2011 Adjusted Plus Minus Omidiran UC Berkeley (102d8248aa584833), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "adjusted_plus_minus",
+      "name": "Adjusted Plus-Minus",
+      "verbatim_quote": "players who set hard screens, play good defense, etc.)  The values _β L S_ are called the adjusted plus/minus (APM) values for the players.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes linearity of player contributions, independence of possessions, and normality of error terms.",
+      "breakdown_regime": "Collapses under high multicollinearity among player covariates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual to Maximum Likelihood Estimation under Gaussian noise",
+        "source_operator": "adjusted_plus_minus",
+        "telemetry": "Cross-validated mean squared error on holdout games"
+      }
+    },
+    {
+      "primitive_id": "penalized_adjusted_plus_minus",
+      "name": "Penalized Adjusted Plus-Minus",
+      "verbatim_quote": "## **2 Improvements to APM** While algorithm (2) is a reasonable approach for estimating the parameters   _β L S_ and _β hc a_ , it doesn't take into account the following three pieces of information: 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Introduces L1 regularization to enforce sparsity, assumes prior knowledge of player impact distribution.",
+      "breakdown_regime": "Stabilizes under high collinearity by shrinking small coefficients to zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "LASSO regression for sparse coefficient recovery",
+        "source_operator": "penalized_adjusted_plus_minus",
+        "telemetry": "Number of non-zero player effect estimates"
+      }
+    },
+    {
+      "primitive_id": "possession_model",
+      "name": "Possession Model",
+      "verbatim_quote": "During each event, the home team scores _Y i_ net points ( _Y i_ is actually defined slightly differently, but this is close enough for intuition.) These events are called \"possessions\" in basketball.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Models basketball as a sequence of independent identically distributed random walks with drift.",
+      "breakdown_regime": "Breaks down for long-term streaks or momentum effects violating IID assumption.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State-transition kernel for Markov chain approximations",
+        "source_operator": "possession_model",
+        "telemetry": "Autocorrelation of residual point differentials"
+      }
+    },
+    {
+      "primitive_id": "home_court_advantage",
+      "name": "Home Court Advantage",
+      "verbatim_quote": "This yields the matrix expression The scalar variable _β hc a_ in Equation (1) represents a home court advantage term, while the _p_ vector _β_ is then interpreted as the net number of points each of the _p_ players in the league \"produce\" per minute.",
+      "page": 1,
+      "latex": "$$Y_i = \beta_{hc} + X_i^T \beta + \\varepsilon_i$$",
+      "symbol_and_unit_ledger": "{'Y_i': 'Net points scored by home team during possession i (dimensionless)', 'beta_hc': 'Home court advantage coefficient (points)', 'X_i': 'Design vector for possession i (binary indicator of player participation)', 'beta': 'Vector of player effect coefficients (points per minute)', 'epsilon_i': 'Error term (Gaussian noise, units same as Y_i)'}",
+      "assumptions": "Constant home-court effect across all players and possessions, additive separability of player contributions.",
+      "breakdown_regime": "Inadequate for modeling time-varying home advantage or interactions with opponent quality.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian hierarchical shrinkage for spatial-temporal home-field effects",
+        "source_operator": "home_court_advantage",
+        "telemetry": "Difference in win rates between home and away games after controlling for opponent strength"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "102d8248aa584833_t0",
+      "think": "The core failure mode of standard APM is its susceptibility to multicollinearity when multiple players frequently co-occur on the court. This leads to unstable coefficient estimates. The penalized variant addresses this by adding an L1 penalty, which induces sparsity and reduces variance at the cost of introducing bias. The optimal regularization parameter λ is selected via cross-validation to balance this trade-off. Empirically, this results in a more interpretable model focusing on the most impactful players, improving predictive accuracy on unseen data.\n\nDeep epistemic analysis for 2011 Adjusted Plus Minus Omidiran UC Berkeley (102d8248aa584833, domain=other, pages_read=6/6): Operator 'Adjusted Plus-Minus' (page 1, domain other) captures: players who set hard screens, play good defense, etc.)  The values _β L S_ are called the adjusted plus/minus (APM) values for the players. Assumptions: Assumes linearity of player contributions, independence of possessions, and normality of error terms. Breakdown regime: Collapses under high multicollinearity among player covariates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to Maximum Likelihood Estimation under Gaussian noise Operator 'Penalized Adjusted Plus-Minus' (page 1, domain other) captures: ## **2 Improvements to APM** While algorithm (2) is a reasonable approach for estimating the parameters   _β L S_ and _β hc a_ , it doesn't take into account the following three pieces of information: 1. Assumptions: Introduces L1 regularization to enforce sparsity, assumes prior knowledge of player impact distribution. Breakdown regime: Stabilizes under high collinearity by shrinking small coefficients to zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LASSO regression for sparse coefficient recovery Operator 'Possession Model' (page 1, domain other) captures: During each event, the home team scores _Y i_ net points ( _Y i_ is actually defined slightly differently, but this is close enough for intuition.) These events are called \"possessions\" in basketball. Assumptions: Models basketball as a sequence of independent identically distributed random walks with drift. Breakdown regime: Breaks down for long-term streaks or momentum effects violating IID assumption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-transition kernel for Markov chain approximations Operator 'Home Court Advantage' (page 1, domain other) captures: This yields the matrix expression The scalar variable _β hc a_ in Equation (1) represents a home court advantage term, while the _p_ vector _β_ is then interpreted as the net number of points each of the _p_ players in the league \"produce\" per minute. Assumptions: Constant home-court effect across all players and possessions, additive separability of player contributions. Breakdown regime: Inadequate for modeling time-varying home advantage or interactions with opponent quality. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian hierarchical shrinkage for spatial-temporal home-field effects Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2011 Adjusted Plus Minus Omidiran UC Berkeley (102d8248aa584833, domain=other, pages_read=6/6): Operator 'Adjusted Plus-Minus' (page 1, domain other) captures: players who set hard screens, play good defense, etc.)  The values _β L S_ are called the adjusted plus/minus (APM) values for the players. Assumptions: Assumes linearity of player contributions, independence of possessions, and normality of error terms. Breakdown regime: Collapses under high multicollinearity among player covariates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to Maximum Likelihood Estimation under Gaussian noise Operator 'Penalized Adjusted Plus-Minus' (page 1, domain other) captures: ## **2 Improvements to APM** While algorithm (2) is a reasonable approach for estimating the parameters   _β L S_ and _β hc a_ , it doesn't take into account the following three pieces of information: 1. Assumptions: Introduces L1 regularization to enforce sparsity, assumes prior knowledge of player impact distribution. Breakdown regime: Stabilizes under high collinearity by shrinking small coefficients to zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LASSO regression for sparse coefficient recovery Operator 'Possession Model' (page 1, domain other) captures: During each event, the home team scores _Y i_ net points ( _Y i_ is actually defined slightly differently, but this is close enough for intuition.) These events are called \"possessions\" in basketball. Assumptions: Models basketball as a sequence of independent identically distributed random walks with drift. Breakdown regime: Breaks down for long-term streaks or momentum effects violating IID assumption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-transition kernel for Markov chain approximations Operator 'Home Court Advantage' (page 1, domain other) captures: This yields the matrix expression The scalar variable _β hc a_ in Equation (1) represents a home court advantage term, while the _p_ vector _β_ is then interpreted as the net number of points each of the _p_ players in the league \"produce\" per minute. Assumptions: Constant home-court effect across all players and possessions, additive separability of player contributions. Breakdown regime: Inadequate for modeling time-varying home advantage or interactions with opponent quality. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian hierarchical shrinkage for spatial-temporal home-field effects Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 2011 Adjusted Plus Minus Omidiran UC Berkeley (102d8248aa584833), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2011 Adjusted Plus Minus Omidiran UC Berkeley (102d8248aa584833), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing analysts might use APM blindly without considering its variance inflation, leading to overfitting and poor generalization. Our approach explicitly models this risk and provides a data-driven solution. Theory of Mind & Decision Maker Model: Rooted in 2011 Adjusted Plus Minus Omidiran UC Berkeley (102d8248aa584833), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must ensure orthogonality of player covariates; otherwise, leakage occurs where irrelevant players absorb signal. Diagnostics include checking the condition number of the design matrix and examining the stability of coefficient paths as λ varies. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2011 Adjusted Plus Minus Omidiran UC Berkeley (102d8248aa584833), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

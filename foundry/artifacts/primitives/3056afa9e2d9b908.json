@@ -1,0 +1,95 @@
+{
+  "book_id": "3056afa9e2d9b908",
+  "source_status": "COMPLETE",
+  "title": "ops-runbook",
+  "file_name": "ops-runbook.md",
+  "sha256": "3056afa9e2d9b908a7c1ccf3c3ff4192d77d6d7d04f46d24a5b2bf47bd2d4aef",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Deployment topology maps to a hybrid cron-worker system where Vercel governs cadence, PostgreSQL ensures state consistency, and Redis provides transient coordination. Universal Lens: Rooted in ops-runbook (3056afa9e2d9b908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic reliability slas from ingestion run timestamps and database health checks, using conformal prediction to bound freshness uncertainty. GSI Mapping: Rooted in ops-runbook (3056afa9e2d9b908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models operational state transitions through health check triggers, worker execution cycles, and failure recovery paths, encoding them as Markovian control flows. GSE Mapping: Rooted in ops-runbook (3056afa9e2d9b908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "production_deployment_topology",
+      "name": "Production Deployment Topology",
+      "verbatim_quote": "**Production deploy.** Prod runs on **Vercel** (`vercel.json` → > `\"framework\": \"nextjs\"`), not a long-lived `npm start` process plus a > standalone Node worker.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Vercel': 'platform runtime', 'NextJS': 'framework identifier', 'npm_start': 'long-lived process', 'standalone_worker': 'process type'}",
+      "assumptions": "Production environment uses serverless infrastructure with scheduled tasks.",
+      "breakdown_regime": "When Vercel cron fails or misconfigured, service degradation occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Vercel's cron scheduling mirrors a discrete-time Markov chain over task states.",
+        "source_operator": "production_deployment_topology",
+        "telemetry": "Cron execution logs and task success/failure rates."
+      }
+    },
+    {
+      "primitive_id": "ingestion_refresh_cadence",
+      "name": "Ingestion Refresh Cadence",
+      "verbatim_quote": "Per `vercel.json` > `crons`: `/api/cron/refresh-odds` runs `0 10 * * *` and > `/api/cron/settle-picks` runs `0 7 * * *` (both daily).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'refresh_odds_cron': '0 10 * * *', 'settle_picks_cron': '0 7 * * *', 'daily': 'time interval'}",
+      "assumptions": "Scheduled jobs are synchronized with UTC and operate within fixed time windows.",
+      "breakdown_regime": "If cron job fails, data staleness increases beyond acceptable thresholds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cron schedule defines a temporal kernel for data freshness in GSI's reliability model.",
+        "source_operator": "ingestion_refresh_cadence",
+        "telemetry": "Timestamps of last successful ingestion run per endpoint."
+      }
+    },
+    {
+      "primitive_id": "worker_execution_command",
+      "name": "Worker Execution Command",
+      "verbatim_quote": "Per `package.json` it is > `npm run start --workspace=workers/data-refresh`, whose `start` script is > `ts-node --esm src/index.ts`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'npm_run_start': 'command', 'workspace': 'directory context', 'ts_node_esm': 'runtime flag', 'src_index_ts': 'entrypoint'}",
+      "assumptions": "Execution environment supports ES modules and TypeScript compilation.",
+      "breakdown_regime": "Node.js version mismatch or config error leads to runtime failures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Worker command structure maps to a functional composition of shell and module loaders.",
+        "source_operator": "worker_execution_command",
+        "telemetry": "Process exit codes and log outputs from worker startup."
+      }
+    },
+    {
+      "primitive_id": "health_check_protocol",
+      "name": "Health Check Protocol",
+      "verbatim_quote": "**Health checks.** `GET /api/health` > (`apps/web/app/api/health/route.ts`) checks ONLY two things: the database > (`SELECT 1` via `db.$queryRaw`) and the last **SUCCESS** ingestion run.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'GET /api/health': 'endpoint', 'db_query_raw': 'SQL query', 'last_ingestion_success': 'timestamp', 'status_code_200': 'success', 'status_code_503': 'failure'}",
+      "assumptions": "Database and ingestion status are sufficient indicators of system health.",
+      "breakdown_regime": "Missing Redis check introduces blind spot in system diagnostics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Health check protocol encodes a binary state machine over DB and ingestion readiness.",
+        "source_operator": "health_check_protocol",
+        "telemetry": "Response times and HTTP status codes from health endpoint."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3056afa9e2d9b908_t0",
+      "think": "The deployment topology reflects a dual-mode architecture: Vercel-driven cron jobs manage periodic data refreshes while local workers handle asynchronous processing. This duality implies a hybrid control flow where scheduled events drive state updates. In GSI, this translates into a stochastic process model where ingestion cadences define temporal kernels for reliability bounds. The worker command structure enforces a modular execution paradigm, aligning with GSE’s compositional logic. Health checks act as observables that validate system integrity, forming a feedback loop essential for adaptive resilience. Failure modes arise when cron misalignment causes stale data or when worker commands fail due to runtime mismatches.\n\nDeep epistemic analysis for ops-runbook (3056afa9e2d9b908, domain=other, pages_read=3/3): Operator 'Production Deployment Topology' (page 1, domain other) captures: **Production deploy.** Prod runs on **Vercel** (`vercel.json` → > `\"framework\": \"nextjs\"`), not a long-lived `npm start` process plus a > standalone Node worker. Assumptions: Production environment uses serverless infrastructure with scheduled tasks. Breakdown regime: When Vercel cron fails or misconfigured, service degradation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Vercel's cron scheduling mirrors a discrete-time Markov chain over task states. Operator 'Ingestion Refresh Cadence' (page 1, domain other) captures: Per `vercel.json` > `crons`: `/api/cron/refresh-odds` runs `0 10 * * *` and > `/api/cron/settle-picks` runs `0 7 * * *` (both daily). Assumptions: Scheduled jobs are synchronized with UTC and operate within fixed time windows. Breakdown regime: If cron job fails, data staleness increases beyond acceptable thresholds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cron schedule defines a temporal kernel for data freshness in GSI's reliability model. Operator 'Worker Execution Command' (page 1, domain other) captures: Per `package.json` it is > `npm run start --workspace=workers/data-refresh`, whose `start` script is > `ts-node --esm src/index.ts`. Assumptions: Execution environment supports ES modules and TypeScript compilation. Breakdown regime: Node.js version mismatch or config error leads to runtime failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Worker command structure maps to a functional composition of shell and module loaders. Operator 'Health Check Protocol' (page 1, domain other) captures: **Health checks.** `GET /api/health` > (`apps/web/app/api/health/route.ts`) checks ONLY two things: the database > (`SELECT 1` via `db.$queryRaw`) and the last **SUCCESS** ingestion run. Assumptions: Database and ingestion status are sufficient indicators of system health. Breakdown regime: Missing Redis check introduces blind spot in system diagnostics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Health check protocol encodes a binary state machine over DB and ingestion readiness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ops-runbook (3056afa9e2d9b908, domain=other, pages_read=3/3): Operator 'Production Deployment Topology' (page 1, domain other) captures: **Production deploy.** Prod runs on **Vercel** (`vercel.json` → > `\"framework\": \"nextjs\"`), not a long-lived `npm start` process plus a > standalone Node worker. Assumptions: Production environment uses serverless infrastructure with scheduled tasks. Breakdown regime: When Vercel cron fails or misconfigured, service degradation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Vercel's cron scheduling mirrors a discrete-time Markov chain over task states. Operator 'Ingestion Refresh Cadence' (page 1, domain other) captures: Per `vercel.json` > `crons`: `/api/cron/refresh-odds` runs `0 10 * * *` and > `/api/cron/settle-picks` runs `0 7 * * *` (both daily). Assumptions: Scheduled jobs are synchronized with UTC and operate within fixed time windows. Breakdown regime: If cron job fails, data staleness increases beyond acceptable thresholds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cron schedule defines a temporal kernel for data freshness in GSI's reliability model. Operator 'Worker Execution Command' (page 1, domain other) captures: Per `package.json` it is > `npm run start --workspace=workers/data-refresh`, whose `start` script is > `ts-node --esm src/index.ts`. Assumptions: Execution environment supports ES modules and TypeScript compilation. Breakdown regime: Node.js version mismatch or config error leads to runtime failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Worker command structure maps to a functional composition of shell and module loaders. Operator 'Health Check Protocol' (page 1, domain other) captures: **Health checks.** `GET /api/health` > (`apps/web/app/api/health/route.ts`) checks ONLY two things: the database > (`SELECT 1` via `db.$queryRaw`) and the last **SUCCESS** ingestion run. Assumptions: Database and ingestion status are sufficient indicators of system health. Breakdown regime: Missing Redis check introduces blind spot in system diagnostics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Health check protocol encodes a binary state machine over DB and ingestion readiness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Historically rooted in Unix process management and distributed computing paradigms, evolving toward cloud-native orchestration patterns. Influenced by event-driven architectures and microservices design principles. Retrocausal Genealogy: Rooted in ops-runbook (3056afa9e2d9b908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ops-runbook (3056afa9e2d9b908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include automated cron schedulers, data ingestion engines, and monitoring systems. Each agent operates under distinct objectives: uptime, accuracy, and responsiveness. Conflicts emerge between real-time processing demands and batched refresh schedules. Theory of Mind & Decision Maker Model: Rooted in ops-runbook (3056afa9e2d9b908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when health checks rely solely on database and ingestion status, ignoring Redis connectivity—a known failure vector. Leakage occurs if cron jobs do not synchronize properly with worker lifecycle, causing data inconsistency. Cross-Layer Veto & Anti-Leakage Check: Rooted in ops-runbook (3056afa9e2d9b908), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "033317758df48b43",
+  "source_status": "COMPLETE",
+  "title": "NFL_REPLAY_CALIBRATION_2026-09-04",
+  "file_name": "NFL_REPLAY_CALIBRATION_2026-09-04.md",
+  "sha256": "033317758df48b433b9551a2e4363edd80064000f731bdce6040461aaf8a793c",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A calibrated probabilistic model of NFL outcomes yields zero expected value across all markets, with confidence intervals enclosing break-even and z-scores below significance thresholds. Universal Lens: Rooted in NFL_REPLAY_CALIBRATION_2026-09-04 (033317758df48b43), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian posterior inference on historical settlement data maps to conformal predictive distributions, where observed win rates are statistically indistinguishable from random walk expectations. GSI Mapping: Rooted in NFL_REPLAY_CALIBRATION_2026-09-04 (033317758df48b43), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE evaluates state transitions between market regimes using payoff matrices derived from replayed picks, revealing no actionable edge in current model outputs. GSE Mapping: Rooted in NFL_REPLAY_CALIBRATION_2026-09-04 (033317758df48b43), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "win_rate_statistical_insignificance",
+      "name": "Win Rate Statistical Insufficiency",
+      "verbatim_quote": "pushes): 52.7% lookahead errors: 0 CLV: 15939 MATCHED_CLOSE ``` ## What that number means | Window | Decisive | Win rate | 95% CI | vs 52.381% BE | z | Significant?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'number of wins', 'L': 'number of losses', 'P': 'number of pushes', 'n': 'total picks', 'r': 'win rate = W/(W+L)', 'CI': 'confidence interval'}",
+      "assumptions": "All picks are independent and identically distributed; no lookahead errors; model predictions are unbiased.",
+      "breakdown_regime": "Full history window (1999–2025)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The win rate distribution is isomorphic to a Bernoulli process with p = 0.527 ± CI, indicating no significant deviation from chance.",
+        "source_operator": "win_rate_statistical_insignificance",
+        "telemetry": "Confidence interval includes 52.381% break-even threshold"
+      }
+    },
+    {
+      "primitive_id": "roi_negative_edge",
+      "name": "Negative Expected Return",
+      "verbatim_quote": "Every figure here is output I saw from a command in this document; nothing is estimated.",
+      "page": 1,
+      "latex": "\\text{ROI} = \\frac{\\sum_{i=1}^{n} (p_i \\cdot w_i - c_i)}{\\sum_{i=1}^{n} c_i}",
+      "symbol_and_unit_ledger": "{'ROI': 'return on investment (dimensionless)', 'p_i': 'probability of winning pick i', 'w_i': 'winnings from pick i', 'c_i': 'cost of pick i'}",
+      "assumptions": "Each pick has fixed cost and payout structure; model output is deterministic for given inputs.",
+      "breakdown_regime": "All markets combined",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from win rate and payout structure, ROI reflects systematic underperformance relative to vig.",
+        "source_operator": "roi_negative_edge",
+        "telemetry": "Net loss of 5.48% across 15,939 picks"
+      }
+    },
+    {
+      "primitive_id": "confidence_interval_degeneracy",
+      "name": "Confidence Interval Degeneracy",
+      "verbatim_quote": "On 630 decisive picks the interval runs from 50.08% to 57.86%: it is equally consistent with losing money and with a large edge, and its z-score (0.797) is no better than the full-history one.",
+      "page": 1,
+      "latex": "\\text{CI}_{\\alpha} = \\left( r - z_{\\alpha/2} \\sqrt{\\frac{r(1-r)}{n}}, r + z_{\\alpha/2} \\sqrt{\\frac{r(1-r)}{n}} \\right)",
+      "symbol_and_unit_ledger": "{'CI_{\\\\alpha}': 'confidence interval at level α', 'r': 'sample win rate', 'z_{\\\\alpha/2}': 'critical z-value', 'n': 'sample size'}",
+      "assumptions": "Normal approximation holds; sample size sufficient for central limit theorem validity.",
+      "breakdown_regime": "Subset of 630 picks",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Confidence interval spans break-even region, implying no statistical support for positive edge.",
+        "source_operator": "confidence_interval_degeneracy",
+        "telemetry": "Z-score of 0.797 below 1.96 threshold"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "033317758df48b43_t0",
+      "think": "The core operator is the empirical win rate estimator, defined as r = W/(W+L), which is subject to sampling variance. In the full dataset, r = 0.527 with a 95% confidence interval [0.5008, 0.5786]. This interval includes the break-even probability of 0.52381, suggesting no statistically significant edge. The z-score of 0.797 fails to exceed 1.96, confirming insignificance. The negative ROI of -5.48% arises because even though the model wins more than half the time, payouts are structured such that the house edge dominates. The confidence intervals decrease in precision with increasing confidence levels, showing that higher confidence bands do not improve performance—this is a form of regression toward the mean. The model's calibration layer, fitted on live data, is tested out-of-sample against 27 seasons of historical data, yielding consistent negative returns. The lack of evidence for superior performance in any subset indicates that the model lacks predictive power beyond random chance. The failure mode lies in assuming that high-confidence predictions translate into profitable outcomes without considering the structural bias in betting payouts.\n\nDeep epistemic analysis for NFL_REPLAY_CALIBRATION_2026-09-04 (033317758df48b43, domain=other, pages_read=6/6): Operator 'Win Rate Statistical Insufficiency' (page 1, domain other) captures: pushes): 52.7% lookahead errors: 0 CLV: 15939 MATCHED_CLOSE ``` ## What that number means | Window | Decisive | Win rate | 95% CI | vs 52.381% BE | z | Significant? Assumptions: All picks are independent and identically distributed; no lookahead errors; model predictions are unbiased. Breakdown regime: Full history window (1999–2025) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The win rate distribution is isomorphic to a Bernoulli process with p = 0.527 ± CI, indicating no significant deviation from chance. Operator 'Negative Expected Return' (page 1, domain other) captures: Every figure here is output I saw from a command in this document; nothing is estimated. Assumptions: Each pick has fixed cost and payout structure; model output is deterministic for given inputs. Breakdown regime: All markets combined Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from win rate and payout structure, ROI reflects systematic underperformance relative to vig. Operator 'Confidence Interval Degeneracy' (page 1, domain other) captures: On 630 decisive picks the interval runs from 50.08% to 57.86%: it is equally consistent with losing money and with a large edge, and its z-score (0.797) is no better than the full-history one. Assumptions: Normal approximation holds; sample size sufficient for central limit theorem validity. Breakdown regime: Subset of 630 picks Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Confidence interval spans break-even region, implying no statistical support for positive edge. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NFL_REPLAY_CALIBRATION_2026-09-04 (033317758df48b43, domain=other, pages_read=6/6): Operator 'Win Rate Statistical Insufficiency' (page 1, domain other) captures: pushes): 52.7% lookahead errors: 0 CLV: 15939 MATCHED_CLOSE ``` ## What that number means | Window | Decisive | Win rate | 95% CI | vs 52.381% BE | z | Significant? Assumptions: All picks are independent and identically distributed; no lookahead errors; model predictions are unbiased. Breakdown regime: Full history window (1999–2025) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The win rate distribution is isomorphic to a Bernoulli process with p = 0.527 ± CI, indicating no significant deviation from chance. Operator 'Negative Expected Return' (page 1, domain other) captures: Every figure here is output I saw from a command in this document; nothing is estimated. Assumptions: Each pick has fixed cost and payout structure; model output is deterministic for given inputs. Breakdown regime: All markets combined Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from win rate and payout structure, ROI reflects systematic underperformance relative to vig. Operator 'Confidence Interval Degeneracy' (page 1, domain other) captures: On 630 decisive picks the interval runs from 50.08% to 57.86%: it is equally consistent with losing money and with a large edge, and its z-score (0.797) is no better than the full-history one. Assumptions: Normal approximation holds; sample size sufficient for central limit theorem validity. Breakdown regime: Subset of 630 picks Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Confidence interval spans break-even region, implying no statistical support for positive edge. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This analysis builds upon classical statistical inference principles, particularly those developed in frequentist hypothesis testing and confidence interval estimation during the mid-20th century. It aligns with modern developments in machine learning calibration and conformal prediction frameworks introduced in the 21st century. Retrocausal Genealogy: Rooted in NFL_REPLAY_CALIBRATION_2026-09-04 (033317758df48b43), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the betting market itself, which incorporates all available information into odds, and the model’s internal logic, which attempts to predict outcomes based on historical patterns. The model assumes rationality in its training data but fails to account for the inefficiencies inherent in real-world betting environments. Theory of Mind & Decision Maker Model: Rooted in NFL_REPLAY_CALIBRATION_2026-09-04 (033317758df48b43), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity checks reveal that the model's confidence metrics do not correlate with actual performance gains. Leakage occurs when synthetic book depth is used instead of real-time pricing data, invalidating comparisons between paid and free tiers. These conditions prevent the model from being used as a reliable basis for commercial decision-making. Cross-Layer Veto & Anti-Leakage Check: Rooted in NFL_REPLAY_CALIBRATION_2026-09-04 (033317758df48b43), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

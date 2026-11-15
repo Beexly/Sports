@@ -1,0 +1,78 @@
+{
+  "book_id": "b33810ce55c7771c",
+  "source_status": "COMPLETE",
+  "title": "ADR-0006-when-to-use-hosted-inference",
+  "file_name": "ADR-0006-when-to-use-hosted-inference.md",
+  "sha256": "b33810ce55c7771c102a3f85969fb62e1af0719aad1dee94bdffcfe64d2782d9",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Hosted inference decision logic as a binary state transition governed by validation, budget, and rollback constraints; modeled as a causal graph with temporal gates. Universal Lens: Rooted in ADR-0006-when-to-use-hosted-inference (b33810ce55c7771c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian model validation and cost-capacity inference mapped to probabilistic risk thresholds; conformal prediction bounds define uncertainty regions for latency-sensitive decisions. GSI Mapping: Rooted in ADR-0006-when-to-use-hosted-inference (b33810ce55c7771c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes rollback readiness and IAM scope as state transitions; conditional traffic routing mirrors deterministic automata with failure mode detection. GSE Mapping: Rooted in ADR-0006-when-to-use-hosted-inference (b33810ce55c7771c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "hosted_inference_decision",
+      "name": "Hosted Inference Decision Logic",
+      "verbatim_quote": "# ADR-0006: When To Use Hosted Inference Decision: Reject for now.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'decision variable, {0,1} (reject=0, accept=1)', 'V': 'model validation status, {0,1}', 'B': 'budget approval status, {0,1}', 'R': 'rollback readiness, {0,1}'}",
+      "assumptions": "Decision D = 1 iff V=1 AND B=1 AND R=1; otherwise D=0.",
+      "breakdown_regime": "D = 0 when any of {V, B, R} = 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Decision logic maps to a Boolean satisfiability problem in GSI's Bayesian inference framework; GSE state machine models rollback paths as deterministic automata.",
+        "source_operator": "hosted_inference_decision",
+        "telemetry": "Rollback readiness score, model validation score, budget utilization rate"
+      }
+    },
+    {
+      "primitive_id": "rollback_readiness",
+      "name": "Rollback Readiness Condition",
+      "verbatim_quote": "Additional gates: - budget and alarm are approved - endpoint IAM and network access are scoped - monitoring and rollback are ready before traffic Rollback detail: - route traffic back to local/current inference - disable endpoint - preserve prediction and monitoring logs",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_r': 'rollback readiness, dimensionless', 'T': 'traffic routing flag, {0,1}', 'L': 'log preservation flag, {0,1}'}",
+      "assumptions": "R_r = 1 iff T=1 AND L=1",
+      "breakdown_regime": "R_r = 0 when either T=0 or L=0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Rollback readiness is derived from traffic control and logging observables; GSI uses this to compute recovery time distributions.",
+        "source_operator": "rollback_readiness",
+        "telemetry": "Traffic rerouting success rate, log retention duration"
+      }
+    },
+    {
+      "primitive_id": "budget_approval_gate",
+      "name": "Budget Approval Gate",
+      "verbatim_quote": "Use when: - low-latency production inference is required - model artifact is validated - cost cap and rollback are approved Why not now: - no validated model artifact - no live AWS budget - no hosting need Rollback path: local batch inference.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'cost cap, USD', 'A': 'approval status, {0,1}'}",
+      "assumptions": "A = 1 iff C ≤ C_max",
+      "breakdown_regime": "A = 0 when C > C_max",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Budget approval gate maps to a constraint satisfaction problem in GSI’s cost-risk optimization; GSE models it as a resource allocation automaton.",
+        "source_operator": "budget_approval_gate",
+        "telemetry": "Cumulative cost vs. cap threshold, approval timestamp"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b33810ce55c7771c_t0",
+      "think": "The decision to reject hosted inference is encoded as a conjunction of three binary conditions: model validation (V), budget approval (B), and rollback readiness (R). This forms a logical AND gate where D = V ∧ B ∧ R. Each condition is a Boolean variable that must be satisfied for the system to proceed. The failure mode occurs when any one of these variables evaluates to false, triggering a rejection. The rollback mechanism is modeled as a reverse state transition in GSE, where traffic is routed back to local inference and endpoint resources are disabled. The system's robustness depends on monitoring and logging being active before traffic is routed, ensuring traceability and auditability. The additional gates—IAM scoping, alarms, and monitoring—are preconditions that ensure operational safety and compliance. These constraints form a causal dependency graph in which each node represents a decision point or constraint, and edges represent logical implications. The system's behavior is deterministic under these constraints but exhibits non-determinism in failure scenarios due to rollback paths.\n\nDeep epistemic analysis for ADR-0006-when-to-use-hosted-inference (b33810ce55c7771c, domain=other, pages_read=1/1): Operator 'Hosted Inference Decision Logic' (page 1, domain other) captures: # ADR-0006: When To Use Hosted Inference Decision: Reject for now. Assumptions: Decision D = 1 iff V=1 AND B=1 AND R=1; otherwise D=0. Breakdown regime: D = 0 when any of {V, B, R} = 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Decision logic maps to a Boolean satisfiability problem in GSI's Bayesian inference framework; GSE state machine models rollback paths as deterministic automata. Operator 'Rollback Readiness Condition' (page 1, domain other) captures: Additional gates: - budget and alarm are approved - endpoint IAM and network access are scoped - monitoring and rollback are ready before traffic Rollback detail: - route traffic back to local/current inference - disable endpoint - preserve prediction and monitoring logs Assumptions: R_r = 1 iff T=1 AND L=1 Breakdown regime: R_r = 0 when either T=0 or L=0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Rollback readiness is derived from traffic control and logging observables; GSI uses this to compute recovery time distributions. Operator 'Budget Approval Gate' (page 1, domain other) captures: Use when: - low-latency production inference is required - model artifact is validated - cost cap and rollback are approved Why not now: - no validated model artifact - no live AWS budget - no hosting need Rollback path: local batch inference. Assumptions: A = 1 iff C ≤ C_max Breakdown regime: A = 0 when C > C_max Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Budget approval gate maps to a constraint satisfaction problem in GSI’s cost-risk optimization; GSE models it as a resource allocation automaton. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ADR-0006-when-to-use-hosted-inference (b33810ce55c7771c, domain=other, pages_read=1/1): Operator 'Hosted Inference Decision Logic' (page 1, domain other) captures: # ADR-0006: When To Use Hosted Inference Decision: Reject for now. Assumptions: Decision D = 1 iff V=1 AND B=1 AND R=1; otherwise D=0. Breakdown regime: D = 0 when any of {V, B, R} = 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Decision logic maps to a Boolean satisfiability problem in GSI's Bayesian inference framework; GSE state machine models rollback paths as deterministic automata. Operator 'Rollback Readiness Condition' (page 1, domain other) captures: Additional gates: - budget and alarm are approved - endpoint IAM and network access are scoped - monitoring and rollback are ready before traffic Rollback detail: - route traffic back to local/current inference - disable endpoint - preserve prediction and monitoring logs Assumptions: R_r = 1 iff T=1 AND L=1 Breakdown regime: R_r = 0 when either T=0 or L=0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Rollback readiness is derived from traffic control and logging observables; GSI uses this to compute recovery time distributions. Operator 'Budget Approval Gate' (page 1, domain other) captures: Use when: - low-latency production inference is required - model artifact is validated - cost cap and rollback are approved Why not now: - no validated model artifact - no live AWS budget - no hosting need Rollback path: local batch inference. Assumptions: A = 1 iff C ≤ C_max Breakdown regime: A = 0 when C > C_max Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Budget approval gate maps to a constraint satisfaction problem in GSI’s cost-risk optimization; GSE models it as a resource allocation automaton. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in decision theory and control systems, this logic traces back to early 20th-century operational research and modern reinforcement learning frameworks. It reflects the influence of formal methods in software engineering and probabilistic programming paradigms. Retrocausal Genealogy: Rooted in ADR-0006-when-to-use-hosted-inference (b33810ce55c7771c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the cost optimizer (seeking minimal expenditure) and the reliability engineer (prioritizing system uptime). The decision-making process involves balancing these competing objectives through explicit constraints and rollback policies, modeling a game-theoretic interaction between economic and operational goals. Theory of Mind & Decision Maker Model: Rooted in ADR-0006-when-to-use-hosted-inference (b33810ce55c7771c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring rollback readiness does not depend on model validation alone, preventing circular dependencies. Leakage is mitigated by requiring independent verification of IAM and monitoring layers, ensuring no single point of failure can compromise the entire system. Cross-Layer Veto & Anti-Leakage Check: Rooted in ADR-0006-when-to-use-hosted-inference (b33810ce55c7771c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,78 +1,16 @@
 {
   "book_id": "389c6be478b24f7b",
-  "source_status": "COMPLETE",
-  "title": "run_proactive_notification_phase-497582_high_item_1",
-  "file_name": "run_proactive_notification_phase-497582_high_item_1.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_389c6be478b24f7b",
+  "file_name": "389c6be478b24f7b.quarantined",
   "sha256": "389c6be478b24f7b86f6b181867c734c7685c66ab27e3a6bc09d8d7e6011f3ae",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Three concurrent financial stressors—Chase return, AWS threat, CashNetUSA deadline—form a ternary constraint system in agent liability space. Universal Lens: Rooted in run_proactive_notification_phase-497582_high_item_1 (389c6be478b24f7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian belief update on financial risk using multivariate temporal priors from muse.db context items and mailbox submissions. GSI Mapping: Rooted in run_proactive_notification_phase-497582_high_item_1 (389c6be478b24f7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situationally grounded state transition from ‘financial stability’ to ‘imminent liability’ via deadline-bound obligations and agent-dependent payment taps. GSE Mapping: Rooted in run_proactive_notification_phase-497582_high_item_1 (389c6be478b24f7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "financial_constraint_ternary",
-      "name": "Financial Constraint Ternary",
-      "verbatim_quote": "## Why this matters Why this matters now: three money developments landed overnight/this morning on top of his already-tight financial lane (Wells Fargo was at -$113.25 with declined charges; Credit One closure notice already surfaced).",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'C': 'constraint vector in USD', 't': 'temporal index of event', 'L': 'liability threshold'}",
-      "assumptions": "Agent's financial capacity is bounded by external liabilities and internal payment capability.",
-      "breakdown_regime": "When ||C(t)|| > L, agent enters failure mode.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps to GSI's Bayesian risk propagation model through temporal constraint vectors and GSE's state-space trajectory of liability accumulation.",
-        "source_operator": "financial_constraint_ternary",
-        "telemetry": "Observed via muse.db agent.context_items and feed.units"
-      }
-    },
-    {
-      "primitive_id": "deadline_bound_obligation",
-      "name": "Deadline-Bound Obligation",
-      "verbatim_quote": "All three below are new or deadline-bound, and all taps are his — no agent can pay these.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'O': 'obligation vector in USD', 'D': 'deadline vector in days', 'A': 'agent liability attribution factor'}",
-      "assumptions": "Each obligation O_i has a fixed D_i; A = 1 implies full personal responsibility.",
-      "breakdown_regime": "If t ≥ D_i, then O_i becomes active penalty.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Derived from GSI's temporal risk kernel and GSE's obligation scheduling logic.",
-        "source_operator": "deadline_bound_obligation",
-        "telemetry": "Tracked via submission_id=39aac849-a684-8553-ed2b-a7aec4682e8f"
-      }
-    },
-    {
-      "primitive_id": "payment_return_mechanism",
-      "name": "Payment Return Mechanism",
-      "verbatim_quote": "<!-- proactive-explanation:run:proactive_notification:phase-497582:high:item:1 --> # Morning money brief: Chase returned a $54 payment, AWS threatens suspension, CashNetUSA",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'R': 'return vector in USD', 'M': 'mechanism identifier', 'T': 'transaction timestamp'}",
-      "assumptions": "Return R occurs when M triggers a reversal protocol at time T.",
-      "breakdown_regime": "R(t) ≠ 0 implies system-level liquidity shock.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps to GSI's transactional anomaly detection and GSE's return-state handling.",
-        "source_operator": "payment_return_mechanism",
-        "telemetry": "Recorded in agent.message_mailbox with submission_id"
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "389c6be478b24f7b_t0",
-      "think": "The ternary financial constraint C(t) = [Chase return, AWS threat, CashNetUSA] forms a vectorial stress profile over time. Each component is a liability event with distinct temporal dynamics. The system's integrity hinges on whether the cumulative norm ||C(t)|| exceeds a static threshold L. When t ≥ D_i, each obligation O_i activates, increasing the total liability. The agent’s liability attribution A = 1 implies no third-party mitigation. This creates a deterministic failure regime where ||C(t)|| > L triggers an immediate state transition in GSE’s agent state machine. The payment return mechanism R(t) introduces a negative feedback loop that may destabilize the system if not offset by incoming liquidity. These interlinked primitives form a closed-loop dynamical system in which GSI's Bayesian inference updates beliefs about agent solvency, while GSE evaluates the impact on agent behavior and decision-making paths.\n\nDeep epistemic analysis for run_proactive_notification_phase-497582_high_item_1 (389c6be478b24f7b, domain=other, pages_read=1/1): Operator 'Financial Constraint Ternary' (page 1, domain other) captures: ## Why this matters Why this matters now: three money developments landed overnight/this morning on top of his already-tight financial lane (Wells Fargo was at -$113.25 with declined charges; Credit One closure notice already surfaced). Assumptions: Agent's financial capacity is bounded by external liabilities and internal payment capability. Breakdown regime: When ||C(t)|| > L, agent enters failure mode. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian risk propagation model through temporal constraint vectors and GSE's state-space trajectory of liability accumulation. Operator 'Deadline-Bound Obligation' (page 1, domain other) captures: All three below are new or deadline-bound, and all taps are his — no agent can pay these. Assumptions: Each obligation O_i has a fixed D_i; A = 1 implies full personal responsibility. Breakdown regime: If t ≥ D_i, then O_i becomes active penalty. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSI's temporal risk kernel and GSE's obligation scheduling logic. Operator 'Payment Return Mechanism' (page 1, domain other) captures: <!-- proactive-explanation:run:proactive_notification:phase-497582:high:item:1 --> # Morning money brief: Chase returned a $54 payment, AWS threatens suspension, CashNetUSA Assumptions: Return R occurs when M triggers a reversal protocol at time T. Breakdown regime: R(t) ≠ 0 implies system-level liquidity shock. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's transactional anomaly detection and GSE's return-state handling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for run_proactive_notification_phase-497582_high_item_1 (389c6be478b24f7b, domain=other, pages_read=1/1): Operator 'Financial Constraint Ternary' (page 1, domain other) captures: ## Why this matters Why this matters now: three money developments landed overnight/this morning on top of his already-tight financial lane (Wells Fargo was at -$113.25 with declined charges; Credit One closure notice already surfaced). Assumptions: Agent's financial capacity is bounded by external liabilities and internal payment capability. Breakdown regime: When ||C(t)|| > L, agent enters failure mode. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian risk propagation model through temporal constraint vectors and GSE's state-space trajectory of liability accumulation. Operator 'Deadline-Bound Obligation' (page 1, domain other) captures: All three below are new or deadline-bound, and all taps are his — no agent can pay these. Assumptions: Each obligation O_i has a fixed D_i; A = 1 implies full personal responsibility. Breakdown regime: If t ≥ D_i, then O_i becomes active penalty. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSI's temporal risk kernel and GSE's obligation scheduling logic. Operator 'Payment Return Mechanism' (page 1, domain other) captures: <!-- proactive-explanation:run:proactive_notification:phase-497582:high:item:1 --> # Morning money brief: Chase returned a $54 payment, AWS threatens suspension, CashNetUSA Assumptions: Return R occurs when M triggers a reversal protocol at time T. Breakdown regime: R(t) ≠ 0 implies system-level liquidity shock. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's transactional anomaly detection and GSE's return-state handling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Roots in classical constraint satisfaction theory and modern agent-based modeling, particularly in financial risk management frameworks such as those developed in stochastic control and game-theoretic models of agent interaction. Retrocausal Genealogy: Rooted in run_proactive_notification_phase-497582_high_item_1 (389c6be478b24f7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in run_proactive_notification_phase-497582_high_item_1 (389c6be478b24f7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Opposing agents include financial institutions (Chase, AWS, Credit One) acting as exogenous constraint generators, and the subject agent who must navigate a constrained decision space under temporal pressure. Their actions are modeled as probabilistic responses to systemic shocks. Theory of Mind & Decision Maker Model: Rooted in run_proactive_notification_phase-497582_high_item_1 (389c6be478b24f7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates in orthogonal dimensions: temporal (deadline), scalar (liability), and transactional (return). Leakage is mitigated by strict adherence to muse.db schema boundaries and telemetry alignment across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in run_proactive_notification_phase-497582_high_item_1 (389c6be478b24f7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

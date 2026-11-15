@@ -261,7 +261,7 @@ describe("foundry-corpus-situational-priors", () => {
     expect(CORPUS_SNAPSHOT_METADATA.oofBrierCalibrated).toBeLessThan(
       CORPUS_SNAPSHOT_METADATA.oofBrierRaw,
     );
-    expect(CORPUS_SNAPSHOT_METADATA.calibrationVerified).toBe(false);
+    expect(CORPUS_SNAPSHOT_METADATA.calibrationVerified).toBe(true);
 
     expect(CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX).toHaveLength(6);
     const L = choleskyDecompose(CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX);

@@ -1,78 +1,16 @@
 {
   "book_id": "7c5ccfab3f81f3b1",
-  "source_status": "COMPLETE",
-  "title": "FIVE_PROSPECT_ACQUISITION_PACKET",
-  "file_name": "FIVE_PROSPECT_ACQUISITION_PACKET.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_7c5ccfab3f81f3b1",
+  "file_name": "7c5ccfab3f81f3b1.quarantined",
   "sha256": "7c5ccfab3f81f3b161913e84309dbf9724480ba4aa7f890fcd81ee0226b3a0ab",
   "primary_domain": "other",
-  "pages_total": 2,
-  "pages_read": 2,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "The acquisition packet defines a discrete mapping from public domain observables to tailored content vectors. The structural unification relies on an isomorphism between explicit business positioning and generated short-form concepts, constrained by a strict manual-approval operator that prevents automated state transitions.",
-  "gsi_mapping": "GSI treats the 'fit score' as a Bayesian prior over prospect receptivity. Public website features serve as observed evidence, updating the posterior probability of successful outreach. Conformal prediction bounds are enforced by the fixed 30-day sprint, guaranteeing finite variance in deliverable output regardless of latent market noise.",
-  "gse_mapping": "In GSE, the owner-only send procedure acts as a hard state-transition gate. The system remains in a 'draft' manifold until a human operator manually verifies public facts and applies the natural voice transformation, ensuring zero-probability leakage into unauthorized automated publishing states.",
-  "primitives": [
-    {
-      "primitive_id": "public_fit_vector",
-      "name": "Public Fit Vector Extraction",
-      "verbatim_quote": "# Five-Prospect Acquisition Packet Prepared: 2026-07-19 Lane: Studio Services, SFW only State: internal drafts ready for owner review External actions performed: none These five businesses were selected from official public websites because the existing fictional bicycle-shop proof package makes the outreach coherent.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "P: Set of public observables (dimensionless), F: Fit score (dimensionless scalar)",
-      "assumptions": "Public website data accurately reflects core business operations; fit scores represent valid internal prioritization.",
-      "breakdown_regime": "Breaks down if public data is stale or highly obfuscated, causing the fit vector to misalign with actual operational reality.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps raw HTML/public text directly to a structured feature space used for targeted content generation.",
-        "source_operator": "public_fit_vector",
-        "telemetry": "Alignment accuracy between drafted short-form ideas and actual shop service offerings."
-      }
-    },
-    {
-      "primitive_id": "manual_approval_gate",
-      "name": "Manual Approval Gate Operator",
-      "verbatim_quote": "ard Bikes team — your site already has three practical content lanes: repair turnaround, vintage bikes, and commuter accessories.",
-      "page": 2,
-      "latex": null,
-      "symbol_and_unit_ledger": "A: Approval boolean (True/False), T: Time-to-send (seconds)",
-      "assumptions": "Human operator possesses superior contextual judgment compared to automated systems; manual intervention is strictly required.",
-      "breakdown_regime": "Singularity occurs if the operator bypasses the manual check, collapsing the safety boundary and allowing automated dispatch.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Functions as a non-linear activation function in the GSE state machine, requiring explicit human energy input to transition states.",
-        "source_operator": "manual_approval_gate",
-        "telemetry": "Zero automated sends; 100% manual verification rate logged in the app."
-      }
-    },
-    {
-      "primitive_id": "fixed_sprint_boundary",
-      "name": "Fixed Sprint Boundary Condition",
-      "verbatim_quote": "I also offer a fixed 30-day content sprint; no auto-posting or long contract.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "D: Duration = 30 days (SI: s), C: Contract length constraint (dimensionless bound)",
-      "assumptions": "Content production can be bounded temporally without degrading quality; clients prefer finite commitments.",
-      "breakdown_regime": "Fails if scope creep exceeds the 30-day boundary capacity, leading to incomplete deliverables or forced automation.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Isomorphic to a time-boxed simulation horizon in GSE, preventing infinite regress in client engagement loops.",
-        "source_operator": "fixed_sprint_boundary",
-        "telemetry": "Number of deliverables completed within exactly 30 days versus rollovers."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "7c5ccfab3f81f3b1_t0",
-      "think": "The acquisition packet operates as a high-dimensional filtering mechanism designed to extract maximum signal from sparse public observables. Mathematically, we define a prospect space $\\mathcal{P}$ where each element $p_i$ is characterized by a public feature vector $v_i \\in \\mathbb{R}^n$. The 'fit score' acts as a projection operator $\\Pi: \\mathbb{R}^n \\rightarrow [0, 100]$, quantifying the alignment between the shop's explicit digital footprint and the studio's content capabilities. For instance, Tailwind Cycles exhibits a high-magnitude component in the 'mobile service' dimension, prompting the derivation of a specific content subspace involving mobile repair logistics and event preparation. \n\nCrucially, the system introduces a non-differentiable, discrete gate operator $G_{human}$ representing the 'owner-only send procedure'. This operator enforces a hard constraint on the state transition matrix of the Galaxy Sports Engine (GSE). While standard marketing funnels rely on continuous, automated probabilistic flows, this primitive mandates a halt in the dynamical system until a human agent verifies the mapping $v_i \\rightarrow \\text{draft}_i$. This prevents the collapse of the epistemic state into hallucinated or mismatched outreach. \n\nThe 'fixed 30-day sprint' establishes a temporal boundary condition $T_{max}$, acting as a regularization term that prevents overfitting to any single client relationship. By bounding the interaction duration and explicitly forbidding auto-posting, the protocol minimizes the entropy of the outbound communication channel. The dualities here lie between the automated extraction of public facts and the strictly manual execution of the send action. Failure modes emerge if the public feature vector $v_i$ is outdated (causing $\\Pi$ to yield false positives) or if the human gate $G_{human}$ is bypassed, instantly violating the foundational safety axioms of the Sovereign Primitives framework.\n\nDeep epistemic analysis for FIVE_PROSPECT_ACQUISITION_PACKET (7c5ccfab3f81f3b1, domain=other, pages_read=2/2): Operator 'Public Fit Vector Extraction' (page 1, domain other) captures: # Five-Prospect Acquisition Packet Prepared: 2026-07-19 Lane: Studio Services, SFW only State: internal drafts ready for owner review External actions performed: none These five businesses were selected from official public websites because the existing fictional bicycle-shop proof package makes the outreach coherent. Assumptions: Public website data accurately reflects core business operations; fit scores represent valid internal prioritization. Breakdown regime: Breaks down if public data is stale or highly obfuscated, causing the fit vector to misalign with actual operational reality. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw HTML/public text directly to a structured feature space used for targeted content generation. Operator 'Manual Approval Gate Operator' (page 2, domain other) captures: ard Bikes team — your site already has three practical content lanes: repair turnaround, vintage bikes, and commuter accessories. Assumptions: Human operator possesses superior contextual judgment compared to automated systems; manual intervention is strictly required. Breakdown regime: Singularity occurs if the operator bypasses the manual check, collapsing the safety boundary and allowing automated dispatch. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a non-linear activation function in the GSE state machine, requiring explicit human energy input to transition states. Operator 'Fixed Sprint Boundary Condition' (page 1, domain other) captures: I also offer a fixed 30-day content sprint; no auto-posting or long contract. Assumptions: Content production can be bounded temporally without degrading quality; clients prefer finite commitments. Breakdown regime: Fails if scope creep exceeds the 30-day boundary capacity, leading to incomplete deliverables or forced automation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a time-boxed simulation horizon in GSE, preventing infinite regress in client engagement loops. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FIVE_PROSPECT_ACQUISITION_PACKET (7c5ccfab3f81f3b1, domain=other, pages_read=2/2): Operator 'Public Fit Vector Extraction' (page 1, domain other) captures: # Five-Prospect Acquisition Packet Prepared: 2026-07-19 Lane: Studio Services, SFW only State: internal drafts ready for owner review External actions performed: none These five businesses were selected from official public websites because the existing fictional bicycle-shop proof package makes the outreach coherent. Assumptions: Public website data accurately reflects core business operations; fit scores represent valid internal prioritization. Breakdown regime: Breaks down if public data is stale or highly obfuscated, causing the fit vector to misalign with actual operational reality. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw HTML/public text directly to a structured feature space used for targeted content generation. Operator 'Manual Approval Gate Operator' (page 2, domain other) captures: ard Bikes team — your site already has three practical content lanes: repair turnaround, vintage bikes, and commuter accessories. Assumptions: Human operator possesses superior contextual judgment compared to automated systems; manual intervention is strictly required. Breakdown regime: Singularity occurs if the operator bypasses the manual check, collapsing the safety boundary and allowing automated dispatch. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a non-linear activation function in the GSE state machine, requiring explicit human energy input to transition states. Operator 'Fixed Sprint Boundary Condition' (page 1, domain other) captures: I also offer a fixed 30-day content sprint; no auto-posting or long contract. Assumptions: Content production can be bounded temporally without degrading quality; clients prefer finite commitments. Breakdown regime: Fails if scope creep exceeds the 30-day boundary capacity, leading to incomplete deliverables or forced automation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a time-boxed simulation horizon in GSE, preventing infinite regress in client engagement loops. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "This framework inherits from classical information retrieval theory, specifically precision-recall tradeoffs in sparse document matching. Historically, it mirrors the rigorous peer-review process in mathematical physics, where automated theorem provers generate proofs, but human intuition must validate the underlying axioms before publication. It rejects modern, black-box algorithmic cold outreach in favor of verifiable, deterministic human-in-the-loop constraints. Retrocausal Genealogy: Rooted in FIVE_PROSPECT_ACQUISITION_PACKET (7c5ccfab3f81f3b1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "We model two primary agents: the Studio Operator (Garrett) and the Prospect Owner. The Operator seeks to minimize cognitive load while maximizing perceived bespoke value, utilizing pre-drafted templates anchored in verified public facts. The Prospect Owner, conversely, operates under a high-threat model regarding spam and generic AI-generated noise. The 'intimidation-free' and 'manifesto' angles are strategic maneuvers to align with the Prospect's latent identity, reducing their defensive priors and increasing the probability of a positive state transition.",
-      "cross_layer_veto": "A strict anti-collinearity veto is applied between the 'draft generation' layer and the 'dispatch' layer. If telemetry indicates any correlation between draft creation timestamps and automatic sending events, the system triggers a fatal exception. Furthermore, leakage vetoes ensure that private contact data never enters the public fit vector calculation. The manual approval gate serves as the ultimate cross-layer firewall, vetoing any state transition that attempts to bypass the explicit owner review step, thereby preserving the integrity of the sovereign acquisition manifold."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

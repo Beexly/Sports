@@ -1,0 +1,78 @@
+{
+  "book_id": "0c3fe897de7ebacc",
+  "source_status": "COMPLETE",
+  "title": "fantasypoints.com",
+  "file_name": "fantasypoints.com.md",
+  "sha256": "0c3fe897de7ebacc297a93145e85f7ce1bd27f3a4540f8aaa614d8d2e17f8477",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Fantasy point projection systems map player attributes to probabilistic scoring outcomes via ranked positional hierarchies and dynamic roster optimization algorithms. Universal Lens: Rooted in fantasypoints.com (0c3fe897de7ebacc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers player value distributions using Bayesian rank regression on projected fantasy points, conditioning on positional constraints and historical performance kernels. GSI Mapping: Rooted in fantasypoints.com (0c3fe897de7ebacc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions in roster management by evaluating marginal utility gains from player substitutions under constraint satisfaction of lineup validity and waiver eligibility. GSE Mapping: Rooted in fantasypoints.com (0c3fe897de7ebacc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pwe",
+      "name": "Player Value Estimator",
+      "verbatim_quote": "wfe(a, n) : null }, pwe = (e, t) => { const n = ome(e, t); return n && Number.isFinite(n.rank) ?",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'e': 'player identifier (string)', 't': 'position type (string)', 'n': 'rank estimate (dimensionless)', 'ome': 'lookup function returning rank object'}",
+      "assumptions": "Player rankings are finite and comparable across positions; rank estimates are derived from aggregate metrics.",
+      "breakdown_regime": "When `ome(e, t)` returns undefined or non-finite values, the estimator defaults to null.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps player identifiers to scalar rank values for use in sorting and selection heuristics within GSI's probabilistic forecasting engine.",
+        "source_operator": "pwe",
+        "telemetry": "Rank consistency across multiple projections and validation against actual performance data."
+      }
+    },
+    {
+      "primitive_id": "dwe",
+      "name": "Dynamic Roster Optimizer",
+      "verbatim_quote": "r, i] of t) { if (r.startsWith(\"PICK_\")) continue; const s = dF(e, i.name || \"\"); s !== null && a.push({ entry: { assetId: r, name: i.name, position: i.position, mvs: i.mvs }, rank: s }) } return a.sort((r, i) => r.rank !== i.rank ?",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'e': 'current roster state (array)', 't': 'candidate pool (array of entries)', 'r': 'asset ID (string)', 'i': 'player entry object', 's': 'rank score (dimensionless)', 'a': 'filtered list of candidates (array)'}",
+      "assumptions": "Candidates can be scored independently; ranking criteria prioritize both rank and marginal value score (mvs).",
+      "breakdown_regime": "Entries prefixed with 'PICK_' are excluded from consideration due to predefined draft logic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically maps fantasy roster construction to combinatorial optimization problems where each player contributes a weighted utility to team fitness.",
+        "source_operator": "dwe",
+        "telemetry": "Optimization convergence rate and final roster composition stability over time."
+      }
+    },
+    {
+      "primitive_id": "xwe",
+      "name": "Positional Value Aggregator",
+      "verbatim_quote": "u.value }), o = i.starters.map(u => ({ slot: u.slot, player: u.player ?",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'e': 'aggregate stats object (dict)', 't': 'statistic type (string)', 'n': 'position-specific stat (float)', 'byPosition': 'list of position-based stats'}",
+      "assumptions": "Stat types are mutually exclusive and defined in advance; aggregation preserves dimensional integrity.",
+      "breakdown_regime": "Returns zero when no matching statistic is found or when conversion to number fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Aggregates per-position contributions into total team metrics used for comparative analysis in GSE's strategic planning module.",
+        "source_operator": "xwe",
+        "telemetry": "Summation accuracy across all positions and comparison with baseline projections."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0c3fe897de7ebacc_t0",
+      "think": "The core operators define a hierarchical framework for evaluating fantasy players through rank estimation (pwe), optimizing rosters dynamically (dwe), and aggregating positional contributions (xwe). These primitives form a closed-loop system where pwe provides input scores, dwe selects optimal lineups based on those scores, and xwe computes cumulative team performance. The failure mode occurs when lookup functions like ome or dF return invalid data, leading to incorrect rankings or incomplete selections. Dualities emerge between static rank estimation and dynamic optimization—static ranks provide priors while dynamic optimization refines them. In GSI, these operators support Bayesian inference pipelines that update belief states about player value over time. In GSE, they enable real-time decision-making under uncertainty by simulating various lineup configurations and computing expected utilities.\n\nDeep epistemic analysis for fantasypoints.com (0c3fe897de7ebacc, domain=other, pages_read=5/5): Operator 'Player Value Estimator' (page 2, domain other) captures: wfe(a, n) : null }, pwe = (e, t) => { const n = ome(e, t); return n && Number.isFinite(n.rank) ? Assumptions: Player rankings are finite and comparable across positions; rank estimates are derived from aggregate metrics. Breakdown regime: When `ome(e, t)` returns undefined or non-finite values, the estimator defaults to null. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps player identifiers to scalar rank values for use in sorting and selection heuristics within GSI's probabilistic forecasting engine. Operator 'Dynamic Roster Optimizer' (page 3, domain other) captures: r, i] of t) { if (r.startsWith(\"PICK_\")) continue; const s = dF(e, i.name || \"\"); s !== null && a.push({ entry: { assetId: r, name: i.name, position: i.position, mvs: i.mvs }, rank: s }) } return a.sort((r, i) => r.rank !== i.rank ? Assumptions: Candidates can be scored independently; ranking criteria prioritize both rank and marginal value score (mvs). Breakdown regime: Entries prefixed with 'PICK_' are excluded from consideration due to predefined draft logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps fantasy roster construction to combinatorial optimization problems where each player contributes a weighted utility to team fitness. Operator 'Positional Value Aggregator' (page 3, domain other) captures: u.value }), o = i.starters.map(u => ({ slot: u.slot, player: u.player ? Assumptions: Stat types are mutually exclusive and defined in advance; aggregation preserves dimensional integrity. Breakdown regime: Returns zero when no matching statistic is found or when conversion to number fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Aggregates per-position contributions into total team metrics used for comparative analysis in GSE's strategic planning module. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for fantasypoints.com (0c3fe897de7ebacc, domain=other, pages_read=5/5): Operator 'Player Value Estimator' (page 2, domain other) captures: wfe(a, n) : null }, pwe = (e, t) => { const n = ome(e, t); return n && Number.isFinite(n.rank) ? Assumptions: Player rankings are finite and comparable across positions; rank estimates are derived from aggregate metrics. Breakdown regime: When `ome(e, t)` returns undefined or non-finite values, the estimator defaults to null. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps player identifiers to scalar rank values for use in sorting and selection heuristics within GSI's probabilistic forecasting engine. Operator 'Dynamic Roster Optimizer' (page 3, domain other) captures: r, i] of t) { if (r.startsWith(\"PICK_\")) continue; const s = dF(e, i.name || \"\"); s !== null && a.push({ entry: { assetId: r, name: i.name, position: i.position, mvs: i.mvs }, rank: s }) } return a.sort((r, i) => r.rank !== i.rank ? Assumptions: Candidates can be scored independently; ranking criteria prioritize both rank and marginal value score (mvs). Breakdown regime: Entries prefixed with 'PICK_' are excluded from consideration due to predefined draft logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps fantasy roster construction to combinatorial optimization problems where each player contributes a weighted utility to team fitness. Operator 'Positional Value Aggregator' (page 3, domain other) captures: u.value }), o = i.starters.map(u => ({ slot: u.slot, player: u.player ? Assumptions: Stat types are mutually exclusive and defined in advance; aggregation preserves dimensional integrity. Breakdown regime: Returns zero when no matching statistic is found or when conversion to number fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Aggregates per-position contributions into total team metrics used for comparative analysis in GSE's strategic planning module. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical ranking models and modern algorithmic game theory, these operators reflect developments in machine learning-based fantasy analytics since early 2010s, particularly influenced by ensemble methods and reinforcement learning paradigms. Retrocausal Genealogy: Rooted in fantasypoints.com (0c3fe897de7ebacc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include competing fantasy managers who may have different views on player value, leading to divergent strategies. The system models this by incorporating variance in projections and allowing for multiple plausible outcomes in its probabilistic forecasts. Theory of Mind & Decision Maker Model: Rooted in fantasypoints.com (0c3fe897de7ebacc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that no two primitives rely on identical input variables without distinct transformations. Leakage is mitigated by isolating the scope of each primitive’s domain, preventing cross-contamination of internal state during computation. Cross-Layer Veto & Anti-Leakage Check: Rooted in fantasypoints.com (0c3fe897de7ebacc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

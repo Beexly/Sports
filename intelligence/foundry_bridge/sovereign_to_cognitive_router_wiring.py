@@ -37,6 +37,9 @@ if str(REPO_ROOT) not in sys.path:
 from intelligence.foundry_bridge.week10_reasoning_mind_bridge import (
     AUTHORITATIVE_WEEK10_TRUTH_2026_11_13,
 )
+from intelligence.foundry_bridge.multi_lane_sovereign_extractor import (
+    is_pii_or_correspondence_row,
+)
 from intelligence.foundry_bridge.gcp_entity_and_injury_truth_reconciler import (
     build_week10_entity_and_venue_truth_rows,
 )
@@ -336,8 +339,9 @@ def run_wiring_and_export(
         doc = json.loads(fp.read_text(encoding="utf-8", errors="replace"))
         book_id = str(doc.get("book_id") or fp.stem)
         source_status = str(doc.get("source_status") or "COMPLETE")
-        if source_status in ("INSUFFICIENT_SOURCE_ACCESS", "INSUFFICIENT_OCR"):
+        if source_status in ("INSUFFICIENT_SOURCE_ACCESS", "INSUFFICIENT_OCR") or doc.get("extractor_model") == "pii-correspondence-quarantine-guard":
             refusal_receipts_count += 1
+            continue
         doc_domain = str(doc.get("primary_domain") or doc.get("domain") or "general")
 
         for idx, p in enumerate(doc.get("primitives", []) or []):
@@ -404,6 +408,14 @@ def run_wiring_and_export(
     if gcp_sync_dir.is_dir():
         for md in sorted(gcp_sync_dir.glob("*.md")):
             rec = parse_gcp_shard_b_markdown(md)
+            if is_pii_or_correspondence_row(
+                {
+                    "file_name": md.name,
+                    "file_path": str(rec.get("drive_folder") or ""),
+                    "title": str(rec.get("source_name") or ""),
+                }
+            ):
+                continue
             rec["ingested_at_utc"] = now_iso
             fam_counts_shard_b[rec["situational_family"]] += 1
             fam_bit_sets[rec["situational_family"]].add(rec["router_bit_index"])

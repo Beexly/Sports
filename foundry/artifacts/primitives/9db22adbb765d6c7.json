@@ -1,0 +1,78 @@
+{
+  "book_id": "9db22adbb765d6c7",
+  "source_status": "COMPLETE",
+  "title": "0245-order-flows-and-limit-order-book",
+  "file_name": "0245-order-flows-and-limit-order-book.md",
+  "sha256": "9db22adbb765d6c7fc4d803a7ce74017227d1db301d247ff8dc536766da3c954",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Limit order book dynamics on meso-scale integrate order flow imbalances, liquidity provision, and price sensitivity through volume-based bucketing and net liquidity measures. Universal Lens: Rooted in 0245-order-flows-and-limit-order-book (9db22adbb765d6c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference to decode order flow signals from prediction markets, mapping limit order book states into probabilistic price move forecasts using conformal prediction intervals. GSI Mapping: Rooted in 0245-order-flows-and-limit-order-book (9db22adbb765d6c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models situational awareness via state transitions driven by steam-move indicators and scarce liquidity triggers derived from limit order book decompositions. GSE Mapping: Rooted in 0245-order-flows-and-limit-order-book (9db22adbb765d6c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "net_liquidity_flow",
+      "name": "Net Liquidity Flow",
+      "verbatim_quote": "6), top-level limit flows VL^{j,(1)}_k signed (adds +, cancels -) (Eq.",
+      "page": 1,
+      "latex": "\\Delta P = \\alpha_0 + \\alpha_1 \\text{TI} + \\alpha_2 (VL^{B} - VL^{A})",
+      "symbol_and_unit_ledger": "{'VL^{B}': 'limit order additions (buy side)', 'VL^{A}': 'limit order additions (sell side)', 'TI': 'trade imbalance (dimensionless)', '\\\\Delta P': 'price change (currency units)'}",
+      "assumptions": "Linear relationship between net liquidity and price change; static LOB metrics at bucket start.",
+      "breakdown_regime": "When |TI| approaches 1, nonlinear effects dominate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Net liquidity flow serves as core input for predicting price drift in GSE's meso-scale state machine.",
+        "source_operator": "net_liquidity_flow",
+        "telemetry": "Price change correlation with net liquidity deviation."
+      }
+    },
+    {
+      "primitive_id": "scarce_liquidity_indicator",
+      "name": "Scarce Liquidity Indicator",
+      "verbatim_quote": "SL^j_k = I{ε̂_k ≥ 1.5·StDev} (ask) / I{ε̂_k ≤ -1.5·StDev} (bid) (Eq. 15)",
+      "page": 2,
+      "latex": "SL^j_k = \\mathbb{I}\\left\\{\\hat{\\varepsilon}_k \\geq 1.5 \\cdot \\text{StDev}\\right\\}",
+      "symbol_and_unit_ledger": "{'\\\\hat{\\\\varepsilon}_k': 'residual error in price prediction', '\\\\text{StDev}': 'standard deviation of residuals', 'SL^j_k': 'binary indicator for scarce liquidity'}",
+      "assumptions": "Residuals follow normal distribution; 1.5× standard deviation threshold defines extreme moves.",
+      "breakdown_regime": "At high volatility or low volume periods where liquidity is constrained.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to steam-move detection in sports betting, indicating potential outlier events.",
+        "source_operator": "scarce_liquidity_indicator",
+        "telemetry": "Frequency of occurrence in low-volume buckets."
+      }
+    },
+    {
+      "primitive_id": "volume_bucketing_scheme",
+      "name": "Volume Bucketing Scheme",
+      "verbatim_quote": "- **Bucketing:** VOLUME-based (not time-based): V ∈ {0.25%, 1%, 2%} of ADV → ~400/100/50 buckets/day.",
+      "page": 1,
+      "latex": "B_k = \\left\\{ v \\in \\mathcal{V} : \\sum_{i=1}^{k} v_i \\in [\\gamma_{k-1}, \\gamma_k) \\right\\}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{V}': 'set of trade volumes', '\\\\gamma_k': 'cumulative volume threshold for bucket k', 'B_k': 'volume bucket k'}",
+      "assumptions": "Volume thresholds are proportional to average daily volume (ADV); buckets capture meso-scale dynamics.",
+      "breakdown_regime": "When volume exceeds typical ADV range, bucket boundaries become less meaningful.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables temporal aggregation without loss of granularity for GSE's event-driven state tracking.",
+        "source_operator": "volume_bucketing_scheme",
+        "telemetry": "Number of trades per bucket and average duration."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9db22adbb765d6c7_t0",
+      "think": "The core insight of the paper lies in decomposing order flows into limit order additions and cancellations, which are then aggregated into net liquidity measures that correlate strongly with price changes. The authors introduce a volume-based bucketing scheme to analyze these flows on a meso-scale, capturing both short-term execution patterns and longer-term resiliency. The key mathematical innovation is the restoration of linearity in price prediction when controlling for net liquidity rather than just trade imbalance. This allows for robust modeling of how limit order book dynamics influence price movements. The scarce liquidity indicator provides a binary signal for detecting anomalous price moves, while the volume bucketing ensures consistent temporal resolution across different assets. These primitives form a foundation for GSI’s probabilistic forecasting engine and GSE’s adaptive state transition logic.\n\nDeep epistemic analysis for 0245-order-flows-and-limit-order-book (9db22adbb765d6c7, domain=other, pages_read=5/5): Operator 'Net Liquidity Flow' (page 1, domain other) captures: 6), top-level limit flows VL^{j,(1)}_k signed (adds +, cancels -) (Eq. Assumptions: Linear relationship between net liquidity and price change; static LOB metrics at bucket start. Breakdown regime: When |TI| approaches 1, nonlinear effects dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Net liquidity flow serves as core input for predicting price drift in GSE's meso-scale state machine. Operator 'Scarce Liquidity Indicator' (page 2, domain other) captures: SL^j_k = I{ε̂_k ≥ 1.5·StDev} (ask) / I{ε̂_k ≤ -1.5·StDev} (bid) (Eq. 15) Assumptions: Residuals follow normal distribution; 1.5× standard deviation threshold defines extreme moves. Breakdown regime: At high volatility or low volume periods where liquidity is constrained. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to steam-move detection in sports betting, indicating potential outlier events. Operator 'Volume Bucketing Scheme' (page 1, domain other) captures: - **Bucketing:** VOLUME-based (not time-based): V ∈ {0.25%, 1%, 2%} of ADV → ~400/100/50 buckets/day. Assumptions: Volume thresholds are proportional to average daily volume (ADV); buckets capture meso-scale dynamics. Breakdown regime: When volume exceeds typical ADV range, bucket boundaries become less meaningful. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables temporal aggregation without loss of granularity for GSE's event-driven state tracking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0245-order-flows-and-limit-order-book (9db22adbb765d6c7, domain=other, pages_read=5/5): Operator 'Net Liquidity Flow' (page 1, domain other) captures: 6), top-level limit flows VL^{j,(1)}_k signed (adds +, cancels -) (Eq. Assumptions: Linear relationship between net liquidity and price change; static LOB metrics at bucket start. Breakdown regime: When |TI| approaches 1, nonlinear effects dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Net liquidity flow serves as core input for predicting price drift in GSE's meso-scale state machine. Operator 'Scarce Liquidity Indicator' (page 2, domain other) captures: SL^j_k = I{ε̂_k ≥ 1.5·StDev} (ask) / I{ε̂_k ≤ -1.5·StDev} (bid) (Eq. 15) Assumptions: Residuals follow normal distribution; 1.5× standard deviation threshold defines extreme moves. Breakdown regime: At high volatility or low volume periods where liquidity is constrained. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to steam-move detection in sports betting, indicating potential outlier events. Operator 'Volume Bucketing Scheme' (page 1, domain other) captures: - **Bucketing:** VOLUME-based (not time-based): V ∈ {0.25%, 1%, 2%} of ADV → ~400/100/50 buckets/day. Assumptions: Volume thresholds are proportional to average daily volume (ADV); buckets capture meso-scale dynamics. Breakdown regime: When volume exceeds typical ADV range, bucket boundaries become less meaningful. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables temporal aggregation without loss of granularity for GSE's event-driven state tracking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early work on market microstructure and order book modeling by Glosten & Milgrom (1985), extended by Easley & O'Hara (1992) and further refined by Almgren & Chriss (2000) in algorithmic trading frameworks. Retrocausal Genealogy: Rooted in 0245-order-flows-and-limit-order-book (9db22adbb765d6c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include market makers who provide liquidity and traders who consume it. Market makers adjust limit orders based on perceived risk, while traders execute at prevailing prices. The model assumes rational behavior under information asymmetry, with agents reacting to observed order flow patterns. Theory of Mind & Decision Maker Model: Rooted in 0245-order-flows-and-limit-order-book (9db22adbb765d6c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between trade imbalance and net liquidity; they must be modeled separately to avoid overfitting. Leakage occurs if static LOB features are conflated with dynamic flows, particularly in thin markets where liquidity is sparse. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0245-order-flows-and-limit-order-book (9db22adbb765d6c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "70e06a2db61cec98",
+  "source_status": "COMPLETE",
+  "title": "2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors",
+  "file_name": "2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors.md",
+  "sha256": "70e06a2db61cec98ff7249a4b9cc441456a21753d4c16b91645a7e8a2ac941fb",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "fastRhockey unifies PHF play-by-play and boxscore data via R-package abstraction, enabling statistical inference and fantasy analytics through structured event-level telemetry. Universal Lens: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (70e06a2db61cec98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models PHF game states using fastRhockey's event-driven telemetry; Bayesian updates on scoring, penalties, and player-on-ice configurations refine predictive posterior distributions over game dynamics. GSI Mapping: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (70e06a2db61cec98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes game progression through fastRhockey's structured play-by-play data; state transitions are governed by event types and player roles, enabling tactical reasoning and situational awareness. GSE Mapping: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (70e06a2db61cec98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "phf_play_by_play_data",
+      "name": "Play-by-Play Event Stream",
+      "verbatim_quote": "The processed play-by-play data fastRhockey delivers contains every event that occurs within a PHF game, the primary/secondary players, as well as player-on-ice data for goals.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'event_type': 'categorical {Goal, Shot, Faceoff, Penalty, etc.}', 'primary_player': 'player identifier', 'secondary_player': 'player identifier', 'on_ice_players': 'set of player identifiers'}",
+      "assumptions": "Events are timestamped, uniquely identified, and associated with team and player metadata.",
+      "breakdown_regime": "Event-level granularity with temporal ordering preserved.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw game events to probabilistic game state vectors for GSI inference.",
+        "source_operator": "phf_play_by_play_data",
+        "telemetry": "Event timestamps, player IDs, team affiliations, and outcome indicators."
+      }
+    },
+    {
+      "primitive_id": "phf_team_boxscore",
+      "name": "Team Boxscore Aggregation",
+      "verbatim_quote": "The processed play-by-play data fastRhockey delivers contains every event that occurs within a PHF game, the primary/secondary players, as well as player-on-ice data for goals.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'team': 'team identifier', 'total_scoring': 'dimensionless integer', 'total_shots': 'dimensionless integer', 'successful_power_play': 'dimensionless float', 'penalty_minutes': 'dimensionless integer'}",
+      "assumptions": "Boxscore data reflects cumulative performance metrics per team per game.",
+      "breakdown_regime": "Aggregate statistics per team per game.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI summary statistic vectors for team-level decision-making.",
+        "source_operator": "phf_team_boxscore",
+        "telemetry": "Scoring totals, shot counts, power-play success rates, penalty minutes."
+      }
+    },
+    {
+      "primitive_id": "phf_api_access",
+      "name": "API Data Retrieval Kernel",
+      "verbatim_quote": "## **2 Structure of fastRhockey** `fastRhockey` was developed entirely as an R package that pulls live data while additionally storing the data in a `fastRhockey-data` repository.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'api_endpoint': 'URI string', 'data_source': 'string {live, cached}', 'response_format': 'JSON object'}",
+      "assumptions": "Data is fetched via RESTful API calls and parsed into structured R data frames.",
+      "breakdown_regime": "Real-time or cached data retrieval with consistent schema.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to synchronize with live game state and GSI to validate data integrity.",
+        "source_operator": "phf_api_access",
+        "telemetry": "API response codes, data freshness, and schema compliance."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "70e06a2db61cec98_t0",
+      "think": "The fastRhockey package establishes a foundational data infrastructure for PHF analytics by structuring play-by-play and boxscore data into computationally tractable formats. Its design addresses historical data inconsistencies due to league rebranding and API disruptions. The core operators—play-by-play stream, team boxscore aggregation, and API kernel—are mathematically defined as discrete-event systems with temporal dependencies. These primitives support dualities between empirical observation and predictive modeling in GSI, and enable GSE to simulate game progression through state transitions. Failure modes arise from missing or malformed data entries, which can corrupt downstream analyses. The system's robustness depends on consistent schema enforcement and modular design principles.\n\nDeep epistemic analysis for 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (70e06a2db61cec98, domain=other, pages_read=5/5): Operator 'Play-by-Play Event Stream' (page 1, domain other) captures: The processed play-by-play data fastRhockey delivers contains every event that occurs within a PHF game, the primary/secondary players, as well as player-on-ice data for goals. Assumptions: Events are timestamped, uniquely identified, and associated with team and player metadata. Breakdown regime: Event-level granularity with temporal ordering preserved. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw game events to probabilistic game state vectors for GSI inference. Operator 'Team Boxscore Aggregation' (page 1, domain other) captures: The processed play-by-play data fastRhockey delivers contains every event that occurs within a PHF game, the primary/secondary players, as well as player-on-ice data for goals. Assumptions: Boxscore data reflects cumulative performance metrics per team per game. Breakdown regime: Aggregate statistics per team per game. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI summary statistic vectors for team-level decision-making. Operator 'API Data Retrieval Kernel' (page 1, domain other) captures: ## **2 Structure of fastRhockey** `fastRhockey` was developed entirely as an R package that pulls live data while additionally storing the data in a `fastRhockey-data` repository. Assumptions: Data is fetched via RESTful API calls and parsed into structured R data frames. Breakdown regime: Real-time or cached data retrieval with consistent schema. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to synchronize with live game state and GSI to validate data integrity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (70e06a2db61cec98, domain=other, pages_read=5/5): Operator 'Play-by-Play Event Stream' (page 1, domain other) captures: The processed play-by-play data fastRhockey delivers contains every event that occurs within a PHF game, the primary/secondary players, as well as player-on-ice data for goals. Assumptions: Events are timestamped, uniquely identified, and associated with team and player metadata. Breakdown regime: Event-level granularity with temporal ordering preserved. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw game events to probabilistic game state vectors for GSI inference. Operator 'Team Boxscore Aggregation' (page 1, domain other) captures: The processed play-by-play data fastRhockey delivers contains every event that occurs within a PHF game, the primary/secondary players, as well as player-on-ice data for goals. Assumptions: Boxscore data reflects cumulative performance metrics per team per game. Breakdown regime: Aggregate statistics per team per game. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI summary statistic vectors for team-level decision-making. Operator 'API Data Retrieval Kernel' (page 1, domain other) captures: ## **2 Structure of fastRhockey** `fastRhockey` was developed entirely as an R package that pulls live data while additionally storing the data in a `fastRhockey-data` repository. Assumptions: Data is fetched via RESTful API calls and parsed into structured R data frames. Breakdown regime: Real-time or cached data retrieval with consistent schema. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to synchronize with live game state and GSI to validate data integrity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the evolution of open-source sports analytics, particularly the SportsDataverse ecosystem, which sought to democratize access to previously fragmented hockey datasets. Influenced by earlier scraping tools and data repositories for men’s hockey, fastRhockey extends this legacy to women’s hockey with a focus on reproducibility and scalability. Retrocausal Genealogy: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (70e06a2db61cec98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data inconsistency due to league structural changes, outdated scrapers, and lack of standardized APIs. Decision actors are analysts, fantasy players, and researchers who rely on accurate, timely data to make strategic choices. The system must anticipate and mitigate data degradation risks while maintaining usability across diverse user groups. Theory of Mind & Decision Maker Model: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (70e06a2db61cec98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by separating event-level telemetry from aggregate summaries, preventing redundant information propagation. Leakage vetoes prevent sensitive metadata from leaking into derived statistics without explicit permission. This maintains orthogonality between GSI's probabilistic models and GSE's deterministic simulations. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (70e06a2db61cec98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

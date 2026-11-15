@@ -1,0 +1,95 @@
+{
+  "book_id": "a3c8f2a5749c9101",
+  "source_status": "COMPLETE",
+  "title": "16678907951",
+  "file_name": "16678907951.pdf",
+  "sha256": "a3c8f2a5749c91018d2b56758b3554c7c72f014bca22bc7ef4a574ad9ab84dca",
+  "primary_domain": "other",
+  "pages_total": 1065,
+  "pages_read": 28,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "z_transform",
+      "name": "Z Transform",
+      "verbatim_quote": "508 THE Z TRANSFORM Check your answers using MATLAB or MAPLE whenever possible.",
+      "page": 533,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Discrete-time linear time-invariant systems with initial rest condition.",
+      "breakdown_regime": "Poles lie outside the unit circle (unstable)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Convert time series to feature vectors for machine learning models. GSE: Model game states and transitions in discrete event simulations.",
+        "source_operator": "z_transform",
+        "telemetry": "Residual error between predicted and actual system outputs"
+      }
+    },
+    {
+      "primitive_id": "difference_equation",
+      "name": "Difference Equation",
+      "verbatim_quote": "Find difference equations representing the discretetime systems shown in Figure 6.6.",
+      "page": 533,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Linear constant coefficient systems with causal impulse response.",
+      "breakdown_regime": "Negative feedback causing oscillatory instability",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Discretize continuous betting strategies into recursive algorithms. GSE: Encode rule-based game logic into state transition tables.",
+        "source_operator": "difference_equation",
+        "telemetry": "State variables tracking player bankroll or team performance metrics"
+      }
+    },
+    {
+      "primitive_id": "complex_partial_fractions",
+      "name": "Complex Partial Fractions",
+      "verbatim_quote": "15 16 1 2-If complex partial fractions are involved then, as was mentioned at the end of Example 6.10, it is difficult to simplify answers when determining inverse z transforms using MATLAB.",
+      "page": 533,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Real coefficients in numerator and denominator polynomials.",
+      "breakdown_regime": "Loss of orthogonality in signal decomposition",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Decompose multivariate financial time series into independent factors. GSE: Separate coupled physical dynamics into decoupled normal modes.",
+        "source_operator": "complex_partial_fractions",
+        "telemetry": "Spectral power distribution across frequency components"
+      }
+    },
+    {
+      "primitive_id": "discrete_time_system_response",
+      "name": "Discrete Time System Response",
+      "verbatim_quote": "When such partial fractions arise in the solution of difference equations use of the command evalc alongside rsolve in MAPLE attempts to express complex exponentials in terms of trigonometric functions, leading in most cases to simplified answers.",
+      "page": 533,
+      "latex": "y_{k+2} - 5y_{k+1} + 6y_k = u_k",
+      "symbol_and_unit_ledger": "{'y_k': 'System output at discrete time k (dimensionless)', 'u_k': 'Unit step input (dimensionless)'}",
+      "assumptions": "Zero initial conditions except specified values y_0 and y_1.",
+      "breakdown_regime": "Exponential growth due to pole at z=3",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Predict future score distributions from lagged performance data. GSE: Simulate tournament brackets using recursive probability transitions.",
+        "source_operator": "discrete_time_system_response",
+        "telemetry": "Mean squared error between model predictions and observed outcomes"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a3c8f2a5749c9101_t0",
+      "think": "The Z transform maps discrete-time signals into the complex frequency domain, enabling algebraic manipulation of difference equations. Complex partial fractions decompose rational transfer functions into simpler terms, facilitating inverse transformation back to the time domain. Difference equations describe dynamical systems through recursive updates, while discrete-time system response characterizes how these systems react to specific inputs. Together, they form a unified framework for analyzing stability, causality, and transient behavior in sampled-data systems. Failure occurs when poles exceed unity magnitude, leading to unbounded growth.\n\nDeep epistemic analysis for 16678907951 (a3c8f2a5749c9101, domain=other, pages_read=28/1065): Operator 'Z Transform' (page 533, domain other) captures: 508 THE Z TRANSFORM Check your answers using MATLAB or MAPLE whenever possible. Assumptions: Discrete-time linear time-invariant systems with initial rest condition. Breakdown regime: Poles lie outside the unit circle (unstable) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Convert time series to feature vectors for machine learning models. GSE: Model game states and transitions in discrete event simulations. Operator 'Difference Equation' (page 533, domain other) captures: Find difference equations representing the discretetime systems shown in Figure 6.6. Assumptions: Linear constant coefficient systems with causal impulse response. Breakdown regime: Negative feedback causing oscillatory instability Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Discretize continuous betting strategies into recursive algorithms. GSE: Encode rule-based game logic into state transition tables. Operator 'Complex Partial Fractions' (page 533, domain other) captures: 15 16 1 2-If complex partial fractions are involved then, as was mentioned at the end of Example 6.10, it is difficult to simplify answers when determining inverse z transforms using MATLAB. Assumptions: Real coefficients in numerator and denominator polynomials. Breakdown regime: Loss of orthogonality in signal decomposition Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Decompose multivariate financial time series into independent factors. GSE: Separate coupled physical dynamics into decoupled normal modes. Operator 'Discrete Time System Response' (page 533, domain other) captures: When such partial fractions arise in the solution of difference equations use of the command evalc alongside rsolve in MAPLE attempts to express complex exponentials in terms of trigonometric functions, leading in most cases to simplified answers. Assumptions: Zero initial conditions except specified values y_0 and y_1. Breakdown regime: Exponential growth due to pole at z=3 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Predict future score distributions from lagged performance data. GSE: Simulate tournament brackets using recursive probability transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 16678907951 (a3c8f2a5749c9101, domain=other, pages_read=28/1065): Operator 'Z Transform' (page 533, domain other) captures: 508 THE Z TRANSFORM Check your answers using MATLAB or MAPLE whenever possible. Assumptions: Discrete-time linear time-invariant systems with initial rest condition. Breakdown regime: Poles lie outside the unit circle (unstable) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Convert time series to feature vectors for machine learning models. GSE: Model game states and transitions in discrete event simulations. Operator 'Difference Equation' (page 533, domain other) captures: Find difference equations representing the discretetime systems shown in Figure 6.6. Assumptions: Linear constant coefficient systems with causal impulse response. Breakdown regime: Negative feedback causing oscillatory instability Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Discretize continuous betting strategies into recursive algorithms. GSE: Encode rule-based game logic into state transition tables. Operator 'Complex Partial Fractions' (page 533, domain other) captures: 15 16 1 2-If complex partial fractions are involved then, as was mentioned at the end of Example 6.10, it is difficult to simplify answers when determining inverse z transforms using MATLAB. Assumptions: Real coefficients in numerator and denominator polynomials. Breakdown regime: Loss of orthogonality in signal decomposition Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Decompose multivariate financial time series into independent factors. GSE: Separate coupled physical dynamics into decoupled normal modes. Operator 'Discrete Time System Response' (page 533, domain other) captures: When such partial fractions arise in the solution of difference equations use of the command evalc alongside rsolve in MAPLE attempts to express complex exponentials in terms of trigonometric functions, leading in most cases to simplified answers. Assumptions: Zero initial conditions except specified values y_0 and y_1. Breakdown regime: Exponential growth due to pole at z=3 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Predict future score distributions from lagged performance data. GSE: Simulate tournament brackets using recursive probability transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Book publishers standardize these tools for engineers who design control systems, while sports analysts might reverse-engineer similar recursive patterns from betting data. Theory of Mind & Decision Maker Model: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Ensure distinct eigenvalues to avoid Jordan blocks; verify bounded input leads to bounded output (BIBO stability) Cross-Layer Veto & Anti-Leakage Check: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 16678907951 (a3c8f2a5749c9101), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

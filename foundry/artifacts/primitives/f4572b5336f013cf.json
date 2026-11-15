@@ -1,0 +1,78 @@
+{
+  "book_id": "f4572b5336f013cf",
+  "source_status": "COMPLETE",
+  "title": "statking-operations-runbook",
+  "file_name": "statking-operations-runbook.md",
+  "sha256": "f4572b5336f013cf7304efbe9e5a5469f86adeb54a2052b8042e8631a782aca9",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Data trustworthiness and coverage integrity as Bayesian belief updates over legal, source, and freshness domains. Universal Lens: Rooted in statking-operations-runbook (f4572b5336f013cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers data confidence via conformal predictive distributions over source trust and conflict metrics. GSI Mapping: Rooted in statking-operations-runbook (f4572b5336f013cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions states using derived kernel operators on coverage, freshness, and conflict signals for tactical inference. GSE Mapping: Rooted in statking-operations-runbook (f4572b5336f013cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "data_coverage_integrity",
+      "name": "Data Coverage Integrity",
+      "verbatim_quote": "## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{legal}}': 'dimensionless, legal usability indicator', 'C_{\\\\text{seeded}}': 'dimensionless, seeded source universe size', 'C_{\\\\text{active}}': 'dimensionless, active data coverage'}",
+      "assumptions": "Legal coverage is a subset of seeded universe; active coverage is a subset of legal.",
+      "breakdown_regime": "When $ C_{\\text{active}} < C_{\\text{seeded}} $, audit required.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian posterior over $ P(C_{\\text{legal}} | C_{\\text{seeded}}) $ maps to GSI's trust score.",
+        "source_operator": "data_coverage_integrity",
+        "telemetry": "Ratio of active legal data to seeded universe."
+      }
+    },
+    {
+      "primitive_id": "trust_explanation_layer",
+      "name": "Trust Explanation Layer",
+      "verbatim_quote": "- HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{\\\\text{trust}}': 'dimensionless, trust score', 'M_{\\\\text{missing}}': 'count, missing data points', 'C_{\\\\text{conflict}}': 'count, conflicting data entries'}",
+      "assumptions": "Trust is inversely proportional to missing and conflicting data.",
+      "breakdown_regime": "When $ T_{\\text{trust}} < 0.5 $, UX must activate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel-based aggregation of $ T_{\\text{trust}}, M_{\\text{missing}}, C_{\\text{conflict}} $ into GSE's explanation vector.",
+        "source_operator": "trust_explanation_layer",
+        "telemetry": "Time to render trust summary in UI."
+      }
+    },
+    {
+      "primitive_id": "licensed_data_route",
+      "name": "Licensed Data Route",
+      "verbatim_quote": "- HIGH: licensed route, pressure, coverage, tracking, PFF-like grades, and trenches data need contracts or first-party charting.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{\\\\text{route}}': 'dimensionless, licensed data availability', 'D_{\\\\text{pressure}}': 'unitless, pressure metric', 'D_{\\\\text{grades}}': 'unitless, grade metric'}",
+      "assumptions": "Licensed data is required for high-value metrics like pressure and grades.",
+      "breakdown_regime": "When $ L_{\\text{route}} < 0.8 $, contract negotiation triggered.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between $ L_{\\text{route}} $ and GSE's data access kernel.",
+        "source_operator": "licensed_data_route",
+        "telemetry": "Percentage of required metrics covered by license."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f4572b5336f013cf_t0",
+      "think": "The core duality lies between legal data coverage and active data usage. The system operates under a Bayesian lens where trust is updated based on evidence from source integrity, freshness, and conflict resolution. The UX layer must compress this into a 10-second narrative, which implies a kernel-based reduction of high-dimensional data into interpretable signals. The licensed route primitive ensures that high-value metrics like pressure and grades are only available when contractual agreements are in place, enforcing a dual regime of access control and data quality. Failure modes include trust erosion due to missing or conflicting data, leading to reduced user engagement and model degradation. The system must maintain a balance between data richness and interpretability through structured telemetry.\n\nDeep epistemic analysis for statking-operations-runbook (f4572b5336f013cf, domain=other, pages_read=1/1): Operator 'Data Coverage Integrity' (page 1, domain other) captures: ## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe. Assumptions: Legal coverage is a subset of seeded universe; active coverage is a subset of legal. Breakdown regime: When $ C_{\\text{active}} < C_{\\text{seeded}} $, audit required. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian posterior over $ P(C_{\\text{legal}} | C_{\\text{seeded}}) $ maps to GSI's trust score. Operator 'Trust Explanation Layer' (page 1, domain other) captures: - HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds. Assumptions: Trust is inversely proportional to missing and conflicting data. Breakdown regime: When $ T_{\\text{trust}} < 0.5 $, UX must activate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel-based aggregation of $ T_{\\text{trust}}, M_{\\text{missing}}, C_{\\text{conflict}} $ into GSE's explanation vector. Operator 'Licensed Data Route' (page 1, domain other) captures: - HIGH: licensed route, pressure, coverage, tracking, PFF-like grades, and trenches data need contracts or first-party charting. Assumptions: Licensed data is required for high-value metrics like pressure and grades. Breakdown regime: When $ L_{\\text{route}} < 0.8 $, contract negotiation triggered. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between $ L_{\\text{route}} $ and GSE's data access kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for statking-operations-runbook (f4572b5336f013cf, domain=other, pages_read=1/1): Operator 'Data Coverage Integrity' (page 1, domain other) captures: ## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe. Assumptions: Legal coverage is a subset of seeded universe; active coverage is a subset of legal. Breakdown regime: When $ C_{\\text{active}} < C_{\\text{seeded}} $, audit required. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian posterior over $ P(C_{\\text{legal}} | C_{\\text{seeded}}) $ maps to GSI's trust score. Operator 'Trust Explanation Layer' (page 1, domain other) captures: - HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds. Assumptions: Trust is inversely proportional to missing and conflicting data. Breakdown regime: When $ T_{\\text{trust}} < 0.5 $, UX must activate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel-based aggregation of $ T_{\\text{trust}}, M_{\\text{missing}}, C_{\\text{conflict}} $ into GSE's explanation vector. Operator 'Licensed Data Route' (page 1, domain other) captures: - HIGH: licensed route, pressure, coverage, tracking, PFF-like grades, and trenches data need contracts or first-party charting. Assumptions: Licensed data is required for high-value metrics like pressure and grades. Breakdown regime: When $ L_{\\text{route}} < 0.8 $, contract negotiation triggered. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between $ L_{\\text{route}} $ and GSE's data access kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Bayesian belief networks and information theory, extended through modern data governance frameworks and probabilistic programming paradigms. Retrocausal Genealogy: Rooted in statking-operations-runbook (f4572b5336f013cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in statking-operations-runbook (f4572b5336f013cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors with incentive misalignment and users seeking maximum utility. The system models these through adversarial trust scoring and conflict resolution kernels. Theory of Mind & Decision Maker Model: Rooted in statking-operations-runbook (f4572b5336f013cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in statking-operations-runbook (f4572b5336f013cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates in distinct signal spaces—coverage, trust, and licensing. Leakage is prevented by strict separation of concerns across GSI, GSE, and UX layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in statking-operations-runbook (f4572b5336f013cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

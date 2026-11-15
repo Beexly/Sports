@@ -1,0 +1,78 @@
+{
+  "book_id": "d2f51cc9c35e601d",
+  "source_status": "COMPLETE",
+  "title": "prompt-ece-insert",
+  "file_name": "prompt-ece-insert.md",
+  "sha256": "d2f51cc9c35e601dabdef7d64bd6bbb7d51fd2d369b322fde789a2464959c6a1",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "ECE as calibration error metric; raw vs debiased variants; bakeoff function mappings; publish path diagnostics. Universal Lens: Rooted in prompt-ece-insert (d2f51cc9c35e601d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration via ECE; probabilistic conformity assessment; predictive reliability quantification through posterior distributions. GSI Mapping: Rooted in prompt-ece-insert (d2f51cc9c35e601d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning on prediction confidence; state transitions based on ECE thresholds; dynamic adjustment of decision policies. GSE Mapping: Rooted in prompt-ece-insert (d2f51cc9c35e601d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "raw_ece_computation",
+      "name": "Raw Expected Calibration Error",
+      "verbatim_quote": "For each bakeoff file, name the function, the line that computes raw ECE, and whether adding a second field (debiased, raw left unchanged) would change a published pick.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ECE_raw': 'dimensionless'}",
+      "assumptions": "Predictions are binned into uniform probability intervals; empirical frequency matches expected probability within bins.",
+      "breakdown_regime": "When binning introduces bias or when predictions are sparse per bin.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Raw ECE serves as foundational calibration metric for Bayesian inference updates in GSI.",
+        "source_operator": "raw_ece_computation",
+        "telemetry": "Frequency-matched prediction accuracy across probability bins."
+      }
+    },
+    {
+      "primitive_id": "debiased_ece_computation",
+      "name": "Debiased Expected Calibration Error",
+      "verbatim_quote": "Read-only. Do not modify any repo. identical-row-bakeoff.ts and calibration-map-bakeoff.ts report raw ECE. debiasedExpectedCalibrationError exists in apps/web/lib/calibration/ece-debiased.ts.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ECE_debiased': 'dimensionless'}",
+      "assumptions": "Debiasing corrects for finite-sample estimation errors in raw ECE computation.",
+      "breakdown_regime": "When sample size is small or bin boundaries are poorly chosen.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Debiased ECE enhances GSI's robustness by correcting systematic underestimation in calibration metrics.",
+        "source_operator": "debiased_ece_computation",
+        "telemetry": "Bias-corrected calibration deviation from uniform prediction distribution."
+      }
+    },
+    {
+      "primitive_id": "publish_path_diagnostic",
+      "name": "Publish Path Diagnostic",
+      "verbatim_quote": "Quote the publish path if any caller of those bakeoffs writes a pick.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'publish_path': 'string'}",
+      "assumptions": "Caller functions may conditionally emit predictions; publish path indicates decision point.",
+      "breakdown_regime": "When no callers invoke pick emission, diagnostic-only mode activates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps ECE computation to GSE's decision-making state transitions via publish path triggers.",
+        "source_operator": "publish_path_diagnostic",
+        "telemetry": "Conditional execution paths indicating prediction publishing events."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d2f51cc9c35e601d_t0",
+      "think": "The primitives define ECE computation pathways: raw ECE measures calibration error directly from binned predictions, while debiased ECE adjusts for sampling bias. The publish path diagnostic ensures these metrics influence actual decisions rather than remaining diagnostic-only. These operators form a dual structure where raw ECE provides baseline calibration, and debiased ECE refines it. Failure modes include overfitting due to insufficient bins or incorrect binning strategies. The dual nature implies that both metrics must be monitored for consistency in GSI's Bayesian updating framework. In GSE, these metrics drive policy adjustments in state transitions, ensuring that prediction confidence aligns with empirical outcomes. The interplay between raw and debiased ECE reflects a deeper duality in calibration theory—between empirical observation and theoretical correction.\n\nDeep epistemic analysis for prompt-ece-insert (d2f51cc9c35e601d, domain=other, pages_read=1/1): Operator 'Raw Expected Calibration Error' (page 1, domain other) captures: For each bakeoff file, name the function, the line that computes raw ECE, and whether adding a second field (debiased, raw left unchanged) would change a published pick. Assumptions: Predictions are binned into uniform probability intervals; empirical frequency matches expected probability within bins. Breakdown regime: When binning introduces bias or when predictions are sparse per bin. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Raw ECE serves as foundational calibration metric for Bayesian inference updates in GSI. Operator 'Debiased Expected Calibration Error' (page 1, domain other) captures: Read-only. Do not modify any repo. identical-row-bakeoff.ts and calibration-map-bakeoff.ts report raw ECE. debiasedExpectedCalibrationError exists in apps/web/lib/calibration/ece-debiased.ts. Assumptions: Debiasing corrects for finite-sample estimation errors in raw ECE computation. Breakdown regime: When sample size is small or bin boundaries are poorly chosen. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Debiased ECE enhances GSI's robustness by correcting systematic underestimation in calibration metrics. Operator 'Publish Path Diagnostic' (page 1, domain other) captures: Quote the publish path if any caller of those bakeoffs writes a pick. Assumptions: Caller functions may conditionally emit predictions; publish path indicates decision point. Breakdown regime: When no callers invoke pick emission, diagnostic-only mode activates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps ECE computation to GSE's decision-making state transitions via publish path triggers. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prompt-ece-insert (d2f51cc9c35e601d, domain=other, pages_read=1/1): Operator 'Raw Expected Calibration Error' (page 1, domain other) captures: For each bakeoff file, name the function, the line that computes raw ECE, and whether adding a second field (debiased, raw left unchanged) would change a published pick. Assumptions: Predictions are binned into uniform probability intervals; empirical frequency matches expected probability within bins. Breakdown regime: When binning introduces bias or when predictions are sparse per bin. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Raw ECE serves as foundational calibration metric for Bayesian inference updates in GSI. Operator 'Debiased Expected Calibration Error' (page 1, domain other) captures: Read-only. Do not modify any repo. identical-row-bakeoff.ts and calibration-map-bakeoff.ts report raw ECE. debiasedExpectedCalibrationError exists in apps/web/lib/calibration/ece-debiased.ts. Assumptions: Debiasing corrects for finite-sample estimation errors in raw ECE computation. Breakdown regime: When sample size is small or bin boundaries are poorly chosen. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Debiased ECE enhances GSI's robustness by correcting systematic underestimation in calibration metrics. Operator 'Publish Path Diagnostic' (page 1, domain other) captures: Quote the publish path if any caller of those bakeoffs writes a pick. Assumptions: Caller functions may conditionally emit predictions; publish path indicates decision point. Breakdown regime: When no callers invoke pick emission, diagnostic-only mode activates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps ECE computation to GSE's decision-making state transitions via publish path triggers. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical calibration theory from the 1970s, extended through modern machine learning frameworks. Influenced by works on proper scoring rules and reliability diagrams. Retrocausal Genealogy: Rooted in prompt-ece-insert (d2f51cc9c35e601d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in prompt-ece-insert (d2f51cc9c35e601d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might optimize for different calibration regimes—some favoring raw ECE for simplicity, others preferring debiased ECE for robustness. Decision actors weigh trade-offs between computational cost and accuracy in prediction reliability. Theory of Mind & Decision Maker Model: Rooted in prompt-ece-insert (d2f51cc9c35e601d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that raw and debiased ECE do not co-vary linearly; leakage occurs if one metric masks failures of the other. Veto conditions ensure that inconsistent ECE signals trigger reevaluation of model assumptions or data quality. Cross-Layer Veto & Anti-Leakage Check: Rooted in prompt-ece-insert (d2f51cc9c35e601d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

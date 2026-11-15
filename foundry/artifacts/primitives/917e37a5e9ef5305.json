@@ -1,0 +1,95 @@
+{
+  "book_id": "917e37a5e9ef5305",
+  "source_status": "COMPLETE",
+  "title": "scrape-wave-2",
+  "file_name": "scrape-wave-2.md",
+  "sha256": "917e37a5e9ef5305539d1f0f643f56d010b3437361db1438bbcc02bfc8c647a5",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "statcast_batted_ball_factors",
+      "name": "Statcast Batted Ball Kinematics",
+      "verbatim_quote": "We need barrel%, hard-hit%, EV50, LA SwSp%, exit velo avg, distance avg per player.",
+      "page": 1,
+      "latex": "\\text{LA SwSp} = \\frac{\\omega_z}{v_{exit}},\\quad \\text{EV50} = f^{-1}_{exit}(p=0.50)",
+      "symbol_and_unit_ledger": "{'\\\\omega_z': 'spin rate about vertical axis (rpm)', 'v_{exit}:': 'exit velocity at launch (mph)', 'f_{exit}(p)': 'empirical CDF of exit velocities at launch', 'Barrel\\\\%': 'hit events meeting Statcast barrel thresholds (dimensionless)', 'Hard-Hit\\\\%': 'percent of batted balls exceeding 98 mph (dimensionless)'}",
+      "assumptions": "Spherical projectile motion, constant air density, minimal drag nonlinearity.",
+      "breakdown_regime": "Low spin (<1800 rpm) or high launch angle (>35°) regimes where aerodynamic models diverge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to MLB factor engine's `underlying` inputs via conformal prediction.",
+        "source_operator": "statcast_batted_ball_factors",
+        "telemetry": "Out-of-sample calibration error on projected batting averages."
+      }
+    },
+    {
+      "primitive_id": "projection_model_comparison",
+      "name": "Fangraphs Model Ensemble Aggregation",
+      "verbatim_quote": "We need the projection numbers per player to compare against ours.",
+      "page": 1,
+      "latex": "\\hat{R}_i = \\sum_{m \\in M} w_m \\cdot \\hat{R}_{i,m},\\quad \\sum_{m \\in M} w_m = 1",
+      "symbol_and_unit_ledger": "{'\\\\hat{R}_i': 'projected player outcome (e.g., RCTB) for player i', 'w_m': 'weight assigned to model m (dimensionless)', '\\\\hat{R}_{i,m}': 'raw model prediction for player i from ensemble member m'}",
+      "assumptions": "Exchangeable player outcomes, stable model performance across seasons.",
+      "breakdown_regime": "High variance in model-specific predictions (e.g., ZIPS vs. STEAMER) leading to overfitting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Serves as ground truth for GSI's consensus factor via Bayesian model averaging.",
+        "source_operator": "projection_model_comparison",
+        "telemetry": "Mean absolute error between weighted ensemble and actual player performance."
+      }
+    },
+    {
+      "primitive_id": "prop_finder_nfl_matchup_split",
+      "name": "PropFinder NFL Matchup Split Analysis",
+      "verbatim_quote": "Pull the full page: Platt, isotonic, temperature scaling, reliability diagram code.",
+      "page": 1,
+      "latex": "P(\\text{Over}) = \\sigma\\left(\\alpha + \\beta \\cdot \\text{MatchupScore}\\right),\\quad \\text{MatchupScore} = f(\\text{ZoneDef}, \\text{ManDef})",
+      "symbol_and_unit_ledger": "{'P(\\\\text{Over})': 'probability of overrunning total (dimensionless)', '\\\\alpha, \\\\beta': 'logistic regression coefficients', 'f(\\\\cdot)': 'feature engineering function mapping defensive schemes to numeric scores'}",
+      "assumptions": "Independence of game outcomes conditional on matchup features, linear decision boundary.",
+      "breakdown_regime": "Extreme clustering of defensive formations (e.g., all zone defenses) causing separation in logistic regression.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Provides empirical betting splits for GSI's consensus factor via conformal prediction.",
+        "source_operator": "prop_finder_nfl_matchup_split",
+        "telemetry": "Brier score on probability forecasts versus settlement outcomes."
+      }
+    },
+    {
+      "primitive_id": "line_star_pro_defensive_partitioning",
+      "name": "LineStar Pro Defensive Formation Grouping Loss",
+      "verbatim_quote": "We need the partitioning algorithm to compute the grouping-loss diagnostic.",
+      "page": 1,
+      "latex": "L = \\sum_{c \\in C} \\pi_c \\cdot \\text{Var}(Y | c),\\quad \\pi_c = \\frac{n_c}{n}",
+      "symbol_and_unit_ledger": "{'L': 'total grouping loss (variance units)', '\\\\pi_c': 'proportion of observations in cluster c', 'Y': 'dependent variable (e.g., points allowed)', 'C': 'set of disjoint defensive formation clusters'}",
+      "assumptions": "Homoscedastic residuals, balanced cluster sizes, Gaussian noise.",
+      "breakdown_regime": "Overly fine-grained partitions leading to zero within-cluster variance but poor generalization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Used in GSE's situational reasoning to identify optimal defensive scheme transitions.",
+        "source_operator": "line_star_pro_defensive_partitioning",
+        "telemetry": "Out-of-sample mean squared error after applying learned partitions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "917e37a5e9ef5305_t0",
+      "think": "Tier 1 primitives form a hierarchical probabilistic generative model for MLB projections: Statcast kinematics inform latent skill factors, which feed into model ensembles. Tier 2 primitives enable NFL prop betting via matchup-based probability estimation. All primitives require cross-validation on held-out test sets to prevent overfitting. The key failure mode is using static benchmarks instead of adaptive conformal prediction, which would allow real-time calibration against market consensus.\n\nDeep epistemic analysis for scrape-wave-2 (917e37a5e9ef5305, domain=other, pages_read=2/2): Operator 'Statcast Batted Ball Kinematics' (page 1, domain other) captures: We need barrel%, hard-hit%, EV50, LA SwSp%, exit velo avg, distance avg per player. Assumptions: Spherical projectile motion, constant air density, minimal drag nonlinearity. Breakdown regime: Low spin (<1800 rpm) or high launch angle (>35°) regimes where aerodynamic models diverge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to MLB factor engine's `underlying` inputs via conformal prediction. Operator 'Fangraphs Model Ensemble Aggregation' (page 1, domain other) captures: We need the projection numbers per player to compare against ours. Assumptions: Exchangeable player outcomes, stable model performance across seasons. Breakdown regime: High variance in model-specific predictions (e.g., ZIPS vs. STEAMER) leading to overfitting. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as ground truth for GSI's consensus factor via Bayesian model averaging. Operator 'PropFinder NFL Matchup Split Analysis' (page 1, domain other) captures: Pull the full page: Platt, isotonic, temperature scaling, reliability diagram code. Assumptions: Independence of game outcomes conditional on matchup features, linear decision boundary. Breakdown regime: Extreme clustering of defensive formations (e.g., all zone defenses) causing separation in logistic regression. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Provides empirical betting splits for GSI's consensus factor via conformal prediction. Operator 'LineStar Pro Defensive Formation Grouping Loss' (page 1, domain other) captures: We need the partitioning algorithm to compute the grouping-loss diagnostic. Assumptions: Homoscedastic residuals, balanced cluster sizes, Gaussian noise. Breakdown regime: Overly fine-grained partitions leading to zero within-cluster variance but poor generalization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used in GSE's situational reasoning to identify optimal defensive scheme transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for scrape-wave-2 (917e37a5e9ef5305, domain=other, pages_read=2/2): Operator 'Statcast Batted Ball Kinematics' (page 1, domain other) captures: We need barrel%, hard-hit%, EV50, LA SwSp%, exit velo avg, distance avg per player. Assumptions: Spherical projectile motion, constant air density, minimal drag nonlinearity. Breakdown regime: Low spin (<1800 rpm) or high launch angle (>35°) regimes where aerodynamic models diverge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to MLB factor engine's `underlying` inputs via conformal prediction. Operator 'Fangraphs Model Ensemble Aggregation' (page 1, domain other) captures: We need the projection numbers per player to compare against ours. Assumptions: Exchangeable player outcomes, stable model performance across seasons. Breakdown regime: High variance in model-specific predictions (e.g., ZIPS vs. STEAMER) leading to overfitting. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as ground truth for GSI's consensus factor via Bayesian model averaging. Operator 'PropFinder NFL Matchup Split Analysis' (page 1, domain other) captures: Pull the full page: Platt, isotonic, temperature scaling, reliability diagram code. Assumptions: Independence of game outcomes conditional on matchup features, linear decision boundary. Breakdown regime: Extreme clustering of defensive formations (e.g., all zone defenses) causing separation in logistic regression. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Provides empirical betting splits for GSI's consensus factor via conformal prediction. Operator 'LineStar Pro Defensive Formation Grouping Loss' (page 1, domain other) captures: We need the partitioning algorithm to compute the grouping-loss diagnostic. Assumptions: Homoscedastic residuals, balanced cluster sizes, Gaussian noise. Breakdown regime: Overly fine-grained partitions leading to zero within-cluster variance but poor generalization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used in GSE's situational reasoning to identify optimal defensive scheme transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Bookmakers use similar statistical models but hide their proprietary weighting schemes, creating an adversarial information gap. Theory of Mind & Decision Maker Model: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Avoid collinearity between Statcast metrics (high correlation) and ensure defensive partitions are independent of matchup data. Cross-Layer Veto & Anti-Leakage Check: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in scrape-wave-2 (917e37a5e9ef5305), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

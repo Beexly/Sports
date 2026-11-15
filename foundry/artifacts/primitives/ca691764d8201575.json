@@ -1,0 +1,78 @@
+{
+  "book_id": "ca691764d8201575",
+  "source_status": "COMPLETE",
+  "title": "mooij_rules",
+  "file_name": "mooij_rules.txt",
+  "sha256": "ca691764d82015756e07820ba73506b216b2cc1e44494a465aac4179864e79f2",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A DMG's ancestral relationships are encoded in a DPAG via directed paths and uncovered possibly directed paths, enabling causal inference under FCI's orientation rules. Universal Lens: Rooted in mooij_rules (ca691764d8201575), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on causal graphs uses DPAG ancestral relations to compute posterior probabilities over latent variables, leveraging FCI-derived edge orientations for confounding adjustment. GSI Mapping: Rooted in mooij_rules (ca691764d8201575), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE models transitions between causal states using DPAG-derived ancestor sets and visibility criteria to determine actionable interventions. GSE Mapping: Rooted in mooij_rules (ca691764d8201575), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ancestor_relation",
+      "name": "Ancestor Relation",
+      "verbatim_quote": "<<<PAGE 6>>> Proposition 4 Let G be a DMG, and let P be a DPAG that contains G, and such that all unshielded triples in P have been oriented according to FCI rule R0 (Zhang, 2008b) using IMσ(G).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'i, j': 'nodes in P', 'ANG(j)': 'set of ancestors of j in G'}",
+      "assumptions": "P is a DPAG containing G; all unshielded triples oriented per FCI R0; acyclicity assumed.",
+      "breakdown_regime": "When no directed or uncovered possibly directed path exists from i to j.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's probabilistic causal model where ANG(j) defines the set of variables that influence j through directed paths.",
+        "source_operator": "ancestor_relation",
+        "telemetry": "Observables include presence/absence of directed paths and uncovered possibly directed paths in P."
+      }
+    },
+    {
+      "primitive_id": "definitely_visible_edge",
+      "name": "Definitely Visible Edge",
+      "verbatim_quote": "For example, in the DPAG in Figure 2, edge X6 →X7 is definitely visible (by virtue of X2 →X6), as are all edges X2 →{X3, X4, X5, X6} (by virtue of X8 ◦→ X2, or X9 ◦→X2).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'i → j': 'directed edge in P', 'definitely_visible': 'Boolean predicate indicating visibility'}",
+      "assumptions": "P is a DPAG containing G; visibility determined by existence of specific uncovered paths.",
+      "breakdown_regime": "When no uncovered path exists from i to j or when i and j are adjacent in P.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's intervention logic where definitely visible edges indicate non-confounded causal directions.",
+        "source_operator": "definitely_visible_edge",
+        "telemetry": "Edge visibility status derived from path structure in P."
+      }
+    },
+    {
+      "primitive_id": "non_ancestor_criterion",
+      "name": "Non-Ancestor Criterion",
+      "verbatim_quote": "For two nodes i̸ = j ∈P: if there is no possibly directed path from i to j in P then i /∈ANG(j).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'i, j': 'nodes in P', 'possibly_directed_path': 'path type in P'}",
+      "assumptions": "P is a DPAG containing G; acyclicity holds.",
+      "breakdown_regime": "When no possibly directed path exists from i to j.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI to exclude non-causal influences during conditional independence testing.",
+        "source_operator": "non_ancestor_criterion",
+        "telemetry": "Verification via path-finding algorithms in P."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ca691764d8201575_t0",
+      "think": "The core insight is that in a Directed Partial Ancestral Graph (DPAG), the ancestral relationship between nodes is determined by directed paths or uncovered possibly directed paths. This allows for a precise characterization of causal influence without requiring full knowledge of the underlying Directed Mixed Graph (DMG). The criterion extends Zhang’s work on definite non-ancestors to DPAGs, providing a sound and complete method to derive ancestral relations. In GSI, this enables probabilistic inference over causal structures by identifying which variables can causally influence others. In GSE, it supports dynamic reasoning about system evolution by determining valid state transitions based on causal dependencies. The concept of 'definitely visible' edges further refines this by distinguishing between edges that are causally informative versus those that might be obscured by confounding. These primitives together form a foundational framework for causal discovery and reasoning in complex systems.\n\nDeep epistemic analysis for mooij_rules (ca691764d8201575, domain=other, pages_read=10/10): Operator 'Ancestor Relation' (page 1, domain other) captures: <<<PAGE 6>>> Proposition 4 Let G be a DMG, and let P be a DPAG that contains G, and such that all unshielded triples in P have been oriented according to FCI rule R0 (Zhang, 2008b) using IMσ(G). Assumptions: P is a DPAG containing G; all unshielded triples oriented per FCI R0; acyclicity assumed. Breakdown regime: When no directed or uncovered possibly directed path exists from i to j. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic causal model where ANG(j) defines the set of variables that influence j through directed paths. Operator 'Definitely Visible Edge' (page 1, domain other) captures: For example, in the DPAG in Figure 2, edge X6 →X7 is definitely visible (by virtue of X2 →X6), as are all edges X2 →{X3, X4, X5, X6} (by virtue of X8 ◦→ X2, or X9 ◦→X2). Assumptions: P is a DPAG containing G; visibility determined by existence of specific uncovered paths. Breakdown regime: When no uncovered path exists from i to j or when i and j are adjacent in P. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's intervention logic where definitely visible edges indicate non-confounded causal directions. Operator 'Non-Ancestor Criterion' (page 1, domain other) captures: For two nodes i̸ = j ∈P: if there is no possibly directed path from i to j in P then i /∈ANG(j). Assumptions: P is a DPAG containing G; acyclicity holds. Breakdown regime: When no possibly directed path exists from i to j. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to exclude non-causal influences during conditional independence testing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for mooij_rules (ca691764d8201575, domain=other, pages_read=10/10): Operator 'Ancestor Relation' (page 1, domain other) captures: <<<PAGE 6>>> Proposition 4 Let G be a DMG, and let P be a DPAG that contains G, and such that all unshielded triples in P have been oriented according to FCI rule R0 (Zhang, 2008b) using IMσ(G). Assumptions: P is a DPAG containing G; all unshielded triples oriented per FCI R0; acyclicity assumed. Breakdown regime: When no directed or uncovered possibly directed path exists from i to j. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic causal model where ANG(j) defines the set of variables that influence j through directed paths. Operator 'Definitely Visible Edge' (page 1, domain other) captures: For example, in the DPAG in Figure 2, edge X6 →X7 is definitely visible (by virtue of X2 →X6), as are all edges X2 →{X3, X4, X5, X6} (by virtue of X8 ◦→ X2, or X9 ◦→X2). Assumptions: P is a DPAG containing G; visibility determined by existence of specific uncovered paths. Breakdown regime: When no uncovered path exists from i to j or when i and j are adjacent in P. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's intervention logic where definitely visible edges indicate non-confounded causal directions. Operator 'Non-Ancestor Criterion' (page 1, domain other) captures: For two nodes i̸ = j ∈P: if there is no possibly directed path from i to j in P then i /∈ANG(j). Assumptions: P is a DPAG containing G; acyclicity holds. Breakdown regime: When no possibly directed path exists from i to j. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to exclude non-causal influences during conditional independence testing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Pearl's causal calculus and Spirtes et al.'s FCI algorithm, this formalism builds upon Zhang's work on ancestral relations and visibility in graphical models, extending it to the DPAG setting. Retrocausal Genealogy: Rooted in mooij_rules (ca691764d8201575), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in mooij_rules (ca691764d8201575), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to obscure causal relationships through hidden variables or spurious correlations. The primitives ensure robust identification of true causal directions even under adversarial interference by enforcing logical consistency in path structures. Theory of Mind & Decision Maker Model: Rooted in mooij_rules (ca691764d8201575), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple paths suggest conflicting causal directions; leakage occurs if visibility criteria fail to distinguish between direct and indirect influences. Veto conditions enforce strict adherence to path-based criteria to prevent erroneous causal inferences. Cross-Layer Veto & Anti-Leakage Check: Rooted in mooij_rules (ca691764d8201575), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

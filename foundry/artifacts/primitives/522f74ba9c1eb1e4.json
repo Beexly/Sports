@@ -1,0 +1,95 @@
+{
+  "book_id": "522f74ba9c1eb1e4",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "522f74ba9c1eb1e4b14001facb4cd9ecd27cdba0b121ca638f5dca41e8de2323",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in README (522f74ba9c1eb1e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in README (522f74ba9c1eb1e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in README (522f74ba9c1eb1e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in README (522f74ba9c1eb1e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in README (522f74ba9c1eb1e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in README (522f74ba9c1eb1e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "historical_backtest_harness",
+      "name": "Deterministic Historical Backtesting Operator",
+      "verbatim_quote": "# Historical backtest harness ## Why this exists The live engine has only ever scored games forward, in real time.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Purely offline, deterministic execution; no network/database access, no environmental dependencies, no clock reads.",
+      "breakdown_regime": "Malformed input rows trigger immediate hard failure via exception, preventing outcome leakage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dualizes the historical replay problem into a pure functional grading pipeline, mirroring the live engine's discrete event processing but operating on pre-settled historical data.",
+        "source_operator": "historical_backtest_harness",
+        "telemetry": "Row parse success rate, error distribution by field, and grading consistency metrics against known historical outcomes."
+      }
+    },
+    {
+      "primitive_id": "historical_game_row_contract",
+      "name": "Historical Game Row Data Contract",
+      "verbatim_quote": "## Row contract One row = one settled game with its closing lines.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each row represents a single, fully observed historical game event with complete closing market information.",
+      "breakdown_regime": "Missing fields or out-of-range values cause immediate rejection, ensuring no synthetic imputation corrupts the backtest.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes the foundational data unit for both GSI's statistical calibration (Bayesian posterior updates) and GSE's state-transition logic (game progression tracking).",
+        "source_operator": "historical_game_row_contract",
+        "telemetry": "Schema compliance ratio, field completeness across data sources, and temporal coverage overlap."
+      }
+    },
+    {
+      "primitive_id": "grading_operator",
+      "name": "Win/Loss/Push Grading Function",
+      "verbatim_quote": "- `grading.ts` — WIN / LOSS / PUSH for spread, total, and moneyline.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Binary outcome classification based on realized game statistics relative to closing market lines.",
+      "breakdown_regime": "Exact equality at threshold triggers push, otherwise win/loss determined by signed difference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Serves as the common evaluation metric for both GSI's conformal prediction intervals and GSE's situational action selection.",
+        "source_operator": "grading_operator",
+        "telemetry": "Grading accuracy on holdout splits, sensitivity to line precision, and consistency with official settlement bodies."
+      }
+    },
+    {
+      "primitive_id": "data_validation_mechanism",
+      "name": "Strict Input Validation Protocol",
+      "verbatim_quote": "It is **not** the live scoring engine — see \"Wiring the real scorer\" for exactly what stands between this harness and `scoring.ts`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All external data sources must be legally obtained, properly licensed, and shaped to match the internal row contract.",
+      "breakdown_regime": "Invalid data formats, missing keys, or value anomalies halt processing entirely, forcing upstream correction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Implements a fail-fast boundary condition that prevents contaminated historical data from biasing either GSI's posterior estimates or GSE's state transitions.",
+        "source_operator": "data_validation_mechanism",
+        "telemetry": "Validation pass rate, error types by source, and drift detection on new data versions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "522f74ba9c1eb1e4_t0",
+      "think": "The historical backtest harness formalizes the duality between real-time scoring (GSE) and offline calibration (GSI). It treats each game as a discrete event with a fixed outcome relative to closing lines, enabling a clean separation of concerns: validation ensures data integrity, grading provides binary feedback, and the contract defines the shared interface. This structure allows for rigorous empirical testing of signals without requiring live market exposure, thereby reducing overfitting and operational risk.\n\nDeep epistemic analysis for README (522f74ba9c1eb1e4, domain=other, pages_read=3/3): Operator 'Deterministic Historical Backtesting Operator' (page 1, domain other) captures: # Historical backtest harness ## Why this exists The live engine has only ever scored games forward, in real time. Assumptions: Purely offline, deterministic execution; no network/database access, no environmental dependencies, no clock reads. Breakdown regime: Malformed input rows trigger immediate hard failure via exception, preventing outcome leakage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dualizes the historical replay problem into a pure functional grading pipeline, mirroring the live engine's discrete event processing but operating on pre-settled historical data. Operator 'Historical Game Row Data Contract' (page 1, domain other) captures: ## Row contract One row = one settled game with its closing lines. Assumptions: Each row represents a single, fully observed historical game event with complete closing market information. Breakdown regime: Missing fields or out-of-range values cause immediate rejection, ensuring no synthetic imputation corrupts the backtest. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes the foundational data unit for both GSI's statistical calibration (Bayesian posterior updates) and GSE's state-transition logic (game progression tracking). Operator 'Win/Loss/Push Grading Function' (page 1, domain other) captures: - `grading.ts` — WIN / LOSS / PUSH for spread, total, and moneyline. Assumptions: Binary outcome classification based on realized game statistics relative to closing market lines. Breakdown regime: Exact equality at threshold triggers push, otherwise win/loss determined by signed difference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as the common evaluation metric for both GSI's conformal prediction intervals and GSE's situational action selection. Operator 'Strict Input Validation Protocol' (page 1, domain other) captures: It is **not** the live scoring engine — see \"Wiring the real scorer\" for exactly what stands between this harness and `scoring.ts`. Assumptions: All external data sources must be legally obtained, properly licensed, and shaped to match the internal row contract. Breakdown regime: Invalid data formats, missing keys, or value anomalies halt processing entirely, forcing upstream correction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Implements a fail-fast boundary condition that prevents contaminated historical data from biasing either GSI's posterior estimates or GSE's state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (522f74ba9c1eb1e4, domain=other, pages_read=3/3): Operator 'Deterministic Historical Backtesting Operator' (page 1, domain other) captures: # Historical backtest harness ## Why this exists The live engine has only ever scored games forward, in real time. Assumptions: Purely offline, deterministic execution; no network/database access, no environmental dependencies, no clock reads. Breakdown regime: Malformed input rows trigger immediate hard failure via exception, preventing outcome leakage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dualizes the historical replay problem into a pure functional grading pipeline, mirroring the live engine's discrete event processing but operating on pre-settled historical data. Operator 'Historical Game Row Data Contract' (page 1, domain other) captures: ## Row contract One row = one settled game with its closing lines. Assumptions: Each row represents a single, fully observed historical game event with complete closing market information. Breakdown regime: Missing fields or out-of-range values cause immediate rejection, ensuring no synthetic imputation corrupts the backtest. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes the foundational data unit for both GSI's statistical calibration (Bayesian posterior updates) and GSE's state-transition logic (game progression tracking). Operator 'Win/Loss/Push Grading Function' (page 1, domain other) captures: - `grading.ts` — WIN / LOSS / PUSH for spread, total, and moneyline. Assumptions: Binary outcome classification based on realized game statistics relative to closing market lines. Breakdown regime: Exact equality at threshold triggers push, otherwise win/loss determined by signed difference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as the common evaluation metric for both GSI's conformal prediction intervals and GSE's situational action selection. Operator 'Strict Input Validation Protocol' (page 1, domain other) captures: It is **not** the live scoring engine — see \"Wiring the real scorer\" for exactly what stands between this harness and `scoring.ts`. Assumptions: All external data sources must be legally obtained, properly licensed, and shaped to match the internal row contract. Breakdown regime: Invalid data formats, missing keys, or value anomalies halt processing entirely, forcing upstream correction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Implements a fail-fast boundary condition that prevents contaminated historical data from biasing either GSI's posterior estimates or GSE's state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in README (522f74ba9c1eb1e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (522f74ba9c1eb1e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Market participants (agents) operate under bounded rationality with asymmetric information. The harness models their collective wisdom as represented by closing lines, treating these as exogenous constraints rather than predictions to be beaten. Theory of Mind & Decision Maker Model: Rooted in README (522f74ba9c1eb1e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents direct reuse of live scoring logic by enforcing strict data lineage; historical data cannot leak future outcomes through hidden state, ensuring valid performance estimates for both GSI's predictive systems and GSE's autonomous agents. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (522f74ba9c1eb1e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

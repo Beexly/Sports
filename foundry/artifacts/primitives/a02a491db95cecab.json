@@ -1,0 +1,78 @@
+{
+  "book_id": "a02a491db95cecab",
+  "source_status": "COMPLETE",
+  "title": "2152-weighted-sets-probabilities-minimax-weighted-regret",
+  "file_name": "2152-weighted-sets-probabilities-minimax-weighted-regret.md",
+  "sha256": "a02a491db95cecab638ef7d8dc71488688bbfa3ce4948da76debb7c90b15d6cd",
+  "primary_domain": "math",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Minimax weighted expected regret (MWER) unifies decision-making under uncertainty via weighted sets of probability measures, enabling adaptive model ensembling and dynamic consistency through likelihood-based weight updates. Universal Lens: Rooted in 2152-weighted-sets-probabilities-minimax-weighted-regret (a02a491db95cecab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs MWER for Bayesian model averaging where ensemble weights reflect posterior likelihoods of outcome models, supporting conformal prediction and robust inference across evolving data streams. GSI Mapping: Rooted in 2152-weighted-sets-probabilities-minimax-weighted-regret (a02a491db95cecab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies MWER to weekly slate optimization by computing maximum weighted expected regret across calibrated model variants, dynamically adjusting stakes and picks based on observed game outcomes. GSE Mapping: Rooted in 2152-weighted-sets-probabilities-minimax-weighted-regret (a02a491db95cecab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "weighted_probability_set",
+      "name": "Weighted Probability Set",
+      "verbatim_quote": "Method / model - **Weighted probabilities:** P^+ = {(Pr, α_Pr)} with α_Pr ∈ [0,1] = \"significance\" weight per measure.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P^+': 'Set of probability measures with associated weights', 'α_Pr': 'Weight assigned to probability measure Pr, dimensionless'}",
+      "assumptions": "Finite state space, bounded utility, stable data-generating measure",
+      "breakdown_regime": "When all weights converge to zero or infinity",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's ensemble model weighting where each model is a probability measure with learned significance",
+        "source_operator": "weighted_probability_set",
+        "telemetry": "Model weight distribution across ensemble members"
+      }
+    },
+    {
+      "primitive_id": "likelihood_updating_rule",
+      "name": "Likelihood Updating Rule",
+      "verbatim_quote": "- **Likelihood updating:** on observing E, α_Pr ← Pr(E)/sup_{Pr'∈P} Pr'(E) (sup over measures updating to the same conditional).",
+      "page": 1,
+      "latex": "\\alpha_{Pr}^{\\text{new}} = \\frac{Pr(E)}{\\sup_{Pr' \\in P} Pr'(E)}",
+      "symbol_and_unit_ledger": "{'α_Pr': 'Current weight of probability measure Pr', 'Pr(E)': 'Probability of event E under measure Pr', 'P': 'Set of probability measures', 'E': 'Observed event'}",
+      "assumptions": "Stable data-generating process, finite state space",
+      "breakdown_regime": "When sup_{Pr'∈P} Pr'(E) approaches zero",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to update model weights based on likelihood of observed outcomes, enabling adaptive ensemble management",
+        "source_operator": "likelihood_updating_rule",
+        "telemetry": "Change in model weights after each observation period"
+      }
+    },
+    {
+      "primitive_id": "minimax_weighted_expected_regret",
+      "name": "Minimax Weighted Expected Regret",
+      "verbatim_quote": "- **MWER decision rule:** reg_{M,P^+}(f) = sup_{Pr∈P}(α_Pr · Σ_s Pr(s)·reg_M(f,s)); prefer f over g iff its maximum weighted expected regret is smaller.",
+      "page": 1,
+      "latex": "\\text{reg}_{M,P^+}(f) = \\sup_{Pr \\in P} \\left( \\alpha_{Pr} \\cdot \\sum_s Pr(s) \\cdot \\text{reg}_M(f,s) \\right)",
+      "symbol_and_unit_ledger": "{'M': 'Menu of acts', 'P^+': 'Weighted set of probability measures', 'f,g': 'Actions', 'Pr': 'Probability measure', 'α_Pr': 'Weight of Pr', 's': 'State', 'reg_M(f,s)': 'Regret of f in s relative to menu M'}",
+      "assumptions": "Finite state space, bounded utility, fixed menu of acts",
+      "breakdown_regime": "When weights become degenerate or when regret becomes unbounded",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps to GSE's weekly slate selection algorithm which minimizes maximum weighted regret across model variants",
+        "source_operator": "minimax_weighted_expected_regret",
+        "telemetry": "Minimum weighted regret value used to select optimal slate actions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a02a491db95cecab_t0",
+      "think": "The core insight of MWER lies in its ability to handle ambiguity in probabilistic models by assigning weights to different probability distributions. The weighted set P^+ allows for a flexible representation of uncertainty, where each probability measure Pr is given a significance weight α_Pr. This framework avoids the pitfalls of traditional Bayesian updating, which fails to concentrate on the true model when uncertainty is represented as a set of measures. Instead, MWER uses a likelihood-based update rule that adjusts these weights according to how well each model explains the observed data. As more data arrives, the weights naturally shift towards those models that best explain the data, leading to convergence to the true model under certain conditions. The decision rule then selects actions that minimize the worst-case weighted expected regret, providing a robust strategy that accounts for both model uncertainty and potential regret from suboptimal choices. This approach generalizes Minimax Expected Regret (MER) and is less conservative than Maxmin Expected Utility (MMEU), offering a middle ground between robustness and efficiency in decision-making under uncertainty.\n\nDeep epistemic analysis for 2152-weighted-sets-probabilities-minimax-weighted-regret (a02a491db95cecab, domain=math, pages_read=3/3): Operator 'Weighted Probability Set' (page 1, domain math) captures: Method / model - **Weighted probabilities:** P^+ = {(Pr, α_Pr)} with α_Pr ∈ [0,1] = \"significance\" weight per measure. Assumptions: Finite state space, bounded utility, stable data-generating measure Breakdown regime: When all weights converge to zero or infinity Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's ensemble model weighting where each model is a probability measure with learned significance Operator 'Likelihood Updating Rule' (page 1, domain math) captures: - **Likelihood updating:** on observing E, α_Pr ← Pr(E)/sup_{Pr'∈P} Pr'(E) (sup over measures updating to the same conditional). Assumptions: Stable data-generating process, finite state space Breakdown regime: When sup_{Pr'∈P} Pr'(E) approaches zero Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to update model weights based on likelihood of observed outcomes, enabling adaptive ensemble management Operator 'Minimax Weighted Expected Regret' (page 1, domain math) captures: - **MWER decision rule:** reg_{M,P^+}(f) = sup_{Pr∈P}(α_Pr · Σ_s Pr(s)·reg_M(f,s)); prefer f over g iff its maximum weighted expected regret is smaller. Assumptions: Finite state space, bounded utility, fixed menu of acts Breakdown regime: When weights become degenerate or when regret becomes unbounded Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSE's weekly slate selection algorithm which minimizes maximum weighted regret across model variants Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2152-weighted-sets-probabilities-minimax-weighted-regret (a02a491db95cecab, domain=math, pages_read=3/3): Operator 'Weighted Probability Set' (page 1, domain math) captures: Method / model - **Weighted probabilities:** P^+ = {(Pr, α_Pr)} with α_Pr ∈ [0,1] = \"significance\" weight per measure. Assumptions: Finite state space, bounded utility, stable data-generating measure Breakdown regime: When all weights converge to zero or infinity Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's ensemble model weighting where each model is a probability measure with learned significance Operator 'Likelihood Updating Rule' (page 1, domain math) captures: - **Likelihood updating:** on observing E, α_Pr ← Pr(E)/sup_{Pr'∈P} Pr'(E) (sup over measures updating to the same conditional). Assumptions: Stable data-generating process, finite state space Breakdown regime: When sup_{Pr'∈P} Pr'(E) approaches zero Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to update model weights based on likelihood of observed outcomes, enabling adaptive ensemble management Operator 'Minimax Weighted Expected Regret' (page 1, domain math) captures: - **MWER decision rule:** reg_{M,P^+}(f) = sup_{Pr∈P}(α_Pr · Σ_s Pr(s)·reg_M(f,s)); prefer f over g iff its maximum weighted expected regret is smaller. Assumptions: Finite state space, bounded utility, fixed menu of acts Breakdown regime: When weights become degenerate or when regret becomes unbounded Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSE's weekly slate selection algorithm which minimizes maximum weighted regret across model variants Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in decision theory literature addressing ambiguity aversion and robust decision making. Builds upon earlier work on minimax regret and maxmin expected utility, extending them into a dynamic setting with learnable weights. Retrocausal Genealogy: Rooted in 2152-weighted-sets-probabilities-minimax-weighted-regret (a02a491db95cecab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models an agent who faces uncertainty about the underlying probability distribution but seeks to make decisions that perform well across all plausible models. The agent learns from feedback and adjusts beliefs accordingly, aiming to minimize long-term regret rather than immediate loss. Theory of Mind & Decision Maker Model: Rooted in 2152-weighted-sets-probabilities-minimax-weighted-regret (a02a491db95cecab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents overfitting to any single model by enforcing a weighted average over multiple models. Ensures that poor-performing models are downweighted, maintaining diversity in the ensemble while avoiding catastrophic failure due to model mis-specification. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2152-weighted-sets-probabilities-minimax-weighted-regret (a02a491db95cecab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

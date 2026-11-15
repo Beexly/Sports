@@ -1,0 +1,78 @@
+{
+  "book_id": "2a3b893969eab207",
+  "source_status": "COMPLETE",
+  "title": "requirements",
+  "file_name": "requirements.txt",
+  "sha256": "2a3b893969eab2077384489f69977621c0af0eee3e4ec87e5cd16ec8f5d4e5b5",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The dependency lock defines a strictly isolated topological vector space. By enforcing `--no-deps`, the system eliminates transitive closure, ensuring the state manifold remains exactly pinned to observed empirical coordinates without unverified algebraic drift.",
+  "gsi_mapping": "GSI treats the pinned versions as an exact posterior distribution over environment states. The explicit rejection of transitive plotting stacks (persim) acts as a conformal veto, pruning high-variance latent features that introduce epistemic noise into the inference engine.",
+  "gse_mapping": "In GSE, this represents a deterministic state-transition operator. The CPU-only constraint and strict pinning collapse the branching factor of deployment configurations, guaranteeing that the situational reasoning layer operates on a fully reproducible, bounded computational substrate.",
+  "primitives": [
+    {
+      "primitive_id": "transitive_closure_veto",
+      "name": "Transitive Closure Veto Operator",
+      "verbatim_quote": "# # `--no-deps` means pip installs EXACTLY the lines below and resolves nothing, so every # transitive package is pinned here explicitly.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "D: Dependency set (dimensionless count); T(D): Transitive closure; \\emptyset: Null resolution set.",
+      "assumptions": "Package manager resolution is disabled; all dependencies must be manually enumerated.",
+      "breakdown_regime": "Fails if a new direct dependency is added without explicitly appending its full transitive closure to the manifest.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to isolating a specific basis in a high-dimensional Hilbert space by projecting out all orthogonal subspaces.",
+        "source_operator": "transitive_closure_veto",
+        "telemetry": "Exact match between installed packages and the requirements.txt line count."
+      }
+    },
+    {
+      "primitive_id": "empirical_state_pin",
+      "name": "Empirical State Pinning Kernel",
+      "verbatim_quote": "# # Every version here is the version actually importable in the environment where # `python3 -m pytest app/tests -q` reports 354 passed (CPython 3.11.15), read back from # importlib.metadata rather than copied from a changelog, and every pin was confirmed to # exist on PyPI.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "V: Version string; E: Execution environment; M: Metadata registry.",
+      "assumptions": "The runtime environment perfectly reflects the metadata registry at the time of inspection.",
+      "breakdown_regime": "Breaks if the underlying CPython ABI changes or if PyPI removes the specified historical artifacts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSI's requirement for grounding probabilistic priors in hard-observed telemetry rather than theoretical documentation.",
+        "source_operator": "empirical_state_pin",
+        "telemetry": "pytest pass rate == 354/354."
+      }
+    },
+    {
+      "primitive_id": "computational_manifold_pruning",
+      "name": "Computational Manifold Pruning",
+      "verbatim_quote": "persim also drags in matplotlib, pillow, fonttools, # contourpy, kiwisolver and friends — tens of MB of plotting stack for a headless API.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S: Storage footprint (Bytes); F: Feature relevance score (0.0 to 1.0).",
+      "assumptions": "Visualization libraries provide zero marginal utility to a headless inference API.",
+      "breakdown_regime": "Invalid if downstream consumers require raw image generation instead of vectorised persistence images.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equivalent to GSE's situational pruning, removing high-cost, low-signal nodes from the tactical decision graph.",
+        "source_operator": "computational_manifold_pruning",
+        "telemetry": "Reduction in Docker image size (MB)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2a3b893969eab207_t0",
+      "think": "The provided text outlines a rigorous methodology for defining a computational boundary condition. In mathematical terms, the software environment is treated as a finite-dimensional vector space where each library is a basis vector. Standard installation procedures (`pip install`) implicitly perform a convex hull operation, pulling in the transitive closure of dependencies. This introduces unquantified degrees of freedom—akin to hidden variables in a physical system—that can cause non-deterministic failures (e.g., the `setuptools` API break mentioned in quote 7). By invoking `--no-deps`, the architect enforces a strict projection operator, collapsing the infinite potential dependency tree down to a precisely defined, finite subspace. This is not merely an optimization; it is an epistemic necessity. The versions are not chosen from theoretical documentation but are extracted via `importlib.metadata` from a live, passing test suite (354 passed). This establishes a ground-truth mapping between the abstract codebase and its concrete execution manifold. Furthermore, the explicit excision of the `persim` plotting stack (quotes 8 and 9) demonstrates a targeted reduction of the state space. Since the application only requires the output of `ripser.ripser()` and performs custom vectorisation, the massive graphical user interface (GUI) dependencies are mathematically orthogonal to the service's objective function. Their removal reduces the computational metric tensor, minimizing latency and attack surface. Finally, the selection of the CPU-only PyTorch wheel (quote 14) acts as a dimensional constraint, preventing the system from attempting to allocate resources for a GPU manifold that does not exist in the deployment topology. Together, these primitives form a closed, self-verifying system where every component's existence is justified by direct operational necessity.\n\nDeep epistemic analysis for requirements (2a3b893969eab207, domain=other, pages_read=2/2): Operator 'Transitive Closure Veto Operator' (page 1, domain other) captures: # # `--no-deps` means pip installs EXACTLY the lines below and resolves nothing, so every # transitive package is pinned here explicitly. Assumptions: Package manager resolution is disabled; all dependencies must be manually enumerated. Breakdown regime: Fails if a new direct dependency is added without explicitly appending its full transitive closure to the manifest. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to isolating a specific basis in a high-dimensional Hilbert space by projecting out all orthogonal subspaces. Operator 'Empirical State Pinning Kernel' (page 1, domain other) captures: # # Every version here is the version actually importable in the environment where # `python3 -m pytest app/tests -q` reports 354 passed (CPython 3.11.15), read back from # importlib.metadata rather than copied from a changelog, and every pin was confirmed to # exist on PyPI. Assumptions: The runtime environment perfectly reflects the metadata registry at the time of inspection. Breakdown regime: Breaks if the underlying CPython ABI changes or if PyPI removes the specified historical artifacts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSI's requirement for grounding probabilistic priors in hard-observed telemetry rather than theoretical documentation. Operator 'Computational Manifold Pruning' (page 1, domain other) captures: persim also drags in matplotlib, pillow, fonttools, # contourpy, kiwisolver and friends — tens of MB of plotting stack for a headless API. Assumptions: Visualization libraries provide zero marginal utility to a headless inference API. Breakdown regime: Invalid if downstream consumers require raw image generation instead of vectorised persistence images. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Equivalent to GSE's situational pruning, removing high-cost, low-signal nodes from the tactical decision graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for requirements (2a3b893969eab207, domain=other, pages_read=2/2): Operator 'Transitive Closure Veto Operator' (page 1, domain other) captures: # # `--no-deps` means pip installs EXACTLY the lines below and resolves nothing, so every # transitive package is pinned here explicitly. Assumptions: Package manager resolution is disabled; all dependencies must be manually enumerated. Breakdown regime: Fails if a new direct dependency is added without explicitly appending its full transitive closure to the manifest. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to isolating a specific basis in a high-dimensional Hilbert space by projecting out all orthogonal subspaces. Operator 'Empirical State Pinning Kernel' (page 1, domain other) captures: # # Every version here is the version actually importable in the environment where # `python3 -m pytest app/tests -q` reports 354 passed (CPython 3.11.15), read back from # importlib.metadata rather than copied from a changelog, and every pin was confirmed to # exist on PyPI. Assumptions: The runtime environment perfectly reflects the metadata registry at the time of inspection. Breakdown regime: Breaks if the underlying CPython ABI changes or if PyPI removes the specified historical artifacts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSI's requirement for grounding probabilistic priors in hard-observed telemetry rather than theoretical documentation. Operator 'Computational Manifold Pruning' (page 1, domain other) captures: persim also drags in matplotlib, pillow, fonttools, # contourpy, kiwisolver and friends — tens of MB of plotting stack for a headless API. Assumptions: Visualization libraries provide zero marginal utility to a headless inference API. Breakdown regime: Invalid if downstream consumers require raw image generation instead of vectorised persistence images. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Equivalent to GSE's situational pruning, removing high-cost, low-signal nodes from the tactical decision graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This approach traces its lineage to the early days of Unix philosophy ('do one thing and do it well') and the mathematical rigor of constructive type theory, where existence proofs require explicit construction. It mirrors the evolution of scientific computing from monolithic Fortran libraries to modern, containerized microservices, reflecting a shift towards declarative, reproducible environments akin to crystallographic lattice definitions.",
+      "theory_of_mind": "The author models the 'opposing agent' as the chaotic, unpredictable nature of the Python Package Index (PyPI) and automated dependency resolvers. They anticipate that future maintainers might lazily add a new library without understanding the cascading transitive effects. By forcing explicit enumeration, the author imposes a cognitive tax on modification, ensuring that any actor changing the system must consciously acknowledge and accept the entire resulting state transition.",
+      "cross_layer_veto": "A critical veto condition exists if the underlying operating system or base Docker image alters the shared C-libraries (e.g., glibc) required by the pinned wheels. Additionally, if the `ripser` library undergoes a breaking API change that invalidates the custom vectorisation logic in `app/models/tda.py`, the entire pinned manifold collapses. The system relies heavily on the assumption that the tested CPython 3.11.15 ABI remains stable across the deployment lifecycle."
+    }
+  ]
+}

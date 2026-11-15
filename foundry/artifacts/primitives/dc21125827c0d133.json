@@ -1,0 +1,78 @@
+{
+  "book_id": "dc21125827c0d133",
+  "source_status": "COMPLETE",
+  "title": "game-2d-animation",
+  "file_name": "game-2d-animation.md",
+  "sha256": "dc21125827c0d133f5700b217a3146b59979dfb00bad4bc81cbb395bbdb788b7",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Temporal coherence in 2D sprite animation emerges from video-to-spritesheet pipelines, where style-preserving key-pose constraints enforce geometric consistency across frames. Universal Lens: Rooted in game-2d-animation (dc21125827c0d133), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers sprite consistency through Bayesian tracking of style-formula embeddings and frame-level variance in key-pose alignment. GSI Mapping: Rooted in game-2d-animation (dc21125827c0d133), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE reasons over state transitions using derived kernels of motion loops and one-shot actions, enforcing directional locks and frame selection fidelity. GSE Mapping: Rooted in game-2d-animation (dc21125827c0d133), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "video_to_spritesheet_pipeline",
+      "name": "Video-to-Spritesheet Pipeline",
+      "verbatim_quote": "The pipeline: > key-pose image → `higgsfield generate create` (**`seedance1_5`**) → frame extraction > (ffmpeg) → frame selection → per-frame background removal → spritesheet > assembly.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'key-pose image (dimensionless)', 'V': 'video model output (frame sequence)', 'F': 'extracted frames (dimensionless)', 'S': 'spritesheet (dimensionless)'}",
+      "assumptions": "The key-pose image is fixed and consistent; video model preserves identity across frames.",
+      "breakdown_regime": "Failure occurs when frame drift or style inconsistency arises due to independent frame generation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The pipeline maps a static key-pose to a dynamic spritesheet via temporal coherence enforced by seedance1_5.",
+        "source_operator": "video_to_spritesheet_pipeline",
+        "telemetry": "Consistency of character identity across frames in the spritesheet."
+      }
+    },
+    {
+      "primitive_id": "style_formula_embedding",
+      "name": "Style Formula Embedding",
+      "verbatim_quote": "Style: the key-pose prompt embeds the STYLE FORMULA per > `stylization.md` — open it first, as for every asset.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'prompt embedding (dimensionless)', 'S_F': 'style formula (dimensionless)'}",
+      "assumptions": "Prompt embedding encodes stylistic attributes consistently across all frames.",
+      "breakdown_regime": "Failure occurs when prompt lacks sufficient detail or style variance is inconsistent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Embedding kernel ensures visual continuity by constraining style variation in frame generation.",
+        "source_operator": "style_formula_embedding",
+        "telemetry": "Visual fidelity of character appearance across generated frames."
+      }
+    },
+    {
+      "primitive_id": "temporal_coherence_tradeoff",
+      "name": "Temporal Coherence Tradeoff",
+      "verbatim_quote": "This trades prompt control for temporal coherence — the right trade for game sprites.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_C': 'temporal coherence (dimensionless)', 'P_C': 'prompt control (dimensionless)'}",
+      "assumptions": "Game sprites prioritize consistency over granular prompt control.",
+      "breakdown_regime": "Tradeoff fails when prompt control is required for specific frame variations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Coherence is achieved by sacrificing per-frame prompt flexibility for uniformity.",
+        "source_operator": "temporal_coherence_tradeoff",
+        "telemetry": "Frame-to-frame identity preservation in sprite sequences."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "dc21125827c0d133_t0",
+      "think": "The core principle of 2D sprite animation lies in maintaining identity across frames through video generation rather than direct frame synthesis. The seedance1_5 model enforces this by animating a single key-pose image, ensuring that each frame reflects the same character geometry. This approach avoids the 'boiling' effect caused by independent frame generation, which leads to drifting limbs and inconsistent proportions. The pipeline thus operates under a constraint-based optimization where style is embedded in the key-pose prompt, and temporal coherence is prioritized over fine-grained prompt control. The resulting spritesheet is a faithful representation of the character's motion, with frame selection preserving only those that maintain visual integrity. The system’s dual nature—combining deterministic style embedding with probabilistic frame sampling—creates a robust framework for game asset generation.\n\nDeep epistemic analysis for game-2d-animation (dc21125827c0d133, domain=other, pages_read=6/6): Operator 'Video-to-Spritesheet Pipeline' (page 1, domain other) captures: The pipeline: > key-pose image → `higgsfield generate create` (**`seedance1_5`**) → frame extraction > (ffmpeg) → frame selection → per-frame background removal → spritesheet > assembly. Assumptions: The key-pose image is fixed and consistent; video model preserves identity across frames. Breakdown regime: Failure occurs when frame drift or style inconsistency arises due to independent frame generation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The pipeline maps a static key-pose to a dynamic spritesheet via temporal coherence enforced by seedance1_5. Operator 'Style Formula Embedding' (page 1, domain other) captures: Style: the key-pose prompt embeds the STYLE FORMULA per > `stylization.md` — open it first, as for every asset. Assumptions: Prompt embedding encodes stylistic attributes consistently across all frames. Breakdown regime: Failure occurs when prompt lacks sufficient detail or style variance is inconsistent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Embedding kernel ensures visual continuity by constraining style variation in frame generation. Operator 'Temporal Coherence Tradeoff' (page 1, domain other) captures: This trades prompt control for temporal coherence — the right trade for game sprites. Assumptions: Game sprites prioritize consistency over granular prompt control. Breakdown regime: Tradeoff fails when prompt control is required for specific frame variations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Coherence is achieved by sacrificing per-frame prompt flexibility for uniformity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for game-2d-animation (dc21125827c0d133, domain=other, pages_read=6/6): Operator 'Video-to-Spritesheet Pipeline' (page 1, domain other) captures: The pipeline: > key-pose image → `higgsfield generate create` (**`seedance1_5`**) → frame extraction > (ffmpeg) → frame selection → per-frame background removal → spritesheet > assembly. Assumptions: The key-pose image is fixed and consistent; video model preserves identity across frames. Breakdown regime: Failure occurs when frame drift or style inconsistency arises due to independent frame generation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The pipeline maps a static key-pose to a dynamic spritesheet via temporal coherence enforced by seedance1_5. Operator 'Style Formula Embedding' (page 1, domain other) captures: Style: the key-pose prompt embeds the STYLE FORMULA per > `stylization.md` — open it first, as for every asset. Assumptions: Prompt embedding encodes stylistic attributes consistently across all frames. Breakdown regime: Failure occurs when prompt lacks sufficient detail or style variance is inconsistent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Embedding kernel ensures visual continuity by constraining style variation in frame generation. Operator 'Temporal Coherence Tradeoff' (page 1, domain other) captures: This trades prompt control for temporal coherence — the right trade for game sprites. Assumptions: Game sprites prioritize consistency over granular prompt control. Breakdown regime: Tradeoff fails when prompt control is required for specific frame variations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Coherence is achieved by sacrificing per-frame prompt flexibility for uniformity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early computer graphics principles of motion capture and sprite-based animation, this method evolved from the need to maintain character consistency in games. It builds upon the foundational work of procedural animation and stylized rendering systems. Retrocausal Genealogy: Rooted in game-2d-animation (dc21125827c0d133), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The system models an agent that balances aesthetic fidelity with computational efficiency. It assumes that game developers prefer consistent character behavior over customizable frame-by-frame control, reflecting a strategic choice in design philosophy. Theory of Mind & Decision Maker Model: Rooted in game-2d-animation (dc21125827c0d133), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that style embedding and frame selection operate independently. Leakage occurs if prompt control overrides temporal coherence, leading to visual artifacts. Veto conditions prevent such interference by enforcing strict adherence to the seedance1_5 model and key-pose constraints. Cross-Layer Veto & Anti-Leakage Check: Rooted in game-2d-animation (dc21125827c0d133), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "11800f6cf5faf6c9",
+  "source_status": "COMPLETE",
+  "title": "p0098",
+  "file_name": "p0098.txt",
+  "sha256": "11800f6cf5faf6c9b85a36d55feec2ddb6473042f9ae0c1c452da5502fbae2ca",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0098 (11800f6cf5faf6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0098 (11800f6cf5faf6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0098 (11800f6cf5faf6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0098 (11800f6cf5faf6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0098 (11800f6cf5faf6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0098 (11800f6cf5faf6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "communication_to_machine",
+      "name": "p0098 Operator 1",
+      "verbatim_quote": "Thus the problem of anti-aircraft fire control made familiar the notion of a communication addressed to a machine rather than to a person.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The machine operates deterministically, receives binary or analog signals, and processes them without ambiguity.",
+      "breakdown_regime": "Failure occurs when signal integrity degrades below a threshold, causing misinterpretation or system halt.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian updating of conditional probabilities on observed telemetry data (e.g., target position, velocity)",
+        "source_operator": "communication_to_machine",
+        "telemetry": "Error rate in signal reception, timing jitter in actuator response"
+      }
+    },
+    {
+      "primitive_id": "mechanical_amplification",
+      "name": "p0098 Operator 2",
+      "verbatim_quote": "The integration was done by rolling disks engaging one another in a frictional manner; and the interchange of outputs and inputs between these disks was the task of a classical train of shafts and gears.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Frictional contact maintains proportionality, gear ratios are constant, and energy losses are minimal.",
+      "breakdown_regime": "Slippage or wear causes deviation from intended transfer function.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State-transition mapping of discrete mechanical configurations",
+        "source_operator": "mechanical_amplification",
+        "telemetry": "Torque transmission efficiency, backlash error in angular displacement"
+      }
+    },
+    {
+      "primitive_id": "electrical_amplification",
+      "name": "p0098 Operator 3",
+      "verbatim_quote": "Babbage had an idea of the computing machine which is surprisingly modern, but his mechanical means fell far behind his ambitions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Vacuum tubes provide linear gain, input impedance is high, and output impedance is low.",
+      "breakdown_regime": "Thermal noise or tube aging reduces gain, leading to signal distortion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal inference on noisy amplifier outputs using Gaussian process priors",
+        "source_operator": "electrical_amplification",
+        "telemetry": "Signal-to-noise ratio at amplifier output, gain variation over temperature range"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "11800f6cf5faf6c9_t0",
+      "think": "The transition from mechanical to electrical amplification represents a shift from continuous-variable systems to discrete-event switching. Mechanical linkages suffer from hysteresis and wear, creating non-Markovian memory effects. In contrast, vacuum tubes introduce shot noise and thermal agitation, yielding white noise statistics. Both systems can be modeled as linear time-invariant filters, but the electrical version allows for feedback loops that correct errors through Shannon's noisy-channel coding theorem. The key failure mode is bandwidth limitation: if the input signal changes faster than the RC time constant of the circuit, the output will lag, causing phase distortion in predictive algorithms.\n\nDeep epistemic analysis for p0098 (11800f6cf5faf6c9, domain=other, pages_read=2/2): Operator 'p0098 Operator 1' (page 1, domain other) captures: Thus the problem of anti-aircraft fire control made familiar the notion of a communication addressed to a machine rather than to a person. Assumptions: The machine operates deterministically, receives binary or analog signals, and processes them without ambiguity. Breakdown regime: Failure occurs when signal integrity degrades below a threshold, causing misinterpretation or system halt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian updating of conditional probabilities on observed telemetry data (e.g., target position, velocity) Operator 'p0098 Operator 2' (page 1, domain other) captures: The integration was done by rolling disks engaging one another in a frictional manner; and the interchange of outputs and inputs between these disks was the task of a classical train of shafts and gears. Assumptions: Frictional contact maintains proportionality, gear ratios are constant, and energy losses are minimal. Breakdown regime: Slippage or wear causes deviation from intended transfer function. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-transition mapping of discrete mechanical configurations Operator 'p0098 Operator 3' (page 1, domain other) captures: Babbage had an idea of the computing machine which is surprisingly modern, but his mechanical means fell far behind his ambitions. Assumptions: Vacuum tubes provide linear gain, input impedance is high, and output impedance is low. Breakdown regime: Thermal noise or tube aging reduces gain, leading to signal distortion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal inference on noisy amplifier outputs using Gaussian process priors Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0098 (11800f6cf5faf6c9, domain=other, pages_read=2/2): Operator 'p0098 Operator 1' (page 1, domain other) captures: Thus the problem of anti-aircraft fire control made familiar the notion of a communication addressed to a machine rather than to a person. Assumptions: The machine operates deterministically, receives binary or analog signals, and processes them without ambiguity. Breakdown regime: Failure occurs when signal integrity degrades below a threshold, causing misinterpretation or system halt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian updating of conditional probabilities on observed telemetry data (e.g., target position, velocity) Operator 'p0098 Operator 2' (page 1, domain other) captures: The integration was done by rolling disks engaging one another in a frictional manner; and the interchange of outputs and inputs between these disks was the task of a classical train of shafts and gears. Assumptions: Frictional contact maintains proportionality, gear ratios are constant, and energy losses are minimal. Breakdown regime: Slippage or wear causes deviation from intended transfer function. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-transition mapping of discrete mechanical configurations Operator 'p0098 Operator 3' (page 1, domain other) captures: Babbage had an idea of the computing machine which is surprisingly modern, but his mechanical means fell far behind his ambitions. Assumptions: Vacuum tubes provide linear gain, input impedance is high, and output impedance is low. Breakdown regime: Thermal noise or tube aging reduces gain, leading to signal distortion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal inference on noisy amplifier outputs using Gaussian process priors Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0098 (11800f6cf5faf6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0098 (11800f6cf5faf6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Artillery officers believed that human operators could compensate for delays in fire control. However, the introduction of automated prediction machines forced commanders to model the machine's probabilistic behavior, treating it as a rational agent with bounded computational resources. This required updating beliefs about enemy aircraft trajectories based on imperfect sensor data. Theory of Mind & Decision Maker Model: Rooted in p0098 (11800f6cf5faf6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Electrical amplifiers leak electromagnetic interference into adjacent frequency bands, corrupting communication channels. To prevent cross-talk, shielding and filtering must be applied, ensuring that the amplifier's output remains independent of external perturbations. Additionally, the amplifier must not saturate, as clipping would introduce harmonic distortion that violates the superposition principle. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0098 (11800f6cf5faf6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

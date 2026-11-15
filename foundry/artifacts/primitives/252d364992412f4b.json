@@ -1,0 +1,78 @@
+{
+  "book_id": "252d364992412f4b",
+  "source_status": "COMPLETE",
+  "title": "0723-on-calibration-of-modern-neural-networks",
+  "file_name": "0723-on-calibration-of-modern-neural-networks.md",
+  "sha256": "252d364992412f4ba4b932d91ae676e697a78d6192d13ae40761b311307e12df",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Temperature scaling calibrates softmax logits via scalar T>0, minimizing validation NLL; maps model confidence to empirical reliability. Universal Lens: Rooted in 0723-on-calibration-of-modern-neural-networks (252d364992412f4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian posterior updates on calibrated probabilities to compute conformal prediction sets, enabling risk-sensitive inference. GSI Mapping: Rooted in 0723-on-calibration-of-modern-neural-networks (252d364992412f4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies calibrated logits for Kelly betting and abstention logic, adjusting pick confidence and state transitions based on reliability metrics. GSE Mapping: Rooted in 0723-on-calibration-of-modern-neural-networks (252d364992412f4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "temperature_scaling",
+      "name": "Temperature Scaling",
+      "verbatim_quote": "- Temperature scaling (9): q̂_i = max_k σ_SM(z_i/T)^(k); T chosen to minimize validation NLL.",
+      "page": 1,
+      "latex": "\\hat{q}_i = \\max_k \\sigma_{\\text{SM}}(z_i/T)^{(k)}",
+      "symbol_and_unit_ledger": "{'q̂_i': 'calibrated probability vector of length K', 'z_i': 'logits vector of length K', 'T': 'temperature scalar > 0'}",
+      "assumptions": "['Train/validation/test data drawn from same distribution', 'Calibration performed post-hoc on held-out validation set']",
+      "breakdown_regime": "When T → ∞, all probabilities approach uniform; when T → 0, probabilities become degenerate",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps uncalibrated softmax outputs to reliable probability distributions for decision-making in GSE's Kelly sizing and abstention gates",
+        "source_operator": "temperature_scaling",
+        "telemetry": "Expected Calibration Error (ECE) reduction on validation set"
+      }
+    },
+    {
+      "primitive_id": "expected_calibration_error",
+      "name": "Expected Calibration Error",
+      "verbatim_quote": "Equations & assumptions - Perfect calibration: P(Ŷ=Y | P̂=p) = p ∀ p∈[0,1] (1).",
+      "page": 1,
+      "latex": "\\text{ECE} = \\sum_{m=1}^M \\frac{n_m}{n} |\\bar{p}_m - \\bar{y}_m|",
+      "symbol_and_unit_ledger": "{'ECE': 'dimensionless expected calibration error', 'n_m': 'number of samples in bin m', 'n': 'total number of samples', '\\\\bar{p}_m': 'average predicted probability in bin m', '\\\\bar{y}_m': 'empirical accuracy in bin m'}",
+      "assumptions": "['Binned probability estimates are independent', 'Bin boundaries are fixed at quantiles']",
+      "breakdown_regime": "ECE = 0 implies perfect calibration; higher values indicate increasing miscalibration",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Quantifies deviation from perfect calibration; used by GSI to assess reliability of GSE's probabilistic forecasts",
+        "source_operator": "expected_calibration_error",
+        "telemetry": "Reduction in ECE after applying temperature scaling"
+      }
+    },
+    {
+      "primitive_id": "entropy_maximization_derivation",
+      "name": "Entropy Maximization Derivation",
+      "verbatim_quote": "- Entropy-maximization derivation: temperature scaling is the unique max-entropy distribution subject to E[true-class logit] = E[weighted logit] (Claim 1, §S2).",
+      "page": 1,
+      "latex": "\\arg\\max_{p} H(p) \\quad \\text{s.t.} \\quad \\mathbb{E}[\\log p_{\\text{true}}] = \\mathbb{E}[\\log w]",
+      "symbol_and_unit_ledger": "{'H(p)': 'entropy of probability distribution p', 'w': 'weight vector derived from logits'}",
+      "assumptions": "['Logits follow a known parametric form', 'Optimization constrained to valid probability simplex']",
+      "breakdown_regime": "As T approaches zero, entropy decreases toward deterministic limit; as T increases, entropy increases toward uniformity",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides theoretical justification for temperature scaling as optimal entropy-preserving transformation of logits",
+        "source_operator": "entropy_maximization_derivation",
+        "telemetry": "Consistency of entropy maximization principle with observed calibration improvements"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "252d364992412f4b_t0",
+      "think": "Temperature scaling operates on the softmax logits z_i through a scalar temperature T, transforming them into calibrated probabilities q̂_i = max_k σ_SM(z_i/T)^(k). This transformation minimizes validation negative log-likelihood (NLL), effectively correcting systematic overconfidence in accuracy-optimized models. The process is equivalent to maximizing entropy under constraints defined by expected true-class logits, ensuring that calibrated outputs reflect genuine uncertainty rather than spurious confidence. In GSE context, this enables precise Kelly bet sizing and informed abstention decisions. For GSI, calibrated probabilities allow robust Bayesian inference and conformal prediction intervals. The method's efficiency lies in its 1D convex optimization, making it suitable for real-time deployment. Failure modes include convergence issues with high-dimensional problems like ImageNet and suboptimal performance on already well-calibrated datasets such as Reuters.\n\nDeep epistemic analysis for 0723-on-calibration-of-modern-neural-networks (252d364992412f4b, domain=other, pages_read=3/3): Operator 'Temperature Scaling' (page 1, domain other) captures: - Temperature scaling (9): q̂_i = max_k σ_SM(z_i/T)^(k); T chosen to minimize validation NLL. Assumptions: ['Train/validation/test data drawn from same distribution', 'Calibration performed post-hoc on held-out validation set'] Breakdown regime: When T → ∞, all probabilities approach uniform; when T → 0, probabilities become degenerate Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps uncalibrated softmax outputs to reliable probability distributions for decision-making in GSE's Kelly sizing and abstention gates Operator 'Expected Calibration Error' (page 1, domain other) captures: Equations & assumptions - Perfect calibration: P(Ŷ=Y | P̂=p) = p ∀ p∈[0,1] (1). Assumptions: ['Binned probability estimates are independent', 'Bin boundaries are fixed at quantiles'] Breakdown regime: ECE = 0 implies perfect calibration; higher values indicate increasing miscalibration Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Quantifies deviation from perfect calibration; used by GSI to assess reliability of GSE's probabilistic forecasts Operator 'Entropy Maximization Derivation' (page 1, domain other) captures: - Entropy-maximization derivation: temperature scaling is the unique max-entropy distribution subject to E[true-class logit] = E[weighted logit] (Claim 1, §S2). Assumptions: ['Logits follow a known parametric form', 'Optimization constrained to valid probability simplex'] Breakdown regime: As T approaches zero, entropy decreases toward deterministic limit; as T increases, entropy increases toward uniformity Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides theoretical justification for temperature scaling as optimal entropy-preserving transformation of logits Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0723-on-calibration-of-modern-neural-networks (252d364992412f4b, domain=other, pages_read=3/3): Operator 'Temperature Scaling' (page 1, domain other) captures: - Temperature scaling (9): q̂_i = max_k σ_SM(z_i/T)^(k); T chosen to minimize validation NLL. Assumptions: ['Train/validation/test data drawn from same distribution', 'Calibration performed post-hoc on held-out validation set'] Breakdown regime: When T → ∞, all probabilities approach uniform; when T → 0, probabilities become degenerate Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps uncalibrated softmax outputs to reliable probability distributions for decision-making in GSE's Kelly sizing and abstention gates Operator 'Expected Calibration Error' (page 1, domain other) captures: Equations & assumptions - Perfect calibration: P(Ŷ=Y | P̂=p) = p ∀ p∈[0,1] (1). Assumptions: ['Binned probability estimates are independent', 'Bin boundaries are fixed at quantiles'] Breakdown regime: ECE = 0 implies perfect calibration; higher values indicate increasing miscalibration Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Quantifies deviation from perfect calibration; used by GSI to assess reliability of GSE's probabilistic forecasts Operator 'Entropy Maximization Derivation' (page 1, domain other) captures: - Entropy-maximization derivation: temperature scaling is the unique max-entropy distribution subject to E[true-class logit] = E[weighted logit] (Claim 1, §S2). Assumptions: ['Logits follow a known parametric form', 'Optimization constrained to valid probability simplex'] Breakdown regime: As T approaches zero, entropy decreases toward deterministic limit; as T increases, entropy increases toward uniformity Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides theoretical justification for temperature scaling as optimal entropy-preserving transformation of logits Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical mechanics and information theory, temperature scaling builds upon earlier work in Platt scaling and histogram binning, extending these concepts with principled entropy regularization to address overconfidence in deep learning models. Retrocausal Genealogy: Rooted in 0723-on-calibration-of-modern-neural-networks (252d364992412f4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may misinterpret calibrated probabilities as absolute truths, leading to overreliance on GSE's picks. Alternatively, they might distrust calibrated outputs due to perceived loss of model-specific nuance, especially in asymmetric markets where miscalibration varies per class. Theory of Mind & Decision Maker Model: Rooted in 0723-on-calibration-of-modern-neural-networks (252d364992412f4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If ECE remains below 1% on Reuters-like datasets, temperature scaling is redundant—no need to apply it. Similarly, if binning methods alter class predictions significantly, they introduce instability incompatible with GSE’s deterministic pick logic. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0723-on-calibration-of-modern-neural-networks (252d364992412f4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

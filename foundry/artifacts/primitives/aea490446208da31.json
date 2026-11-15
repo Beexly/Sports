@@ -1,0 +1,78 @@
+{
+  "book_id": "aea490446208da31",
+  "source_status": "COMPLETE",
+  "title": "1199-lasso-ridge-xgboost-deep-lstm-tennis",
+  "file_name": "1199-lasso-ridge-xgboost-deep-lstm-tennis.md",
+  "sha256": "aea490446208da31b94b522c5fc80aa7cea309423b3380628493c978d6d90968",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The paper introduces WINJUD, a sliding-window point-victor counting system that applies a decay factor β to recent performance, visualized as heatmaps. It also proposes a dual-network Deep_LSTM to predict within-match fluctuations using six kinematic and momentum features, achieving 75% accuracy on a small, unverified Wimbledon dataset.",
+  "gsi_mapping": "In GSI, WINJUD maps to a dynamic, exponentially-weighted skill update rule for Bayesian posterior recalibration, where β governs the informativeness of new evidence. The Deep_LSTM can be interpreted as a conformal predictive system generating fluctuation intervals for match outcome probabilities, useful for sizing and hedging.",
+  "gse_mapping": "For GSE, WINJUD implements a state-transition operator that updates player latent states based on recent performance, while the Deep_LSTM models high-dimensional Markovian transitions between match contexts, enabling situational reasoning for tactical adaptation.",
+  "primitives": [
+    {
+      "primitive_id": "winjud",
+      "name": "WINJUD",
+      "verbatim_quote": "# [1199] Lasso–Ridge-based XGBoost and Deep_LSTM Help Tennis Players Perform better (arXiv:2405.07030v1) **Citation:** Zhai, W.",
+      "page": 1,
+      "latex": "score(t) = \\sum_{i=1}^{k} w_i \\cdot victor_i \\cdot \\beta^{t-i}",
+      "symbol_and_unit_ledger": "{'w_i': 'weight factor (dimensionless)', 'victor_i': 'binary point victory indicator (dimensionless)', 'β': 'decay factor (dimensionless)', 'k': 'sliding window length (dimensionless)'}",
+      "assumptions": "Exponential decay of past performance, fixed window size, binary outcome assumption.",
+      "breakdown_regime": "Singularity occurs when β approaches 1 (overfitting to recent data) or when k becomes too large (computational intractability).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "WINJUD is mathematically equivalent to an exponentially weighted moving average (EWMA) filter, which is a kernel smoother. In GSE, it serves as a state-transition kernel for updating player skill matrices; in GSI, it acts as a likelihood kernel for conformal prediction.",
+        "source_operator": "winjud",
+        "telemetry": "Tracking error variance of predicted versus actual match outcomes as a function of β."
+      }
+    },
+    {
+      "primitive_id": "deep_lstm",
+      "name": "Deep_LSTM",
+      "verbatim_quote": "# [1199] Lasso–Ridge-based XGBoost and Deep_LSTM Help Tennis Players Perform better (arXiv:2405.07030v1) **Citation:** Zhai, W.",
+      "page": 1,
+      "latex": "output = f_{LSTM}(x_t) + g_{Dense}(x_t)",
+      "symbol_and_unit_ledger": "{'f_{LSTM}': 'LSTM network output (dimensionless)', 'g_{Dense}': 'Dense network output (dimensionless)', 'x_t': 'input feature vector at time t (dimensionless)'}",
+      "assumptions": "Local temporal stationarity, fixed input dimensionality, additive network contributions.",
+      "breakdown_regime": "Vanishing/exploding gradients lead to collapse when sequence length exceeds memory capacity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Deep_LSTM is a derived kernel that approximates the transition density of a hidden Markov process. In GSE, it models state-action-value functions; in GSI, it generates predictive distributions for fluctuation bounds.",
+        "source_operator": "deep_lstm",
+        "telemetry": "Mean squared error on hold-out validation sets as a measure of generalization performance."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "1199-lasso-ridge-xgboost-deep-lstm-tennis Grounded Principle 3",
+      "verbatim_quote": "Research question Can \"momentum\" (strategic vs psychological) in tennis be quantified and used to predict match outcomes and within-match fluctuations?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "aea490446208da31_t0",
+      "think": "The core failure mode is overfitting to idiosyncratic Wimbledon patterns due to a tiny, unverified dataset. The proposed momentum factors lack causal justification and may capture noise rather than true skill dynamics. The Deep_LSTM's architecture is standard but insufficiently regularized, risking memorization. Transferability to NFL or other sports requires domain adaptation, which is not demonstrated. The paper lacks empirical diagnostics for calibration and sharpness, undermining practical utility.\n\nDeep epistemic analysis for 1199-lasso-ridge-xgboost-deep-lstm-tennis (aea490446208da31, domain=other, pages_read=3/3): Operator 'WINJUD' (page 1, domain other) captures: # [1199] Lasso–Ridge-based XGBoost and Deep_LSTM Help Tennis Players Perform better (arXiv:2405.07030v1) **Citation:** Zhai, W. Assumptions: Exponential decay of past performance, fixed window size, binary outcome assumption. Breakdown regime: Singularity occurs when β approaches 1 (overfitting to recent data) or when k becomes too large (computational intractability). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): WINJUD is mathematically equivalent to an exponentially weighted moving average (EWMA) filter, which is a kernel smoother. In GSE, it serves as a state-transition kernel for updating player skill matrices; in GSI, it acts as a likelihood kernel for conformal prediction. Operator 'Deep_LSTM' (page 1, domain other) captures: # [1199] Lasso–Ridge-based XGBoost and Deep_LSTM Help Tennis Players Perform better (arXiv:2405.07030v1) **Citation:** Zhai, W. Assumptions: Local temporal stationarity, fixed input dimensionality, additive network contributions. Breakdown regime: Vanishing/exploding gradients lead to collapse when sequence length exceeds memory capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The Deep_LSTM is a derived kernel that approximates the transition density of a hidden Markov process. In GSE, it models state-action-value functions; in GSI, it generates predictive distributions for fluctuation bounds. Operator '1199-lasso-ridge-xgboost-deep-lstm-tennis Grounded Principle 3' (page 1, domain other) captures: Research question Can \"momentum\" (strategic vs psychological) in tennis be quantified and used to predict match outcomes and within-match fluctuations? Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1199-lasso-ridge-xgboost-deep-lstm-tennis (aea490446208da31, domain=other, pages_read=3/3): Operator 'WINJUD' (page 1, domain other) captures: # [1199] Lasso–Ridge-based XGBoost and Deep_LSTM Help Tennis Players Perform better (arXiv:2405.07030v1) **Citation:** Zhai, W. Assumptions: Exponential decay of past performance, fixed window size, binary outcome assumption. Breakdown regime: Singularity occurs when β approaches 1 (overfitting to recent data) or when k becomes too large (computational intractability). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): WINJUD is mathematically equivalent to an exponentially weighted moving average (EWMA) filter, which is a kernel smoother. In GSE, it serves as a state-transition kernel for updating player skill matrices; in GSI, it acts as a likelihood kernel for conformal prediction. Operator 'Deep_LSTM' (page 1, domain other) captures: # [1199] Lasso–Ridge-based XGBoost and Deep_LSTM Help Tennis Players Perform better (arXiv:2405.07030v1) **Citation:** Zhai, W. Assumptions: Local temporal stationarity, fixed input dimensionality, additive network contributions. Breakdown regime: Vanishing/exploding gradients lead to collapse when sequence length exceeds memory capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The Deep_LSTM is a derived kernel that approximates the transition density of a hidden Markov process. In GSE, it models state-action-value functions; in GSI, it generates predictive distributions for fluctuation bounds. Operator '1199-lasso-ridge-xgboost-deep-lstm-tennis Grounded Principle 3' (page 1, domain other) captures: Research question Can \"momentum\" (strategic vs psychological) in tennis be quantified and used to predict match outcomes and within-match fluctuations? Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This work builds on classical time-series forecasting (ARIMA) and modern deep learning (LSTM). It extends prior sport-specific applications of machine learning by incorporating ad-hoc behavioral heuristics. However, it falls short of contemporary best practices in out-of-sample testing and uncertainty quantification. Retrocausal Genealogy: Rooted in 1199-lasso-ridge-xgboost-deep-lstm-tennis (aea490446208da31), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (opponents) adapt to exploit any predictable pattern. The model assumes opponents are static or follow simple heuristics, ignoring strategic response. For NFL, this translates to bookmakers adjusting lines based on perceived model biases, eroding edge. Theory of Mind & Decision Maker Model: Rooted in 1199-lasso-ridge-xgboost-deep-lstm-tennis (aea490446208da31), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions require features to be informative about distinct aspects of the game (e.g., momentum vs. kinematics). Leakage occurs if future information (e.g., opponent's next move) leaks into training data, inflating apparent accuracy. Cross-layer veto demands that the Deep_LSTM's hidden states do not contain spurious correlations with spectator effects or venue bias. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1199-lasso-ridge-xgboost-deep-lstm-tennis (aea490446208da31), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

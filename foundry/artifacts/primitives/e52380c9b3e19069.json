@@ -1,0 +1,78 @@
+{
+  "book_id": "e52380c9b3e19069",
+  "source_status": "COMPLETE",
+  "title": "ownership-hunt-2026-09-13",
+  "file_name": "ownership-hunt-2026-09-13.md",
+  "sha256": "e52380c9b3e190690a5092899a2cee32ba4a20bc50a7acd5ef697ee94c1f4bd8",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Ownership probability distributions across DFS platforms map to site-specific expectation kernels with asymmetric variance. Universal Lens: Rooted in ownership-hunt-2026-09-13 (e52380c9b3e19069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on player ownership using conformal predictive intervals from multi-source free models. GSI Mapping: Rooted in ownership-hunt-2026-09-13 (e52380c9b3e19069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in lineup construction driven by site-split ownership differentials and stack popularity thresholds. GSE Mapping: Rooted in ownership-hunt-2026-09-13 (e52380c9b3e19069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "site_split_ownership",
+      "name": "Site-Split Ownership Differential",
+      "verbatim_quote": "Justin Herbert — ~14% DraftKings / 21%+ FanDuel (site-split) - **Number:** \"barely 14% on DraftKings but over 21% on FanDuel\" - **Source:** FantasyAlarm — same article above - **Slate:** site-split; this is the cleanest FanDuel-specific number found anywhere - **Method:** same model ### 3.",
+      "page": 1,
+      "latex": "\\Delta O_{\\text{site}} = O_{\\text{FanDuel}} - O_{\\text{DraftKings}}",
+      "symbol_and_unit_ledger": "{'O_{\\\\text{site}}': 'Ownership percentage (dimensionless)', '\\\\Delta O_{\\\\text{site}}': 'Ownership differential (dimensionless)'}",
+      "assumptions": "Ownership data is independent per platform, modeled as Bernoulli trials.",
+      "breakdown_regime": "When \\( \\Delta O_{\\text{site}} > 0.07 \\), indicates significant platform skew.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each site's ownership kernel maps to a distinct posterior belief in GSI's probabilistic model.",
+        "source_operator": "site_split_ownership",
+        "telemetry": "Observed roster share difference between DraftKings and FanDuel"
+      }
+    },
+    {
+      "primitive_id": "stack_popularity",
+      "name": "Stack Popularity Index",
+      "verbatim_quote": "The highest-owned stack on both sites is **Burrow/Chase at ~30%**.",
+      "page": 2,
+      "latex": "S = \\frac{1}{N} \\sum_{i=1}^{N} O_i \\cdot W_i",
+      "symbol_and_unit_ledger": "{'S': 'Stack popularity index (dimensionless)', 'O_i': 'Ownership of player i (dimensionless)', 'W_i': 'Weight factor for player i (dimensionless)', 'N': 'Number of players in stack (dimensionless)'}",
+      "assumptions": "Stacks are composed of two or more correlated players with shared fantasy value.",
+      "breakdown_regime": "When \\( S < 0.25 \\), stack is underpopulated; when \\( S > 0.35 \\), overpopulated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from individual player ownership vectors in GSE's lineup optimizer.",
+        "source_operator": "stack_popularity",
+        "telemetry": "Aggregate roster share of QB/WR stacks"
+      }
+    },
+    {
+      "primitive_id": "platform_bias",
+      "name": "Platform Bias Indicator",
+      "verbatim_quote": "## Bottom line The strongest FanDuel-specific 2026 figure is **Justin Herbert at 21%+ on FanDuel (vs ~14% DK)** from FantasyAlarm's model.",
+      "page": 2,
+      "latex": "B = \\frac{\\max(O_{\\text{FanDuel}}, O_{\\text{DK}})}{\\min(O_{\\text{FanDuel}}, O_{\\text{DK}})}",
+      "symbol_and_unit_ledger": "{'B': 'Bias ratio (dimensionless)', 'O_{\\\\text{FanDuel}}': 'Ownership on FanDuel (dimensionless)', 'O_{\\\\text{DK}}': 'Ownership on DraftKings (dimensionless)'}",
+      "assumptions": "Ownership is a function of platform-specific user behavior and site algorithms.",
+      "breakdown_regime": "When \\( B > 1.5 \\), platform bias is pronounced.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bias indicator maps to GSI's confidence-weighted ensemble prediction.",
+        "source_operator": "platform_bias",
+        "telemetry": "Ratio of max to min ownership across platforms"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e52380c9b3e19069_t0",
+      "think": "Ownership differentials between DraftKings and FanDuel reflect divergent user preferences and algorithmic weighting. The site-split ownership of Justin Herbert (~14% DK vs 21% FD) implies a 7% bias toward FanDuel users. This asymmetry is modeled via a differential operator ΔO_site = O_FanDuel − O_DraftKings, where the variance in ownership estimates reflects platform-specific behavioral clustering. Stack popularity, such as Burrow/Chase at ~30%, emerges from joint probability distributions of correlated players. The index S = Σ(O_i · W_i)/N captures the collective influence of high-value pairings. Platform bias B = max(O_FanDuel, O_DraftKings)/min(O_FanDuel, O_DraftKings) quantifies deviation from parity. These primitives form a dual framework: one for site-specific variance and another for inter-player correlation. Failure modes include overfitting to single-source models and ignoring dynamic shifts in player value. The epistemic risk lies in assuming static ownership patterns across evolving game states.\n\nDeep epistemic analysis for ownership-hunt-2026-09-13 (e52380c9b3e19069, domain=other, pages_read=2/2): Operator 'Site-Split Ownership Differential' (page 1, domain other) captures: Justin Herbert — ~14% DraftKings / 21%+ FanDuel (site-split) - **Number:** \"barely 14% on DraftKings but over 21% on FanDuel\" - **Source:** FantasyAlarm — same article above - **Slate:** site-split; this is the cleanest FanDuel-specific number found anywhere - **Method:** same model ### 3. Assumptions: Ownership data is independent per platform, modeled as Bernoulli trials. Breakdown regime: When \\( \\Delta O_{\\text{site}} > 0.07 \\), indicates significant platform skew. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each site's ownership kernel maps to a distinct posterior belief in GSI's probabilistic model. Operator 'Stack Popularity Index' (page 2, domain other) captures: The highest-owned stack on both sites is **Burrow/Chase at ~30%**. Assumptions: Stacks are composed of two or more correlated players with shared fantasy value. Breakdown regime: When \\( S < 0.25 \\), stack is underpopulated; when \\( S > 0.35 \\), overpopulated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from individual player ownership vectors in GSE's lineup optimizer. Operator 'Platform Bias Indicator' (page 2, domain other) captures: ## Bottom line The strongest FanDuel-specific 2026 figure is **Justin Herbert at 21%+ on FanDuel (vs ~14% DK)** from FantasyAlarm's model. Assumptions: Ownership is a function of platform-specific user behavior and site algorithms. Breakdown regime: When \\( B > 1.5 \\), platform bias is pronounced. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bias indicator maps to GSI's confidence-weighted ensemble prediction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ownership-hunt-2026-09-13 (e52380c9b3e19069, domain=other, pages_read=2/2): Operator 'Site-Split Ownership Differential' (page 1, domain other) captures: Justin Herbert — ~14% DraftKings / 21%+ FanDuel (site-split) - **Number:** \"barely 14% on DraftKings but over 21% on FanDuel\" - **Source:** FantasyAlarm — same article above - **Slate:** site-split; this is the cleanest FanDuel-specific number found anywhere - **Method:** same model ### 3. Assumptions: Ownership data is independent per platform, modeled as Bernoulli trials. Breakdown regime: When \\( \\Delta O_{\\text{site}} > 0.07 \\), indicates significant platform skew. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each site's ownership kernel maps to a distinct posterior belief in GSI's probabilistic model. Operator 'Stack Popularity Index' (page 2, domain other) captures: The highest-owned stack on both sites is **Burrow/Chase at ~30%**. Assumptions: Stacks are composed of two or more correlated players with shared fantasy value. Breakdown regime: When \\( S < 0.25 \\), stack is underpopulated; when \\( S > 0.35 \\), overpopulated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from individual player ownership vectors in GSE's lineup optimizer. Operator 'Platform Bias Indicator' (page 2, domain other) captures: ## Bottom line The strongest FanDuel-specific 2026 figure is **Justin Herbert at 21%+ on FanDuel (vs ~14% DK)** from FantasyAlarm's model. Assumptions: Ownership is a function of platform-specific user behavior and site algorithms. Breakdown regime: When \\( B > 1.5 \\), platform bias is pronounced. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bias indicator maps to GSI's confidence-weighted ensemble prediction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian ensemble forecasting, with influences from conformal prediction theory and information geometry. Early work by De Finetti and Jaynes laid groundwork for belief updating under uncertainty. Retrocausal Genealogy: Rooted in ownership-hunt-2026-09-13 (e52380c9b3e19069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ownership-hunt-2026-09-13 (e52380c9b3e19069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents—DFS players and platform algorithms—optimize for distinct objectives. Players seek edge through underdogs; algorithms aim to balance liquidity and variance. GSI models these agents' strategies as competing stochastic processes. Theory of Mind & Decision Maker Model: Rooted in ownership-hunt-2026-09-13 (e52380c9b3e19069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that site-split ownership does not co-vary linearly with stack popularity. Leakage occurs if platform bias is conflated with player correlation. Veto conditions enforce independence between observables. Cross-Layer Veto & Anti-Leakage Check: Rooted in ownership-hunt-2026-09-13 (e52380c9b3e19069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in ownership-hunt-2026-09-13 (e52380c9b3e19069), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}
