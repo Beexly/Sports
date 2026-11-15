@@ -58,7 +58,7 @@ def _iter_player_records(obj: Any) -> Iterable[Dict[str, Any]]:
         for k, v in obj.items():
             if k in ("players", "pool", "player_pool", "lineups", "slots", "roster", "entries"):
                 yield from _iter_player_records(v)
-            elif isinstance(v, (list, dict)):
+            elif k != "stage0_removed" and isinstance(v, (list, dict)):
                 yield from _iter_player_records(v)
     elif isinstance(obj, list):
         for item in obj:
