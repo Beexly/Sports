@@ -17,9 +17,15 @@ from __future__ import annotations
 
 import json
 import sys
+from datetime import date
 from pathlib import Path
 
 import pytest
+
+# Historical week-9 TNF (JAX@BAL, 2026-11-05) regression fixture. Pin the roster
+# currency clock to the config's as_of so the fail-closed staleness gate does not
+# reject this archived fixture; live week-10 callers never pass `today`.
+_WEEK9_TNF_AS_OF = date(2026, 11, 7)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
@@ -33,7 +39,7 @@ from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E40
 
 
 def test_stage0_allowlist_and_confirmed_starters():
-    allowlist = load_stage0_game_roster_allowlist("JAX", "BAL", 9)
+    allowlist = load_stage0_game_roster_allowlist("JAX", "BAL", 9, today=_WEEK9_TNF_AS_OF)
     assert allowlist["confirmed_qb1"] == {
         "JAX": "Trevor Lawrence",
         "BAL": "Joe Fagnano",
@@ -67,7 +73,7 @@ def test_stage0_allowlist_and_confirmed_starters():
 
 
 def test_stage0_contamination_gate_raises_on_hallucinated_or_excluded_players():
-    allowlist = load_stage0_game_roster_allowlist("JAX", "BAL", 9)
+    allowlist = load_stage0_game_roster_allowlist("JAX", "BAL", 9, today=_WEEK9_TNF_AS_OF)
 
     with pytest.raises(Stage0RosterContaminationError):
         assert_zero_roster_contamination(

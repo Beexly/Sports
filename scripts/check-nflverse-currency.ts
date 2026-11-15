@@ -25,6 +25,7 @@ const SOFT: Partial<Record<NflverseDatasetKey, string>> = {
   combine: "keyed by draft class",
   draft_picks: "keyed by draft year",
   trades: "event-dated",
+  pbp_participation: "current-season participation asset not yet published upstream (2025 available); supplementary scheme/personnel context",
 };
 // NGS variants share one catalog key.
 const VARIANTS: Partial<Record<NflverseDatasetKey, string[]>> = {
