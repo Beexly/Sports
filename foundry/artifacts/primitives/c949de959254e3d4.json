@@ -1,0 +1,748 @@
+{
+ "book_id": "c949de959254e3d4",
+ "source_status": "COMPLETE",
+ "source_note": "Edited by H. Isaac Chen, John F. Burke and Akiva S. Cohen, Traumatic Brain Injury as a Systems Neuroscience Problem, Frontiers in Systems Neuroscience research topic e-book, Frontiers Media, 2017 (articles published 2015-2016; e-book citation doi 10.3389/978-2-88945-098-5). The local file is the complete Frontiers e-book PDF, size 28833454 bytes, full sha256 c949de959254e3d4fb2c4f2dd82a0282d6fd237bfb93ba799a98dbd1d43a13b5, book_id is the first 16 hex of the scan digest sha256 of str(size) plus full file bytes. Extracted text is 1,152,394 bytes and generally clean; the e-book uses two column article layouts, so quotations were taken only from passages that are contiguous in the extracted text file, including abstracts, the single column editorial and front matter, and full width figure captions. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "systems_reframing_of_tbi",
+   "name": "TBI should be studied at the systems neuroscience level, correlating neural circuitry changes with function",
+   "verbatim_quote": "Much can be learned about TBI by studying this disorder on a systems neuroscience level and correlating changes in neural circuitry with neurological and cognitive function.",
+   "page": "Front matter, Topic description, text lines 98-102",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Function is an emergent property of circuitry, not only of local tissue damage",
+    "Circuit changes can be measured and correlated with cognitive outcomes"
+   ],
+   "breakdown_regime": "Breaks down when circuit measures are unavailable and only lesion anatomy is recorded; correlation with function is not by itself a causal mechanism",
+   "domain": "systems neuroscience framing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning engine should model a performer or team as a network whose output depends on connections between units, not only on the state of individual units, and should score connection level changes against observed function.",
+    "source_operator": "systems_reframing_of_tbi",
+    "telemetry": "Circuit level measures, connectivity metrics, and paired functional outcome scores over time"
+   }
+  },
+  {
+   "primitive_id": "network_reshaping_after_injury",
+   "name": "Networks are disrupted and then reshaped after TBI, and tracking that reshaping is where treatment benefit lies",
+   "verbatim_quote": "Further progress in understanding the disruption and subsequent reshaping of networks is likely to have substantial benefits in the treatment of patients with TBI-associated deficits.",
+   "page": "Front matter, Topic description, text lines 115-117",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Post injury network change is dynamic rather than a fixed deficit",
+    "Tools for measuring assemblies and networks keep improving"
+   ],
+   "breakdown_regime": "Breaks down at a single time point snapshot; reshaping cannot be inferred without longitudinal measurement",
+   "domain": "network dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine state should be time varying: after a shock, model a disruption phase and a separate reshaping phase with different parameters, instead of applying one permanent downgrade.",
+    "source_operator": "network_reshaping_after_injury",
+    "telemetry": "Repeated network measures at multiple post shock time points, plus functional outcomes at the same times"
+   }
+  },
+  {
+   "primitive_id": "topic_treatment_modulates_network_function",
+   "name": "The Topic includes treatment options for TBI patients that modulate network function",
+   "verbatim_quote": "We also include articles on treatment options for TBI patients that modulate network function.",
+   "page": "Front matter, Topic statement, text lines 124-131",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Synaptic, oscillatory, and connectivity measures tap the same underlying network dysfunction",
+    "Mechanisms at the cellular level propagate to network level function"
+   ],
+   "breakdown_regime": "Breaks down when one level is measured in isolation; a synaptic change without a network readout does not establish a functional deficit",
+   "domain": "network dysfunction mechanisms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Signals should be organized in three stacked families, local interaction strength, rhythm and timing, and long range connectivity, and a conclusion should require agreement across at least two families before it is treated as structural.",
+    "source_operator": "topic_treatment_modulates_network_function",
+    "telemetry": "Synaptic measures, oscillation spectra, and functional connectivity estimates for the same system"
+   }
+  },
+  {
+   "primitive_id": "systems_neuroscience_definition",
+   "name": "Systems neuroscience examines neural circuit activity and how it relates to behavior and function",
+   "verbatim_quote": "Systems neuroscience examines the activity of neural circuits and how they relate to behavior and function.",
+   "page": "Editorial, Chen, Burke and Cohen 2016, text lines 235-236",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Circuit activity is the level at which behavior is generated",
+    "TBI is therefore legible as a circuit disorder"
+   ],
+   "breakdown_regime": "Breaks down for deficits driven mainly by non circuit factors such as systemic illness or peripheral injury",
+   "domain": "systems neuroscience framing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine should keep an explicit circuit layer between raw inputs and predicted behavior, so explanations cite which connection or rhythm changed rather than only which input moved.",
+    "source_operator": "systems_neuroscience_definition",
+    "telemetry": "Circuit activity recordings, connectivity estimates, and behavioral measures collected in parallel"
+   }
+  },
+  {
+   "primitive_id": "mild_tbi_persistent_symptoms_rate",
+   "name": "Upwards of 15 percent of mild TBI patients experience persistent symptoms",
+   "verbatim_quote": "In patients with mild TBI's, upwards of 15% of patients experience persistent symptoms",
+   "page": "Editorial, Chen, Burke and Cohen 2016, text lines 248-249",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The cited cohort generalizes to mild TBI populations broadly",
+    "Persistent symptoms are circuit mediated rather than only psychological"
+   ],
+   "breakdown_regime": "Breaks down across case mixes; rates differ by setting, definition of persistence, and follow up interval",
+   "domain": "clinical epidemiology of TBI",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Base rates matter: a reasoning engine should carry an explicit persistence base rate for post shock symptoms instead of treating every shock as either fully resolved or permanently damaging.",
+    "source_operator": "mild_tbi_persistent_symptoms_rate",
+    "telemetry": "Cohort follow up rates, symptom persistence proportions, and time since injury"
+   }
+  },
+  {
+   "primitive_id": "bigler_systems_biology_quantitative_imaging",
+   "name": "A systems biology approach is the appropriate framework for quantitative neuroimaging findings in TBI",
+   "verbatim_quote": "This review argues that a systems biology approach to understanding quantitative neuroimaging findings in TBI provides an appropriate framework for better utilizing the information derived from quantitative neuroimaging and its relation with neuropsychological outcome.",
+   "page": "Bigler 2016, Abstract, text lines 385-388",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Quantitative image features carry information that qualitative reads discard",
+    "Imaging levels from tissue to whole person form one system"
+   ],
+   "breakdown_regime": "Breaks down when quantification is uncalibrated across scanners or when outcome measures are too coarse to register network change",
+   "domain": "quantitative neuroimaging",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Replace qualitative labels with quantitative features wherever a measurement exists, and relate those features to outcomes inside one multilevel model rather than as isolated facts.",
+    "source_operator": "bigler_systems_biology_quantitative_imaging",
+    "telemetry": "Automated image quantification outputs, volumetric and diffusion metrics, and standardized outcome scores"
+   }
+  },
+  {
+   "primitive_id": "gcs_structural_disparity",
+   "name": "A single Glasgow Coma Scale level hides a wide disparity of structural pathology",
+   "verbatim_quote": "The problem of traumatic brain injury (TBI) severity classification by using the Glasgow Coma Scale (GCS) is the wide disparity of structural pathology that may be present for a given classification level.",
+   "page": "Bigler 2016, Figure 1 caption, text lines 496-497",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cases shown span the GCS range with and without visible abnormality",
+    "Structural pathology is the relevant hidden variable behind the score"
+   ],
+   "breakdown_regime": "Breaks down as a complete severity account; GCS still carries prognostic value, it is the one number summary that fails",
+   "domain": "severity classification limits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any single summary rating in the engine should be treated as a compression with known hidden variance: two cases with the same rating can carry opposite structural states, so the rating must never veto contradictory structural evidence.",
+    "source_operator": "gcs_structural_disparity",
+    "telemetry": "Distributions of structural findings conditioned on each rating level, not only the rating itself"
+   }
+  },
+  {
+   "primitive_id": "coup_contrecoup_shear_transfer",
+   "name": "Impact energy translates forward and opposite, so the greatest damage can sit away from the impact point",
+   "verbatim_quote": "Some of the energy of that impact becomes translated forward and opposite (contrecoup) resulting in multiple areas of surface contusion and hemorrhagic shear injury in the left frontal (top yellow arrow) and temporal lobe regions (bottom yellow arrow in the upper left CT).",
+   "page": "Bigler 2016, Figure 3 caption, text lines 616-629",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Biomechanical deformation follows the direction of brain displacement",
+    "Shear strain concentrates where tissue properties change"
+   ],
+   "breakdown_regime": "Breaks down for purely focal penetrating injury and for slow loading where inertial shear is minimal",
+   "domain": "injury biomechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Shock propagation in a network is not local: the largest downstream effect can appear at the node opposite or most mechanically mismatched to the entry point, so impact analysis must trace transfer paths rather than only inspecting the entry node.",
+    "source_operator": "coup_contrecoup_shear_transfer",
+    "telemetry": "Impact direction, tissue strain maps, and lesion location relative to impact site"
+   }
+  },
+  {
+   "primitive_id": "jacobian_normative_network_projection",
+   "name": "Volume loss mapped against a normative template projects which dependent networks are affected",
+   "verbatim_quote": "Assuming that where significant volume reduction has occurred would reflect damage to networks dependent on those areas, a schematic network map from Cole et al. (2013) is used to project where damage is and what networks would be affected.",
+   "page": "Bigler 2016, Figure 11 caption, text lines 1072-1076",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The normative template is an appropriate reference for the individual",
+    "Network membership of a region predicts functional consequence of its loss"
+   ],
+   "breakdown_regime": "Breaks down when individual anatomy departs strongly from the template or when plasticity has remapped network membership",
+   "domain": "normative imaging comparison",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maintain a normative reference distribution for every tracked unit, express each case as a deviation map against that reference, and propagate deviations through a dependency map to forecast which downstream functions degrade.",
+    "source_operator": "jacobian_normative_network_projection",
+    "telemetry": "Individual deviation maps against normative samples, plus a region to network dependency table"
+   }
+  },
+  {
+   "primitive_id": "normative_database_mining",
+   "name": "Scan sequences can be mined for structural, diffusion, and functional metrics for comparison against a normative sample",
+   "verbatim_quote": "the different types of scans and scan sequences can be mined for structural, DTI and functional imaging metrics so that individual comparisons can be made within each data point in reference to a normative sample",
+   "page": "Bigler 2016, Figure 12 caption, text lines 1239-1248",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Different sequences tap different levels of the same pathology",
+    "A shared normative dataset makes individual comparison interpretable"
+   ],
+   "breakdown_regime": "Breaks down when normative samples are small, demographically mismatched, or collected on different protocols",
+   "domain": "normative imaging comparison",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine feature should be stored with its normative distribution so a new observation is read as a percentile or deviation, not as a raw number without context.",
+    "source_operator": "normative_database_mining",
+    "telemetry": "Feature level normative means and spreads, case level deviations, and protocol identifiers"
+   }
+  },
+  {
+   "primitive_id": "axonal_injury_network_substrate",
+   "name": "Axonal injury is an injury to the substrate by which brain networks communicate",
+   "verbatim_quote": "Unlike focal injury to a discrete brain region, axonal injury is fundamentally an injury to the substrate by which networks of the brain communicate with one another.",
+   "page": "Wolf and Koch 2016, Abstract, text lines 1567-1569",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "White matter axons are preferentially vulnerable to biomechanical forces",
+    "Network communication depends on the integrity of long axonal conduits"
+   ],
+   "breakdown_regime": "Breaks down for purely focal cortical lesions where the deficit is local computation loss rather than disconnection",
+   "domain": "connectome injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Distinguish node damage from edge damage in the engine: a system can lose function because a unit failed or because the links between healthy units failed, and the two failures predict different recovery patterns.",
+    "source_operator": "axonal_injury_network_substrate",
+    "telemetry": "White matter integrity measures, tract level damage maps, and node level function measures"
+   }
+  },
+  {
+   "primitive_id": "wolf_timing_disruption_hypothesis",
+   "name": "Traumatic axonal injury disrupts the timing of neuronal communication, underlying cognitive dysfunction",
+   "verbatim_quote": "Our central hypothesis is that traumatic injury to axons may disrupt the exquisite timing of neuronal communication within and between brain networks, and that this may underlie aspects of post-TBI cognitive dysfunction.",
+   "page": "Wolf and Koch 2016, Abstract, text lines 1573-1575",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Ensemble coding is timing dependent",
+    "Axonal conduction delays are a plausible causal route from injury to cognition"
+   ],
+   "breakdown_regime": "Breaks down where amplitude or rate coding dominates and timing precision is not load bearing for the task",
+   "domain": "network synchrony and timing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Add timing as a first class signal: not only whether units are active, but whether their activity arrives in the right order and phase, since a network with intact units and broken timing still fails.",
+    "source_operator": "wolf_timing_disruption_hypothesis",
+    "telemetry": "Inter regional latency, phase coherence, and ensemble synchrony measures before and after injury"
+   }
+  },
+  {
+   "primitive_id": "hippocampal_synchrony_loss",
+   "name": "Axonal injury causes loss or derangement of synchronization within intra-hippocampal connections",
+   "verbatim_quote": "TBI induced axonal injury results in loss of, or derangement in",
+   "page": "Wolf and Koch 2016, summary points, text lines 2113-2141",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Hippocampal oscillatory function depends on intra-hippocampal synchrony",
+    "Memory construction ensembles are the downstream casualty"
+   ],
+   "breakdown_regime": "Breaks down when compensatory pathways restore synchrony or when the measured rhythm is not the one the task uses",
+   "domain": "network synchrony and timing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Local synchrony inside a subsystem should be monitored separately from global activity: a subsystem can look active while its internal coordination, and therefore its output quality, has collapsed.",
+    "source_operator": "hippocampal_synchrony_loss",
+    "telemetry": "Within region coherence, ensemble formation rates, and memory task performance"
+   }
+  },
+  {
+   "primitive_id": "carron_sensory_processing_hypothesis",
+   "name": "Changes in sensory processing are a significant contributor to post TBI cognitive and motor deficits",
+   "verbatim_quote": "we have hypothesized that a significant contributor to the cognitive and motor deficits seen after TBI could be changes in sensory processing.",
+   "page": "Carron, Alwis and Rajan 2016, Abstract, text lines 2516-2518",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Interior and exterior life depends on responsiveness to information about the world",
+    "The whisker barrel system is a valid model test system for cortical sensory encoding"
+   ],
+   "breakdown_regime": "Breaks down for deficits with no sensory component and when animal model encoding changes do not transfer to human cortex",
+   "domain": "sensory cortex function",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Input processing quality is a hidden variable in any prediction system: if the sensing layer distorts its inputs, downstream reasoning inherits the distortion, so sensor layer fidelity should be measured directly.",
+    "source_operator": "carron_sensory_processing_hypothesis",
+    "telemetry": "Sensory evoked response fidelity, encoding accuracy for simple and complex inputs, and downstream task scores"
+   }
+  },
+  {
+   "primitive_id": "upper_layer_hyperexcitation_inhibition",
+   "name": "Common TBI produces persistent neuronal hyperexcitation in upper cortical layers, likely from changes in inhibition",
+   "verbatim_quote": "form of TBI results in persistent neuronal hyperexcitation specifically in the upper",
+   "page": "Carron, Alwis and Rajan 2016, Abstract, text lines 2528-2531",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Barrel cortex recordings represent cortical encoding generally",
+    "Layer specific effects can be separated from whole cortex averages"
+   ],
+   "breakdown_regime": "Breaks down in deeper layers and in injury types where suppression rather than hyperexcitation dominates, especially acutely",
+   "domain": "cortical excitation inhibition balance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Averages hide layer specific failure: track subsystems separately, because one layer can be hyperexcitable while another is suppressed, and a pooled signal would wrongly read as normal.",
+    "source_operator": "upper_layer_hyperexcitation_inhibition",
+    "telemetry": "Layer resolved activity measures, inhibitory neuron counts by type, and evoked response amplitudes over time"
+   }
+  },
+  {
+   "primitive_id": "ei_balance_inhibition_change",
+   "name": "Changes in inhibition are a major change modulating the excitation inhibition balance in the long term TBI brain",
+   "verbatim_quote": "appear to be one of the major changes modulating the E:I balance",
+   "page": "Carron, Alwis and Rajan 2016, Conclusions, text lines 3146-3203",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Excitatory activity and connectivity are enhanced while inhibition is compromised after trauma",
+    "The supragranular layers show the most uniform cortical change"
+   ],
+   "breakdown_regime": "Breaks down in subcortical regions where some areas increase inhibition as compensation, so one global balance shift does not hold",
+   "domain": "cortical excitation inhibition balance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Balance variables need a sign and a region: the engine should represent excitation and inhibition as separate channels whose ratio is tracked per subsystem, since the same injury can push the ratio opposite ways in different places.",
+    "source_operator": "ei_balance_inhibition_change",
+    "telemetry": "Excitatory and inhibitory activity estimates per region, interneuron population measures, and ratio time series"
+   }
+  },
+  {
+   "primitive_id": "eeg_temporal_evolution_monitoring",
+   "name": "Electrophysiology can track the temporal evolution of neuronal functionality changes with high precision",
+   "verbatim_quote": "to provide the high-precision information needed to monitor and understand the",
+   "page": "Carron, Alwis and Rajan 2016, electrophysiology discussion, text lines 3226-3266",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Non invasive extra cranial recording is portable and can be done at the bedside",
+    "Evoked activity is consistently altered in TBI, differently over time and by injury type"
+   ],
+   "breakdown_regime": "Breaks down as a stand alone diagnostic; quantitative EEG alone showed limited diagnostic utility for mild TBI",
+   "domain": "electrophysiological monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cheap, repeatable, high frequency measurement beats rare expensive measurement for tracking a changing system: the engine should prefer a dense time series of a good proxy over a single precise snapshot.",
+    "source_operator": "eeg_temporal_evolution_monitoring",
+    "telemetry": "Repeated EEG or evoked potential measures, approximate entropy, and band power ratios over the recovery course"
+   }
+  },
+  {
+   "primitive_id": "slow_wave_coefficient",
+   "name": "The Slow Wave Coefficient is the ratio of summed delta plus theta power to summed alpha plus beta power",
+   "verbatim_quote": "(the ratio of the summed power in the delta and theta bands",
+   "page": "Carron, Alwis and Rajan 2016, electrophysiology discussion, text lines 3226-3266",
+   "latex": "SWC = \\frac{P_{\\delta} + P_{\\theta}}{P_{\\alpha} + P_{\\beta}}",
+   "symbol_and_unit_ledger": {
+    "SWC": "Slow Wave Coefficient, dimensionless ratio",
+    "P_delta, P_theta": "summed EEG power in the delta and theta bands, microvolts squared",
+    "P_alpha, P_beta": "summed EEG power in the alpha and beta bands, microvolts squared"
+   },
+   "assumptions": [
+    "Band power sums are computed over the same EEG epoch",
+    "The ratio indexes unilateral TBI in the cited analysis"
+   ],
+   "breakdown_regime": "Breaks down with artifacts, medication effects on band power, and sleep state changes that move the same bands",
+   "domain": "electrophysiological monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A ratio of low frequency to high frequency power is a compact state index: the engine can use analogous ratios, slow structural signal over fast surface signal, as a cheap continuous health gauge for a system.",
+    "source_operator": "slow_wave_coefficient",
+    "telemetry": "EEG band powers in delta, theta, alpha, and beta bands from the same recording epoch"
+   }
+  },
+  {
+   "primitive_id": "mptp_cypd_mechanism",
+   "name": "Mitochondrial permeability transition pore opening after mild TBI is gated by cyclophilin-D",
+   "verbatim_quote": "Mitochondria are central to cell survival and Ca2+ homeostasis due to their intracellular buffering capabilities. Mitochondrial dysfunction resulting in mitochondrial permeability transition pore (mPTP) opening has been reported after mild traumatic brain injury (mTBI).",
+   "page": "Sun and Jacobs 2016, Abstract, text lines 3670-3672",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cyclosporine A protects against pore opening through its interaction with cyclophilin-D",
+    "Mitochondrial calcium buffering is central to cell survival"
+   ],
+   "breakdown_regime": "Breaks down when cell death proceeds through pore independent pathways or when injury severity overwhelms mitochondrial protection",
+   "domain": "mitochondrial mechanisms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Single gatekeeper components deserve explicit modeling: one regulator, here cyclophilin-D, can decide whether a stressed subsystem crosses into failure, so the engine should flag gatekeeper variables rather than averaging them into a general stress score.",
+    "source_operator": "mptp_cypd_mechanism",
+    "telemetry": "Mitochondrial calcium load, pore opening markers, and cell survival after injury"
+   }
+  },
+  {
+   "primitive_id": "total_adaptation_definition",
+   "name": "Total adaptation is the frequency of the first two action potentials divided by the frequency of the last two in a sweep",
+   "verbatim_quote": "total adaptation = frequency of first two APs in the sweep divided by the frequency of the last two APs in the sweep",
+   "page": "Sun and Jacobs 2016, Figure 4 caption, text lines 4065-4076",
+   "latex": "A_{total} = \\frac{f_{first\\,2}}{f_{last\\,2}}",
+   "symbol_and_unit_ledger": {
+    "A_total": "total adaptation, dimensionless ratio",
+    "f_first2": "frequency of the first two action potentials in the sweep, hertz",
+    "f_last2": "frequency of the last two action potentials in the sweep, hertz"
+   },
+   "assumptions": [
+    "Adaptation is measured within one 400 ms depolarizing sweep",
+    "First pair and last pair frequencies summarize the firing pattern change"
+   ],
+   "breakdown_regime": "Breaks down for neurons firing fewer than four action potentials in a sweep and across different sweep durations",
+   "domain": "neuronal intrinsic excitability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Within episode adaptation is a usable fatigue signature: compare early response rate to late response rate inside the same episode rather than comparing absolute rates across episodes.",
+    "source_operator": "total_adaptation_definition",
+    "telemetry": "Action potential timestamps within a stimulation sweep, injected current level, and neuron class"
+   }
+  },
+  {
+   "primitive_id": "cypd_inhibition_strategy",
+   "name": "Inhibiting cyclophilin-D after TBI reduces synaptic hyperexcitation and remains a treatment target",
+   "verbatim_quote": "suggest that inhibiting CypD after TBI is an effective strategy to reduce synaptic",
+   "page": "Sun and Jacobs 2016, Abstract, text lines 3702-3706",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Knockout results indicate the direction a pharmacological inhibitor should push",
+    "Protection was partial for intrinsic properties, so the target is one contributor among several"
+   ],
+   "breakdown_regime": "Breaks down as a complete rescue claim; the knockout also changed membrane properties directly, confounding a purely selective interpretation",
+   "domain": "mitochondrial mechanisms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Interventions should be graded as partial by default: the engine should record which sub measures an intervention normalized, which it overshot, and which it left unchanged, instead of a single worked or failed verdict.",
+    "source_operator": "cypd_inhibition_strategy",
+    "telemetry": "Spontaneous and miniature EPSC frequency, action potential slope, rheobase, and input resistance by treatment group"
+   }
+  },
+  {
+   "primitive_id": "drp1_fission_dynamics",
+   "name": "TBI increases Drp1 driven mitochondrial fission, and inhibiting fission improves hippocampal learning and memory",
+   "verbatim_quote": "inhibition of fission improves hippocampal-dependent learning and memory, suggesting",
+   "page": "Fischer et al. 2016, Abstract, text lines 4587-4591",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Drp1 translocates to the mitochondrial outer membrane to initiate fission",
+    "Mitochondrial length distribution is a readout of the fusion fission balance"
+   ],
+   "breakdown_regime": "Breaks down over time; length first increased at 24 hours before decreasing at 72 hours, so a single time point can invert the conclusion",
+   "domain": "mitochondrial mechanisms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Structure turnover balance is a state variable: when a system fragments faster than it reconnects, function degrades, and the fragmentation rate itself is measurable before output fails.",
+    "source_operator": "drp1_fission_dynamics",
+    "telemetry": "Drp1 levels in mitochondrial fractions, mitochondrial length distributions, and newborn neuron survival counts"
+   }
+  },
+  {
+   "primitive_id": "mdivi1_rescue_window",
+   "name": "Post injury Mdivi-1 prevented the decrease in mitochondrial length and reduced loss of newborn hippocampal neurons",
+   "verbatim_quote": "a pharmacological inhibitor of Drp1, prevented this decrease in mitochondria length.",
+   "page": "Fischer et al. 2016, Abstract, text lines 4582-4586",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Treatment began after injury, so the window is post injury rather than prophylactic",
+    "Behavioral improvement tracks the structural rescue"
+   ],
+   "breakdown_regime": "Breaks down outside the tested dosing schedule and in regions other than hippocampus that were not measured",
+   "domain": "mitochondrial mechanisms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Timing of intervention relative to a known trajectory inflection is decisive: the same intervention applied before the 72 hour fragmentation shift is a different intervention from one applied after it.",
+    "source_operator": "mdivi1_rescue_window",
+    "telemetry": "Treatment start time, mitochondrial length at 24 and 72 hours, and memory task scores by treatment group"
+   }
+  },
+  {
+   "primitive_id": "pde_upregulation_camp",
+   "name": "TBI upregulates hippocampal phosphodiesterase isoforms, a candidate mechanism for the fall in cAMP and impaired plasticity",
+   "verbatim_quote": "Traumatic brain injury (TBI) results in significant impairments in hippocampal synaptic plasticity.",
+   "page": "Wilson et al. 2016, Abstract, text lines 5302-5305",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Phosphodiesterases degrade cAMP, so their upregulation can explain lower cAMP",
+    "Isoform and time course specificity matters; only some isoforms changed"
+   ],
+   "breakdown_regime": "Breaks down as a sole mechanism claim; expression change does not by itself prove activity change in the relevant compartment",
+   "domain": "cAMP signaling and plasticity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When a key messenger falls, look for increased degradation, not only decreased production: the engine should model both the source and the sink of every important signal.",
+    "source_operator": "pde_upregulation_camp",
+    "telemetry": "Isoform level PDE expression at 30 minutes to 7 days, cAMP levels, and cell type localization"
+   }
+  },
+  {
+   "primitive_id": "rolipram_ltp_rescue",
+   "name": "PDE4 inhibition with rolipram partially rescued basal transmission and converted decaying LTP into long lasting LTP",
+   "verbatim_quote": "converted a decaying form of long-term potentiation (LTP) into long-lasting LTP.",
+   "page": "Wilson et al. 2016, Abstract, text lines 5326-5327",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Hippocampal slices preserve the plasticity deficit ex vivo",
+    "Pan PDE4 inhibition is the tested intervention, not isoform selective inhibition"
+   ],
+   "breakdown_regime": "Breaks down as a whole animal cognition claim; slice rescue does not establish behavioral rescue or a safe systemic dose",
+   "domain": "cAMP signaling and plasticity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A decaying signal that can be converted to a durable one by blocking its degradation is a distinct failure class: the engine should separate failure to form a pattern from failure to maintain it, because the fixes differ.",
+    "source_operator": "rolipram_ltp_rescue",
+    "telemetry": "Field EPSP slopes, LTP decay curves, and treatment condition in slice experiments"
+   }
+  },
+  {
+   "primitive_id": "methionine_transmethylation_sam",
+   "name": "Methionine metabolism through transmethylation generates SAM, the principal methyl donor for epigenetic regulation",
+   "verbatim_quote": "Metabolism of methionine via the transmethylation pathway generates S-adenosylmethionine (SAM) that serves as the principal methyl",
+   "page": "Dash et al. 2016, Abstract, text lines 6062-6065",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Methionine is essential and obtained from the diet",
+    "SAM supply couples nutrition and metabolism to gene regulation"
+   ],
+   "breakdown_regime": "Breaks down when plasma levels do not reflect brain tissue levels or when methyltransferase activity is limited by other factors",
+   "domain": "metabolomics and epigenetics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Resource supply chains reach regulatory layers: a fall in a basic input metabolite can change which genes are expressed, so the engine should trace supply shocks through to regulatory consequences, not stop at the supply level.",
+    "source_operator": "methionine_transmethylation_sam",
+    "telemetry": "Plasma methionine and SAM levels, methylation marks, and gene expression changes after injury"
+   }
+  },
+  {
+   "primitive_id": "transsulfuration_glutathione_route",
+   "name": "Under oxidative stress, homocysteine enters the transsulfuration pathway to generate protective glutathione",
+   "verbatim_quote": "Under conditions of oxidative stress, homocysteine (which is derived from SAM) enters the transsulfuration pathway to generate glutathione, an important cytoprotective",
+   "page": "Dash et al. 2016, Abstract, text lines 6068-6069",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The pathway choice depends on oxidative stress state",
+    "Glutathione is a key defense against oxidative damage, which TBI causes"
+   ],
+   "breakdown_regime": "Breaks down when precursor supply, cysteine and glycine, is itself depleted, as the same study found after severe TBI",
+   "domain": "metabolomics and epigenetics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Branching pathways create trade offs under stress: diverting a metabolite to defense removes it from regulation, so a stressed system pays for protection with reduced regulatory capacity, a cost the engine should book explicitly.",
+    "source_operator": "transsulfuration_glutathione_route",
+    "telemetry": "Homocysteine routing, cysteine and glycine levels, glutathione levels, and oxidative stress markers"
+   }
+  },
+  {
+   "primitive_id": "methionine_systems_level_effect",
+   "name": "Decreased methionine and its products likely alter cellular function in multiple organs at a systems level",
+   "verbatim_quote": "Taken together, these results suggest that decreased levels of methionine and its metabolic products are likely to alter cellular function in multiple organs at a systems level.",
+   "page": "Dash et al. 2016, concluding abstract statement, text lines 6115-6117",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Plasma metabolite changes were graded by injury severity, stronger in severe than mild TBI",
+    "Methionine products serve many cellular functions across organs"
+   ],
+   "breakdown_regime": "Breaks down as organ specific proof; plasma measurement shows association, not which organ functions changed",
+   "domain": "metabolomics and epigenetics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A brain injury with whole body metabolic signatures warns against local only models: the engine should check whether a local shock has systemic correlates before treating the system as closed.",
+    "source_operator": "methionine_systems_level_effect",
+    "telemetry": "Multi organ metabolite panels, severity graded metabolite changes, and organ function measures"
+   }
+  },
+  {
+   "primitive_id": "oscillation_disruption_and_entrainment",
+   "name": "TBI alters physiological oscillatory rhythms, and low frequency septohippocampal stimulation entrained oscillations and improved spatial learning",
+   "verbatim_quote": "Specifically, stimulation of the septohippocampal circuit in the theta frequency entrained oscillations and improved spatial learning following TBI.",
+   "page": "Pevzner et al. 2016, Abstract, text lines 6638-6639",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Theta rhythm supports spatial learning circuitry",
+    "Entrainment by external stimulation can substitute for a lost endogenous rhythm"
+   ],
+   "breakdown_regime": "Breaks down outside the theta band and the septohippocampal circuit; other circuits have other governing rhythms",
+   "domain": "oscillations and neuromodulation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A broken rhythm can be repaired by pacing: if a subsystem has lost its timing signal, an external pacemaker at the natural frequency is a candidate fix, and its success is measurable as entrainment plus functional gain.",
+    "source_operator": "oscillation_disruption_and_entrainment",
+    "telemetry": "Oscillation spectra, stimulation frequency, entrainment measures, and spatial learning scores"
+   }
+  },
+  {
+   "primitive_id": "neuromodulation_translation_case",
+   "name": "Electrical neuromodulation is a candidate therapy because TBI altered rhythms are measurable and stimulable",
+   "verbatim_quote": "Electrical neuromodulation is one approach that has shown promise in alleviating symptoms associated with neurological disorders such as in Parkinson's disease (PD) and epilepsy.",
+   "page": "Pevzner et al. 2016, Abstract, text lines 6633-6635",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Neuromodulation has precedent in other neurological disorders",
+    "Clinical translation needs hypothesis driven preclinical design"
+   ],
+   "breakdown_regime": "Breaks down when stimulation parameters, target, or timing are extrapolated across disorders without circuit specific testing",
+   "domain": "oscillations and neuromodulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Borrow interventions only with their mechanism attached: a therapy that works by restoring rhythm in one disorder is a candidate for another disorder only where the same rhythm failure is documented.",
+    "source_operator": "neuromodulation_translation_case",
+    "telemetry": "Stimulation target and parameters, disorder specific rhythm findings, and outcome measures"
+   }
+  },
+  {
+   "primitive_id": "girgis_hippocampal_physiology_mtbi",
+   "name": "Cognitive dysfunction after mild TBI relates to subtle physiological changes in the hippocampus despite no overt defects",
+   "verbatim_quote": "There is increasing evidence that cognitive and memory dysfunction is related to subtle physiological changes that occur in the hippocampus, and these impact both the phenotype of deficits observed and subsequent recovery.",
+   "page": "Girgis et al. 2016, Abstract, text lines 7837-7839",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Mild TBI is defined by absence of major imaging or histopathological defects",
+    "Physiological change can exist below imaging resolution"
+   ],
+   "breakdown_regime": "Breaks down when a normal physiological workup accompanies persistent deficits, implicating other regions or network level causes",
+   "domain": "hippocampal neuromodulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Absence of visible damage is not absence of damage: the engine should keep a sub resolution failure class for cases where output is impaired but structural measures are clean, and route those cases to functional measurement.",
+    "source_operator": "girgis_hippocampal_physiology_mtbi",
+    "telemetry": "Hippocampal physiology measures, cognitive testing, and imaging findings in the same patients"
+   }
+  },
+  {
+   "primitive_id": "girgis_repurposing_and_stimulation",
+   "name": "Medications used for other indications or brain stimulation may modulate post mTBI hippocampal activity therapeutically",
+   "verbatim_quote": "Therapeutic modulation of physiological activity by means of medications commonly used for other indications or brain stimulation may represent novel treatment approaches.",
+   "page": "Girgis et al. 2016, Abstract, text lines 7840-7842",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Known drugs have known safety profiles, shortening translation",
+    "The target is physiological activity, not structural repair"
+   ],
+   "breakdown_regime": "Breaks down when the repurposed drug's primary effect harms another injured system or when stimulation targets are wrong",
+   "domain": "hippocampal neuromodulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Repurposing is a search strategy: before inventing a new intervention, scan known interventions whose mechanism matches the documented failure, including interventions built for other problems.",
+    "source_operator": "girgis_repurposing_and_stimulation",
+    "telemetry": "Drug mechanism profiles, hippocampal activity measures, and cognitive outcomes"
+   }
+  },
+  {
+   "primitive_id": "murugan_neurovascular_cbf_signature",
+   "name": "mTBI changes stimulation evoked cerebral blood flow responses in sensorimotor cortex, marking altered neurovascular activity",
+   "verbatim_quote": "we demonstrate post-traumatic changes in cerebral blood flow (CBF) in the sensorimotor cortex in response to whisker stimulation compared to sham using functional Laser Doppler Imaging (fLDI) at adulthood (P67-P73).",
+   "page": "Murugan et al. 2016, Abstract, text lines 8525-8528",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Developing rats injured at P25-P26 were measured at adulthood, so the signature is persistent",
+    "Blood flow response is a proxy for underlying neuronal activity"
+   ],
+   "breakdown_regime": "Breaks down when vascular injury itself, rather than neuronal activity change, drives the blood flow signature",
+   "domain": "mitochondrial calcium and neurovascular coupling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Proxy signals must be validated against the thing they proxy: a blood flow change can mean neuronal change or vascular change, and the engine should keep both readings alive until a discriminating measure arrives.",
+    "source_operator": "murugan_neurovascular_cbf_signature",
+    "telemetry": "Evoked CBF response maps, neuronal activity measures, and behavioral scores in the same animals"
+   }
+  },
+  {
+   "primitive_id": "kaempferol_mitochondrial_calcium",
+   "name": "Facilitating mitochondrial calcium uptake with kaempferol improved neurovascular activity and sensorimotor behavior after mTBI",
+   "verbatim_quote": "facilitation of mitochondrial Ca2+ uptake in the early window after injury may sustain",
+   "page": "Murugan et al. 2016, Abstract, text lines 8552-8558",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Surviving neurons had diminished mitochondrial calcium influx and oxidative metabolism",
+    "Treatment was given in the early window after injury"
+   ],
+   "breakdown_regime": "Breaks down for the lost neuronal population; kaempferol did not augment or restore neuronal loss, it improved function of survivors",
+   "domain": "mitochondrial calcium and neurovascular coupling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Support the survivors is a distinct strategy from replacing the lost: after attrition, raising the capacity of remaining units can recover system output, and the engine should model survivor capacity as a lever separate from unit count.",
+    "source_operator": "kaempferol_mitochondrial_calcium",
+    "telemetry": "Mitochondrial calcium uptake, oxidative metabolism, neuronal survival counts, and behavior after treatment"
+   }
+  },
+  {
+   "primitive_id": "mtor_neurogenesis_epileptogenesis",
+   "name": "mTOR signaling links post injury neurogenesis and mossy fiber sprouting to post traumatic epileptogenesis",
+   "verbatim_quote": "A prominent cell signaling pathway activated in animal models of both TBI and epilepsy is the mammalian target of rapamycin (mTOR).",
+   "page": "Butler et al. 2015, Abstract, text lines 9257-9258",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Adult neurogenesis increases shortly after TBI in the dentate gyrus",
+    "Newborn neurons and sprouting can integrate into recurrent excitatory circuits"
+   ],
+   "breakdown_regime": "Breaks down as a universal epilepsy mechanism; post traumatic epilepsy also arises from neocortical injury without dentate involvement",
+   "domain": "post traumatic epilepsy mechanisms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Growth after damage is double edged: repair processes that add new units and connections can also wire in pathological feedback loops, so the engine should score post shock growth for both recovery value and loop formation risk.",
+    "source_operator": "mtor_neurogenesis_epileptogenesis",
+    "telemetry": "Doublecortin labeling, mossy fiber sprouting measures, recurrent excitation, and seizure prevalence"
+   }
+  },
+  {
+   "primitive_id": "rapamycin_reorganization_attenuation",
+   "name": "Rapamycin attenuated mossy fiber sprouting and recurrent excitation and diminished seizure prevalence after CCI",
+   "verbatim_quote": "At later times post-injury (8-13 weeks), evidence of mossy fiber sprouting and increased",
+   "page": "Butler et al. 2015, Abstract, text lines 9278-9283",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rapamycin was given daily from the day of injury until tissue collection",
+    "Rapamycin reduced post traumatic neurogenesis but did not prevent cell loss"
+   ],
+   "breakdown_regime": "Breaks down as a cell survival claim and outside the controlled cortical impact model and dosing used here",
+   "domain": "post traumatic epilepsy mechanisms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Suppressing a growth pathway trades repair for stability: the engine should represent such interventions as a trade with two scored outcomes, less pathological reorganization against less regenerative growth.",
+    "source_operator": "rapamycin_reorganization_attenuation",
+    "telemetry": "Sprouting and excitability measures at 8 to 13 weeks, seizure prevalence, and cell loss stains by treatment"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "c949de959254e3d4-t1",
+   "think": "This edited volume is a research topic, not a single experiment, and its value is the way it forces one question at several levels at once: what happens to a network when its parts are injured, and which level of description actually explains the lost function. The editors open by conceding the traditional view, in which traumatic brain injury is an anatomic and neuropathological condition managed by defining a lesion and limiting secondary damage, and then argue that this view pays too little attention to the function of the organ. Their alternative is to study the disorder at the systems neuroscience level, correlating changes in neural circuitry with neurological and cognitive function. That framing runs through all eleven contributions and gives the collection a coherence that edited volumes often lack. The first section sets governing principles. Bigler shows that clinical neuroimaging is usually read qualitatively even though automated quantification can extract far more, and that a systems biology frame, tissue to organ to whole person, is what lets quantitative imaging speak to neuropsychological outcome. His figure captions carry some of the sharpest claims in the book: a Glasgow Coma Scale level conceals a wide disparity of structural pathology, impact energy translates to a contrecoup site opposite the blow, and Jacobian warping against a normative template turns volume loss into a projection of which networks will fail. Wolf and Koch then supply the volume's central hypothesis, that axonal injury is an injury to the communication substrate itself and that its cognitive cost is paid in timing, because ensembles encode information in ways that depend on precise synchrony within and between networks. Carron and colleagues ground the same idea in sensory cortex, where the most common form of injury produces persistent hyperexcitation in upper layers, attributed to changed inhibition, so that the excitation to inhibition balance shifts and neuronal encoding of naturalistic input is distorted. The second section descends to the cellular machinery that network activity is built from, and it is strikingly mitochondrial. Sun and Jacobs use cyclophilin-D knockout mice to show that blocking permeability transition pore opening ameliorates excitatory synaptic abnormalities and partly normalizes intrinsic firing properties after mild injury, while leaving some properties changed or even reversed, which makes the protection real but partial and mechanistically mixed. Fischer and colleagues show a time dependent mitochondrial dynamics story, length first up at twenty four hours and fission dominant by seventy two, with Drp1 increased in mitochondrial fractions and its inhibitor Mdivi-1 preserving length, newborn neurons, and memory. Wilson and colleagues work the signaling layer, finding specific phosphodiesterase isoforms upregulated on distinct time courses after injury, degrading the cAMP that hippocampal plasticity needs, with rolipram converting a decaying potentiation into a lasting one in slices. Dash and colleagues widen the lens to the whole body, showing plasma methionine and its transmethylation and transsulfuration products falling after human injury in a severity graded way, which ties a dietary amino acid supply chain to epigenetic regulation and antioxidant defense at a systems level. The third section returns to networks with therapies aimed at circuit function. Pevzner and colleagues review oscillations and argue that entraining the septohippocampal circuit at theta frequency restored rhythms and spatial learning, making electrical neuromodulation a rational candidate rather than a speculative one. Girgis and colleagues survey hippocampal physiological change after mild injury, where there is no overt structural defect to treat, and propose repurposed medications and stimulation aimed at activity itself. Murugan and colleagues show that facilitating mitochondrial calcium uptake with kaempferol in the early window normalized evoked cerebral blood flow responses and improved behavior in surviving populations, joining the mitochondrial and network stories in one result. Butler and colleagues close with the dark side of plasticity: mTOR driven neurogenesis and mossy fiber sprouting after cortical impact build recurrent excitation and seizures, and rapamycin attenuates the reorganization and the epilepsy at the cost of the growth itself. Read together, the volume teaches a method as much as a set of facts. Measure quantitatively against normative references. Separate node damage from connection damage. Track timing and balance, not only activity levels. Expect interventions to be partial, time window dependent, and traded against something else. And expect the same injury to look different at every level, which is exactly why a reasoning engine needs all the levels wired into one account rather than a pile of independent signals. Two further lessons deserve emphasis because they are easy to miss. The first is heterogeneity as a design constraint rather than a nuisance. The editorial stresses that pinpointing the network cause of a specific symptom is hard precisely because injuries and symptoms vary across patients, and Bigler's case study method answers that problem directly, extracting from one deeply imaged child the kind of trajectory information that group averages wash out. A reasoning engine built on this work therefore needs a case level mode, in which one well measured instance can generate hypotheses that group data later tests, instead of a population only mode that discards outliers as noise. The second lesson is that assessment has to change when measurement changes. Bigler notes that paper and pencil neuropsychology was built for a non digital era and is poorly matched to network analysis, and Carron's group argues the same for electrophysiology, which remains underused clinically despite being portable, cheap, and repeatable at the bedside. Instruments define what a field can see, so an engine should periodically audit its own instruments, asking which of its measures are legacy conveniences and which actually tap the level where the failure lives. That audit, the normative comparisons, the timing measures, and the balance ratios together form the volume's practical bequest.",
+   "retrocausal_genealogy": "The lineage of this work runs from classical lesion neurology and the Glasgow Coma Scale era of severity grading, through the diffuse axonal injury pathology established in the early nineteen eighties, into the connectome period in which the brain is described as interconnected networks communicating over long axonal conduits. Systems biology supplied the multilevel template that Bigler imports into neuroimaging, borrowing the tissue to organ to organism pyramid and its demand for normative databases. The oscillation and entrainment material descends from decades of hippocampal theta and sharp wave ripple research, while the mitochondrial chapters descend from cell death biology, permeability transition, and fission fusion dynamics worked out outside brain injury and then carried into it. The editors' contribution is genealogical as much as scientific: they place these separate ancestries under one research topic heading and declare them one problem.",
+   "theory_of_mind": "The editors and contributors share a model of the reader as a clinician scientist who already accepts molecular and cellular accounts and needs persuading that those accounts are incomplete rather than wrong. Their model of the domain is that function lives at the circuit level, that the circuit level is measurable with imaging, electrophysiology, and behavior in parallel, and that heterogeneity across patients is the central obstacle, because dissimilar injuries converge on similar symptoms through different network routes. They assume the reader will accept animal model circuitry, especially rodent hippocampus and barrel cortex, as evidence about human network principles, and they write therapeutically throughout: nearly every mechanism chapter ends by naming a target, a stimulation site, or a repurposed drug, because their model of the field's purpose is intervention, not description alone.",
+   "cross_layer_veto": "Several findings in this volume veto comfortable moves elsewhere. The Glasgow Coma Scale disparity vetoes any severity judgment made from one summary score when structural evidence disagrees. The timing hypothesis vetoes amplitude only accounts of network health, since intact units with deranged synchrony still fail. The regional split in inhibition, excitation up in cortex and suppression up in parts of hippocampus, vetoes any single global excitation inhibition shift applied to the whole brain. The partial and overshooting rescue in the cyclophilin-D knockout vetoes binary intervention verdicts. The rapamycin result vetoes treating post injury growth as purely good, and the methionine data veto closed system models of a brain only injury. Any layer built on this work must let these constraints override smoother stories."
+  }
+ ],
+ "universal_lens": "Any complex system that fails by disconnection rather than by destruction needs this template: measure the parts quantitatively against a normative reference, measure the connections and their timing separately, track balance variables per subsystem rather than globally, and judge every intervention as partial, timed, and traded against another function. The pattern transfers to organizations, infrastructure, and software systems, where a single summary score hides structural disparity in exactly the way a coma scale hides lesion disparity, and where post shock regrowth can wire in pathological feedback just as sprouting wires in seizures.",
+ "gsi_mapping": "The Galaxy Sports Institute takes from this volume a research method for studying injured and recovering performers: normative referenced quantitative measurement instead of qualitative labels, layer resolved tracking instead of pooled averages, explicit persistence base rates after a shock, and a standing distinction between node failure, connection failure, and timing failure. Its study designs should pair structural, functional, and outcome measures in the same subjects over time, grade interventions by which sub measures they normalize, and treat post injury adaptation as a trade that can help or harm.",
+ "gse_mapping": "The Galaxy Sports Edge reasoning engine takes a network model of performance: units and the links between them are separate state variables, timing and synchrony are first class signals, excitation and inhibition style balance ratios are tracked per subsystem, and every observation is read as a deviation from a normative distribution. Shocks propagate to non local nodes, recovery follows a disruption then reshaping trajectory, and interventions or returns from absence are scored as partial and time window dependent. None of this is betting content; it is the engine's general machinery for reasoning about damaged and recovering systems."
+}
