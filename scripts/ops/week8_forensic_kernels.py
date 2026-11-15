@@ -433,16 +433,20 @@ def allocate_stochastic_conserved_box_score(
     if fam_lower == "tackles":
         alpha = np.maximum(0.80, max(kappa_eff, 48.0) * share_vec)
         gamma_shape = 9.0
+        dir_draws = rng_eff.dirichlet(alpha, size=n_worlds_eff)
+        # Compound Gamma overdispersion (Negative-Binomial continuous mixture)
+        gamma_noise = rng_eff.gamma(shape=gamma_shape, scale=1.0, size=(n_worlds_eff, k_act))
+        weights = dir_draws * gamma_noise
+        row_sums = np.maximum(1e-12, np.sum(weights, axis=1, keepdims=True))
+        weights = weights / row_sums
     else:
-        alpha = np.maximum(0.35, kappa_eff * share_vec)
-        gamma_shape = 1.45 if "yd" in fam_lower else 1.85
-
-    dir_draws = rng_eff.dirichlet(alpha, size=n_worlds_eff)
-    # Compound Gamma overdispersion (Negative-Binomial continuous mixture)
-    gamma_noise = rng_eff.gamma(shape=gamma_shape, scale=1.0, size=(n_worlds_eff, k_act))
-    weights = dir_draws * gamma_noise
-    row_sums = np.maximum(1e-12, np.sum(weights, axis=1, keepdims=True))
-    weights = weights / row_sums
+        # Unbiased Dirichlet shares (E[w_j] == share_vec_j) so residual depth caps are preserved
+        # without Jensen / floor shrinkage inflating OTHER_TEAM_REC / OTHER_TEAM_RUSH above 5%.
+        kappa_dir = min(kappa_eff, 7.5 if "yd" in fam_lower else 10.5)
+        alpha = np.maximum(1e-3, kappa_dir * share_vec)
+        weights = rng_eff.dirichlet(alpha, size=n_worlds_eff)
+        row_sums = np.maximum(1e-12, np.sum(weights, axis=1, keepdims=True))
+        weights = weights / row_sums
 
     alloc = team_arr[:, None] * weights
 

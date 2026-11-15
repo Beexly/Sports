@@ -544,7 +544,9 @@ def _apply_vacated_volume_and_trench_conservation(
         qb_pr = qb_rec.get("projections") or {}
 
         team_pass_yds = _metric_val(qb_pr, "pass_yds", "mean")
-        team_comps = _metric_val(qb_pr, "completions", "mean")
+        team_comps = _metric_val(qb_pr, "pass_completions", "mean")
+        if team_comps <= 0.0:
+            team_comps = _metric_val(qb_pr, "completions", "mean")
         team_pass_tds = _metric_val(qb_pr, "pass_tds", "mean")
         team_rush_yds = _metric_val(t_proj, "rush_yds", "mean")
         team_pts = _metric_val(t_proj, "points", "mean")
@@ -1026,40 +1028,64 @@ def _format_classic_lineup(df_lu: pd.DataFrame, mode: str, lineup_index: int, sa
     by_pos: dict[str, list[dict[str, Any]]] = {"QB": [], "RB": [], "WR": [], "TE": [], "DST": []}
     for rec in recs:
         by_pos[str(rec["position"]).upper()].append(rec)
-    for plist in by_pos.values():
-        plist.sort(key=lambda r: float(r["median_fpts"]), reverse=True)
 
-    if len(by_pos["QB"]) != 1 or len(by_pos["TE"]) != 1 or len(by_pos["DST"]) != 1:
+    # Validate Classic 9-man roster positional counts (1 QB, 2..3 RB, 3..4 WR, 1..2 TE, 1 DST, sum == 9)
+    if (
+        len(by_pos["QB"]) != 1
+        or len(by_pos["DST"]) != 1
+        or len(by_pos["RB"]) not in (2, 3)
+        or len(by_pos["WR"]) not in (3, 4)
+        or len(by_pos["TE"]) not in (1, 2)
+        or (len(by_pos["RB"]) + len(by_pos["WR"]) + len(by_pos["TE"])) != 7
+        or len(recs) != 9
+    ):
         raise ValueError(f"Invalid Classic lineup positional counts: { {k: len(v) for k, v in by_pos.items()} }")
 
-    # Late-swap FLEX optimization: put latest-kickoff eligible RB/WR/TE in FLEX slot (zero projection loss).
-    def _window_rank(team_code: str) -> int:
-        t = str(team_code or "").upper()
+    # Late-swap FLEX optimization: positional starters by earliest kickoff first,
+    # leaving the latest-kickoff eligible extra RB/WR/TE in FLEX (maximizing EQ-DFS-07 recourse optionality).
+    def _player_kickoff_rank(r: Mapping[str, Any]) -> float:
+        if "kickoff_epoch" in r and r["kickoff_epoch"] is not None:
+            try:
+                return float(r["kickoff_epoch"])
+            except (ValueError, TypeError):
+                pass
+        t = str(r.get("team") or "").upper()
         if t in {"LAC", "BAL"}:
-            return 3
+            return 4.0
         if t in {"PIT", "CIN"}:
-            return 2
+            return 3.0
         if t in {"SEA", "LV", "LAR", "LA", "ARI", "SF", "DAL"}:
-            return 1
-        return 0
+            return 2.0
+        if t in {"HOU", "GB", "NE", "CHI", "BUF", "MIN", "TB"}:
+            return 2.0
+        return 1.0
 
     rbs = list(by_pos["RB"])
     wrs = list(by_pos["WR"])
+    tes = list(by_pos["TE"])
+
     if len(rbs) == 3:
-        rbs.sort(key=lambda r: (_window_rank(str(r.get("team", ""))), -float(r["median_fpts"])))
-        rb_primary = sorted(rbs[:2], key=lambda r: -float(r["median_fpts"]))
-        wr_primary = sorted(wrs[:3], key=lambda r: -float(r["median_fpts"]))
-        flex_candidates = [rbs[2]]
+        # 3-RB build: 2 RB starters by earliest kickoff, 3rd (latest kickoff) in FLEX
+        rbs_sorted = sorted(rbs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        rb_primary = rbs_sorted[:2]
+        flex_candidate = rbs_sorted[2]
+        wr_primary = sorted(wrs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        te_primary = tes[:1]
     elif len(wrs) == 4:
-        wrs.sort(key=lambda r: (_window_rank(str(r.get("team", ""))), -float(r["median_fpts"])))
-        rb_primary = sorted(rbs[:2], key=lambda r: -float(r["median_fpts"]))
-        wr_primary = sorted(wrs[:3], key=lambda r: -float(r["median_fpts"]))
-        flex_candidates = [wrs[3]]
+        # 4-WR build: 3 WR starters by earliest kickoff, 4th (latest kickoff) in FLEX
+        wrs_sorted = sorted(wrs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        wr_primary = wrs_sorted[:3]
+        flex_candidate = wrs_sorted[3]
+        rb_primary = sorted(rbs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        te_primary = tes[:1]
+    elif len(tes) == 2:
+        # 2-TE build: TE1 starter by earlier kickoff, 2nd TE (latest kickoff) in FLEX
+        tes_sorted = sorted(tes, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        te_primary = tes_sorted[:1]
+        flex_candidate = tes_sorted[1]
+        rb_primary = sorted(rbs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        wr_primary = sorted(wrs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
     else:
-        rb_primary = rbs[:2]
-        wr_primary = wrs[:3]
-        flex_candidates = [*rbs[2:], *wrs[3:]]
-    if len(rb_primary) != 2 or len(wr_primary) != 3 or len(flex_candidates) != 1:
         raise ValueError(f"Could not assign Classic FLEX deterministically: { {k: len(v) for k, v in by_pos.items()} }")
 
     ordered: list[tuple[str, dict[str, Any]]] = [
@@ -1069,8 +1095,8 @@ def _format_classic_lineup(df_lu: pd.DataFrame, mode: str, lineup_index: int, sa
         ("WR", wr_primary[0]),
         ("WR", wr_primary[1]),
         ("WR", wr_primary[2]),
-        ("TE", by_pos["TE"][0]),
-        ("FLEX", flex_candidates[0]),
+        ("TE", te_primary[0]),
+        ("FLEX", flex_candidate),
         ("DST", by_pos["DST"][0]),
     ]
     roster: list[dict[str, Any]] = []
@@ -1230,7 +1256,7 @@ def build_classic_packet(
         covariance_bonuses={},
         min_salary=48000.0,
         max_per_team=4,
-        max_tes=1,
+        max_tes=2,
     )
     if not cash_dfs:
         raise RuntimeError(f"Cash optimizer failed to find a valid Classic lineup for {slate_key}")
@@ -1256,7 +1282,7 @@ def build_classic_packet(
         covariance_bonuses=omega,
         min_salary=48000.0,
         max_per_team=4,
-        max_tes=1,
+        max_tes=2,
         max_exposure=0.55,
     )
     if len(gpp_dfs) < 25:
@@ -1271,7 +1297,7 @@ def build_classic_packet(
             covariance_bonuses=omega,
             min_salary=48000.0,
             max_per_team=4,
-            max_tes=1,
+            max_tes=2,
             max_exposure=0.70,
         )
 
@@ -1288,11 +1314,18 @@ def build_classic_packet(
 
         slots = lu_dict.get("roster") or []
         flex_items = [s for s in slots if str(s.get("slot") or "").upper() == "FLEX"]
-        rwt_items = [s for s in slots if str(s.get("slot") or "").upper() in {"RB", "WR", "TE"}]
-        if not flex_items or not rwt_items:
+        if not flex_items:
             return True
-        return _win_rank(str(flex_items[0].get("team") or "")) >= max(
-            _win_rank(str(s.get("team") or "")) for s in rwt_items
+        flex_item = flex_items[0]
+        flex_pos = str(flex_item.get("pos") or flex_item.get("position") or "").upper()
+        same_pos_starters = [
+            s for s in slots
+            if str(s.get("slot") or "").upper() == flex_pos
+        ]
+        if not same_pos_starters:
+            return True
+        return _win_rank(str(flex_item.get("team") or "")) >= max(
+            _win_rank(str(s.get("team") or "")) for s in same_pos_starters
         )
 
     raw_gpp_lus = [_format_classic_lineup(df_k, mode="gpp", lineup_index=idx + 1) for idx, df_k in enumerate(gpp_dfs)]

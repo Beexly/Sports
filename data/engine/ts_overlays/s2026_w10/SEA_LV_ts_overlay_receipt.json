@@ -1,0 +1,144 @@
+{
+  "schema": "gse-game-ts-overlay-receipt-v1",
+  "season": 2026,
+  "week": 10,
+  "matchup": "SEA@LV",
+  "espnEventId": "401873062",
+  "kickoffUtc": "2026-11-15T21:05Z",
+  "venue": "Stadium",
+  "indoor": false,
+  "gameSlot": "SUN_LATE",
+  "confirmedQb1": {
+    "away": {
+      "team": "SEA",
+      "qb": "Drew Lock"
+    },
+    "home": {
+      "team": "LV",
+      "qb": "Fernando Mendoza"
+    }
+  },
+  "mcpCognitiveRouter": {
+    "contextMaskWords": [
+      255,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "stageCSelectedCount": 20,
+    "jamesSteinShrinkage": 0,
+    "clampedLogOddsDelta": 0.0036,
+    "clamped": false,
+    "mpRankShrinkage": 0.97443
+  },
+  "masterSituationalOverlay": {
+    "streamsExecutedCount": 14,
+    "streamsTotalCount": 19,
+    "situational80EvaluatedCount": 80,
+    "zeroOrphanModulesCount": 140,
+    "conformalAbstentionVerdict": "ABSTAIN_CONFORMAL"
+  },
+  "corpusGrounding": {
+    "overallSupport": 0.563435,
+    "coverage": 0.8,
+    "facetsCount": 5,
+    "evidenceCount": 8,
+    "citationsSample": [
+      "lit.situation:e3b0c44298fc#0",
+      "lit.corpus_chunk:e3b0c44298fc#0",
+      "lit.corpus_statement:8a7b6c5d4e3fp48",
+      "lit.corpus_chunk:a1b2c3d4e5f6#1",
+      "lit.situation:a1b2c3d4e5f6#1"
+    ]
+  },
+  "tacticalPrior": {
+    "logOddsPrior": 0.007041,
+    "rawLogOdds": 0.34,
+    "support": 0.6,
+    "boundedByPriorBound": true,
+    "priorBoundLimit": 0.025
+  },
+  "chartingHooks": {
+    "statrankings": {
+      "proeSeason": -0.035,
+      "proeL3": -0.0385,
+      "neutralPaceSecPerPlay": 29.8,
+      "firstHalfPassPct": 0.515,
+      "passRateTrailing8Plus": 0.72,
+      "passRateLeading8Plus": 0.44,
+      "matchupRanks": {
+        "scoring": 23,
+        "epa": 14,
+        "pressure": 3,
+        "redzone": 14,
+        "tackling": 12,
+        "kicking": 10,
+        "qb": 23,
+        "rb": 15,
+        "wr": 11,
+        "te": 13
+      },
+      "wrYprrVsMan": 2.15,
+      "wrYprrVsZone": 1.85,
+      "primaryCbFpRtAllowed": 0.28,
+      "seasonFpVsXfp": 1.04
+    },
+    "samHoppen": {
+      "epaPerPlayYtd": -0.116,
+      "epaPerPlayL4": -0.1218,
+      "successRateYtd": 0.42400000000000004,
+      "successRateL4": 0.434,
+      "epaPerDrive": 1.4900000000000002,
+      "earlyDownEpa": -0.11000000000000001,
+      "explosivePassPct": 0.12,
+      "explosiveRushPct": 0.11,
+      "cpoe": -2.7,
+      "pressurePct": 0.36,
+      "personnel11Pct": 0.64,
+      "multiTePct": 0.28,
+      "motionAtSnapPct": 0.36,
+      "zoneRushPct": 0.58,
+      "clockDrainPct": 0.42,
+      "manCoveragePct": 0.32,
+      "zoneCoveragePct": 0.68,
+      "lightBoxPct": 0.52,
+      "blitzPct": 0.26,
+      "stuntPct": 0.18
+    },
+    "fantasyPtsData": {
+      "sepScore": 72.9,
+      "oneReadPct": 63.8
+    },
+    "pattonAnalytics": {
+      "pressureOverExpectation": 3,
+      "pressureToSackSurvivalRate": 0.81
+    },
+    "koalatyStats": {
+      "xfpPerG": 15.2,
+      "fppgMinusXfppg": 0.8
+    },
+    "wideLeft": {
+      "cover1RateByDefense": 0.256
+    }
+  },
+  "cadenceWindows": {
+    "noonMasterLock": {
+      "version": "v3.0",
+      "dow": "Fri",
+      "ctTime": "12:00",
+      "phase": "NOON_CONTENT_READY_MASTER_LOCK"
+    },
+    "tMinus90Adjustment": {
+      "version": "v4.0",
+      "ctTime": "13:35",
+      "adjustmentUtc": "2026-11-15T19:35:00.000Z"
+    }
+  },
+  "generatedUtc": "2026-11-15T20:12:15.856Z",
+  "merkleHash": "8346a4bf358b660f03fe2e2110a54e39b2a0cdd1b9e177d7de014c57ddf63c86"
+}

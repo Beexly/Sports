@@ -183,13 +183,136 @@ from scripts.ops.solve_showdown_dfs_milp import (  # noqa: E402
 from scripts.ops.week8_forensic_kernels import (  # noqa: E402
     allocate_conserved_box_score,
     allocate_stochastic_conserved_box_score,
-    assert_pbp_conservation,
+    assert_pbp_conservation as _baseline_assert_pbp_conservation,
     assert_prop_distribution_invariants,
     detect_injury_decoy_or_pitch_count_trap,
     evaluate_empirical_prop_probability,
     evaluate_parlay_conjunction_gate,
     wilson_lower_bound,
 )
+
+
+def redistribute_vacated_team_volume(
+    rec_weights: dict[str, float],
+    rush_weights: dict[str, float],
+    athletes: dict[str, Any],
+    team: str,
+    opp_f7_outs: int = 0,
+    max_wr_share: float = 0.34,
+    max_te_share: float = 0.29,
+    max_rb_target_share: float = 0.22,
+    max_rb1_carry_share: float = 0.78,
+    max_residual_depth: float = 0.05,
+) -> tuple[dict[str, float], dict[str, float]]:
+    """
+    Vacated-volume conservation using Sinkhorn-style proportional reallocation and role caps.
+    Eliminates OTHER_TEAM_REC / OTHER_TEAM_RUSH black-hole volume sinks:
+      - WR <= 0.34 target share
+      - TE <= 0.29 target share
+      - RB <= 0.22 target share
+      - RB1 <= 0.78 non-QB carry share
+      - Residual unnamed depth <= 0.05 (named active Stage-0 players receive >= 94% of team volume)
+      - Modulated by opposing front-7 injury efficiency priors (opp_f7_outs)
+    """
+    rw = {k: float(v) for k, v in rec_weights.items() if k != "OTHER_TEAM_REC"}
+    cw = {k: float(v) for k, v in rush_weights.items() if k != "OTHER_TEAM_RUSH"}
+
+    # 1. Opposing front-7 injury efficiency prior modulation
+    if opp_f7_outs > 0:
+        f7_boost = 1.0 + 0.035 * min(opp_f7_outs, 4)
+        for name in list(cw.keys()):
+            pos = (athletes.get(name) or {}).get("position")
+            if pos == "RB":
+                cw[name] *= f7_boost
+        for name in list(rw.keys()):
+            pos = (athletes.get(name) or {}).get("position")
+            if pos == "TE":
+                rw[name] *= (1.0 + 0.025 * min(opp_f7_outs, 4))
+
+    # 2. Receiving share iterative role-cap conservation
+    for _ in range(50):
+        tot_r = sum(rw.values())
+        if tot_r <= 0:
+            break
+        converged = True
+        for name, w in list(rw.items()):
+            pos = (athletes.get(name) or {}).get("position")
+            sh = w / tot_r
+            cap = max_wr_share if pos == "WR" else (max_te_share if pos == "TE" else (max_rb_target_share if pos == "RB" else 0.35))
+            if sh > cap:
+                converged = False
+                excess = w - cap * tot_r
+                rw[name] = cap * tot_r
+                others = [k for k in rw if k != name]
+                if others:
+                    oth_tot = sum(rw[k] for k in others)
+                    if oth_tot > 0:
+                        for ok in others:
+                            rw[ok] += excess * (rw[ok] / oth_tot)
+        if converged:
+            break
+
+    # 3. Rushing share iterative role-cap conservation
+    for _ in range(50):
+        tot_c = sum(cw.values())
+        if tot_c <= 0:
+            break
+        converged = True
+        rb_players = [(k, w) for k, w in cw.items() if (athletes.get(k) or {}).get("position") == "RB"]
+        if rb_players:
+            rb_players.sort(key=lambda x: -x[1])
+            rb1_name, rb1_w = rb_players[0]
+            if (rb1_w / tot_c) > max_rb1_carry_share:
+                converged = False
+                excess = rb1_w - max_rb1_carry_share * tot_c
+                cw[rb1_name] = max_rb1_carry_share * tot_c
+                others = [k for k in cw if k != rb1_name]
+                if others:
+                    oth_tot = sum(cw[k] for k in others)
+                    if oth_tot > 0:
+                        for ok in others:
+                            cw[ok] += excess * (cw[ok] / oth_tot)
+        if converged:
+            break
+
+    # 4. Residual unnamed depth <= 0.05 (named active Stage-0 players receive >= 95% of volume)
+    tot_rec = sum(rw.values())
+    if tot_rec > 0:
+        rw["OTHER_TEAM_REC"] = tot_rec * (max_residual_depth / (1.0 - max_residual_depth))
+    tot_rush = sum(cw.values())
+    if tot_rush > 0:
+        cw["OTHER_TEAM_RUSH"] = tot_rush * (max_residual_depth / (1.0 - max_residual_depth))
+
+    return rw, cw
+
+
+def assert_pbp_conservation(
+    player_rec_yds: Any,
+    team_pass_yds: Any,
+    player_rec_tds: Any,
+    team_pass_tds: Any,
+    tol: float = 1e-4,
+    player_keys: Sequence[str] | None = None,
+) -> None:
+    """Tightened PBP conservation assert ensuring exact world-level conservation
+    AND that named active Stage-0 players receive >= 94% of team volume (residual depth <= 6%)."""
+    _baseline_assert_pbp_conservation(player_rec_yds, team_pass_yds, player_rec_tds, team_pass_tds, tol=tol)
+    if player_keys is not None and len(player_keys) == len(player_rec_yds):
+        bh_idx = [
+            i for i, k in enumerate(player_keys)
+            if str(k).upper() in ("OTHER_TEAM_REC", "OTHER_TEAM_RUSH")
+        ]
+        if bh_idx:
+            n_worlds = len(team_pass_yds)
+            tot_team = sum(team_pass_yds)
+            if tot_team > 0:
+                bh_tot = sum(sum(player_rec_yds[i][w] for w in range(n_worlds)) for i in bh_idx)
+                bh_frac = bh_tot / tot_team
+                if bh_frac > 0.06:
+                    raise AssertionError(
+                        f"CONSERVATION_FAIL: Named active Stage-0 players receive only {1.0 - bh_frac:.2%} "
+                        f"of volume (residual black-hole volume is {bh_frac:.2%} > 6% max allowable)"
+                    )
 
 WEEK9_MATCHUP_ENVIRONMENT_REGISTRY: dict[tuple[str, str], dict[str, Any]] = {
     # =========================================================================
@@ -1956,14 +2079,25 @@ def run_stage1b_all_5367_equations_pre_sim_review(
         }
 
     # Execute live TypeScript Prediction Engine + MCP Cognitive Router + 22-Stream Master Situational Aggregator
-    ts_telemetry_path = REPO_ROOT / "data" / "engine" / "tnf_jax_bal_ts_engines_telemetry_2026_11_05.json"
+    base_ts_path = REPO_ROOT / "data" / "engine" / "tnf_jax_bal_ts_engines_telemetry_2026_11_05.json"
+    if wk_1b >= 10:
+        ts_telemetry_path = (
+            REPO_ROOT / "data" / "engine" / "ts_overlays" / f"s2026_w{wk_1b}" / f"{away_tm_1b}_{home_tm_1b}_ts_overlay_receipt.json"
+        )
+        ts_runner_cmd = (
+            f"scripts/ops/run_live_game_ts_overlay_and_grounding.ts --season 2026 --week {wk_1b} --game {away_tm_1b}@{home_tm_1b}"
+        )
+    else:
+        ts_telemetry_path = base_ts_path
+        ts_runner_cmd = "scripts/ops/run_ts_prediction_and_mcp_engines.ts"
+
     if not ts_telemetry_path.is_file():
         import shutil
         cagent_tsx = Path.home() / ".cagent" / "Sports" / "node_modules" / ".bin" / "tsx.cmd"
         tsx_cmd = (
-            f'"{cagent_tsx}" scripts/ops/run_ts_prediction_and_mcp_engines.ts'
+            f'"{cagent_tsx}" {ts_runner_cmd}'
             if not shutil.which("tsx") and cagent_tsx.is_file()
-            else "npx tsx scripts/ops/run_ts_prediction_and_mcp_engines.ts"
+            else f"npx tsx {ts_runner_cmd}"
         )
         subprocess.run(
             tsx_cmd,
@@ -1974,12 +2108,41 @@ def run_stage1b_all_5367_equations_pre_sim_review(
             text=True,
         )
         globals()["_TS_ENGINES_EXECUTED_IN_PROCESS"] = True
-    ts_telemetry = (
-        json.loads(ts_telemetry_path.read_text(encoding="utf-8"))
-        if ts_telemetry_path.is_file()
+
+    base_ts = (
+        json.loads(base_ts_path.read_text(encoding="utf-8"))
+        if base_ts_path.is_file()
         else {}
     )
-    ts_router = dict(ts_telemetry.get("mcp_cognitive_router", {}))
+    if wk_1b >= 10 and ts_telemetry_path.is_file():
+        overlay_ts = json.loads(ts_telemetry_path.read_text(encoding="utf-8"))
+        ts_telemetry = {**base_ts, **overlay_ts}
+        base_msra = dict(base_ts.get("master_situational_reasoning_aggregator") or {})
+        if isinstance(overlay_ts.get("masterSituationalOverlay"), dict):
+            base_msra["per_game_ts_overlay"] = overlay_ts["masterSituationalOverlay"]
+        ts_telemetry["master_situational_reasoning_aggregator"] = base_msra
+        for keep_key in (
+            "x_situational_80_rules",
+            "signals_and_edge_lab",
+            "wireable_dispatch_registry",
+        ):
+            if keep_key in base_ts:
+                ts_telemetry[keep_key] = base_ts[keep_key]
+    else:
+        ts_telemetry = base_ts
+    raw_router = ts_telemetry.get("mcpCognitiveRouter") or ts_telemetry.get("mcp_cognitive_router") or {}
+    ts_router = dict(raw_router)
+    if "mpRankShrinkage" in raw_router and "marchenko_pastur_effective_rank_shrinkage" not in ts_router:
+        ts_router["marchenko_pastur_effective_rank_shrinkage"] = float(raw_router["mpRankShrinkage"])
+    if "jamesSteinShrinkage" in raw_router and "stage_d_james_stein_shrinkage" not in ts_router:
+        js_val = float(raw_router["jamesSteinShrinkage"])
+        if js_val > 0.0:
+            ts_router["stage_d_james_stein_shrinkage"] = js_val
+    if isinstance(ts_telemetry.get("corpusGrounding"), dict):
+        ts_router["corpus_grounding"] = ts_telemetry["corpusGrounding"]
+    if isinstance(ts_telemetry.get("tacticalPrior"), dict):
+        ts_router["tactical_prior"] = ts_telemetry["tacticalPrior"]
+    ts_router["ts_overlay_receipt_path"] = str(ts_telemetry_path.relative_to(REPO_ROOT)) if ts_telemetry_path.is_file() else ""
 
     # Stage D: Matchup-Conditioned Cross-Equation Jacobian Coupling & Positive-Part James-Stein Shrinkage
     js_factor = float(eq_gate_12k_1b.get("james_stein_shrinkage_factor", ts_router.get("stage_d_james_stein_shrinkage", 0.916978)))
@@ -3546,22 +3709,35 @@ def run_stage3_and_4_conserved_post_sim_projections(
         named_tk_sum = sum(tackle_weights.values())
         tackle_weights["OTHER_DEF"] = max(25.0, 64.0 - named_tk_sum)
 
-        # For Week 10+, conserve unboarded receiving/rushing shares via residual sinks & cap single-RB target concentration
+        # For Week 10+, conserve unboarded receiving/rushing shares via redistribute_vacated_team_volume
         if not is_jax_bal_s34 and int(week) >= 10:
-            tm_tot = (stage0_allowlist.get("team_totals_2026_pbp") or {}).get(team) or {}
-            tm_gp = max(1.0, float(tm_tot.get("team_gp", 6.0)))
-            team_tgt_pg = max(24.0, float(tm_tot.get("targets", 28.0 * tm_gp)) / tm_gp)
-            team_car_pg = max(20.0, float(tm_tot.get("carries", 25.0 * tm_gp)) / tm_gp)
-            rec_weights["OTHER_TEAM_REC"] = max(2.2, team_tgt_pg - sum(rec_weights.values()))
-            rush_weights["OTHER_TEAM_RUSH"] = max(1.8, team_car_pg - sum(rush_weights.values()))
-            tot_rec_w = sum(rec_weights.values()) or 1.0
-            for nm_r in list(rec_weights.keys()):
-                if nm_r != "OTHER_TEAM_REC" and (athletes.get(nm_r) or {}).get("position") == "RB":
-                    max_rb_w = 0.24 * tot_rec_w
-                    if rec_weights[nm_r] > max_rb_w:
-                        excess_w = rec_weights[nm_r] - max_rb_w
-                        rec_weights[nm_r] = max_rb_w
-                        rec_weights["OTHER_TEAM_REC"] += excess_w
+            tm_alias = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
+            opp_team = home if team == away else away
+            opp_team_norm = tm_alias.get(opp_team.strip().upper(), opp_team.strip().upper())
+            f7_pos = {"DE", "DT", "DL", "LB", "OLB", "ILB", "EDGE"}
+            f7_out_names: set[str] = set()
+            for p_nm, inf in athletes.items():
+                inf_tm = str(inf.get("team") or "").strip().upper()
+                inf_tm = tm_alias.get(inf_tm, inf_tm)
+                if inf_tm == opp_team_norm and inf.get("position") in f7_pos:
+                    if str((inf.get("injury_status") or {}).get("report_status") or "").upper() in {"OUT", "IR", "DOUBTFUL"}:
+                        f7_out_names.add(p_nm.strip().lower())
+            for ep in (stage0_allowlist.get("excluded_players") or []):
+                if isinstance(ep, dict):
+                    raw_ep_tm = str(ep.get("team") or "").strip().upper()
+                    ep_tm = tm_alias.get(raw_ep_tm, raw_ep_tm)
+                    ep_pos = str(ep.get("position") or "").strip().upper()
+                    ep_nm = str(ep.get("name") or "").strip().lower()
+                    if ep_tm == opp_team_norm and ep_pos in f7_pos and ep_nm:
+                        f7_out_names.add(ep_nm)
+            opp_f7_outs = len(f7_out_names)
+            rec_weights, rush_weights = redistribute_vacated_team_volume(
+                rec_weights=rec_weights,
+                rush_weights=rush_weights,
+                athletes=athletes,
+                team=team,
+                opp_f7_outs=opp_f7_outs,
+            )
 
         # Normalize shares to sum to 1.0
         rec_sum = sum(rec_weights.values()) or 1.0
@@ -3632,6 +3808,7 @@ def run_stage3_and_4_conserved_post_sim_projections(
         vecs_a["away_pass_yds"].tolist(),
         [jax_rec_tds_alloc[k].tolist() for k in jax_rec_sh_a],
         vecs_a["away_pass_tds"].tolist(),
+        player_keys=list(jax_rec_sh_a.keys()),
     )
 
     bal_rec_yds_alloc = allocate_stochastic_conserved_box_score(
@@ -3645,6 +3822,7 @@ def run_stage3_and_4_conserved_post_sim_projections(
         vecs_a["home_pass_yds"].tolist(),
         [bal_rec_tds_alloc[k].tolist() for k in bal_rec_sh_a],
         vecs_a["home_pass_tds"].tolist(),
+        player_keys=list(bal_rec_sh_a.keys()),
     )
 
     zero_tds = [0.0] * n_sims
@@ -3656,6 +3834,7 @@ def run_stage3_and_4_conserved_post_sim_projections(
         vecs_a["away_rush_yds"].tolist(),
         [zero_tds for _ in jax_rush_sh_a],
         zero_tds,
+        player_keys=list(jax_rush_sh_a.keys()),
     )
 
     bal_rush_yds_alloc = allocate_stochastic_conserved_box_score(
@@ -3666,6 +3845,7 @@ def run_stage3_and_4_conserved_post_sim_projections(
         vecs_a["home_rush_yds"].tolist(),
         [zero_tds for _ in bal_rush_sh_a],
         zero_tds,
+        player_keys=list(bal_rush_sh_a.keys()),
     )
 
     # Stochastic conserved tackle allocations across defenders
@@ -3765,9 +3945,11 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 p_tds_vec = np.maximum(0.0, p_tds_vec + (rng_disp.gamma(4.0, 0.46, size=n_sims) - 1.84))
             scr_vec = np.asarray(vecs_a[scr_key], dtype=np.float64) if scr_key in vecs_a else np.clip(r_yds_vec / 5.2, 0.0, 10.0)
             sacks_vec = np.asarray(vecs_a[sack_key], dtype=np.float64) if sack_key in vecs_a else np.zeros(n_sims, dtype=np.float64)
-            carries_vec = scr_vec + rng_disp.poisson(1.4, size=n_sims)
-            if float(np.std(r_yds_vec)) < 6.0:
-                r_yds_vec = np.maximum(0.0, r_yds_vec + rng_disp.gamma(2.2, 4.5, size=n_sims) - 4.0)
+            kneel_key = "away_kneeldowns" if tm == away else "home_kneeldowns"
+            kneel_vec = np.asarray(vecs_a[kneel_key], dtype=np.float64) if kneel_key in vecs_a else np.zeros(n_sims, dtype=np.float64)
+            carries_vec = scr_vec + kneel_vec
+            # Pure simulated qb_rush_yds allowing 0 or negative kneeldown yards (-1, -2) without artificial +5.9 Gamma floor clamp
+            r_yds_vec = np.asarray(r_yds_vec, dtype=np.float64)
 
             proj_entry["projections"]["pass_yds"] = _quantiles_from_vec(p_yds_vec, cqr_mult)
             proj_entry["projections"]["pass_tds"] = _quantiles_from_vec(p_tds_vec, cqr_mult)

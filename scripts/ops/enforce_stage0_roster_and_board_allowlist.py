@@ -832,9 +832,11 @@ def load_stage0_game_roster_allowlist(
             )
         tm = _normalize_team_abbr(str(p.get("team") or "").strip(), away, home)
         if int(week) >= 10:
+            return_from_ir = stage0_cfg.get("return_from_ir") or {}
+            is_return_ir = any(k.lower() == name.lower() for k in return_from_ir)
             inj_chk = injury_map.get((tm, name.lower())) or inj_stripped_map.get((tm, _strip_name_suffix(name.lower()))) or {}
             inj_st_low = str(inj_chk.get("report_status") or "").strip().lower()
-            if inj_st_low in {"out", "doubtful", "ir", "injured reserve"}:
+            if inj_st_low in {"out", "doubtful", "ir", "injured reserve"} and not is_return_ir:
                 raise Stage0RosterContaminationError(
                     f"STAGE0_FAIL: Injured ({inj_chk.get('report_status')}) player {name} appeared on live board allowlist!"
                 )

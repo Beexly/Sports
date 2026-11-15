@@ -391,6 +391,138 @@ def sinkhorn_reallocate_weights(C_tuple, base_shares, scratched_roles, eps: floa
     return feasible_shares, mass_moved
 
 
+_EMPIRICAL_QB_MOBILITY_FALLBACKS: dict[str, float] = {
+    # Pocket statues (~0.012 - 0.018)
+    "aaron rodgers": 0.015,
+    "matthew stafford": 0.012,
+    "kirk cousins": 0.014,
+    "jared goff": 0.012,
+    "joe flacco": 0.012,
+    "derek carr": 0.018,
+    "gardner minshew": 0.035,
+    "gardner minshew ii": 0.035,
+    "baker mayfield": 0.045,
+    "sam darnold": 0.048,
+    "c.j. stroud": 0.038,
+    "cj stroud": 0.038,
+    "jameis winston": 0.025,
+    "tua tagovailoa": 0.028,
+    "desmond ridder": 0.055,
+    "mac jones": 0.024,
+    "kenny pickett": 0.038,
+    "aidan o'connell": 0.015,
+    "bryce young": 0.052,
+    "will levis": 0.055,
+    "trevor lawrence": 0.058,
+    "dak prescott": 0.035,
+    "patrick mahomes": 0.075,
+    "jordan love": 0.052,
+    # Dual-threat / high-mobility (~0.060 - 0.165)
+    "lamar jackson": 0.165,
+    "josh allen": 0.135,
+    "jalen hurts": 0.140,
+    "kyler murray": 0.125,
+    "jayden daniels": 0.145,
+    "anthony richardson": 0.130,
+    "justin fields": 0.155,
+    "justin herbert": 0.065,
+    "brock purdy": 0.062,
+    "geno smith": 0.058,
+    "russell wilson": 0.072,
+    "caleb williams": 0.078,
+    "bo nix": 0.082,
+    "drake maye": 0.085,
+    "daniel jones": 0.095,
+}
+
+_TEAM_DEFAULT_QB1: dict[str, str] = {
+    "ARI": "kyler murray",
+    "ATL": "kirk cousins",
+    "BAL": "lamar jackson",
+    "BUF": "josh allen",
+    "CAR": "bryce young",
+    "CHI": "caleb williams",
+    "CIN": "joe burrow",
+    "CLE": "jameis winston",
+    "DAL": "dak prescott",
+    "DEN": "bo nix",
+    "DET": "jared goff",
+    "GB": "jordan love",
+    "HOU": "cj stroud",
+    "IND": "anthony richardson",
+    "JAX": "trevor lawrence",
+    "KC": "patrick mahomes",
+    "LAC": "justin herbert",
+    "LAR": "matthew stafford",
+    "LV": "gardner minshew",
+    "MIA": "tua tagovailoa",
+    "MIN": "sam darnold",
+    "NE": "drake maye",
+    "NO": "derek carr",
+    "NYG": "daniel jones",
+    "NYJ": "aaron rodgers",
+    "PHI": "jalen hurts",
+    "PIT": "russell wilson",
+    "SEA": "geno smith",
+    "SF": "brock purdy",
+    "TB": "baker mayfield",
+    "TEN": "will levis",
+    "WAS": "jayden daniels",
+}
+
+
+def resolve_qb_mobility_profile(
+    qb_name: str = "", team: str = "", pbp_df: object | None = None
+) -> dict[str, float]:
+    """
+    Condition scramble_p on each QB's empirical 2026 scramble + designed-rush profile.
+    Pocket statues (Rodgers, Stafford, Cousins, Goff, Flacco) receive ~0.012-0.018.
+    Dual-threat QBs (Lamar, Allen, Hurts, Kyler, Daniels, Herbert, Purdy, Wilson) receive ~0.060-0.165.
+    """
+    norm_name = str(qb_name or "").strip().lower()
+    norm_team = str(team or "").strip().upper()
+
+    if not norm_name and norm_team in _TEAM_DEFAULT_QB1:
+        norm_name = _TEAM_DEFAULT_QB1[norm_team]
+
+    if pbp_df is not None:
+        try:
+            cols = set(getattr(pbp_df, "columns", []))
+            if "qb_scramble" in cols and ("passer_player_name" in cols or "rusher_player_name" in cols):
+                sub = pbp_df
+                if norm_team:
+                    sub = sub[(sub["posteam"] == norm_team) | (sub["defteam"] == norm_team)]
+                last_name = norm_name.split()[-1] if norm_name else ""
+                if last_name:
+                    p_mask = (
+                        sub["passer_player_name"].str.lower().str.contains(last_name, na=False)
+                        | sub["rusher_player_name"].str.lower().str.contains(last_name, na=False)
+                    )
+                    qb_sub = sub[p_mask]
+                    pass_plays = len(qb_sub[qb_sub.get("pass_attempt") == 1])
+                    scrambles = len(qb_sub[qb_sub.get("qb_scramble") == 1])
+                    if pass_plays >= 12:
+                        emp_rate = float(scrambles) / float(pass_plays)
+                        return {
+                            "scramble_p": float(np.clip(emp_rate, 0.010, 0.220)),
+                            "designed_rush_p": float(np.clip(emp_rate * 0.45, 0.005, 0.100)),
+                        }
+        except Exception:
+            pass
+
+    for k, v in _EMPIRICAL_QB_MOBILITY_FALLBACKS.items():
+        if k in norm_name or norm_name in k:
+            return {
+                "scramble_p": float(v),
+                "designed_rush_p": float(v * 0.45),
+            }
+
+    return {
+        "scramble_p": 0.045,
+        "designed_rush_p": 0.018,
+    }
+
+
 def load_week8_injuries_from_csv(repo_root: str | None = None) -> dict[str, list[str]]:
     """Read data/nflverse/injuries_2026.csv (Week 8 practice_status + Week 7 report_status)
     and map active injuries to epaDropoffTable & Sinkhorn role keys."""
@@ -1504,7 +1636,28 @@ def simulate_matchup_pbp(
     comp_floor_lut = np.array([away_comp_floor, home_comp_floor], dtype=np.float64)
     int_mult_lut = np.array([away_int_mult, home_int_mult], dtype=np.float64)
     sack_prob_lut = np.array([away_sack_prob, home_sack_prob], dtype=np.float64)
-    scramble_p_lut = np.array([0.145, 0.115], dtype=np.float64)
+
+    away_qb_name = ""
+    home_qb_name = ""
+    if w1_w7_override is not None:
+        away_qb_name = (
+            (w1_w7_override.get("away") or {}).get("qb_name")
+            or w1_w7_override.get("away_qb")
+            or (w1_w7_override.get("confirmed_qb1") or {}).get(away, "")
+        )
+        home_qb_name = (
+            (w1_w7_override.get("home") or {}).get("qb_name")
+            or w1_w7_override.get("home_qb")
+            or (w1_w7_override.get("confirmed_qb1") or {}).get(home, "")
+        )
+    if not away_qb_name and isinstance(sealed_state.get("confirmed_qb1"), dict):
+        away_qb_name = sealed_state["confirmed_qb1"].get(away, "")
+    if not home_qb_name and isinstance(sealed_state.get("confirmed_qb1"), dict):
+        home_qb_name = sealed_state["confirmed_qb1"].get(home, "")
+
+    away_mob = resolve_qb_mobility_profile(away_qb_name, team=away)
+    home_mob = resolve_qb_mobility_profile(home_qb_name, team=home)
+    scramble_p_lut = np.array([away_mob["scramble_p"], home_mob["scramble_p"]], dtype=np.float64)
     corpus_conditioner_applied = _apply_corpus_conditioner_to_luts(
         net_epa_lut, pace_lut, sack_prob_lut, corpus_conditioner
     )
@@ -1732,6 +1885,9 @@ def simulate_matchup_pbp(
                 yds = np.where(is_kneeldown, -1, yds)
                 home_kneeldowns[idx_13[is_kneeldown & is_hm]] += 1
                 away_kneeldowns[idx_13[is_kneeldown & is_aw]] += 1
+                # Kneeldowns count as QB carries for -1 rush yard each
+                home_qb_rush_yds[idx_13[is_kneeldown & is_hm]] -= 1
+                away_qb_rush_yds[idx_13[is_kneeldown & is_aw]] -= 1
 
             # Accumulate real simulated passing & rushing yardage per world (capped at remaining field length)
             pos_pass_yds = np.minimum(yl_v, np.maximum(0, pass_yds))
@@ -1996,6 +2152,8 @@ def simulate_matchup_pbp(
             "away_qb_scrambles": away_qb_scrambles,
             "home_qb_rush_yds": home_qb_rush_yds,
             "away_qb_rush_yds": away_qb_rush_yds,
+            "home_kneeldowns": home_kneeldowns,
+            "away_kneeldowns": away_kneeldowns,
             "home_kneeldowns_excluded": home_kneeldowns,
             "away_kneeldowns_excluded": away_kneeldowns,
             "home_wr1_yds": hm_wr1_yds_vec,

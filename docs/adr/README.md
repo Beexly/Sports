@@ -12,6 +12,10 @@ This directory contains formal MADR-format Architecture Decision Records (ADRs) 
 | [0004](0004-hardware-aware-laptop-execution-pinecone-hybrid-and-bazel-monorepo.md) | Hardware-Aware Laptop Execution (`i7-1255U` + `Iris Xe`), Pinecone Hybrid Index & Bazel Monorepo Build Optimization | Accepted | 2026-11-06 |
 | [0005](0005-week9-plays-360-board-and-draftkings-fanduel-dfs-engine.md) | Week 9 Plays (`47-19-1` Baseline), 360-Degree Full-Board Market Review & DraftKings/FanDuel DFS Engine | Accepted | 2026-11-06 |
 | [0006](0006-multi-channel-video-social-follower-growth-and-ad-affiliate-revenue-engine.md) | Multi-Channel Short-Form Video Production, Social Follower Flywheel & Ad/Affiliate Revenue Attribution Engine | Accepted | 2026-11-06 |
+| [0007](0007-unified-dynamic-stage0-live-roster-and-return-from-ir-state-machine.md) | Unified Dynamic Stage-0 Live Roster & Return-from-IR State Machine | Accepted | 2026-11-15 |
+| [0008](0008-zero-leak-sinkhorn-vacated-volume-conservation-and-qb-kneeldown-physics.md) | Zero-Leak Sinkhorn Vacated Volume Conservation & QB Kneeldown Physics | Accepted | 2026-11-15 |
+| [0009](0009-empirical-covariance-dirichlet-field-and-2te-lateswap-dfs-architecture.md) | Empirical Covariance, Dirichlet Field & 2-TE Late-Swap DFS Architecture | Accepted | 2026-11-15 |
+| [0010](0010-three-noon-content-ready-locks-t90m-adjustments-and-autonomy-kernel.md) | Three-Noon Content-Ready Locks, T-90m Adjustments & Autonomy Kernel | Accepted | 2026-11-15 |
 
 ## ADR Lifecycle Rules
 

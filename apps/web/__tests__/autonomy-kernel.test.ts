@@ -197,6 +197,78 @@ describe("autonomy operating kernel", () => {
       false,
     );
   });
+
+  describe("pregame cadence & integrity monitoring (ADR-0010)", () => {
+    it("queues Three-Noon Master Locks with requiresOwner=true and autonomousSafe=false", () => {
+      const wedPlan = planAutonomyCycle(
+        baseObs({ pregameCadence: { wedNoonTnfLockDue: true } }),
+      );
+      const wedAct = wedPlan.ownerQueue.find((a) => a.kind === "SEAL_WED_NOON_TNF_LOCK");
+      expect(wedAct).toBeDefined();
+      expect(wedAct!.requiresOwner).toBe(true);
+      expect(wedAct!.autonomousSafe).toBe(false);
+      expect(wedPlan.autonomousQueue.some((a) => a.kind === "SEAL_WED_NOON_TNF_LOCK")).toBe(false);
+
+      const friPlan = planAutonomyCycle(
+        baseObs({ pregameCadence: { friNoonSundayLockDue: true } }),
+      );
+      const friAct = friPlan.ownerQueue.find((a) => a.kind === "SEAL_FRI_NOON_SUNDAY_LOCK");
+      expect(friAct).toBeDefined();
+      expect(friAct!.requiresOwner).toBe(true);
+      expect(friAct!.autonomousSafe).toBe(false);
+      expect(friPlan.autonomousQueue.some((a) => a.kind === "SEAL_FRI_NOON_SUNDAY_LOCK")).toBe(false);
+
+      const sunPlan = planAutonomyCycle(
+        baseObs({ pregameCadence: { sunNoonMnfLockDue: true } }),
+      );
+      const sunAct = sunPlan.ownerQueue.find((a) => a.kind === "SEAL_SUN_NOON_MNF_LOCK");
+      expect(sunAct).toBeDefined();
+      expect(sunAct!.requiresOwner).toBe(true);
+      expect(sunAct!.autonomousSafe).toBe(false);
+      expect(sunPlan.autonomousQueue.some((a) => a.kind === "SEAL_SUN_NOON_MNF_LOCK")).toBe(false);
+    });
+
+    it("queues T-90m inactives adjustment and DFS late swap with requiresOwner=true", () => {
+      const plan = planAutonomyCycle(
+        baseObs({
+          pregameCadence: {
+            t90mInactivesAdjustmentDue: true,
+            lateSwapPacketsStale: true,
+            activeSlot: "SUN_EARLY",
+          },
+        }),
+      );
+      const t90m = plan.ownerQueue.find((a) => a.kind === "RUN_T90M_INACTIVES_ADJUSTMENT");
+      expect(t90m).toBeDefined();
+      expect(t90m!.requiresOwner).toBe(true);
+      expect(t90m!.autonomousSafe).toBe(false);
+      expect(t90m!.detail).toContain("SUN_EARLY");
+
+      const dfs = plan.ownerQueue.find((a) => a.kind === "REBUILD_DFS_LATE_SWAP_PACKETS");
+      expect(dfs).toBeDefined();
+      expect(dfs!.requiresOwner).toBe(true);
+      expect(dfs!.autonomousSafe).toBe(false);
+    });
+
+    it("triggers P0 quarantine on engine integrity leak without flipping gates", () => {
+      const plan = planAutonomyCycle(
+        baseObs({
+          pregameCadence: {
+            engineIntegrityLeakDetected: true,
+            integrityLeakDetail: "Frozen tau mismatch detected in week 10 projection",
+          },
+        }),
+      );
+      expect(plan.severity).toBe("P0");
+      const q = plan.ownerQueue.find((a) => a.kind === "QUARANTINE_ENGINE_INTEGRITY_LEAK");
+      expect(q).toBeDefined();
+      expect(q!.requiresOwner).toBe(true);
+      expect(q!.autonomousSafe).toBe(false);
+      expect(q!.detail).toContain("Frozen tau mismatch");
+      expect(plan.introspection.refuseDefaultHeld).toBe(true);
+      expect(plan.introspection.contradictions.some((c) => c.includes("integrity leak"))).toBe(true);
+    });
+  });
 });
 
 describe("settlement learning loop", () => {

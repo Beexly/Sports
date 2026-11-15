@@ -40,6 +40,51 @@ CORPUS_JSON_PATH = (
 LATE_WINDOW_TEAMS_WEEK9 = {"HOU", "LAC", "ARI", "SEA", "GB", "NE", "LV", "SF", "TB", "CHI", "BUF", "MIN"}
 
 
+def resolve_dynamic_late_window_teams(
+    lineup_players: Sequence[Dict[str, Any]],
+    late_window_teams: Optional[Sequence[str] | set[str]] = None,
+) -> set[str]:
+    """
+    Resolve teams playing in the late afternoon (4:00+ PM ET) or Primetime (SNF/MNF) windows.
+    Prioritizes:
+    1. Explicit late_window_teams argument if provided.
+    2. Player-level kickoff_epoch / game_time timestamps: if multiple kickoffs exist,
+       any team with kickoff >= min_kickoff + 7200s (2 hrs) or hour >= 16 ET (20:00 UTC).
+    3. Player-level is_late_window / window_rank flags.
+    4. Safe fallback to LATE_WINDOW_TEAMS_WEEK9 for backwards compatibility.
+    """
+    if late_window_teams is not None:
+        return {str(t).upper() for t in late_window_teams}
+
+    kickoffs: dict[str, float] = {}
+    for p in lineup_players:
+        tm = str(p.get("team") or "").upper()
+        if not tm:
+            continue
+        ep = p.get("kickoff_epoch")
+        if ep is not None:
+            try:
+                kickoffs[tm] = max(kickoffs.get(tm, 0.0), float(ep))
+            except (ValueError, TypeError):
+                pass
+
+    if len(kickoffs) >= 2:
+        min_k = min(kickoffs.values())
+        max_k = max(kickoffs.values())
+        if max_k - min_k >= 7200:
+            return {tm for tm, ep in kickoffs.items() if ep > min_k + 3600}
+
+    flagged_teams = set()
+    for p in lineup_players:
+        tm = str(p.get("team") or "").upper()
+        if p.get("is_late_window") or int(p.get("window_rank", 0) or 0) > 0:
+            flagged_teams.add(tm)
+    if flagged_teams:
+        return flagged_teams
+
+    return set(LATE_WINDOW_TEAMS_WEEK9)
+
+
 def load_dfs_5000_page_corpus_summary() -> Dict[str, Any]:
     """Load summary metadata from the harvested 5,000+ page DFS research corpus."""
     if not CORPUS_JSON_PATH.is_file():
@@ -72,22 +117,35 @@ def eq_dfs_01_stack_and_overlap_audit(
 ) -> Dict[str, Any]:
     """
     EQ-DFS-01 (Hunter, Vielma & Zaman 2019):
-    Evaluates QB + pass-catcher stacking, opposing bring-back presence, and maximum player
-    overlap against previously selected portfolio lineups.
+    Evaluates QB + pass-catcher stacking, opposing bring-back presence, Captain stacking for Showdown,
+    and maximum player overlap against previously selected portfolio lineups.
     """
-    qb = next((p for p in lineup_players if str(p.get("position")) == "QB"), None)
-    qb_team = str(qb.get("team", "")) if qb else ""
-    qb_opp = str(qb.get("opponent", "")) if qb else ""
+    cpt = next(
+        (p for p in lineup_players if str(p.get("slot", "")).upper() == "CPT" or bool(p.get("is_cpt"))),
+        None,
+    )
+    cpt_name = str(cpt.get("player") or cpt.get("name") or "") if cpt else ""
+    cpt_team = str(cpt.get("team") or "").upper() if cpt else ""
+
+    qb = next((p for p in lineup_players if str(p.get("position", p.get("pos", ""))).upper() == "QB"), None)
+    qb_team = str(qb.get("team", "")).upper() if qb else ""
+    qb_opp = str(qb.get("opponent", "")).upper() if qb else ""
+
+    primary_team = cpt_team if (cpt_team and not qb_team) else qb_team
+    primary_opp = str(cpt.get("opponent", "")).upper() if (cpt and not qb_opp) else qb_opp
 
     same_team_pass_catchers = [
         str(p.get("player") or p.get("name"))
         for p in lineup_players
-        if str(p.get("position")) in ("WR", "TE") and str(p.get("team")) == qb_team
+        if str(p.get("position", p.get("pos", ""))).upper() in ("WR", "TE", "RB")
+        and str(p.get("team", "")).upper() == primary_team
+        and (str(p.get("player") or p.get("name")) != cpt_name if cpt else True)
     ]
     opposing_bring_backs = [
         str(p.get("player") or p.get("name"))
         for p in lineup_players
-        if str(p.get("position")) in ("RB", "WR", "TE") and str(p.get("team")) == qb_opp
+        if str(p.get("position", p.get("pos", ""))).upper() in ("RB", "WR", "TE", "QB")
+        and str(p.get("team", "")).upper() == primary_opp
     ]
 
     cur_names = {str(p.get("player") or p.get("name")) for p in lineup_players}
@@ -96,7 +154,7 @@ def eq_dfs_01_stack_and_overlap_audit(
         prev_names = {str(p.get("player") or p.get("name")) for p in prev}
         max_overlap = max(max_overlap, len(cur_names & prev_names))
 
-    return {
+    res: Dict[str, Any] = {
         "qb_team": qb_team,
         "stack_pass_catchers": same_team_pass_catchers,
         "stack_count": len(same_team_pass_catchers),
@@ -104,6 +162,10 @@ def eq_dfs_01_stack_and_overlap_audit(
         "bring_back_count": len(opposing_bring_backs),
         "max_overlap_with_prior_lineups": max_overlap,
     }
+    if cpt:
+        res["cpt_player"] = cpt_name
+        res["cpt_team"] = cpt_team
+    return res
 
 
 def eq_dfs_02_kl_contrarian_leverage(
@@ -209,38 +271,56 @@ def eq_dfs_06_duplication_uniqueness_score(
     """
     EQ-DFS-06 (Beal, Norman & Ramchurn 2020):
     Probability `U(L) = 1 - prod_i pi_i` that a lineup is non-duplicated in a large-field GPP,
-    boosted by intentional salary-cap geometric spacing (`$100-$600` under cap).
+    boosted by intentional salary-cap geometric spacing (`$100-$600` under cap) and Showdown 1.5x Captain leverage ratio.
     """
     total_sal = sum(int(p.get("salary", 0) or 0) for p in lineup_players)
     cap_left = max(0, salary_cap - total_sal)
     log_dup_prob = 0.0
+    cpt_present = False
     for p in lineup_players:
         sal = float(p.get("salary", 4500.0) or 4500.0)
         proj = float(p.get("projection", 12.0) or 12.0)
         est_own = min(0.38, max(0.03, (proj / max(sal / 1000.0, 2.0)) * 0.055))
-        log_dup_prob += math.log(est_own)
-    base_unique = 1.0 - math.exp(max(-18.0, log_dup_prob * 0.35))
+        is_cpt = str(p.get("slot", "")).upper() == "CPT" or bool(p.get("is_cpt"))
+        if is_cpt:
+            cpt_present = True
+            cpt_own = max(0.015, est_own * 0.35)
+            log_dup_prob += math.log(cpt_own)
+        else:
+            log_dup_prob += math.log(est_own)
+    decay_factor = 0.45 if cpt_present else 0.35
+    base_unique = 1.0 - math.exp(max(-18.0, log_dup_prob * decay_factor))
     cap_spacing_boost = 0.015 if 100 <= cap_left <= 900 else 0.0
     return round(min(0.9999, base_unique + cap_spacing_boost), 4)
 
 
 def eq_dfs_07_late_swap_recourse_value(
     lineup_players: Sequence[Dict[str, Any]],
+    late_window_teams: Optional[Sequence[str] | set[str]] = None,
 ) -> Dict[str, Any]:
     """
     EQ-DFS-07 (Newell & Easton 2021; Shapiro et al. 2014):
-    Two-stage stochastic recourse value `EV_swap(L)` from roster spots in the 4:05/4:25 PM ET
+    Two-stage stochastic recourse value `EV_swap(L)` from roster spots in the late afternoon
     or Primetime windows that retain late-swap optionality after early-window variance resolves.
+    Dynamically resolves late_window_teams via live scoreboard / kickoff_epoch timestamps.
     """
+    active_late_teams = resolve_dynamic_late_window_teams(lineup_players, late_window_teams)
     late_players = [
         str(p.get("player") or p.get("name"))
         for p in lineup_players
-        if str(p.get("team", "")) in LATE_WINDOW_TEAMS_WEEK9
+        if str(p.get("team", "")).upper() in active_late_teams
     ]
-    recourse_fpts_bonus = round(0.65 * len(late_players), 2)
+    unique_teams = {str(p.get("team", "")).upper() for p in lineup_players if p.get("team")}
+    is_single_game = len(unique_teams) <= 2 and len(lineup_players) <= 6
+    if is_single_game and len(active_late_teams) >= len(unique_teams):
+        recourse_fpts_bonus = 0.0
+    else:
+        recourse_fpts_bonus = round(0.65 * len(late_players), 2)
+
     return {
         "late_window_slots_count": len(late_players),
         "late_window_players": late_players,
+        "late_window_teams": sorted(active_late_teams),
         "expected_recourse_fpts_gain": recourse_fpts_bonus,
     }
 
@@ -249,6 +329,7 @@ def evaluate_lineup_with_7_dfs_equations(
     lineup_players: Sequence[Dict[str, Any]],
     prior_lineups: Sequence[Sequence[Dict[str, Any]]] = (),
     submodular_marginal_gain: float = 0.0,
+    late_window_teams: Optional[Sequence[str] | set[str]] = None,
 ) -> Dict[str, Any]:
     """Evaluate a single DFS lineup across all 7 literature-backed equations (EQ-DFS-01..07)."""
     eq01 = eq_dfs_01_stack_and_overlap_audit(lineup_players, prior_lineups)
@@ -256,7 +337,7 @@ def evaluate_lineup_with_7_dfs_equations(
     eq04 = eq_dfs_04_bertsimas_sim_gamma_robust_floor(lineup_players, gamma=3)
     eq05 = eq_dfs_05_stack_covariance_bonus(lineup_players)
     eq06 = eq_dfs_06_duplication_uniqueness_score(lineup_players)
-    eq07 = eq_dfs_07_late_swap_recourse_value(lineup_players)
+    eq07 = eq_dfs_07_late_swap_recourse_value(lineup_players, late_window_teams=late_window_teams)
     return {
         "eq_dfs_01_stack_and_overlap": eq01,
         "eq_dfs_02_kl_contrarian_leverage": eq02,

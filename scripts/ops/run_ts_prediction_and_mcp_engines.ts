@@ -249,6 +249,9 @@ import {
 import {
   HeadroomReversibleVault,
 } from "../../packages/mcp-equations-server/src/headroom-magnemo-opik-harness.js";
+import {
+  runLiveGameTsOverlayAndGrounding,
+} from "./run_live_game_ts_overlay_and_grounding.js";
 
 function walkTsSourceFiles(dir: string): string[] {
   if (!fs.existsSync(dir)) return [];
@@ -1378,4 +1381,25 @@ function main() {
   }));
 }
 
-main();
+async function entrypoint() {
+  const args = process.argv.slice(2);
+  const hasGameArgs = args.some((a) => a === "--game" || a === "--week" || a === "--season");
+  if (hasGameArgs) {
+    let season = 2026;
+    let week = 10;
+    let game = "ALL_REMAINING";
+    for (let i = 0; i < args.length; i++) {
+      if (args[i] === "--season" && args[i + 1]) season = parseInt(args[i + 1]!, 10);
+      if (args[i] === "--week" && args[i + 1]) week = parseInt(args[i + 1]!, 10);
+      if (args[i] === "--game" && args[i + 1]) game = args[i + 1]!;
+    }
+    console.log(
+      `[DELEGATING] run_ts_prediction_and_mcp_engines -> runLiveGameTsOverlayAndGrounding (--season ${season} --week ${week} --game ${game})`,
+    );
+    await runLiveGameTsOverlayAndGrounding({ season, week, game });
+    return;
+  }
+  main();
+}
+
+entrypoint();

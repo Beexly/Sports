@@ -1,25 +1,13 @@
 {
-  "schema": "gse-unified-stage0-truth-v1",
+  "schema": "gse-unified-stage0-truth-v2",
   "season": 2026,
   "week": 10,
   "season_type": "REG",
-  "generated_utc": "2026-11-14T03:11:47.274636+00:00",
-  "mode": "dry-run-audit",
-  "scoreboard_source": "live_espn_api",
+  "generated_utc": "2026-11-15T20:30:48.860296+00:00",
+  "mode": "t90m-adjust",
+  "scoreboard_source": "local_snapshot",
   "events_count": 14,
   "events": [
-    {
-      "matchup": "WAS@NYG",
-      "espn_event_id": "401873052",
-      "kickoff_utc": "2026-11-13T01:15Z",
-      "status": "STATUS_FINAL",
-      "venue": "MetLife Stadium",
-      "city": "East Rutherford",
-      "state": "NJ",
-      "country": "USA",
-      "is_indoor": false,
-      "neutral_site": false
-    },
     {
       "matchup": "NE@DET",
       "espn_event_id": "401873053",
@@ -169,6 +157,18 @@
       "neutral_site": false
     },
     {
+      "matchup": "WAS@NYG",
+      "espn_event_id": "401873052",
+      "kickoff_utc": "2026-11-13T01:15Z",
+      "status": "STATUS_SCHEDULED",
+      "venue": "MetLife Stadium",
+      "city": "East Rutherford",
+      "state": "NJ",
+      "country": "USA",
+      "is_indoor": false,
+      "neutral_site": false
+    },
+    {
       "matchup": "LAC@BAL",
       "espn_event_id": "401873065",
       "kickoff_utc": "2026-11-17T01:15Z",
@@ -181,19 +181,1993 @@
       "neutral_site": false
     }
   ],
-  "venues": {
-    "WAS@NYG": {
-      "matchup": "WAS@NYG",
-      "espn_event_id": "401873052",
-      "kickoff_utc": "2026-11-13T01:15Z",
-      "status": "STATUS_FINAL",
-      "venue": "MetLife Stadium",
-      "city": "East Rutherford",
-      "state": "NJ",
-      "country": "USA",
-      "is_indoor": false,
-      "neutral_site": false
+  "sealed_started_teams": [],
+  "unstarted_pre_teams": [
+    "ARI",
+    "ATL",
+    "BAL",
+    "BUF",
+    "CAR",
+    "CIN",
+    "CLE",
+    "DAL",
+    "DET",
+    "GB",
+    "HOU",
+    "IND",
+    "JAX",
+    "KC",
+    "LAC",
+    "LAR",
+    "LV",
+    "MIA",
+    "MIN",
+    "NE",
+    "NO",
+    "NYG",
+    "NYJ",
+    "PIT",
+    "SEA",
+    "SF",
+    "TEN",
+    "WAS"
+  ],
+  "confirmed_qb1": {
+    "ARI": "Carson Beck",
+    "ATL": "Michael Penix Jr.",
+    "BAL": "Jacoby Brissett",
+    "BUF": "Josh Allen",
+    "CAR": "Bryce Young",
+    "CIN": "Joe Burrow",
+    "CLE": "Shedeur Sanders",
+    "DAL": "Dak Prescott",
+    "DET": "Jared Goff",
+    "GB": "Jordan Love",
+    "HOU": "C.J. Stroud",
+    "IND": "Daniel Jones",
+    "JAX": "Trevor Lawrence",
+    "KC": "Patrick Mahomes",
+    "LAC": "Justin Herbert",
+    "LAR": "Matthew Stafford",
+    "LV": "Fernando Mendoza",
+    "MIA": "Kyle McCord",
+    "MIN": "Kirk Cousins",
+    "NE": "Tommy DeVito",
+    "NO": "Tyler Shough",
+    "NYJ": "Geno Smith",
+    "PIT": "Aaron Rodgers",
+    "SEA": "Drew Lock",
+    "SF": "Brock Purdy",
+    "TEN": "Cam Ward",
+    "CHI": "Caleb Williams",
+    "DEN": "Bo Nix",
+    "NYG": "J.J. McCarthy",
+    "PHI": "Joe Milton",
+    "TB": "Baker Mayfield",
+    "WAS": "Jayden Daniels"
+  },
+  "confirmed_qb1_simulation": {
+    "ARI": "Carson Beck",
+    "ATL": "Michael Penix Jr.",
+    "BAL": "Jacoby Brissett",
+    "BUF": "Josh Allen",
+    "CAR": "Bryce Young",
+    "CIN": "Joe Burrow",
+    "CLE": "Deshaun Watson",
+    "DAL": "Dak Prescott",
+    "DET": "Jared Goff",
+    "GB": "Jordan Love",
+    "HOU": "C.J. Stroud",
+    "IND": "Daniel Jones",
+    "JAX": "Trevor Lawrence",
+    "KC": "Patrick Mahomes",
+    "LAC": "Justin Herbert",
+    "LAR": "Matthew Stafford",
+    "LV": "Fernando Mendoza",
+    "MIA": "Kyle McCord",
+    "MIN": "Kirk Cousins",
+    "NE": "Tommy DeVito",
+    "NO": "Tyler Shough",
+    "NYJ": "Geno Smith",
+    "PIT": "Aaron Rodgers",
+    "SEA": "Drew Lock",
+    "SF": "Brock Purdy",
+    "TEN": "Cam Ward",
+    "CHI": "Caleb Williams",
+    "DEN": "Bo Nix",
+    "NYG": "J.J. McCarthy",
+    "PHI": "Joe Milton",
+    "TB": "Baker Mayfield",
+    "WAS": "Jayden Daniels"
+  },
+  "confirmed_qb1_dfs_config": {
+    "ARI": "Carson Beck",
+    "ATL": "Michael Penix Jr.",
+    "BAL": "Jacoby Brissett",
+    "BUF": "Josh Allen",
+    "CAR": "Bryce Young",
+    "CIN": "Joe Burrow",
+    "CLE": "Shedeur Sanders",
+    "DAL": "Dak Prescott",
+    "DET": "Jared Goff",
+    "GB": "Jordan Love",
+    "HOU": "C.J. Stroud",
+    "IND": "Daniel Jones",
+    "JAX": "Trevor Lawrence",
+    "KC": "Patrick Mahomes",
+    "LAC": "Justin Herbert",
+    "LAR": "Matthew Stafford",
+    "LV": "Fernando Mendoza",
+    "MIA": "Kyle McCord",
+    "MIN": "Kirk Cousins",
+    "NE": "Tommy DeVito",
+    "NO": "Tyler Shough",
+    "NYJ": "Geno Smith",
+    "PIT": "Aaron Rodgers",
+    "SEA": "Drew Lock",
+    "SF": "Brock Purdy",
+    "TEN": "Cam Ward",
+    "CHI": "Caleb Williams",
+    "DEN": "Bo Nix",
+    "NYG": "J.J. McCarthy",
+    "PHI": "Joe Milton",
+    "TB": "Baker Mayfield",
+    "WAS": "Jayden Daniels"
+  },
+  "excluded_players": [
+    {
+      "name": "Gardner Minshew",
+      "team": "ARI",
+      "position": "QB",
+      "reason": "IR - Alias of Gardner Minshew II (WEEK10-ROSTER-INJURY-VERIFICATION-2026-11-13.md)"
     },
+    {
+      "name": "Gardner Minshew II",
+      "team": "ARI",
+      "position": "QB",
+      "reason": "IR - Elbow (Neon injuries wk10, fetched 2026-11-15) + IR - Elbow (ESPN live pregame 2026-11-15T12:49Z)"
+    },
+    {
+      "name": "Hjalte Froholdt",
+      "team": "ARI",
+      "position": "C",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jon Gaines II",
+      "team": "ARI",
+      "position": "G",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T01:35Z)"
+    },
+    {
+      "name": "Michael Wilson",
+      "team": "ARI",
+      "position": "WR",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Zachary Carter",
+      "team": "ARI",
+      "position": "DT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-14T02:22Z)"
+    },
+    {
+      "name": "Andy Dalton",
+      "team": "ATL",
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:45Z)"
+    },
+    {
+      "name": "Avieon Terrell",
+      "team": "ATL",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Brian Robinson Jr.",
+      "team": "ATL",
+      "position": "RB",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Cameron Williams",
+      "team": "ATL",
+      "position": "OL",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Divine Deablo",
+      "team": "ATL",
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jack Strand",
+      "team": "ATL",
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Robert Longerbeam",
+      "team": "ATL",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Samson Ebukam",
+      "team": "ATL",
+      "position": "DE",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Zachariah Branch",
+      "team": "ATL",
+      "position": "WR",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Adam Randall",
+      "team": "BAL",
+      "position": "RB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Neck (ESPN live pregame 2026-11-14T23:40Z)"
+    },
+    {
+      "name": "Jaylinn Hawkins",
+      "team": "BAL",
+      "position": "S",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-14T19:16Z)"
+    },
+    {
+      "name": "Lamar Jackson",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15) + IR - Thumb (ESPN live pregame 2026-11-13T14:48Z)"
+    },
+    {
+      "name": "Tyler Huntley",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "IR - Toe (ESPN live pregame 2026-11-05T21:20Z)"
+    },
+    {
+      "name": "Ar'maj Reed-Adams",
+      "team": "BUF",
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
+    },
+    {
+      "name": "DJ Moore",
+      "team": "BUF",
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
+    },
+    {
+      "name": "Greg Gaines",
+      "team": "BUF",
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
+    },
+    {
+      "name": "Jalon Kilgore",
+      "team": "BUF",
+      "position": "S",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
+    },
+    {
+      "name": "Joshua Palmer",
+      "team": "BUF",
+      "position": "WR",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Jude Bowry",
+      "team": "BUF",
+      "position": "OT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
+    },
+    {
+      "name": "Mike Danna",
+      "team": "BUF",
+      "position": "DE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
+    },
+    {
+      "name": "Shane Buechele",
+      "team": "BUF",
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Spencer Brown",
+      "team": "BUF",
+      "position": "OT",
+      "reason": "DOUBTFUL - Ankle (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Tyrell Shavers",
+      "team": "BUF",
+      "position": "WR",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "AJ Dillon",
+      "team": "CAR",
+      "position": "RB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Bobby Okereke",
+      "team": "CAR",
+      "position": "LB",
+      "reason": "OUT - Foot (Neon injuries wk10, fetched 2026-11-15) + OUT - Foot (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "name": "Brady Christensen",
+      "team": "CAR",
+      "position": "G",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Haynes King",
+      "team": "CAR",
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "name": "Ja'Tavion Sanders",
+      "team": "CAR",
+      "position": "TE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "name": "Jaycee Horn",
+      "team": "CAR",
+      "position": "CB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jonathon Brooks",
+      "team": "CAR",
+      "position": "RB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
+    },
+    {
+      "name": "Mike Jackson",
+      "team": "CAR",
+      "position": "CB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Sam Hecht",
+      "team": "CAR",
+      "position": "C",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "name": "TeRah Edwards",
+      "team": "CAR",
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Will Lee III",
+      "team": "CAR",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "name": "Braxton Jones",
+      "team": "CHI",
+      "position": "OT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "D.J. Moore",
+      "team": "CHI",
+      "position": "WR",
+      "reason": "OUT / Master-Plan Stage 0 Ban"
+    },
+    {
+      "name": "Kentavius Street",
+      "team": "CHI",
+      "position": "DT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Kyle Monangai",
+      "team": "CHI",
+      "position": "RB",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Malik Muhammad II",
+      "team": "CHI",
+      "position": "CB",
+      "reason": "OUT - Foot (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Zavier Scott",
+      "team": "CHI",
+      "position": "RB",
+      "reason": "IR - Wrist (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Andrei Iosivas",
+      "team": "CIN",
+      "position": "WR",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Thumb (ESPN live pregame 2026-11-14T20:08Z)"
+    },
+    {
+      "name": "Brian Parker II",
+      "team": "CIN",
+      "position": "OT",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-12T22:57Z)"
+    },
+    {
+      "name": "Cashius Howell",
+      "team": "CIN",
+      "position": "DE",
+      "reason": "IR - Wrist (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Erick All Jr.",
+      "team": "CIN",
+      "position": "TE",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Jalen Davis",
+      "team": "CIN",
+      "position": "CB",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Kyle Dugger",
+      "team": "CIN",
+      "position": "S",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-14T01:56Z)"
+    },
+    {
+      "name": "Zack Moss",
+      "team": "CIN",
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
+    },
+    {
+      "name": "Deshaun Watson",
+      "team": "CLE",
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
+    },
+    {
+      "name": "Dillon Gabriel",
+      "team": "CLE",
+      "position": "QB",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "name": "Justin Jefferson",
+      "team": "CLE",
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "name": "Kalia Davis",
+      "team": "CLE",
+      "position": "DT",
+      "reason": "IR - Quadriceps (ESPN live pregame 2026-10-28T00:26Z)"
+    },
+    {
+      "name": "Michael Burton",
+      "team": "CLE",
+      "position": "FB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Noah Igbinoghene",
+      "team": "CLE",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "name": "Parker Brailsford",
+      "team": "CLE",
+      "position": "C",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "name": "Ronnie Hickman",
+      "team": "CLE",
+      "position": "S",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "name": "Ronnie Hickman Jr.",
+      "team": "CLE",
+      "position": "S",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Taylen Green",
+      "team": "CLE",
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Teven Jenkins",
+      "team": "CLE",
+      "position": "G",
+      "reason": "IR - Back (ESPN live pregame 2026-10-24T18:50Z)"
+    },
+    {
+      "name": "Devin Moore",
+      "team": "DAL",
+      "position": "CB",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Donovan Ezeiruaku",
+      "team": "DAL",
+      "position": "LB",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T01:00Z)"
+    },
+    {
+      "name": "Jake Ferguson",
+      "team": "DAL",
+      "position": "TE",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jonathan Mingo",
+      "team": "DAL",
+      "position": "WR",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Juanyeh Thomas",
+      "team": "DAL",
+      "position": "S",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Malachi Lawrence",
+      "team": "DAL",
+      "position": "LB",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "P.J. Locke",
+      "team": "DAL",
+      "position": "S",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Tyler Goodson",
+      "team": "DAL",
+      "position": "RB",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee - ACL + MCL (ESPN live pregame 2026-11-14T18:50Z)"
+    },
+    {
+      "name": "Brandon Jones",
+      "team": "DEN",
+      "position": "S",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Eyioma Uwazurike",
+      "team": "DEN",
+      "position": "DE",
+      "reason": "IR - Shoulder (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Kris Abrams-Draine",
+      "team": "DEN",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Talanoa Hufanga",
+      "team": "DEN",
+      "position": "S",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Ahmed Hassanein",
+      "team": "DET",
+      "position": "DE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Amen Ogbongbemiga",
+      "team": "DET",
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Cade Mays",
+      "team": "DET",
+      "position": "C",
+      "reason": "Out - Ankle (nflverse w10)"
+    },
+    {
+      "name": "D.J. Reed",
+      "team": "DET",
+      "position": "CB",
+      "reason": "Out - Hip (nflverse w10)"
+    },
+    {
+      "name": "Isiah Pacheco",
+      "team": "DET",
+      "position": "RB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Jack Campbell",
+      "team": "DET",
+      "position": "LB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jimmy Rolder",
+      "team": "DET",
+      "position": "LB",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Keith Abney II",
+      "team": "DET",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Kerby Joseph",
+      "team": "DET",
+      "position": "S",
+      "reason": "Out - Knee (nflverse w10)"
+    },
+    {
+      "name": "Mekhi Wingo",
+      "team": "DET",
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Chris Brooks",
+      "team": "GB",
+      "position": "RB",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Donovan Jennings",
+      "team": "GB",
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Josh Jacobs",
+      "team": "GB",
+      "position": "RB",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Josh Whyle",
+      "team": "GB",
+      "position": "TE",
+      "reason": "IR - Concussion (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Kevin Zeitler",
+      "team": "GB",
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Micah Parsons",
+      "team": "GB",
+      "position": "DE",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Pierre Strong Jr.",
+      "team": "GB",
+      "position": "RB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Sean Rhyan",
+      "team": "GB",
+      "position": "G",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Skyy Moore",
+      "team": "GB",
+      "position": "WR",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Warren Brinson",
+      "team": "GB",
+      "position": "DT",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Zaire Franklin",
+      "team": "GB",
+      "position": "LB",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Azeez Al-Shaair",
+      "team": "HOU",
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Brevin Jordan",
+      "team": "HOU",
+      "position": "TE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:37Z)"
+    },
+    {
+      "name": "Christian Kirk",
+      "team": "HOU",
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
+    },
+    {
+      "name": "Danielle Hunter",
+      "team": "HOU",
+      "position": "DE",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)"
+    },
+    {
+      "name": "David Montgomery",
+      "team": "HOU",
+      "position": "RB",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jake Hummel",
+      "team": "HOU",
+      "position": "LB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Jaylin Smith",
+      "team": "HOU",
+      "position": "CB",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Keylan Rutledge",
+      "team": "HOU",
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:37Z)"
+    },
+    {
+      "name": "Marvin Harrison Jr.",
+      "team": "HOU",
+      "position": "WR",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)"
+    },
+    {
+      "name": "Wyatt Teller",
+      "team": "HOU",
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Illness (ESPN live pregame 2026-11-15T16:37Z)"
+    },
+    {
+      "name": "Akeem Davis-Gaither",
+      "team": "IND",
+      "position": "LB",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Alec Pierce",
+      "team": "IND",
+      "position": "WR",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Arden Key",
+      "team": "IND",
+      "position": "DE",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Jalen Travis",
+      "team": "IND",
+      "position": "OT",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Jaylon Carlies",
+      "team": "IND",
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Jerry Tillery",
+      "team": "IND",
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Luke Rhodes",
+      "team": "IND",
+      "position": "LS",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Mo Alie-Cox",
+      "team": "IND",
+      "position": "TE",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Riley Leonard",
+      "team": "IND",
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)"
+    },
+    {
+      "name": "Will Mallory",
+      "team": "IND",
+      "position": "TE",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Albert Regis",
+      "team": "JAX",
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "B.J. Green II",
+      "team": "JAX",
+      "position": "DE",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Forearm (ESPN live pregame 2026-11-14T02:12Z)"
+    },
+    {
+      "name": "CJ Williams",
+      "team": "JAX",
+      "position": "WR",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:42Z)"
+    },
+    {
+      "name": "DaVon Hamilton",
+      "team": "JAX",
+      "position": "DT",
+      "reason": "IR - Knee (ESPN live pregame 2026-11-04T01:05Z)"
+    },
+    {
+      "name": "Eric Murray",
+      "team": "JAX",
+      "position": "S",
+      "reason": "IR - Elbow (ESPN live pregame 2026-11-04T01:11Z)"
+    },
+    {
+      "name": "Jessie Bates",
+      "team": "JAX",
+      "position": "S",
+      "reason": "OUT - Not injury related - resting player (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jessie Bates III",
+      "team": "JAX",
+      "position": "S",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Jordan Davis",
+      "team": "JAX",
+      "position": "DT",
+      "reason": "OUT - Not injury related - resting player (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Wesley Williams",
+      "team": "JAX",
+      "position": "DE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Ben VanSumeren",
+      "team": "KC",
+      "position": "FB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)"
+    },
+    {
+      "name": "Garrett Nussmeier",
+      "team": "KC",
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)"
+    },
+    {
+      "name": "Jaydn Ott",
+      "team": "KC",
+      "position": "RB",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:46Z)"
+    },
+    {
+      "name": "Jaylon Moore",
+      "team": "KC",
+      "position": "OT",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:46Z)"
+    },
+    {
+      "name": "Kenneth Walker III",
+      "team": "KC",
+      "position": "RB",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "L'Jarius Sneed",
+      "team": "KC",
+      "position": "CB",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Melvin Smith Jr.",
+      "team": "KC",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Omarr Norman-Lott",
+      "team": "KC",
+      "position": "DT",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Peter Woods",
+      "team": "KC",
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:46Z)"
+    },
+    {
+      "name": "Rashee Rice",
+      "team": "KC",
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
+    },
+    {
+      "name": "Branson Taylor",
+      "team": "LAC",
+      "position": "G",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T01:24Z)"
+    },
+    {
+      "name": "Brenen Thompson",
+      "team": "LAC",
+      "position": "WR",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "David Njoku",
+      "team": "LAC",
+      "position": "TE",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Denzel Perryman",
+      "team": "LAC",
+      "position": "LB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Isas Waxter",
+      "team": "LAC",
+      "position": "CB",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T01:11Z)"
+    },
+    {
+      "name": "Kendall Williamson",
+      "team": "LAC",
+      "position": "S",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T01:14Z)"
+    },
+    {
+      "name": "Trey Pipkins III",
+      "team": "LAC",
+      "position": "OT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-15T01:22Z)"
+    },
+    {
+      "name": "Davante Adams",
+      "team": "LAR",
+      "position": "WR",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Hamstring (ESPN live pregame 2026-11-15T16:06Z)"
+    },
+    {
+      "name": "Jordan Whittington",
+      "team": "LAR",
+      "position": "WR",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Puka Nacua",
+      "team": "LAR",
+      "position": "WR",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee - MCL (ESPN live pregame 2026-11-15T16:00Z)"
+    },
+    {
+      "name": "Steve Avila",
+      "team": "LAR",
+      "position": "G",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-14T02:16Z)"
+    },
+    {
+      "name": "Terrance Ferguson",
+      "team": "LAR",
+      "position": "TE",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Chigozie Anusiem",
+      "team": "LV",
+      "position": "CB",
+      "reason": "IR - Knee (ESPN live pregame 2026-08-22T20:31Z)"
+    },
+    {
+      "name": "Keyron Crawford",
+      "team": "LV",
+      "position": "DE",
+      "reason": "IR - Ankle (ESPN live pregame 2026-08-31T00:50Z)"
+    },
+    {
+      "name": "Patrick Johnson",
+      "team": "LV",
+      "position": "DE",
+      "reason": "IR - Neck (ESPN live pregame 2026-11-01T02:52Z)"
+    },
+    {
+      "name": "Aaron Brewer",
+      "team": "MIA",
+      "position": "C",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Caedan Wallace",
+      "team": "MIA",
+      "position": "OT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Chris Bell",
+      "team": "MIA",
+      "position": "WR",
+      "reason": "DOUBTFUL - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-15T16:41Z)"
+    },
+    {
+      "name": "Darrell Baker Jr.",
+      "team": "MIA",
+      "position": "CB",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jared Wayne",
+      "team": "MIA",
+      "position": "WR",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Justin Joly",
+      "team": "MIA",
+      "position": "TE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Malik Willis",
+      "team": "MIA",
+      "position": "QB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Marcellas Dial Jr.",
+      "team": "MIA",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Zach Sieler",
+      "team": "MIA",
+      "position": "DT",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Blake Cashman",
+      "team": "MIN",
+      "position": "LB",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Demond Claiborne",
+      "team": "MIN",
+      "position": "RB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Jauan Jennings",
+      "team": "MIN",
+      "position": "WR",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "name": "Jordan Addison",
+      "team": "MIN",
+      "position": "WR",
+      "reason": "OUT - Wrist (Neon injuries wk10, fetched 2026-11-15) + OUT - Thumb (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "name": "Kyler Murray",
+      "team": "MIN",
+      "position": "QB",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Max Brosmer",
+      "team": "MIN",
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "name": "T.J. Hockenson",
+      "team": "MIN",
+      "position": "TE",
+      "reason": "OUT - Wrist (Neon injuries wk10, fetched 2026-11-15) + OUT - Wrist (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "name": "Tyrion Ingram-Dawkins",
+      "team": "MIN",
+      "position": "DE",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "name": "Behren Morton",
+      "team": "NE",
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Ben Brown",
+      "team": "NE",
+      "position": "C",
+      "reason": "Out - Knee (nflverse w10)"
+    },
+    {
+      "name": "Brenden Schooler",
+      "team": "NE",
+      "position": "S",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Carlton Davis III",
+      "team": "NE",
+      "position": "CB",
+      "reason": "Out - Knee (nflverse w10)"
+    },
+    {
+      "name": "Dametrious Crownover",
+      "team": "NE",
+      "position": "OT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "TreVeyon Henderson",
+      "team": "NE",
+      "position": "RB",
+      "reason": "Out - Illness (nflverse w10)"
+    },
+    {
+      "name": "Walter Rouse",
+      "team": "NE",
+      "position": "OL",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "CJ Donaldson",
+      "team": "NO",
+      "position": "RB",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Christen Miller",
+      "team": "NO",
+      "position": "DT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Erik McCoy",
+      "team": "NO",
+      "position": "C",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Biceps (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Jaylan Ford",
+      "team": "NO",
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Mike Reid",
+      "team": "NO",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Taliese Fuaga",
+      "team": "NO",
+      "position": "OT",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Zach Wilson",
+      "team": "NO",
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "CJ Okoye",
+      "team": "NYG",
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "J.C. Davis",
+      "team": "NYG",
+      "position": "OT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Josh Sills",
+      "team": "NYG",
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Malik Harrison",
+      "team": "NYG",
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Nikko Reed",
+      "team": "NYG",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Paulson Adebo",
+      "team": "NYG",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Thomas Fidone II",
+      "team": "NYG",
+      "position": "TE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jarvis Brownlee Jr.",
+      "team": "NYJ",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Illness (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Jelani Woods",
+      "team": "NYJ",
+      "position": "TE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Max Mitchell",
+      "team": "NYJ",
+      "position": "OT",
+      "reason": "IR - Concussion (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Nate Lynn",
+      "team": "NYJ",
+      "position": "DE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Tim Patrick",
+      "team": "NYJ",
+      "position": "WR",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "Trevin Wallace",
+      "team": "NYJ",
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Groin (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "name": "VJ Payne",
+      "team": "NYJ",
+      "position": "S",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Britain Covey",
+      "team": "PHI",
+      "position": "WR",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "DeVonta Smith",
+      "team": "PHI",
+      "position": "WR",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Dontayvion Wicks",
+      "team": "PHI",
+      "position": "WR",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jihaad Campbell",
+      "team": "PHI",
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jonathan Jones",
+      "team": "PHI",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Michael Carter II",
+      "team": "PHI",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Michael Pittman Jr.",
+      "team": "PIT",
+      "position": "WR",
+      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-15) + IR - Foot (ESPN live pregame 2026-11-12T18:08Z)"
+    },
+    {
+      "name": "Roman Wilson",
+      "team": "PIT",
+      "position": "WR",
+      "reason": "IR - Finger (ESPN live pregame 2026-10-17T19:27Z)"
+    },
+    {
+      "name": "Sebastian Joseph-Day",
+      "team": "PIT",
+      "position": "DT",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Triceps (ESPN live pregame 2026-10-23T00:28Z)"
+    },
+    {
+      "name": "Charles Cross",
+      "team": "SEA",
+      "position": "OT",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T02:36Z)"
+    },
+    {
+      "name": "Cooper Kupp",
+      "team": "SEA",
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
+    },
+    {
+      "name": "Elijah Arroyo",
+      "team": "SEA",
+      "position": "TE",
+      "reason": "IR - Shoulder (ESPN live pregame 2026-10-23T21:48Z)"
+    },
+    {
+      "name": "Leonard Williams",
+      "team": "SEA",
+      "position": "DT",
+      "reason": "OUT - Shoulder (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-14T00:38Z)"
+    },
+    {
+      "name": "Quenton Nelson",
+      "team": "SEA",
+      "position": "G",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-14T02:39Z)"
+    },
+    {
+      "name": "Sam Darnold",
+      "team": "SEA",
+      "position": "QB",
+      "reason": "OUT - Ribs (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-10T00:15Z)"
+    },
+    {
+      "name": "Brandon Aiyuk",
+      "team": "SF",
+      "position": "WR",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
+    },
+    {
+      "name": "C.J. West",
+      "team": "SF",
+      "position": "DT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-15T00:05Z)"
+    },
+    {
+      "name": "Gracen Halton",
+      "team": "SF",
+      "position": "DT",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-15) + IR - Ankle (ESPN live pregame 2026-11-14T19:20Z)"
+    },
+    {
+      "name": "Mike Evans",
+      "team": "SF",
+      "position": "WR",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Nate Hobbs",
+      "team": "SF",
+      "position": "CB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Groin (ESPN live pregame 2026-11-15T00:02Z)"
+    },
+    {
+      "name": "Chris Godwin",
+      "team": "TB",
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
+    },
+    {
+      "name": "Jalen McMillan",
+      "team": "TB",
+      "position": "WR",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Yaya Diaby",
+      "team": "TB",
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Anthony Hill Jr.",
+      "team": "TEN",
+      "position": "LB",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Brandon Crenshaw-Dickson",
+      "team": "TEN",
+      "position": "OT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Carnell Tate",
+      "team": "TEN",
+      "position": "WR",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Cody Barton",
+      "team": "TEN",
+      "position": "LB",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Dorian Mausi",
+      "team": "TEN",
+      "position": "LB",
+      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Jackie Marshall",
+      "team": "TEN",
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "James Williams Sr.",
+      "team": "TEN",
+      "position": "LB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jaylon Jones",
+      "team": "TEN",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "name": "Nicholas Singleton",
+      "team": "TEN",
+      "position": "RB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:40Z)"
+    },
+    {
+      "name": "Peter Skoronski",
+      "team": "TEN",
+      "position": "G",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Tommy Townsend",
+      "team": "TEN",
+      "position": "P",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Will Levis",
+      "team": "TEN",
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
+    },
+    {
+      "name": "Athan Kaliakmanis",
+      "team": "WAS",
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Colson Yankoff",
+      "team": "WAS",
+      "position": "TE",
+      "reason": "Out - Knee (nflverse w10)"
+    },
+    {
+      "name": "Daron Payne",
+      "team": "WAS",
+      "position": "DT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Dyami Brown",
+      "team": "WAS",
+      "position": "WR",
+      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Isaac Yiadom",
+      "team": "WAS",
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Jeremy McNichols",
+      "team": "WAS",
+      "position": "RB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)"
+    },
+    {
+      "name": "Lucas Patrick",
+      "team": "WAS",
+      "position": "C",
+      "reason": "Out - Concussion (nflverse w10)"
+    },
+    {
+      "name": "Ricky Barber",
+      "team": "WAS",
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Stefon Diggs",
+      "team": "WAS",
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
+    },
+    {
+      "name": "Tanoa Togiai",
+      "team": "WAS",
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    }
+  ],
+  "excluded_players_union": [
+    "Gardner Minshew",
+    "Gardner Minshew II",
+    "Hjalte Froholdt",
+    "Jon Gaines II",
+    "Michael Wilson",
+    "Zachary Carter",
+    "Andy Dalton",
+    "Avieon Terrell",
+    "Brian Robinson Jr.",
+    "Cameron Williams",
+    "Divine Deablo",
+    "Jack Strand",
+    "Robert Longerbeam",
+    "Samson Ebukam",
+    "Zachariah Branch",
+    "Adam Randall",
+    "Jaylinn Hawkins",
+    "Lamar Jackson",
+    "Tyler Huntley",
+    "Ar'maj Reed-Adams",
+    "DJ Moore",
+    "Greg Gaines",
+    "Jalon Kilgore",
+    "Joshua Palmer",
+    "Jude Bowry",
+    "Mike Danna",
+    "Shane Buechele",
+    "Spencer Brown",
+    "Tyrell Shavers",
+    "AJ Dillon",
+    "Bobby Okereke",
+    "Brady Christensen",
+    "Haynes King",
+    "Ja'Tavion Sanders",
+    "Jaycee Horn",
+    "Jonathon Brooks",
+    "Mike Jackson",
+    "Sam Hecht",
+    "TeRah Edwards",
+    "Will Lee III",
+    "Braxton Jones",
+    "D.J. Moore",
+    "Kentavius Street",
+    "Kyle Monangai",
+    "Malik Muhammad II",
+    "Zavier Scott",
+    "Andrei Iosivas",
+    "Brian Parker II",
+    "Cashius Howell",
+    "Erick All Jr.",
+    "Jalen Davis",
+    "Kyle Dugger",
+    "Zack Moss",
+    "Deshaun Watson",
+    "Dillon Gabriel",
+    "Justin Jefferson",
+    "Kalia Davis",
+    "Michael Burton",
+    "Noah Igbinoghene",
+    "Parker Brailsford",
+    "Ronnie Hickman",
+    "Ronnie Hickman Jr.",
+    "Taylen Green",
+    "Teven Jenkins",
+    "Devin Moore",
+    "Donovan Ezeiruaku",
+    "Jake Ferguson",
+    "Jonathan Mingo",
+    "Juanyeh Thomas",
+    "Malachi Lawrence",
+    "P.J. Locke",
+    "Tyler Goodson",
+    "Brandon Jones",
+    "Eyioma Uwazurike",
+    "Kris Abrams-Draine",
+    "Talanoa Hufanga",
+    "Ahmed Hassanein",
+    "Amen Ogbongbemiga",
+    "Cade Mays",
+    "D.J. Reed",
+    "Isiah Pacheco",
+    "Jack Campbell",
+    "Jimmy Rolder",
+    "Keith Abney II",
+    "Kerby Joseph",
+    "Mekhi Wingo",
+    "Chris Brooks",
+    "Donovan Jennings",
+    "Josh Jacobs",
+    "Josh Whyle",
+    "Kevin Zeitler",
+    "Micah Parsons",
+    "Pierre Strong Jr.",
+    "Sean Rhyan",
+    "Skyy Moore",
+    "Warren Brinson",
+    "Zaire Franklin",
+    "Azeez Al-Shaair",
+    "Brevin Jordan",
+    "Christian Kirk",
+    "Danielle Hunter",
+    "David Montgomery",
+    "Jake Hummel",
+    "Jaylin Smith",
+    "Keylan Rutledge",
+    "Marvin Harrison Jr.",
+    "Wyatt Teller",
+    "Akeem Davis-Gaither",
+    "Alec Pierce",
+    "Arden Key",
+    "Jalen Travis",
+    "Jaylon Carlies",
+    "Jerry Tillery",
+    "Luke Rhodes",
+    "Mo Alie-Cox",
+    "Riley Leonard",
+    "Will Mallory",
+    "Albert Regis",
+    "B.J. Green II",
+    "CJ Williams",
+    "DaVon Hamilton",
+    "Eric Murray",
+    "Jessie Bates",
+    "Jessie Bates III",
+    "Jordan Davis",
+    "Wesley Williams",
+    "Ben VanSumeren",
+    "Garrett Nussmeier",
+    "Jaydn Ott",
+    "Jaylon Moore",
+    "Kenneth Walker III",
+    "L'Jarius Sneed",
+    "Melvin Smith Jr.",
+    "Omarr Norman-Lott",
+    "Peter Woods",
+    "Rashee Rice",
+    "Branson Taylor",
+    "Brenen Thompson",
+    "David Njoku",
+    "Denzel Perryman",
+    "Isas Waxter",
+    "Kendall Williamson",
+    "Trey Pipkins III",
+    "Davante Adams",
+    "Jordan Whittington",
+    "Puka Nacua",
+    "Steve Avila",
+    "Terrance Ferguson",
+    "Chigozie Anusiem",
+    "Keyron Crawford",
+    "Patrick Johnson",
+    "Aaron Brewer",
+    "Caedan Wallace",
+    "Chris Bell",
+    "Darrell Baker Jr.",
+    "Jared Wayne",
+    "Justin Joly",
+    "Malik Willis",
+    "Marcellas Dial Jr.",
+    "Zach Sieler",
+    "Blake Cashman",
+    "Demond Claiborne",
+    "Jauan Jennings",
+    "Jordan Addison",
+    "Kyler Murray",
+    "Max Brosmer",
+    "T.J. Hockenson",
+    "Tyrion Ingram-Dawkins",
+    "Behren Morton",
+    "Ben Brown",
+    "Brenden Schooler",
+    "Carlton Davis III",
+    "Dametrious Crownover",
+    "TreVeyon Henderson",
+    "Walter Rouse",
+    "CJ Donaldson",
+    "Christen Miller",
+    "Erik McCoy",
+    "Jaylan Ford",
+    "Mike Reid",
+    "Taliese Fuaga",
+    "Zach Wilson",
+    "CJ Okoye",
+    "J.C. Davis",
+    "Josh Sills",
+    "Malik Harrison",
+    "Nikko Reed",
+    "Paulson Adebo",
+    "Thomas Fidone II",
+    "Jarvis Brownlee Jr.",
+    "Jelani Woods",
+    "Max Mitchell",
+    "Nate Lynn",
+    "Tim Patrick",
+    "Trevin Wallace",
+    "VJ Payne",
+    "Britain Covey",
+    "DeVonta Smith",
+    "Dontayvion Wicks",
+    "Jihaad Campbell",
+    "Jonathan Jones",
+    "Michael Carter II",
+    "Michael Pittman Jr.",
+    "Roman Wilson",
+    "Sebastian Joseph-Day",
+    "Charles Cross",
+    "Cooper Kupp",
+    "Elijah Arroyo",
+    "Leonard Williams",
+    "Quenton Nelson",
+    "Sam Darnold",
+    "Brandon Aiyuk",
+    "C.J. West",
+    "Gracen Halton",
+    "Mike Evans",
+    "Nate Hobbs",
+    "Chris Godwin",
+    "Jalen McMillan",
+    "Yaya Diaby",
+    "Anthony Hill Jr.",
+    "Brandon Crenshaw-Dickson",
+    "Carnell Tate",
+    "Cody Barton",
+    "Dorian Mausi",
+    "Jackie Marshall",
+    "James Williams Sr.",
+    "Jaylon Jones",
+    "Nicholas Singleton",
+    "Peter Skoronski",
+    "Tommy Townsend",
+    "Will Levis",
+    "Athan Kaliakmanis",
+    "Colson Yankoff",
+    "Daron Payne",
+    "Dyami Brown",
+    "Isaac Yiadom",
+    "Jeremy McNichols",
+    "Lucas Patrick",
+    "Ricky Barber",
+    "Stefon Diggs",
+    "Tanoa Togiai"
+  ],
+  "return_from_ir": {
+    "Tank Dell": {
+      "name": "Tank Dell",
+      "team": "HOU",
+      "position": "WR",
+      "ramp_factor": 0.78,
+      "consensus_sources": [
+        "nflverse_injuries_not_out",
+        "dk_draftables_active",
+        "practice_participation_active",
+        "espn_active_roster_board"
+      ],
+      "status": "RETURN_FROM_IR_CONFIRMED"
+    }
+  },
+  "effective_role_snap_share": {
+    "Darren Waller": 0.76,
+    "Colby Parkinson": 0.74,
+    "Emmett Johnson": 0.65,
+    "Ollie Gordon II": 0.58,
+    "Kendrick Bourne": 0.82,
+    "Khalil Shakir": 0.82,
+    "Brevyn Spann-Ford": 0.75,
+    "MarShawn Lloyd": 0.68,
+    "Woody Marks": 0.68,
+    "Xavier Worthy": 0.82,
+    "Konata Mumpfield": 0.82,
+    "Gavin Bartholomew": 0.75,
+    "Deebo Samuel": 0.82,
+    "Wan'Dale Robinson": 0.82,
+    "Antonio Williams": 0.82
+  },
+  "traded_players": [
+    {
+      "name": "Greg Dortch",
+      "from": "ARI",
+      "to": "BUF",
+      "position": "WR",
+      "date": "2026-11-10",
+      "reason": "Verified trade-deadline move (GREG DORTCH IS BUF; Fri Nov 13 verification)"
+    },
+    {
+      "name": "Kendrick Bourne",
+      "from": "SF",
+      "to": "ARI",
+      "position": "WR",
+      "date": "2026-11-10",
+      "reason": "Verified move (BOURNE IS ARIZ; Fri Nov 13 verification)"
+    },
+    {
+      "name": "Josh Downs",
+      "from": "IND",
+      "to": "KC",
+      "position": "WR",
+      "date": "2026-11-10",
+      "reason": "Nov 10 trade-deadline move IND->KC (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Keenan Allen",
+      "from": "IND",
+      "to": "SF",
+      "position": "WR",
+      "date": "2026-11-10",
+      "reason": "Trade-deadline move IND->SF (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Kenneth Walker III",
+      "from": "SEA",
+      "to": "KC",
+      "position": "RB",
+      "date": "2026-11-10",
+      "reason": "Verified move SEA->KC (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Tyler Allgeier",
+      "from": "ATL",
+      "to": "ARI",
+      "position": "RB",
+      "date": "2026-11-10",
+      "reason": "Verified lead back ATL->ARI (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Myles Garrett",
+      "from": "CLE",
+      "to": "LAR",
+      "position": "LB",
+      "date": "2026-06-01",
+      "reason": "Motif-verified trade CLE->LAR"
+    },
+    {
+      "name": "Jared Verse",
+      "from": "LAR",
+      "to": "CLE",
+      "position": "DE",
+      "date": "2026-06-01",
+      "reason": "Motif-verified trade LAR->CLE"
+    },
+    {
+      "name": "Jeffery Simmons",
+      "from": "TEN",
+      "to": "CHI",
+      "position": "DT",
+      "date": "2026-11-10",
+      "reason": "Motif-verified trade TEN->CHI"
+    },
+    {
+      "name": "Trent McDuffie",
+      "from": "KC",
+      "to": "LAR",
+      "position": "CB",
+      "date": "2026-11-10",
+      "reason": "Motif-verified trade KC->LAR"
+    },
+    {
+      "name": "Amani Hooker",
+      "from": "TEN",
+      "to": "BUF",
+      "position": "S",
+      "date": "2026-11-10",
+      "reason": "Verified move TEN->BUF (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Jessie Bates",
+      "from": "ATL",
+      "to": "JAX",
+      "position": "S",
+      "date": "2026-11-10",
+      "reason": "Verified move ATL->JAX (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Kyler Murray",
+      "from": "ARI",
+      "to": "MIN",
+      "position": "QB",
+      "date": "2026-11-10",
+      "reason": "Verified move ARI->MIN (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Kirk Cousins",
+      "from": "ATL",
+      "to": "MIN",
+      "position": "QB",
+      "date": "2026-11-10",
+      "reason": "Verified expected MIN starter (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Jacoby Brissett",
+      "from": "ARI",
+      "to": "BAL",
+      "position": "QB",
+      "date": "2026-11-04",
+      "reason": "Verified BAL MNF starter ARI->BAL (Fri Nov 13 verification)"
+    },
+    {
+      "name": "J.J. McCarthy",
+      "from": "MIN",
+      "to": "NYG",
+      "position": "QB",
+      "date": "2026-11-10",
+      "reason": "Verified move MIN->NYG (Fri Nov 13 verification)"
+    }
+  ],
+  "venues": {
     "NE@DET": {
       "matchup": "NE@DET",
       "espn_event_id": "401873053",
@@ -342,6 +2316,18 @@
       "is_indoor": false,
       "neutral_site": false
     },
+    "WAS@NYG": {
+      "matchup": "WAS@NYG",
+      "espn_event_id": "401873052",
+      "kickoff_utc": "2026-11-13T01:15Z",
+      "status": "STATUS_SCHEDULED",
+      "venue": "MetLife Stadium",
+      "city": "East Rutherford",
+      "state": "NJ",
+      "country": "USA",
+      "is_indoor": false,
+      "neutral_site": false
+    },
     "LAC@BAL": {
       "matchup": "LAC@BAL",
       "espn_event_id": "401873065",
@@ -358,233 +2344,164 @@
   "teams_32_coverage": {
     "ARI": {
       "espn_slug": "ari",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 87
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 144
     },
     "ATL": {
       "espn_slug": "atl",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 79
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 150
     },
     "BAL": {
       "espn_slug": "bal",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 80
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 122
     },
     "BUF": {
       "espn_slug": "buf",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 74
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 129
     },
     "CAR": {
       "espn_slug": "car",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 82
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 166
     },
     "CHI": {
       "espn_slug": "chi",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 82
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 123
     },
     "CIN": {
       "espn_slug": "cin",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 75
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 112
     },
     "CLE": {
       "espn_slug": "cle",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 78
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 154
     },
     "DAL": {
       "espn_slug": "dal",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 78
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 129
     },
     "DEN": {
       "espn_slug": "den",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 80
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 119
     },
     "DET": {
       "espn_slug": "det",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 84
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 153
     },
     "GB": {
       "espn_slug": "gb",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 83
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 112
     },
     "HOU": {
       "espn_slug": "hou",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 85
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 141
     },
     "IND": {
       "espn_slug": "ind",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 76
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 121
     },
     "JAX": {
       "espn_slug": "jax",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 84
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 137
     },
     "KC": {
       "espn_slug": "kc",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 78
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 116
     },
     "LAC": {
       "espn_slug": "lac",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 79
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 142
     },
     "LAR": {
       "espn_slug": "lar",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 84
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 106
     },
     "LV": {
       "espn_slug": "lv",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 74
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 153
     },
     "MIA": {
       "espn_slug": "mia",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 75
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 152
     },
     "MIN": {
       "espn_slug": "min",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 80
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 119
     },
     "NE": {
       "espn_slug": "ne",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 81
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 130
     },
     "NO": {
       "espn_slug": "no",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 76
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 140
     },
     "NYG": {
       "espn_slug": "nyg",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 84
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 166
     },
     "NYJ": {
       "espn_slug": "nyj",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 84
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 159
     },
     "PHI": {
       "espn_slug": "phi",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 74
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 146
     },
     "PIT": {
       "espn_slug": "pit",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 80
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 140
     },
     "SEA": {
       "espn_slug": "sea",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 82
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 114
     },
     "SF": {
       "espn_slug": "sf",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 89
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 134
     },
     "TB": {
       "espn_slug": "tb",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 73
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 136
     },
     "TEN": {
       "espn_slug": "ten",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 79
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 148
     },
     "WAS": {
       "espn_slug": "wsh",
-      "source_mode": "live_espn_roster_api",
-      "roster_count": 80
+      "source_mode": "local_rosters_csv_and_stage0",
+      "roster_count": 166
     }
-  },
-  "confirmed_qb1_simulation": {
-    "ARI": "Carson Beck",
-    "ATL": "Michael Penix Jr.",
-    "BAL": "Jacoby Brissett",
-    "BUF": "Josh Allen",
-    "CAR": "Bryce Young",
-    "CHI": "Caleb Williams",
-    "CIN": "Joe Burrow",
-    "CLE": "Deshaun Watson",
-    "DAL": "Dak Prescott",
-    "DEN": "Bo Nix",
-    "DET": "Jared Goff",
-    "GB": "Jordan Love",
-    "HOU": "C.J. Stroud",
-    "IND": "Daniel Jones",
-    "JAX": "Trevor Lawrence",
-    "KC": "Patrick Mahomes",
-    "LA": "Matthew Stafford",
-    "LAC": "Justin Herbert",
-    "LV": "Fernando Mendoza",
-    "MIA": "Kyle McCord",
-    "MIN": "Kirk Cousins",
-    "NE": "Drake Maye",
-    "NO": "Tyler Shough",
-    "NYG": "J.J. McCarthy",
-    "NYJ": "Geno Smith",
-    "PHI": "Joe Milton",
-    "PIT": "Aaron Rodgers",
-    "SEA": "Drew Lock",
-    "SF": "Brock Purdy",
-    "TB": "Baker Mayfield",
-    "TEN": "Cam Ward",
-    "WAS": "Jayden Daniels",
-    "LAR": "Matthew Stafford"
-  },
-  "confirmed_qb1_dfs_config": {
-    "ARI": "Carson Beck",
-    "ATL": "Michael Penix Jr.",
-    "BAL": "Jacoby Brissett",
-    "BUF": "Josh Allen",
-    "CAR": "Bryce Young",
-    "CHI": "Caleb Williams",
-    "CIN": "Joe Burrow",
-    "CLE": "Shedeur Sanders",
-    "DAL": "Dak Prescott",
-    "DEN": "Bo Nix",
-    "DET": "Jared Goff",
-    "GB": "Jordan Love",
-    "HOU": "C.J. Stroud",
-    "IND": "Daniel Jones",
-    "JAX": "Trevor Lawrence",
-    "KC": "Patrick Mahomes",
-    "LA": "Matthew Stafford",
-    "LAC": "Justin Herbert",
-    "LV": "Fernando Mendoza",
-    "MIA": "Kyle McCord",
-    "MIN": "Kirk Cousins",
-    "NE": "Drake Maye",
-    "NO": "Tyler Shough",
-    "NYG": "J.J. McCarthy",
-    "NYJ": "Geno Smith",
-    "PHI": "Joe Milton",
-    "PIT": "Aaron Rodgers",
-    "SEA": "Drew Lock",
-    "SF": "Brock Purdy",
-    "TB": "Baker Mayfield",
-    "TEN": "Cam Ward",
-    "WAS": "Jayden Daniels"
   },
   "active_player_team": {
     "Greg Dortch": "BUF",
@@ -610,268 +2527,5 @@
     "Fernando Mendoza": "LV",
     "Shedeur Sanders": "CLE",
     "Deshaun Watson": "CLE"
-  },
-  "traded_players": [
-    {
-      "name": "Greg Dortch",
-      "from": "ARI",
-      "to": "BUF",
-      "position": "WR",
-      "date": "2026-11-10",
-      "reason": "Verified trade-deadline move (GREG DORTCH IS BUF; Fri Nov 13 verification)"
-    },
-    {
-      "name": "Kendrick Bourne",
-      "from": "SF",
-      "to": "ARI",
-      "position": "WR",
-      "date": "2026-11-10",
-      "reason": "Verified move (BOURNE IS ARIZ; Fri Nov 13 verification)"
-    },
-    {
-      "name": "Josh Downs",
-      "from": "IND",
-      "to": "KC",
-      "position": "WR",
-      "date": "2026-11-10",
-      "reason": "Nov 10 trade-deadline move IND->KC (Fri Nov 13 verification)"
-    },
-    {
-      "name": "Keenan Allen",
-      "from": "IND",
-      "to": "SF",
-      "position": "WR",
-      "date": "2026-11-10",
-      "reason": "Trade-deadline move IND->SF (Fri Nov 13 verification)"
-    },
-    {
-      "name": "Kenneth Walker III",
-      "from": "SEA",
-      "to": "KC",
-      "position": "RB",
-      "date": "2026-11-10",
-      "reason": "Verified move SEA->KC (Fri Nov 13 verification)"
-    },
-    {
-      "name": "Tyler Allgeier",
-      "from": "ATL",
-      "to": "ARI",
-      "position": "RB",
-      "date": "2026-11-10",
-      "reason": "Verified lead back ATL->ARI (Fri Nov 13 verification)"
-    },
-    {
-      "name": "Myles Garrett",
-      "from": "CLE",
-      "to": "LAR",
-      "position": "LB",
-      "date": "2026-06-01",
-      "reason": "Motif-verified trade CLE->LAR"
-    },
-    {
-      "name": "Jared Verse",
-      "from": "LAR",
-      "to": "CLE",
-      "position": "DE",
-      "date": "2026-06-01",
-      "reason": "Motif-verified trade LAR->CLE"
-    },
-    {
-      "name": "Jeffery Simmons",
-      "from": "TEN",
-      "to": "CHI",
-      "position": "DT",
-      "date": "2026-11-10",
-      "reason": "Motif-verified trade TEN->CHI"
-    },
-    {
-      "name": "Trent McDuffie",
-      "from": "KC",
-      "to": "LAR",
-      "position": "CB",
-      "date": "2026-11-10",
-      "reason": "Motif-verified trade KC->LAR"
-    },
-    {
-      "name": "Amani Hooker",
-      "from": "TEN",
-      "to": "BUF",
-      "position": "S",
-      "date": "2026-11-10",
-      "reason": "Verified move TEN->BUF (Fri Nov 13 verification)"
-    },
-    {
-      "name": "Jessie Bates",
-      "from": "ATL",
-      "to": "JAX",
-      "position": "S",
-      "date": "2026-11-10",
-      "reason": "Verified move ATL->JAX (Fri Nov 13 verification)"
-    },
-    {
-      "name": "Kyler Murray",
-      "from": "ARI",
-      "to": "MIN",
-      "position": "QB",
-      "date": "2026-11-10",
-      "reason": "Verified move ARI->MIN (Fri Nov 13 verification)"
-    },
-    {
-      "name": "Kirk Cousins",
-      "from": "ATL",
-      "to": "MIN",
-      "position": "QB",
-      "date": "2026-11-10",
-      "reason": "Verified expected MIN starter (Fri Nov 13 verification)"
-    },
-    {
-      "name": "Jacoby Brissett",
-      "from": "ARI",
-      "to": "BAL",
-      "position": "QB",
-      "date": "2026-11-04",
-      "reason": "Verified BAL MNF starter ARI->BAL (Fri Nov 13 verification)"
-    },
-    {
-      "name": "J.J. McCarthy",
-      "from": "MIN",
-      "to": "NYG",
-      "position": "QB",
-      "date": "2026-11-10",
-      "reason": "Verified move MIN->NYG (Fri Nov 13 verification)"
-    }
-  ],
-  "excluded_players_union": [
-    "Aaron Brewer",
-    "Adam Randall",
-    "Aidan O'Connell",
-    "Alec Pierce",
-    "Andrei Iosivas",
-    "Arden Key",
-    "B.J. Green II",
-    "Ben Brown",
-    "Ben Skowronek",
-    "Brandin Echols",
-    "Brandon Aiyuk",
-    "Brandon Jones",
-    "Braxton Jones",
-    "Brian Robinson Jr.",
-    "Britain Covey",
-    "C.J. West",
-    "Cade Mays",
-    "Cade Stover",
-    "Cam Skattebo",
-    "Cam'Ron Silmon-Craig",
-    "Cameron Williams",
-    "Carlton Davis III",
-    "Case Keenum",
-    "Cashius Howell",
-    "Charles Cross",
-    "Chris Brooks",
-    "Chris Godwin",
-    "Christian Kirk",
-    "Colson Yankoff",
-    "Colton Hood",
-    "Cooper Kupp",
-    "D.J. Moore",
-    "D.J. Reed",
-    "DJ Moore",
-    "Damien Lewis",
-    "Daron Payne",
-    "Darrell Baker Jr.",
-    "Davante Adams",
-    "David Njoku",
-    "DeVonta Smith",
-    "Demond Claiborne",
-    "Denzel Perryman",
-    "Derrick Harmon",
-    "Deshaun Watson",
-    "Devin Moore",
-    "Doneiko Slaughter",
-    "Dontayvion Wicks",
-    "Dorian Mausi",
-    "Dyami Brown",
-    "Erick All Jr.",
-    "Erik McCoy",
-    "Eyioma Uwazurike",
-    "Gardner Minshew",
-    "Gardner Minshew II",
-    "Gracen Halton",
-    "Hunter Long",
-    "Isiah Pacheco",
-    "Jack Campbell",
-    "Jacob Saylors",
-    "Jaelan Phillips",
-    "Jake Ferguson",
-    "Jake Hummel",
-    "Jalen McMillan",
-    "Jalen Travis",
-    "James Williams Sr.",
-    "Jaycee Horn",
-    "Jaylen Wright",
-    "Jaylin Smith",
-    "Jaylon Jones",
-    "Jeremy McNichols",
-    "Jihaad Campbell",
-    "Jimmy Rolder",
-    "Jonathan Bullard",
-    "Jonathan Jones",
-    "Jonathon Brooks",
-    "Jordan Whittington",
-    "Josh Jacobs",
-    "Joshua Palmer",
-    "Justin Walley",
-    "Kentavius Street",
-    "Kerby Joseph",
-    "Kris Abrams-Draine",
-    "Kyle Monangai",
-    "Kyler Murray",
-    "L'Jarius Sneed",
-    "Lamar Jackson",
-    "Lucas Patrick",
-    "Luke Schoonmaker",
-    "Malachi Lawrence",
-    "Malik Muhammad II",
-    "Malik Willis",
-    "Mansoor Delane",
-    "MarShawn Lloyd",
-    "Max Mitchell",
-    "Micah Parsons",
-    "Michael Carter II",
-    "Michael Pittman Jr.",
-    "Michael Wilson",
-    "Mike Jackson",
-    "Omarr Norman-Lott",
-    "P.J. Locke",
-    "Puka Nacua",
-    "Quenton Nelson",
-    "Rashee Rice",
-    "Rashid Shaheed",
-    "Reggie Gilliam",
-    "Rhamondre Stevenson",
-    "Sam Darnold",
-    "Samson Ebukam",
-    "Skyy Moore",
-    "Stefon Diggs",
-    "Talanoa Hufanga",
-    "Terrance Ferguson",
-    "Tommy Townsend",
-    "Travis Etienne Jr.",
-    "TreVeyon Henderson",
-    "Treylon Burks",
-    "Tyler Goodson",
-    "Tyler Huntley",
-    "Tyrell Shavers",
-    "VJ Payne",
-    "Will Lee III",
-    "Will Levis",
-    "Xavier Legette",
-    "Yaya Diaby",
-    "Zach Sieler",
-    "Zachariah Branch",
-    "Zachary Carter",
-    "Zack Moss",
-    "Zaire Franklin",
-    "Zavier Scott"
-  ]
+  }
 }

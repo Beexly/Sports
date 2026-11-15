@@ -2,19 +2,20 @@
   "schema": "gse.preflight_roster_gate.v1",
   "week": 10,
   "as_of": "2026-11-15",
-  "verified_by": "hermes-wp6-stage0-from-neon (injuries wk10 + snap_counts wk7-9 QB leaders) + Motif-verified transactions via Garrett standing order 2026-11-13 (Garrett->LAR, Verse->CLE, Simmons->CHI, McDuffie->LAR, Parsons OUT)",
-  "note": "Generated 2026-11-15T17:04:42Z from live Neon + HEAD transactions baseline: 1261 wk10 injury rows (latest fetch 2026-11-15T17:03:12Z), 353 excluded (6 from ESPN live pregame inactives), 16 verified trades preserved, 32 QB1s confirmed.",
+  "generated_utc": "2026-11-15T20:12:09.076497+00:00",
+  "verified_by": "build_live_stage0_truth (ADR-0007 / ADR-0008 unified truth v2)",
+  "note": "Synced from gse-unified-stage0-truth-v2",
   "max_age_days": 3,
   "blocked_statuses": [
     "OUT",
-    "O",
-    "IR",
-    "D",
-    "DOUBTFUL",
-    "SUSP",
     "PUP",
-    "NFI",
-    "OUT_FOR_SEASON"
+    "SUSP",
+    "DOUBTFUL",
+    "D",
+    "OUT_FOR_SEASON",
+    "IR",
+    "O",
+    "NFI"
   ],
   "excluded_players": [
     {
@@ -26,146 +27,104 @@
     {
       "name": "Gardner Minshew II",
       "team": "ARI",
-      "reason": "IR - Elbow (Neon injuries wk10, fetched 2026-11-15) + IR - Elbow (ESPN live pregame 2026-11-15T12:49Z)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "IR - Elbow (Neon injuries wk10, fetched 2026-11-15) + IR - Elbow (ESPN live pregame 2026-11-15T12:49Z)"
     },
     {
       "name": "Hjalte Froholdt",
       "team": "ARI",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "C"
-    },
-    {
-      "name": "Hjalte Froholdt",
-      "team": "ARI",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "C"
+      "position": "C",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jon Gaines II",
       "team": "ARI",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T01:35Z)",
-      "position": "G"
-    },
-    {
-      "name": "Jon Gaines II",
-      "team": "ARI",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T01:35Z)",
-      "position": "G"
+      "position": "G",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T01:35Z)"
     },
     {
       "name": "Michael Wilson",
       "team": "ARI",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Zachary Carter",
       "team": "ARI",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-14T02:22Z)",
-      "position": "DT"
-    },
-    {
-      "name": "Zachary Carter",
-      "team": "ARI",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-14T02:22Z)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-14T02:22Z)"
     },
     {
       "name": "Andy Dalton",
       "team": "ATL",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:45Z)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:45Z)"
     },
     {
       "name": "Avieon Terrell",
       "team": "ATL",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Brian Robinson Jr.",
       "team": "ATL",
-      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Cameron Williams",
       "team": "ATL",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "OL"
+      "position": "OL",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Divine Deablo",
       "team": "ATL",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
-    },
-    {
-      "name": "Divine Deablo",
-      "team": "ATL",
-      "reason": "DOUBTFUL - Forearm (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jack Strand",
       "team": "ATL",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Robert Longerbeam",
       "team": "ATL",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Samson Ebukam",
       "team": "ATL",
-      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DE"
+      "position": "DE",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Zachariah Branch",
       "team": "ATL",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
-    },
-    {
-      "name": "Zachariah Branch",
-      "team": "ATL",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
-    },
-    {
-      "name": "Zachariah Branch",
-      "team": "ATL",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Adam Randall",
       "team": "BAL",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Neck (ESPN live pregame 2026-11-14T23:40Z)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Neck (ESPN live pregame 2026-11-14T23:40Z)"
     },
     {
       "name": "Jaylinn Hawkins",
       "team": "BAL",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-14T19:16Z)",
-      "position": "S"
-    },
-    {
-      "name": "Jaylinn Hawkins",
-      "team": "BAL",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-14T19:16Z)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-14T19:16Z)"
     },
     {
       "name": "Lamar Jackson",
       "team": "BAL",
-      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15) + IR - Thumb (ESPN live pregame 2026-11-13T14:48Z)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15) + IR - Thumb (ESPN live pregame 2026-11-13T14:48Z)"
     },
     {
       "name": "Tyler Huntley",
@@ -176,272 +135,224 @@
     {
       "name": "Ar'maj Reed-Adams",
       "team": "BUF",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)",
-      "position": "G"
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
     },
     {
       "name": "DJ Moore",
       "team": "BUF",
-      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "UNKNOWN"
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
     },
     {
       "name": "Greg Gaines",
       "team": "BUF",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
     },
     {
       "name": "Jalon Kilgore",
       "team": "BUF",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
     },
     {
       "name": "Joshua Palmer",
       "team": "BUF",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Jude Bowry",
       "team": "BUF",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)",
-      "position": "OT"
+      "position": "OT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
     },
     {
       "name": "Mike Danna",
       "team": "BUF",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)",
-      "position": "DE"
+      "position": "DE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
     },
     {
       "name": "Shane Buechele",
       "team": "BUF",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Spencer Brown",
       "team": "BUF",
-      "reason": "DOUBTFUL - Ankle (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "OT"
-    },
-    {
-      "name": "Spencer Brown",
-      "team": "BUF",
-      "reason": "DOUBTFUL - Ankle (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "T"
+      "position": "OT",
+      "reason": "DOUBTFUL - Ankle (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Tyrell Shavers",
       "team": "BUF",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "AJ Dillon",
       "team": "CAR",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Bobby Okereke",
       "team": "CAR",
-      "reason": "OUT - Foot (Neon injuries wk10, fetched 2026-11-15) + OUT - Foot (ESPN live pregame 2026-11-15T16:38Z)",
-      "position": "LB"
-    },
-    {
-      "name": "Bobby Okereke",
-      "team": "CAR",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Foot (ESPN live pregame 2026-11-15T16:38Z)",
-      "position": "LB"
-    },
-    {
-      "name": "Bobby Okereke",
-      "team": "CAR",
-      "reason": "OUT - Foot (Neon injuries wk10, fetched 2026-11-15) + OUT - Foot (ESPN live pregame 2026-11-15T16:38Z)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - Foot (Neon injuries wk10, fetched 2026-11-15) + OUT - Foot (ESPN live pregame 2026-11-15T16:38Z)"
     },
     {
       "name": "Brady Christensen",
       "team": "CAR",
-      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "G"
+      "position": "G",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Haynes King",
       "team": "CAR",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
     },
     {
       "name": "Ja'Tavion Sanders",
       "team": "CAR",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
     },
     {
       "name": "Jaycee Horn",
       "team": "CAR",
-      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jonathon Brooks",
       "team": "CAR",
-      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "RB"
-    },
-    {
-      "name": "Jonathon Brooks",
-      "team": "CAR",
-      "reason": "DOUBTFUL - Groin (Neon injuries wk10, fetched 2026-11-15) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
     },
     {
       "name": "Mike Jackson",
       "team": "CAR",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
-    },
-    {
-      "name": "Mike Jackson",
-      "team": "CAR",
-      "reason": "DOUBTFUL - Groin (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Sam Hecht",
       "team": "CAR",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)",
-      "position": "C"
+      "position": "C",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
     },
     {
       "name": "TeRah Edwards",
       "team": "CAR",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Will Lee III",
       "team": "CAR",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:38Z)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:38Z)"
     },
     {
       "name": "Braxton Jones",
       "team": "CHI",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "OT"
+      "position": "OT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "D.J. Moore",
+      "team": "CHI",
+      "position": "WR",
+      "reason": "OUT / Master-Plan Stage 0 Ban"
     },
     {
       "name": "Kentavius Street",
       "team": "CHI",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Kyle Monangai",
       "team": "CHI",
-      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Malik Muhammad II",
       "team": "CHI",
-      "reason": "OUT - Foot (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - Foot (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Zavier Scott",
       "team": "CHI",
-      "reason": "IR - Wrist (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "IR - Wrist (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Andrei Iosivas",
       "team": "CIN",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Thumb (ESPN live pregame 2026-11-14T20:08Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Andrei Iosivas",
-      "team": "CIN",
-      "reason": "DOUBTFUL - Thumb (Neon injuries wk10, fetched 2026-11-15) + IR - Thumb (ESPN live pregame 2026-11-14T20:08Z)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Thumb (ESPN live pregame 2026-11-14T20:08Z)"
     },
     {
       "name": "Brian Parker II",
       "team": "CIN",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-12T22:57Z)",
-      "position": "OT"
-    },
-    {
-      "name": "Brian Parker II",
-      "team": "CIN",
-      "reason": "DOUBTFUL - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-12T22:57Z)",
-      "position": "G"
+      "position": "OT",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-12T22:57Z)"
     },
     {
       "name": "Cashius Howell",
       "team": "CIN",
-      "reason": "IR - Wrist (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DE"
+      "position": "DE",
+      "reason": "IR - Wrist (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Erick All Jr.",
       "team": "CIN",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Jalen Davis",
       "team": "CIN",
-      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
-    },
-    {
-      "name": "Jalen Davis",
-      "team": "CIN",
-      "reason": "DOUBTFUL - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Kyle Dugger",
       "team": "CIN",
-      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-14T01:56Z)",
-      "position": "S"
-    },
-    {
-      "name": "Kyle Dugger",
-      "team": "CIN",
-      "reason": "OUT - Quadricep (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-14T01:56Z)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-14T01:56Z)"
     },
     {
       "name": "Zack Moss",
       "team": "CIN",
-      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "UNKNOWN"
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
     },
     {
       "name": "Deshaun Watson",
       "team": "CLE",
-      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "UNKNOWN"
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
     },
     {
       "name": "Dillon Gabriel",
       "team": "CLE",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
     },
     {
       "name": "Justin Jefferson",
       "team": "CLE",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
     },
     {
       "name": "Kalia Davis",
@@ -452,50 +363,38 @@
     {
       "name": "Michael Burton",
       "team": "CLE",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "FB"
-    },
-    {
-      "name": "Michael Burton",
-      "team": "CLE",
-      "reason": "OUT - Calf (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "FB"
+      "position": "FB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Noah Igbinoghene",
       "team": "CLE",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
     },
     {
       "name": "Parker Brailsford",
       "team": "CLE",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "C"
+      "position": "C",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
     },
     {
       "name": "Ronnie Hickman",
       "team": "CLE",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "S"
-    },
-    {
-      "name": "Ronnie Hickman",
-      "team": "CLE",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-15T16:32Z)"
     },
     {
       "name": "Ronnie Hickman Jr.",
       "team": "CLE",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Taylen Green",
       "team": "CLE",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Teven Jenkins",
@@ -506,566 +405,338 @@
     {
       "name": "Devin Moore",
       "team": "DAL",
-      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Donovan Ezeiruaku",
       "team": "DAL",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T01:00Z)",
-      "position": "LB"
-    },
-    {
-      "name": "Donovan Ezeiruaku",
-      "team": "DAL",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T01:00Z)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T01:00Z)"
     },
     {
       "name": "Jake Ferguson",
       "team": "DAL",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
-    },
-    {
-      "name": "Jake Ferguson",
-      "team": "DAL",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jonathan Mingo",
       "team": "DAL",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
-    },
-    {
-      "name": "Jonathan Mingo",
-      "team": "DAL",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Juanyeh Thomas",
       "team": "DAL",
-      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "S"
-    },
-    {
-      "name": "Juanyeh Thomas",
-      "team": "DAL",
-      "reason": "DOUBTFUL - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "S"
+      "position": "S",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Malachi Lawrence",
       "team": "DAL",
-      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "P.J. Locke",
       "team": "DAL",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "S"
-    },
-    {
-      "name": "P.J. Locke",
-      "team": "DAL",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Tyler Goodson",
       "team": "DAL",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee - ACL + MCL (ESPN live pregame 2026-11-14T18:50Z)",
-      "position": "RB"
-    },
-    {
-      "name": "Tyler Goodson",
-      "team": "DAL",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + IR - Knee - ACL + MCL (ESPN live pregame 2026-11-14T18:50Z)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee - ACL + MCL (ESPN live pregame 2026-11-14T18:50Z)"
     },
     {
       "name": "Brandon Jones",
       "team": "DEN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Eyioma Uwazurike",
       "team": "DEN",
-      "reason": "IR - Shoulder (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DE"
+      "position": "DE",
+      "reason": "IR - Shoulder (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Kris Abrams-Draine",
       "team": "DEN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Talanoa Hufanga",
       "team": "DEN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Ahmed Hassanein",
       "team": "DET",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DE"
+      "position": "DE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Amen Ogbongbemiga",
       "team": "DET",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Cade Mays",
       "team": "DET",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "C"
-    },
-    {
-      "name": "Cade Mays",
-      "team": "DET",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "C"
+      "position": "C",
+      "reason": "Out - Ankle (nflverse w10)"
     },
     {
       "name": "D.J. Reed",
       "team": "DET",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
-    },
-    {
-      "name": "D.J. Reed",
-      "team": "DET",
-      "reason": "OUT - Hip (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "Out - Hip (nflverse w10)"
     },
     {
       "name": "Isiah Pacheco",
       "team": "DET",
-      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Jack Campbell",
       "team": "DET",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jimmy Rolder",
       "team": "DET",
-      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Keith Abney II",
       "team": "DET",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Kerby Joseph",
       "team": "DET",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "S"
-    },
-    {
-      "name": "Kerby Joseph",
-      "team": "DET",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "S"
+      "position": "S",
+      "reason": "Out - Knee (nflverse w10)"
     },
     {
       "name": "Mekhi Wingo",
       "team": "DET",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Chris Brooks",
       "team": "GB",
-      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Donovan Jennings",
       "team": "GB",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "G"
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Josh Jacobs",
       "team": "GB",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "RB"
-    },
-    {
-      "name": "Josh Jacobs",
-      "team": "GB",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "RB"
-    },
-    {
-      "name": "Josh Jacobs",
-      "team": "GB",
-      "reason": "OUT - Finger (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Josh Whyle",
       "team": "GB",
-      "reason": "IR - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
-    },
-    {
-      "name": "Josh Whyle",
-      "team": "GB",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "IR - Concussion (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Kevin Zeitler",
       "team": "GB",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "G"
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Micah Parsons",
       "team": "GB",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DE"
-    },
-    {
-      "name": "Micah Parsons",
-      "team": "GB",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "DE",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Pierre Strong Jr.",
       "team": "GB",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Sean Rhyan",
       "team": "GB",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "G"
-    },
-    {
-      "name": "Sean Rhyan",
-      "team": "GB",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "G"
-    },
-    {
-      "name": "Sean Rhyan",
-      "team": "GB",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "C"
+      "position": "G",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Skyy Moore",
       "team": "GB",
-      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Warren Brinson",
       "team": "GB",
-      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Zaire Franklin",
       "team": "GB",
-      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
-    },
-    {
-      "name": "Zaire Franklin",
-      "team": "GB",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
-    },
-    {
-      "name": "Zaire Franklin",
-      "team": "GB",
-      "reason": "DOUBTFUL - Shin (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Azeez Al-Shaair",
       "team": "HOU",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
-    },
-    {
-      "name": "Azeez Al-Shaair",
-      "team": "HOU",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
-    },
-    {
-      "name": "Azeez Al-Shaair",
-      "team": "HOU",
-      "reason": "OUT - Groin (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Brevin Jordan",
       "team": "HOU",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "TE"
-    },
-    {
-      "name": "Brevin Jordan",
-      "team": "HOU",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "TE"
-    },
-    {
-      "name": "Brevin Jordan",
-      "team": "HOU",
-      "reason": "OUT - Finger (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:37Z)"
     },
     {
       "name": "Christian Kirk",
       "team": "HOU",
-      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "UNKNOWN"
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
     },
     {
       "name": "Danielle Hunter",
       "team": "HOU",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "DE"
-    },
-    {
-      "name": "Danielle Hunter",
-      "team": "HOU",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "DE"
-    },
-    {
-      "name": "Danielle Hunter",
-      "team": "HOU",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "DE"
+      "position": "DE",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)"
     },
     {
       "name": "David Montgomery",
       "team": "HOU",
-      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jake Hummel",
       "team": "HOU",
-      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Jaylin Smith",
       "team": "HOU",
-      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Keylan Rutledge",
       "team": "HOU",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "G"
-    },
-    {
-      "name": "Keylan Rutledge",
-      "team": "HOU",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "G"
-    },
-    {
-      "name": "Keylan Rutledge",
-      "team": "HOU",
-      "reason": "OUT - Neck (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "G"
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:37Z)"
     },
     {
       "name": "Marvin Harrison Jr.",
       "team": "HOU",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Marvin Harrison Jr.",
-      "team": "HOU",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Marvin Harrison Jr.",
-      "team": "HOU",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)"
     },
     {
       "name": "Wyatt Teller",
       "team": "HOU",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Illness (ESPN live pregame 2026-11-15T16:37Z)",
-      "position": "G"
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Illness (ESPN live pregame 2026-11-15T16:37Z)"
     },
     {
       "name": "Akeem Davis-Gaither",
       "team": "IND",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
-    },
-    {
-      "name": "Akeem Davis-Gaither",
-      "team": "IND",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Alec Pierce",
       "team": "IND",
-      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Arden Key",
       "team": "IND",
-      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "DE"
+      "position": "DE",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Jalen Travis",
       "team": "IND",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "OT"
-    },
-    {
-      "name": "Jalen Travis",
-      "team": "IND",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "OT"
-    },
-    {
-      "name": "Jalen Travis",
-      "team": "IND",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "T"
+      "position": "OT",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Jaylon Carlies",
       "team": "IND",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "LB"
-    },
-    {
-      "name": "Jaylon Carlies",
-      "team": "IND",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "LB"
-    },
-    {
-      "name": "Jaylon Carlies",
-      "team": "IND",
-      "reason": "OUT - Neck (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Jerry Tillery",
       "team": "IND",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "DT"
-    },
-    {
-      "name": "Jerry Tillery",
-      "team": "IND",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "DT"
-    },
-    {
-      "name": "Jerry Tillery",
-      "team": "IND",
-      "reason": "OUT - Calf (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Luke Rhodes",
       "team": "IND",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "LS"
-    },
-    {
-      "name": "Luke Rhodes",
-      "team": "IND",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "LS"
-    },
-    {
-      "name": "Luke Rhodes",
-      "team": "IND",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "LS"
+      "position": "LS",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Mo Alie-Cox",
       "team": "IND",
-      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
-    },
-    {
-      "name": "Mo Alie-Cox",
-      "team": "IND",
-      "reason": "OUT - Groin (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Riley Leonard",
       "team": "IND",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)"
     },
     {
       "name": "Will Mallory",
       "team": "IND",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Albert Regis",
       "team": "JAX",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "B.J. Green II",
       "team": "JAX",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Forearm (ESPN live pregame 2026-11-14T02:12Z)",
-      "position": "DE"
-    },
-    {
-      "name": "BJ Green II",
-      "team": "JAX",
-      "reason": "OUT - Forearm (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DE"
+      "position": "DE",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Forearm (ESPN live pregame 2026-11-14T02:12Z)"
     },
     {
       "name": "CJ Williams",
       "team": "JAX",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:42Z)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:42Z)"
     },
     {
       "name": "DaVon Hamilton",
@@ -1082,242 +753,158 @@
     {
       "name": "Jessie Bates",
       "team": "JAX",
-      "reason": "OUT - Not injury related - resting player (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - Not injury related - resting player (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jessie Bates III",
       "team": "JAX",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "S"
-    },
-    {
-      "name": "Jessie Bates III",
-      "team": "JAX",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Jordan Davis",
       "team": "JAX",
-      "reason": "OUT - Not injury related - resting player (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - Not injury related - resting player (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Wesley Williams",
       "team": "JAX",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "DE"
+      "position": "DE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Ben VanSumeren",
       "team": "KC",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)",
-      "position": "FB"
+      "position": "FB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)"
     },
     {
       "name": "Garrett Nussmeier",
       "team": "KC",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)"
     },
     {
       "name": "Jaydn Ott",
       "team": "KC",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:46Z)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:46Z)"
     },
     {
       "name": "Jaylon Moore",
       "team": "KC",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:46Z)",
-      "position": "OT"
-    },
-    {
-      "name": "Jaylon Moore",
-      "team": "KC",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:46Z)",
-      "position": "OT"
-    },
-    {
-      "name": "Jaylon Moore",
-      "team": "KC",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:46Z)",
-      "position": "T"
+      "position": "OT",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:46Z)"
     },
     {
       "name": "Kenneth Walker III",
       "team": "KC",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "RB"
-    },
-    {
-      "name": "Kenneth Walker III",
-      "team": "KC",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "L'Jarius Sneed",
       "team": "KC",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Melvin Smith Jr.",
       "team": "KC",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Omarr Norman-Lott",
       "team": "KC",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Peter Woods",
       "team": "KC",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:46Z)",
-      "position": "DT"
-    },
-    {
-      "name": "Peter Woods",
-      "team": "KC",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:46Z)",
-      "position": "DT"
-    },
-    {
-      "name": "Peter Woods",
-      "team": "KC",
-      "reason": "OUT - Neck (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:46Z)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:46Z)"
     },
     {
       "name": "Rashee Rice",
       "team": "KC",
-      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "UNKNOWN"
-    },
-    {
-      "name": "Davante Adams",
-      "team": "LA",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Hamstring (ESPN live pregame 2026-11-15T16:06Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Davante Adams",
-      "team": "LA",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Hamstring (ESPN live pregame 2026-11-15T16:06Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Jordan Whittington",
-      "team": "LA",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
-    },
-    {
-      "name": "Puka Nacua",
-      "team": "LA",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee - MCL (ESPN live pregame 2026-11-15T16:00Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Puka Nacua",
-      "team": "LA",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee - MCL (ESPN live pregame 2026-11-15T16:00Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Steve Avila",
-      "team": "LA",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-14T02:16Z)",
-      "position": "G"
-    },
-    {
-      "name": "Steve Avila",
-      "team": "LA",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-14T02:16Z)",
-      "position": "G"
-    },
-    {
-      "name": "Terrance Ferguson",
-      "team": "LA",
-      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
-    },
-    {
-      "name": "Terrance Ferguson",
-      "team": "LA",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
     },
     {
       "name": "Branson Taylor",
       "team": "LAC",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T01:24Z)",
-      "position": "G"
-    },
-    {
-      "name": "Branson Taylor",
-      "team": "LAC",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T01:24Z)",
-      "position": "G"
+      "position": "G",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T01:24Z)"
     },
     {
       "name": "Brenen Thompson",
       "team": "LAC",
-      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
-    },
-    {
-      "name": "Brenen Thompson",
-      "team": "LAC",
-      "reason": "DOUBTFUL - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "David Njoku",
       "team": "LAC",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Denzel Perryman",
       "team": "LAC",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Isas Waxter",
       "team": "LAC",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T01:11Z)",
-      "position": "CB"
-    },
-    {
-      "name": "Isas Waxter",
-      "team": "LAC",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T01:11Z)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T01:11Z)"
     },
     {
       "name": "Kendall Williamson",
       "team": "LAC",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T01:14Z)",
-      "position": "S"
-    },
-    {
-      "name": "Kendall Williamson",
-      "team": "LAC",
-      "reason": "OUT - Calf (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T01:14Z)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T01:14Z)"
     },
     {
       "name": "Trey Pipkins III",
       "team": "LAC",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-15T01:22Z)",
-      "position": "OT"
+      "position": "OT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-15T01:22Z)"
+    },
+    {
+      "name": "Davante Adams",
+      "team": "LAR",
+      "position": "WR",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Hamstring (ESPN live pregame 2026-11-15T16:06Z)"
+    },
+    {
+      "name": "Jordan Whittington",
+      "team": "LAR",
+      "position": "WR",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "name": "Puka Nacua",
+      "team": "LAR",
+      "position": "WR",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee - MCL (ESPN live pregame 2026-11-15T16:00Z)"
+    },
+    {
+      "name": "Steve Avila",
+      "team": "LAR",
+      "position": "G",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-14T02:16Z)"
+    },
+    {
+      "name": "Terrance Ferguson",
+      "team": "LAR",
+      "position": "TE",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Chigozie Anusiem",
@@ -1340,476 +927,314 @@
     {
       "name": "Aaron Brewer",
       "team": "MIA",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "C"
-    },
-    {
-      "name": "Aaron Brewer",
-      "team": "MIA",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "C"
-    },
-    {
-      "name": "Aaron Brewer",
-      "team": "MIA",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "C"
+      "position": "C",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Caedan Wallace",
       "team": "MIA",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "OT"
+      "position": "OT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Chris Bell",
       "team": "MIA",
-      "reason": "DOUBTFUL - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-15T16:41Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Chris Bell",
-      "team": "MIA",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-15T16:41Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Chris Bell",
-      "team": "MIA",
-      "reason": "DOUBTFUL - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-15T16:41Z)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "DOUBTFUL - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-15T16:41Z)"
     },
     {
       "name": "Darrell Baker Jr.",
       "team": "MIA",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jared Wayne",
       "team": "MIA",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Jared Wayne",
-      "team": "MIA",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Jared Wayne",
-      "team": "MIA",
-      "reason": "OUT - Quadricep (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Justin Joly",
       "team": "MIA",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Malik Willis",
       "team": "MIA",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Marcellas Dial Jr.",
       "team": "MIA",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Zach Sieler",
       "team": "MIA",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Blake Cashman",
       "team": "MIN",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
-    },
-    {
-      "name": "Blake Cashman",
-      "team": "MIN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
-    },
-    {
-      "name": "Blake Cashman",
-      "team": "MIN",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Demond Claiborne",
       "team": "MIN",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Jauan Jennings",
       "team": "MIN",
-      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Jauan Jennings",
-      "team": "MIN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Jauan Jennings",
-      "team": "MIN",
-      "reason": "OUT - Calf (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15) + OUT - Calf (ESPN live pregame 2026-11-15T16:32Z)"
     },
     {
       "name": "Jordan Addison",
       "team": "MIN",
-      "reason": "OUT - Wrist (Neon injuries wk10, fetched 2026-11-15) + OUT - Thumb (ESPN live pregame 2026-11-15T16:38Z)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - Wrist (Neon injuries wk10, fetched 2026-11-15) + OUT - Thumb (ESPN live pregame 2026-11-15T16:38Z)"
     },
     {
       "name": "Kyler Murray",
       "team": "MIN",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "QB"
-    },
-    {
-      "name": "Kyler Murray",
-      "team": "MIN",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Max Brosmer",
       "team": "MIN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
     },
     {
       "name": "T.J. Hockenson",
       "team": "MIN",
-      "reason": "OUT - Wrist (Neon injuries wk10, fetched 2026-11-15) + OUT - Wrist (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "TE"
-    },
-    {
-      "name": "T.J. Hockenson",
-      "team": "MIN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Wrist (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "TE"
-    },
-    {
-      "name": "T.J. Hockenson",
-      "team": "MIN",
-      "reason": "OUT - Wrist (Neon injuries wk10, fetched 2026-11-15) + OUT - Wrist (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "OUT - Wrist (Neon injuries wk10, fetched 2026-11-15) + OUT - Wrist (ESPN live pregame 2026-11-15T16:32Z)"
     },
     {
       "name": "Tyrion Ingram-Dawkins",
       "team": "MIN",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "DE"
-    },
-    {
-      "name": "Tyrion Ingram-Dawkins",
-      "team": "MIN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "DE"
-    },
-    {
-      "name": "Tyrion Ingram-Dawkins",
-      "team": "MIN",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:32Z)",
-      "position": "DT"
+      "position": "DE",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:32Z)"
     },
     {
       "name": "Behren Morton",
       "team": "NE",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Ben Brown",
       "team": "NE",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "C"
-    },
-    {
-      "name": "Ben Brown",
-      "team": "NE",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "C"
+      "position": "C",
+      "reason": "Out - Knee (nflverse w10)"
     },
     {
       "name": "Brenden Schooler",
       "team": "NE",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "S"
+      "position": "S",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Carlton Davis III",
       "team": "NE",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
-    },
-    {
-      "name": "Carlton Davis III",
-      "team": "NE",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "Out - Knee (nflverse w10)"
     },
     {
       "name": "Dametrious Crownover",
       "team": "NE",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "OT"
+      "position": "OT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "TreVeyon Henderson",
       "team": "NE",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "RB"
-    },
-    {
-      "name": "TreVeyon Henderson",
-      "team": "NE",
-      "reason": "OUT - Illness (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "Out - Illness (nflverse w10)"
     },
     {
       "name": "Walter Rouse",
       "team": "NE",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "OL"
+      "position": "OL",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "CJ Donaldson",
       "team": "NO",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "RB"
-    },
-    {
-      "name": "CJ Donaldson",
-      "team": "NO",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "RB"
-    },
-    {
-      "name": "CJ Donaldson",
-      "team": "NO",
-      "reason": "OUT - Shoulder (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Christen Miller",
       "team": "NO",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DT"
-    },
-    {
-      "name": "Christen Miller",
-      "team": "NO",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Erik McCoy",
       "team": "NO",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Biceps (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "C"
-    },
-    {
-      "name": "Erik McCoy",
-      "team": "NO",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Biceps (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "C"
-    },
-    {
-      "name": "Erik McCoy",
-      "team": "NO",
-      "reason": "OUT - Biceps (Neon injuries wk10, fetched 2026-11-15) + OUT - Biceps (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "C"
+      "position": "C",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Biceps (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Jaylan Ford",
       "team": "NO",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Mike Reid",
       "team": "NO",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Taliese Fuaga",
       "team": "NO",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "OT"
-    },
-    {
-      "name": "Taliese Fuaga",
-      "team": "NO",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "OT"
-    },
-    {
-      "name": "Taliese Fuaga",
-      "team": "NO",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "T"
+      "position": "OT",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Zach Wilson",
       "team": "NO",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "CJ Okoye",
       "team": "NYG",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "J.C. Davis",
       "team": "NYG",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "OT"
+      "position": "OT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Josh Sills",
       "team": "NYG",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "G"
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Malik Harrison",
       "team": "NYG",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Nikko Reed",
       "team": "NYG",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Paulson Adebo",
       "team": "NYG",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Thomas Fidone II",
       "team": "NYG",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jarvis Brownlee Jr.",
       "team": "NYJ",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Illness (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Illness (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Jelani Woods",
       "team": "NYJ",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Max Mitchell",
       "team": "NYJ",
-      "reason": "IR - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "OT"
+      "position": "OT",
+      "reason": "IR - Concussion (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Nate Lynn",
       "team": "NYJ",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "DE"
+      "position": "DE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Tim Patrick",
       "team": "NYJ",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "Trevin Wallace",
       "team": "NYJ",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Groin (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "LB"
-    },
-    {
-      "name": "Trevin Wallace",
-      "team": "NYJ",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Groin (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "LB"
-    },
-    {
-      "name": "Trevin Wallace",
-      "team": "NYJ",
-      "reason": "OUT - Groin (Neon injuries wk10, fetched 2026-11-15) + OUT - Groin (ESPN live pregame 2026-11-15T16:36Z)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Groin (ESPN live pregame 2026-11-15T16:36Z)"
     },
     {
       "name": "VJ Payne",
       "team": "NYJ",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "S"
+      "position": "S",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Britain Covey",
       "team": "PHI",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "DeVonta Smith",
       "team": "PHI",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Dontayvion Wicks",
       "team": "PHI",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jihaad Campbell",
       "team": "PHI",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jonathan Jones",
       "team": "PHI",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Michael Carter II",
       "team": "PHI",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Michael Pittman Jr.",
       "team": "PIT",
-      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-15) + IR - Foot (ESPN live pregame 2026-11-12T18:08Z)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-15) + IR - Foot (ESPN live pregame 2026-11-12T18:08Z)"
     },
     {
       "name": "Roman Wilson",
@@ -1820,26 +1245,20 @@
     {
       "name": "Sebastian Joseph-Day",
       "team": "PIT",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Triceps (ESPN live pregame 2026-10-23T00:28Z)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Triceps (ESPN live pregame 2026-10-23T00:28Z)"
     },
     {
       "name": "Charles Cross",
       "team": "SEA",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T02:36Z)",
-      "position": "OT"
-    },
-    {
-      "name": "Charles Cross",
-      "team": "SEA",
-      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T02:36Z)",
-      "position": "T"
+      "position": "OT",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T02:36Z)"
     },
     {
       "name": "Cooper Kupp",
       "team": "SEA",
-      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "UNKNOWN"
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
     },
     {
       "name": "Elijah Arroyo",
@@ -1850,284 +1269,200 @@
     {
       "name": "Leonard Williams",
       "team": "SEA",
-      "reason": "OUT - Shoulder (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-14T00:38Z)",
-      "position": "DT"
-    },
-    {
-      "name": "Leonard Williams",
-      "team": "SEA",
-      "reason": "OUT - Stinger (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-14T00:38Z)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - Shoulder (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-14T00:38Z)"
     },
     {
       "name": "Quenton Nelson",
       "team": "SEA",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-14T02:39Z)",
-      "position": "G"
-    },
-    {
-      "name": "Quenton Nelson",
-      "team": "SEA",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-14T02:39Z)",
-      "position": "G"
+      "position": "G",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + OUT - Knee (ESPN live pregame 2026-11-14T02:39Z)"
     },
     {
       "name": "Sam Darnold",
       "team": "SEA",
-      "reason": "OUT - Ribs (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-10T00:15Z)",
-      "position": "QB"
-    },
-    {
-      "name": "Sam Darnold",
-      "team": "SEA",
-      "reason": "OUT - Ribs (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-10T00:15Z)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - Ribs (Neon injuries wk10, fetched 2026-11-15) + OUT - Quadriceps (ESPN live pregame 2026-11-10T00:15Z)"
     },
     {
       "name": "Brandon Aiyuk",
       "team": "SF",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
     },
     {
       "name": "C.J. West",
       "team": "SF",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-15T00:05Z)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15) + IR - Knee (ESPN live pregame 2026-11-15T00:05Z)"
     },
     {
       "name": "Gracen Halton",
       "team": "SF",
-      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-15) + IR - Ankle (ESPN live pregame 2026-11-14T19:20Z)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-15) + IR - Ankle (ESPN live pregame 2026-11-14T19:20Z)"
     },
     {
       "name": "Mike Evans",
       "team": "SF",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
-    },
-    {
-      "name": "Mike Evans",
-      "team": "SF",
-      "reason": "OUT - Achilles (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Nate Hobbs",
       "team": "SF",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Groin (ESPN live pregame 2026-11-15T00:02Z)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Groin (ESPN live pregame 2026-11-15T00:02Z)"
     },
     {
       "name": "Chris Godwin",
       "team": "TB",
-      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "UNKNOWN"
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
     },
     {
       "name": "Jalen McMillan",
       "team": "TB",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Yaya Diaby",
       "team": "TB",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Anthony Hill Jr.",
       "team": "TEN",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "LB"
-    },
-    {
-      "name": "Anthony Hill Jr.",
-      "team": "TEN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "LB"
-    },
-    {
-      "name": "Anthony Hill Jr.",
-      "team": "TEN",
-      "reason": "OUT - Neck (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Brandon Crenshaw-Dickson",
       "team": "TEN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "OT"
+      "position": "OT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Carnell Tate",
       "team": "TEN",
-      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Carnell Tate",
-      "team": "TEN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "WR"
-    },
-    {
-      "name": "Carnell Tate",
-      "team": "TEN",
-      "reason": "OUT - Shoulder (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15) + OUT - Shoulder (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Cody Barton",
       "team": "TEN",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
-    },
-    {
-      "name": "Cody Barton",
-      "team": "TEN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
-    },
-    {
-      "name": "Cody Barton",
-      "team": "TEN",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Dorian Mausi",
       "team": "TEN",
-      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Jackie Marshall",
       "team": "TEN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "James Williams Sr.",
       "team": "TEN",
-      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "LB"
+      "position": "LB",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jaylon Jones",
       "team": "TEN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
     },
     {
       "name": "Nicholas Singleton",
       "team": "TEN",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:40Z)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:40Z)"
     },
     {
       "name": "Peter Skoronski",
       "team": "TEN",
-      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "G"
-    },
-    {
-      "name": "Peter Skoronski",
-      "team": "TEN",
-      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "G"
+      "position": "G",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Tommy Townsend",
       "team": "TEN",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "P"
-    },
-    {
-      "name": "Tommy Townsend",
-      "team": "TEN",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "P"
+      "position": "P",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Will Levis",
       "team": "TEN",
-      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "UNKNOWN"
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
     },
     {
       "name": "Athan Kaliakmanis",
       "team": "WAS",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "QB"
+      "position": "QB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Colson Yankoff",
       "team": "WAS",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
-    },
-    {
-      "name": "Colson Yankoff",
-      "team": "WAS",
-      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "TE"
+      "position": "TE",
+      "reason": "Out - Knee (nflverse w10)"
     },
     {
       "name": "Daron Payne",
       "team": "WAS",
-      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Dyami Brown",
       "team": "WAS",
-      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "WR"
+      "position": "WR",
+      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Isaac Yiadom",
       "team": "WAS",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "CB"
+      "position": "CB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Jeremy McNichols",
       "team": "WAS",
-      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
-      "position": "RB"
+      "position": "RB",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)"
     },
     {
       "name": "Lucas Patrick",
       "team": "WAS",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "G"
-    },
-    {
-      "name": "Lucas Patrick",
-      "team": "WAS",
-      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "C"
+      "position": "C",
+      "reason": "Out - Concussion (nflverse w10)"
     },
     {
       "name": "Ricky Barber",
       "team": "WAS",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "DT"
+      "position": "DT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     },
     {
       "name": "Stefon Diggs",
       "team": "WAS",
-      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-      "position": "UNKNOWN"
+      "position": "UNKNOWN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)"
     },
     {
       "name": "Tanoa Togiai",
       "team": "WAS",
-      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
-      "position": "G"
+      "position": "G",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
     }
   ],
   "traded_players": [
@@ -2266,40 +1601,96 @@
     "BAL": "Jacoby Brissett",
     "BUF": "Josh Allen",
     "CAR": "Bryce Young",
-    "CHI": "Caleb Williams",
     "CIN": "Joe Burrow",
     "CLE": "Shedeur Sanders",
     "DAL": "Dak Prescott",
-    "DEN": "Bo Nix",
     "DET": "Jared Goff",
     "GB": "Jordan Love",
     "HOU": "C.J. Stroud",
     "IND": "Daniel Jones",
     "JAX": "Trevor Lawrence",
     "KC": "Patrick Mahomes",
-    "LA": "Matthew Stafford",
     "LAC": "Justin Herbert",
+    "LAR": "Matthew Stafford",
     "LV": "Fernando Mendoza",
     "MIA": "Kyle McCord",
     "MIN": "Kirk Cousins",
     "NE": "Tommy DeVito",
     "NO": "Tyler Shough",
-    "NYG": "J.J. McCarthy",
     "NYJ": "Geno Smith",
-    "PHI": "Joe Milton",
     "PIT": "Aaron Rodgers",
     "SEA": "Drew Lock",
     "SF": "Brock Purdy",
-    "TB": "Baker Mayfield",
     "TEN": "Cam Ward",
+    "CHI": "Caleb Williams",
+    "DEN": "Bo Nix",
+    "NYG": "J.J. McCarthy",
+    "PHI": "Joe Milton",
+    "TB": "Baker Mayfield",
     "WAS": "Jayden Daniels"
   },
-  "qb1_fallback_rule": "QB1 = most offenseSnaps in team's latest snap_counts week (>=7, 2026); if excluded by wk10 injury report, next non-excluded QB with snap evidence. Teams without evidence are omitted and props fail-closed: none.",
-  "situational_multipliers_unfitted": {},
-  "situational_flags": {
-    "NE": {
-      "qb1_change": true,
-      "reason": "Baseline QB1 Drake Maye excluded; promoted Tommy DeVito"
+  "return_from_ir": {
+    "Tank Dell": {
+      "name": "Tank Dell",
+      "team": "HOU",
+      "position": "WR",
+      "ramp_factor": 0.78,
+      "consensus_sources": [
+        "nflverse_injuries_not_out",
+        "dk_draftables_active",
+        "practice_participation_active",
+        "espn_active_roster_board"
+      ],
+      "status": "RETURN_FROM_IR_CONFIRMED"
     }
-  }
+  },
+  "effective_role_snap_share": {
+    "Darren Waller": 0.76,
+    "Colby Parkinson": 0.74,
+    "Emmett Johnson": 0.65,
+    "Ollie Gordon II": 0.58,
+    "Kendrick Bourne": 0.82,
+    "Khalil Shakir": 0.82,
+    "Brevyn Spann-Ford": 0.75,
+    "MarShawn Lloyd": 0.68,
+    "Woody Marks": 0.68,
+    "Xavier Worthy": 0.82,
+    "Konata Mumpfield": 0.82,
+    "Gavin Bartholomew": 0.75,
+    "Deebo Samuel": 0.82,
+    "Wan'Dale Robinson": 0.82,
+    "Antonio Williams": 0.82
+  },
+  "sealed_started_teams": [],
+  "unstarted_pre_teams": [
+    "ARI",
+    "ATL",
+    "BAL",
+    "BUF",
+    "CAR",
+    "CIN",
+    "CLE",
+    "DAL",
+    "DET",
+    "GB",
+    "HOU",
+    "IND",
+    "JAX",
+    "KC",
+    "LAC",
+    "LAR",
+    "LV",
+    "MIA",
+    "MIN",
+    "NE",
+    "NO",
+    "NYG",
+    "NYJ",
+    "PIT",
+    "SEA",
+    "SF",
+    "TEN",
+    "WAS"
+  ],
+  "situational_flags": {}
 }

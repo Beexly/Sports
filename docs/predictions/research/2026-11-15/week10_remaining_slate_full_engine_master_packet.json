@@ -1,0 +1,38 @@
+{
+  "schema": "gse-remaining-slate-full-engine-master-packet-v1",
+  "season": 2026,
+  "week": 10,
+  "mode": "t90m-adjust",
+  "target": "all-remaining",
+  "window": "sun_late",
+  "generated_utc": "2026-11-15T20:30:49.390180+00:00",
+  "elapsed_seconds": 0.064,
+  "sla_badge_180s": true,
+  "sla_badge_label": "<180s T-90m SLA ACHIEVED",
+  "fast_diff_applied": true,
+  "inactives_diff_count": 0,
+  "orchestrated_games": [
+    "SEA@LV",
+    "LAR@ARI",
+    "SF@DAL"
+  ],
+  "stage_statuses": {
+    "stage0": "VERIFIED_EXISTING",
+    "stage2": "VERIFIED_STANDBY",
+    "stage4_boards": "VERIFIED_STANDBY",
+    "stage3_5_simulation": "FAST_DIFF_ZERO_INACTIVE_CHANGES_REUSED",
+    "stage6_dfs_packets": "VERIFIED_STANDBY",
+    "stage6_lineup_doctor": "VERIFIED_STANDBY"
+  },
+  "manifest_paths": {
+    "stage0_truth": "C:\\Users\\Garrett\\Sports-wt-triage\\data\\engine\\week10_unified_stage0_truth.json",
+    "stage2_ts_overlay": "C:\\Users\\Garrett\\Sports-wt-triage\\scripts\\ops\\run_live_game_ts_overlay_and_grounding.ts",
+    "stage4_boards": "C:\\Users\\Garrett\\Sports-wt-triage\\scripts\\ops\\build_game_boards_360.py",
+    "stage3_5_connected_dossiers": [
+      "C:\\Users\\Garrett\\Sports-wt-triage\\data\\engine\\connected_workflow_dossier_sea_lv_week10.json",
+      "C:\\Users\\Garrett\\Sports-wt-triage\\data\\engine\\connected_workflow_dossier_lar_ari_week10.json",
+      "C:\\Users\\Garrett\\Sports-wt-triage\\data\\engine\\connected_workflow_dossier_sf_dal_week10.json"
+    ],
+    "stage6_dfs": "C:\\Users\\Garrett\\Sports-wt-triage\\scripts\\dfs\\build_weekly_dfs_packets.py"
+  }
+}

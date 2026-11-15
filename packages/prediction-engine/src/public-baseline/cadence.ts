@@ -1,13 +1,14 @@
 /**
  * Cadence locks. The schedule is the spec. Nothing here registers a cron.
  *
- * v1.0 Tue 04:00 CT, v2.0 Wed 17:00 CT, v2.5 Thu 16:30 CT (TNF prep pass),
- * v3.0 Fri 16:30 CT, v4.0 Sunday kickoff minus 90 minutes.
+ * Three-Noon Content-Ready Master Locks + T-90m Adjustments (ADR-0010):
+ * - v1.0 Tue 04:00 CT Baseline
+ * - v2.0 Wed 12:00 CT TNF Content-Ready Master Lock
+ * - v2.5 Thu T-90m (17:45 CT) TNF Adjustment
+ * - v3.0 Fri 12:00 CT Sunday Content-Ready Master Lock
+ * - v3.5 Sun 12:00 CT MNF Content-Ready Master Lock
+ * - v4.0 Pre-Kickoff T-90m Sunday & Monday Adjustments (10:30, 13:35, 17:50, 17:45 CT)
  *
- * v4.0 has two Sunday slots because the slate does: 10:30 CT is the early-slate
- * T-90m inactives lock, 13:35 CT the afternoon-slate one. They are distinct locks,
- * not a duplicate — the cron registry carries both and both are registered here so
- * no cron is an orphan.
  * Each lock carries valid_time, transaction_time, and a sha256 Merkle of the
  * canonical payload. The 5-minute day is a 288-bit mask, Uint32Array(9).
  */
@@ -24,11 +25,11 @@ export interface CadenceEntry {
 
 export const CADENCE: ReadonlyArray<CadenceEntry> = [
   { version: "v1.0", dow: "Tue", hour: 4, minute: 0, day: "Tue" },
-  { version: "v2.0", dow: "Wed", hour: 17, minute: 0, day: "Wed" },
-  { version: "v2.5", dow: "Thu", hour: 16, minute: 30, day: "Thu" },
-  { version: "v3.0", dow: "Fri", hour: 16, minute: 30, day: "Fri" },
+  { version: "v2.0", dow: "Wed", hour: 12, minute: 0, day: "Wed" },
+  { version: "v2.5", dow: "Thu", hour: 17, minute: 45, day: "Thu" },
+  { version: "v3.0", dow: "Fri", hour: 12, minute: 0, day: "Fri" },
+  { version: "v3.5", dow: "Sun", hour: 12, minute: 0, day: "Sun" },
   { version: "v4.0", dow: "Sun", hour: 10, minute: 30, day: "Sun" },
-  { version: "v4.0", dow: "Sun", hour: 13, minute: 35, day: "Sun" },
 ] as const
 
 export function cadenceIndex(version: CadenceVersion): number {
@@ -39,7 +40,7 @@ export const T_MINUS_MINUTES = 90
 export const FIVE_MIN_SLOTS = 288
 export const XOR_WORDS = 9
 
-export type CadenceVersion = "v1.0" | "v2.0" | "v2.5" | "v3.0" | "v4.0"
+export type CadenceVersion = "v1.0" | "v2.0" | "v2.5" | "v3.0" | "v3.5" | "v4.0"
 
 export type WallClock = { dow: string; hour: number; minute: number }
 
@@ -56,7 +57,7 @@ export function chicagoParts(instant: Date): WallClock {
   return { dow: get("weekday"), hour: Number(get("hour")), minute: Number(get("minute")) }
 }
 
-export function dueVersion(parts: WallClock): "v1.0" | "v2.0" | "v2.5" | "v3.0" | "v4.0" | null {
+export function dueVersion(parts: WallClock): CadenceVersion | null {
   for (const row of CADENCE) {
     if (parts.dow === row.dow && parts.hour === row.hour && parts.minute === row.minute) return row.version
   }
@@ -127,7 +128,8 @@ export type RollingPhase =
   | 'MON_TUE_FINE_TUNE_SEAL'
   | 'T_MINUS_48H_EARLY_SIM'
   | 'INJURY_WEATHER_OVERLAY'
-  | 'T_MINUS_90M_FINAL_LOCK';
+  | 'T_MINUS_90M_FINAL_LOCK'
+  | 'NOON_CONTENT_READY_MASTER_LOCK';
 
 export interface RollingCadenceEntry extends CadenceEntry {
   id: string;
@@ -402,6 +404,115 @@ export function getPostGameFilmReviewWindow(slot: GameSlotWindow): RollingCadenc
   );
   if (!match) {
     throw new Error(`No post-game film review window registered for slot: ${slot}`);
+  }
+  return match;
+}
+
+// --------------------------------------------------------------------------- //
+// Three-Noon Content-Ready Master Locks (ADR-0010)
+// --------------------------------------------------------------------------- //
+
+export interface NoonMasterLockEntry {
+  readonly id: string;
+  readonly slot: GameSlotWindow | "SUNDAY_ALL";
+  readonly targetSlots: readonly GameSlotWindow[];
+  readonly version: CadenceVersion;
+  readonly day: string;
+  readonly dow: string;
+  readonly hour: number;
+  readonly minute: number;
+  readonly ctTime: string;
+  readonly phase: RollingPhase;
+  readonly description: string;
+  readonly outputs: ReadonlyArray<
+    | "FILM_GRADES"
+    | "PACE_OF_PLAY"
+    | "TOTALS_SPREADS"
+    | "PLAYER_PROPS"
+    | "CORRELATED_SGP"
+    | "DFS_WRITEUPS"
+    | "CONTENT_OS_PACKET"
+  >;
+}
+
+export const NOON_MASTER_LOCKS: ReadonlyArray<NoonMasterLockEntry> = [
+  {
+    id: "noon-content-cutoff-wed-tnf",
+    slot: "TNF",
+    targetSlots: ["TNF"],
+    version: "v2.0",
+    day: "Wed",
+    dow: "Wed",
+    hour: 12,
+    minute: 0,
+    ctTime: "12:00",
+    phase: "NOON_CONTENT_READY_MASTER_LOCK",
+    description: "Wed 12:00 CT TNF Content-Ready Cutoff",
+    outputs: ["TOTALS_SPREADS", "PLAYER_PROPS", "CORRELATED_SGP", "DFS_WRITEUPS", "CONTENT_OS_PACKET"],
+  },
+  {
+    id: "noon-content-cutoff-fri-sunday",
+    slot: "SUNDAY_ALL",
+    targetSlots: ["SUN_EARLY", "SUN_LATE", "SNF"],
+    version: "v3.0",
+    day: "Fri",
+    dow: "Fri",
+    hour: 12,
+    minute: 0,
+    ctTime: "12:00",
+    phase: "NOON_CONTENT_READY_MASTER_LOCK",
+    description: "Fri 12:00 CT Sunday Content-Ready Cutoff",
+    outputs: ["TOTALS_SPREADS", "PLAYER_PROPS", "CORRELATED_SGP", "DFS_WRITEUPS", "CONTENT_OS_PACKET"],
+  },
+  {
+    id: "noon-content-cutoff-sun-mnf",
+    slot: "MNF",
+    targetSlots: ["MNF"],
+    version: "v3.5",
+    day: "Sun",
+    dow: "Sun",
+    hour: 12,
+    minute: 0,
+    ctTime: "12:00",
+    phase: "NOON_CONTENT_READY_MASTER_LOCK",
+    description: "Sun 12:00 CT MNF Content-Ready Cutoff",
+    outputs: ["TOTALS_SPREADS", "PLAYER_PROPS", "CORRELATED_SGP", "DFS_WRITEUPS", "CONTENT_OS_PACKET"],
+  },
+] as const;
+
+export function getNoonMasterLockWindow(slot: GameSlotWindow | "SUNDAY_ALL"): NoonMasterLockEntry {
+  const match = NOON_MASTER_LOCKS.find(
+    (e) => e.slot === slot || e.targetSlots.includes(slot as GameSlotWindow),
+  );
+  if (!match) {
+    throw new Error(`No Noon Content Cutoff registered for slot: ${slot}`);
+  }
+  return match;
+}
+
+export interface TMinus90AdjustmentWindow extends RollingCadenceEntry {
+  readonly kickoffUtc?: string;
+  readonly adjustmentUtc?: string;
+}
+
+export function getTMinus90AdjustmentWindow(
+  slot: GameSlotWindow,
+  kickoffUtc?: Date | string | number,
+): TMinus90AdjustmentWindow {
+  const match = ROLLING_GAME_WINDOW_CADENCE.find(
+    (e) => e.phase === "T_MINUS_90M_FINAL_LOCK" && e.gameSlot === slot,
+  );
+  if (!match) {
+    throw new Error(`No T-90m adjustment window registered for slot: ${slot}`);
+  }
+  if (kickoffUtc !== undefined) {
+    const kDate = new Date(kickoffUtc);
+    const adjDate = tMinus90(kDate);
+    return {
+      ...match,
+      kickoffUtc: kDate.toISOString(),
+      adjustmentUtc: adjDate.toISOString(),
+    };
   }
   return match;
 }

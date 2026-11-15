@@ -401,14 +401,8 @@ def optimize_gpp_portfolio(
         prob += pulp.lpSum([x[k] for k in pids if df.loc[k, "position"] == "TE"]) <= 2
         prob += pulp.lpSum([x[k] for k in pids]) == 9
 
-        # Empirical salary / ownership geometry
-        for k in pids:
-            if df.loc[k, "position"] == "TE" and 5100 <= df.loc[k, "salary"] <= 6600:
-                prob += x[k] == 0
-            if df.loc[k, "position"] == "QB" and (
-                df.loc[k, "proj_ownership"] > 0.20 or df.loc[k, "salary"] > 7900
-            ):
-                prob += x[k] == 0
+        # Empirical salary / ownership geometry (arbitrary TE $5100-6600 and QB > $7900 bans removed per ADR-0009;
+        # evaluated purely via simulated empirical DK FPTS distributions, Ledoit-Wolf shrinkage, and Dirichlet field)
 
         prob += pulp.lpSum(
             [x[k] for k in pids if df.loc[k, "position"] == "WR" and df.loc[k, "proj_ownership"] <= 0.05]
