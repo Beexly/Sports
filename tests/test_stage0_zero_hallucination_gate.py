@@ -175,10 +175,13 @@ def test_connected_workflow_master_bundle_and_all_37_athlete_projections():
 def test_week10_stage0_live_roster_config_fresh_on_2026_11_14() -> None:
     cfg = require_week(10, today=date(2026, 11, 14))
     assert cfg["week"] == 10
-    assert cfg["as_of"] == "2026-11-13"
-    try:
-        require_week(10, today=date(2026, 11, 18))
-    except PreflightRosterGateError:
-        pass
-    else:
-        raise AssertionError("Expected PreflightRosterGateError for stale Week-10 config")
+    assert cfg["as_of"] == "2026-11-14"
+  with pytest.raises(PreflightRosterGateError):
+      require_week(10, today=date(2026, 11, 19))
+    excluded_names = {p["name"] for p in cfg["excluded_players"]}
+    assert "TreVeyon Henderson" in excluded_names
+    assert "Kenneth Walker III" in excluded_names
+    assert "Mike Evans" in excluded_names
+    assert "Travis Etienne Jr." not in excluded_names
+    assert "Xavier Legette" not in excluded_names
+
