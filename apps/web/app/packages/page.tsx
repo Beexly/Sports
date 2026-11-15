@@ -4,7 +4,6 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import {
   TWO_DOOR_PACK_OFFERS,
-  singleSlateCheckoutAvailability,
   membershipCheckoutAvailability,
 } from "@/lib/packages/two-door-offers";
 import { LIVE_PACKAGE_CATALOG, getActiveForSalePackages } from "@/lib/packages/catalog";
@@ -51,7 +50,6 @@ const FIVE_STAGES: readonly { readonly title: string; readonly body: string }[] 
 
 export default async function PackagesPage(): Promise<JSX.Element> {
   const gate = await getStage5GateStatus();
-  const slateAvailability = singleSlateCheckoutAvailability();
   const membershipAvailability = membershipCheckoutAvailability();
   const stripePacks = LIVE_PACKAGE_CATALOG.filter((pkg) => Boolean(pkg.forSale) && Boolean(pkg.stripePriceId));
 
@@ -153,9 +151,9 @@ export default async function PackagesPage(): Promise<JSX.Element> {
             <p className={`${eyebrow} text-ion-2`}>Every slate clears all five before listing</p>
           </div>
           <ol className="mt-6 grid gap-px border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-5">
-            {FIVE_STAGES.map((stage) => (
-              <li key={stage.n} className="bg-eclipse p-5">
-                <span className="font-numerals text-xs text-plasma">{stage.n}</span>
+            {FIVE_STAGES.map((stage, idx) => (
+              <li key={stage.title} className="bg-eclipse p-5">
+                <span className="font-numerals text-xs text-plasma">{String(idx + 1).padStart(2, "0")}</span>
                 <h3 className="mt-2 text-sm font-semibold text-ion-white">{stage.title}</h3>
                 <p className="mt-1.5 text-xs leading-5 text-ion-1">{stage.body}</p>
               </li>
@@ -243,7 +241,6 @@ export default async function PackagesPage(): Promise<JSX.Element> {
                   key={offer.slug}
                   offer={offer}
                   gate={gate}
-                  availability={slateAvailability}
                 />
               ))}
             </div>
