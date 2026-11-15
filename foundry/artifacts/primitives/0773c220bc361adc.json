@@ -1,0 +1,704 @@
+{
+ "book_id": "0773c220bc361adc",
+ "source_status": "COMPLETE",
+ "source_note": "Brendan Burns, Designing Distributed Systems: Patterns and Paradigms for Scalable, Reliable Services, O'Reilly Media, first edition, January 2018. Local file is the publisher PDF at books-c-systems/Burns-2018-DesigningDistributedSystems.pdf, size 6922568 bytes, full sha256 0773c220bc361adc6168b4eb501a3e960bc7077d6e50bcdd58013476520cf7df, book_id is the first 16 hex chars of the scan digest sha256 of str(size) plus full file bytes. Extracted text is clean and complete, 5474 lines including front matter, 13 chapters, and index, with occasional hyphenated line breaks that were avoided when selecting quotes. No catalog correction needed. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "pattern_blueprint",
+   "name": "A pattern is a repeatable generic blueprint for organizing a distributed system without mandating a specific technology",
+   "verbatim_quote": "In this book I capture a collection of repeatable, generic patterns that can make the development of reliable distributed systems more approachable and efficient.",
+   "page": "Chapter 1, Introduction; Preface, The World of Distributed Systems Today",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "The reader already uses containers and container orchestration",
+    "Similar structural problems recur across otherwise different applications"
+   ],
+   "breakdown_regime": "Fails when a pattern name is applied without its preconditions, or when a specific product recipe is mistaken for a general pattern",
+   "domain": "distributed systems design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A named pattern with stated preconditions becomes a reusable reasoning template in the engine: a situation is matched to a template only when its preconditions are observed, and the template supplies the checks that follow.",
+    "source_operator": "pattern_blueprint",
+    "telemetry": "Catalog of situation templates matched, precondition hits and misses, and downstream outcomes"
+   }
+  },
+  {
+   "primitive_id": "sidecar_pattern",
+   "name": "A sidecar container augments and improves an application container, often without the application container knowing",
+   "verbatim_quote": "The role of the sidecar is to augment and improve the application container, often without the application container's knowledge.",
+   "page": "Chapter 2, The Sidecar Pattern",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Main and sidecar containers are coscheduled on one machine and share namespaces",
+    "The added function can be separated from the core application logic"
+   ],
+   "breakdown_regime": "Fails when the sidecar shares fate or resources so tightly that its failure or load degrades the main container it was meant to protect",
+   "domain": "single node patterns",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An auxiliary signal processor can be attached beside a core projection path to add a check or transformation without rewriting the core path, provided resource use and failure are isolated and observed.",
+    "source_operator": "sidecar_pattern",
+    "telemetry": "Sidecar processor latency, error rate, resource use, and change in core output quality"
+   }
+  },
+  {
+   "primitive_id": "dynamic_configuration_sidecar",
+   "name": "A configuration manager sidecar polls a configuration API, writes differences to a shared filesystem, and signals the application to reconfigure",
+   "verbatim_quote": "When the configuration manager starts, it examines the configuration API and looks for differences between the local filesystem and the configuration stored in the API.",
+   "page": "Chapter 2, Dynamic Configuration with Sidecars",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "The application reads configuration from a local file at start or on signal",
+    "A shared directory is visible to both containers"
+   ],
+   "breakdown_regime": "Fails when the application cannot reload safely, when signals are missed, or when a forced restart interrupts in flight work",
+   "domain": "configuration management",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine parameters and feature configuration should be versioned, diffed against the running state, and applied through an explicit reload signal with rollback, rather than edited in place without a record.",
+    "source_operator": "dynamic_configuration_sidecar",
+    "telemetry": "Configuration version, diff size, reload success, rollback events, and parameter values in force per run"
+   }
+  },
+  {
+   "primitive_id": "parameterized_containers",
+   "name": "Each parameter of a container is an input that customizes a generic container to a specific situation",
+   "verbatim_quote": "Each parameter represents an input that can customize a generic container to a specific situation.",
+   "page": "Chapter 2, Parameterized Containers",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Parameters are passed by environment variables or command line",
+    "Defaults and parameter meanings are documented"
+   ],
+   "breakdown_regime": "Fails when parameters are undocumented, renamed, or reinterpreted, because a silent change in units or meaning breaks consumers without an error",
+   "domain": "modularity and reuse",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every reusable engine component exposes its inputs explicitly with names, units, and defaults, so a run can be reproduced from its parameter set alone and a change in meaning is treated as a breaking change.",
+    "source_operator": "parameterized_containers",
+    "telemetry": "Parameter sets per run, default overrides, and unit declarations for each input"
+   }
+  },
+  {
+   "primitive_id": "ambassador_pattern",
+   "name": "An ambassador container brokers interactions between the application container and the rest of the world",
+   "verbatim_quote": "This chapter introduces the ambassador pattern, where an ambassador container brokers interactions between the application container and the rest of the world.",
+   "page": "Chapter 3, Ambassadors",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Ambassador and application are tightly linked and scheduled to a single machine",
+    "External complexity such as sharding or discovery can be hidden behind the ambassador"
+   ],
+   "breakdown_regime": "Fails when the ambassador becomes a bottleneck or a single point of failure, or when it hides errors the application needs to see",
+   "domain": "single node patterns",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "External data access should pass through a broker layer that owns routing, retries, and endpoint selection, so core reasoning code sees a stable interface while the broker absorbs source changes.",
+    "source_operator": "ambassador_pattern",
+    "telemetry": "Broker routing decisions, retry counts, endpoint latency, and error classes per source"
+   }
+  },
+  {
+   "primitive_id": "sharding_definition",
+   "name": "Sharding splits a layer into multiple disjoint pieces, each hosted by a separate machine",
+   "verbatim_quote": "Sharding splits up the layer into multiple disjoint pieces, each hosted by a separate machine.",
+   "page": "Chapter 3, Using an Ambassador to Shard a Service; Chapter 6, Sharded Services",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Pieces are disjoint, so each item belongs to one shard",
+    "A sharding function decides placement"
+   ],
+   "breakdown_regime": "Fails when pieces overlap, when the placement function is unstable, or when cross shard queries dominate the workload",
+   "domain": "sharding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A large corpus or game slate is partitioned into disjoint shards by a stable key so each shard can be processed in parallel and results remain attributable to exactly one shard.",
+    "source_operator": "sharding_definition",
+    "telemetry": "Shard assignment per item, shard sizes, and cross shard query rate"
+   }
+  },
+  {
+   "primitive_id": "service_brokering_discovery",
+   "name": "Service discovery links a consumer to a provider for its environment, and the system performing it is a service broker",
+   "verbatim_quote": "This process is called service discovery, and the system that performs this discovery and linking is commonly called a service broker.",
+   "page": "Chapter 3, Using an Ambassador for Service Brokering",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Environments differ, for example public cloud, physical datacenter, or private cloud",
+    "A broker can create or locate the required service instance"
+   ],
+   "breakdown_regime": "Fails when discovery returns stale endpoints or when environment differences leak through the broker into application logic",
+   "domain": "service discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Source endpoints for engine data should be resolved through a broker that records which endpoint served each run, so a bad source can be traced and replaced without changing reasoning code.",
+    "source_operator": "service_brokering_discovery",
+    "telemetry": "Resolved endpoint per run, discovery latency, and stale endpoint incidents"
+   }
+  },
+  {
+   "primitive_id": "request_splitting_experimentation",
+   "name": "Request splitting sends a fraction or a copy of traffic to a new version to simulate production load without risking production users",
+   "verbatim_quote": "Most often, this form of request splitting is used to simulate production load on the new version of the service without risking impact to existing production users.",
+   "page": "Chapter 3, Using an Ambassador to Do Experimentation or Request Splitting",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Traffic can be split by percentage or teed to both versions",
+    "The production path remains the one users depend on"
+   ],
+   "breakdown_regime": "Fails when the experimental version shares state with production, or when split traffic is not representative of real load",
+   "domain": "experimentation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A new reasoning component should first receive a copied or sampled slice of real inputs in shadow, with its outputs recorded but not emitted, before any promotion decision is made.",
+    "source_operator": "request_splitting_experimentation",
+    "telemetry": "Shadow sample size, agreement rate with production, latency and error deltas"
+   }
+  },
+  {
+   "primitive_id": "adapter_pattern",
+   "name": "An adapter container modifies the interface of an application container so it conforms to a predefined interface expected of all applications",
+   "verbatim_quote": "In the adapter pattern, the adapter container is used to modify the interface of the application container so that it conforms to some predefined interface that is expected of all applications.",
+   "page": "Chapter 4, Adapters",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "A standard interface exists for monitoring, logging, or health",
+    "The application itself is not modified"
+   ],
+   "breakdown_regime": "Fails when the standard interface loses information the application uniquely provides, or when adapters multiply until no one knows the true interface",
+   "domain": "single node patterns",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Heterogeneous data sources are normalized through adapters into one engine interface, with the adapter owning format translation so source quirks do not spread into reasoning code.",
+    "source_operator": "adapter_pattern",
+    "telemetry": "Adapter translation failures, dropped fields, and schema conformance per source"
+   }
+  },
+  {
+   "primitive_id": "adapter_monitoring_prometheus",
+   "name": "An adapter can take an existing service such as Redis and adapt it to the Prometheus metrics collection interface",
+   "verbatim_quote": "Consequently, the adapter pattern is quite useful for taking an existing service like Redis and adapting it to the Prometheus metrics-collection interface.",
+   "page": "Chapter 4, Monitoring",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "The service exposes some inspectable state",
+    "Prometheus expects a defined metrics format"
+   ],
+   "breakdown_regime": "Fails when the adapter samples too rarely to catch short failures, or when exported metrics mislabel the underlying state",
+   "domain": "observability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine stage should export its counts, latencies, and refusal reasons through a standard telemetry adapter, so health can be compared across stages without custom instrumentation per stage.",
+    "source_operator": "adapter_monitoring_prometheus",
+    "telemetry": "Exported metric series per stage, scrape success, and refusal reason counts"
+   }
+  },
+  {
+   "primitive_id": "stateless_service",
+   "name": "Stateless services are ones that do not require saved state to operate correctly, so any replica can serve any request",
+   "verbatim_quote": "Stateless services are ones that don't require saved state to operate correctly.",
+   "page": "Chapter 5, Stateless Services",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Requests carry or reference everything needed to serve them",
+    "No per replica local state is required for correctness"
+   ],
+   "breakdown_regime": "Fails when hidden local state accumulates, for example in memory caches that become required for correctness rather than speed",
+   "domain": "serving patterns",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning stage that keeps no required local state can be rerun, replicated, and replaced freely, which makes verification reruns and parallel scoring straightforward.",
+    "source_operator": "stateless_service",
+    "telemetry": "Replica identity per output, rerun reproducibility rate, and local state size"
+   }
+  },
+  {
+   "primitive_id": "readiness_probe",
+   "name": "Containers can be alive but not ready, so a replicated service needs a readiness check separate from liveness",
+   "verbatim_quote": "In all of these cases, the containers are alive, but they are not ready.",
+   "page": "Chapter 5, Readiness Probes for Load Balancing",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Startup work such as loading data must finish before serving",
+    "The load balancer respects the readiness signal"
+   ],
+   "breakdown_regime": "Fails when readiness is reported before dependencies are truly loaded, sending traffic to a replica that errors or answers badly",
+   "domain": "serving patterns",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A data source or model component must report ready only after its inputs are loaded and checked; alive but unready components receive no work and their unready reason is recorded.",
+    "source_operator": "readiness_probe",
+    "telemetry": "Readiness state and reason per component, time from start to ready, traffic sent while unready"
+   }
+  },
+  {
+   "primitive_id": "session_tracking_consistent_hashing",
+   "name": "Consistent hashing for session tracking minimizes the number of users remapped when a service scales up or down",
+   "verbatim_quote": "Consistent hashing functions minimize the number of users that actually change which replica they are mapped to, reducing the impact of scaling on your application.",
+   "page": "Chapter 5, Session Tracked Services",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "A stable user or session key exists",
+    "Replica count changes over time"
+   ],
+   "breakdown_regime": "Fails when keys are poorly distributed, concentrating sessions on few replicas despite the consistent mapping",
+   "domain": "session tracking",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Stable assignment of entities to shards or caches should change as little as possible when capacity changes, so prior computed results stay valid for most entities after a resize.",
+    "source_operator": "session_tracking_consistent_hashing",
+    "telemetry": "Remap fraction on resize, per replica load distribution, cache hit change after resize"
+   }
+  },
+  {
+   "primitive_id": "cache_hit_rate",
+   "name": "Cache performance is defined by hit rate, the percentage of time the cache contains the data for a user request",
+   "verbatim_quote": "The hit rate is the percentage of the time that your cache contains the data for a user request.",
+   "page": "Chapter 6, Sharded Caching, The Role of the Cache in System Performance",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Requests repeat enough that stored results are reused",
+    "Serving from cache is significantly faster or cheaper than recomputation"
+   ],
+   "breakdown_regime": "Fails when the hit rate is low, when cached results go stale, or when cache failure overloads the layer behind it because capacity assumed the cache",
+   "domain": "caching",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cached intermediate results in the engine, such as parsed documents or computed features, should be judged by measured hit rate and by the load that a cold cache would place on the stages behind it.",
+    "source_operator": "cache_hit_rate",
+    "telemetry": "Cache hit rate, miss latency, recompute cost, and stale result incidents"
+   }
+  },
+  {
+   "primitive_id": "sharded_vs_replicated",
+   "name": "Replicated services are generally used for stateless services, whereas sharded services are generally used for stateful services",
+   "verbatim_quote": "Replicated services are generally used for building stateless services, whereas sharded services are generally used for building stateful services.",
+   "page": "Chapter 6, Sharded Services",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Stateless work can be copied identically to many machines",
+    "Stateful work must be partitioned because state does not fit or cannot be served from one place"
+   ],
+   "breakdown_regime": "Fails when stateful work is replicated as if stateless, causing divergence, or when stateless work is sharded without need, adding routing complexity",
+   "domain": "serving patterns",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine chooses replication for stateless scoring stages and partitioning for stateful stores, and records which choice was made per stage so capacity plans follow the actual state model.",
+    "source_operator": "sharded_vs_replicated",
+    "telemetry": "Per stage state classification, replica count, shard count, and divergence incidents"
+   }
+  },
+  {
+   "primitive_id": "sharding_function",
+   "name": "The sharding function relates a request to its shard, commonly defined with a hash and the modulo operator",
+   "verbatim_quote": "This mapping is the responsibility of the sharding function.",
+   "page": "Chapter 6, An Examination of Sharding Functions",
+   "latex": "Shard = ShardingFunction(Req)",
+   "symbol_and_unit_ledger": {
+    "Shard": "shard identifier, dimensionless index",
+    "Req": "incoming request or item to place, dimensionless key carrier",
+    "ShardingFunction": "deterministic mapping from request key to shard identifier"
+   },
+   "assumptions": [
+    "The function is deterministic for the same request key",
+    "The same key must map to the same shard while the shard set is fixed"
+   ],
+   "breakdown_regime": "Fails when the function uses volatile fields such as time or client address, so the same logical item lands on different shards",
+   "domain": "sharding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Placement of games, documents, or entities into processing shards must be a deterministic function of a stable key, recorded with the run, so any item can be located and reprocessed on the same shard.",
+    "source_operator": "sharding_function",
+    "telemetry": "Shard function version, key fields used, and placement lookup success rate"
+   }
+  },
+  {
+   "primitive_id": "sharding_key_selection",
+   "name": "Determining the appropriate key for the sharding function is vital to designing a sharded system well",
+   "verbatim_quote": "Determining the appropriate key for your sharding function is vital to designing your sharded system well.",
+   "page": "Chapter 6, Selecting a Key",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "A key can be extracted from the request, for example its path",
+    "The key should group requests that share cached or local data"
+   ],
+   "breakdown_regime": "Fails when the key is too fine, scattering related items, or too coarse, overloading one shard and defeating locality",
+   "domain": "sharding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Shard key choice for the corpus, by stable document or game identity rather than by volatile metadata, decides whether related evidence stays together and whether load stays even.",
+    "source_operator": "sharding_key_selection",
+    "telemetry": "Key distribution across shards, related item colocation rate, and largest shard share"
+   }
+  },
+  {
+   "primitive_id": "consistent_hashing_remap_bound",
+   "name": "Consistent hashing guarantees that resizing remaps only about the number of keys divided by the number of shards",
+   "verbatim_quote": "Consistent hashing functions are special hash functions that are guaranteed to only remap # keys / # shards, when being resized to # shards.",
+   "page": "Chapter 6, Consistent Hashing Functions",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Keys are distributed by the hash across the shard ring or equivalent structure",
+    "Resizing adds or removes a small number of shards at a time"
+   ],
+   "breakdown_regime": "Fails when shard counts change massively at once, or when uneven key popularity makes nominal remap bounds irrelevant to actual load",
+   "domain": "sharding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When engine shard counts change, expected remapped work is bounded in advance by the keys to shards ratio, and the actual remap is measured against that bound before the resize is accepted.",
+    "source_operator": "consistent_hashing_remap_bound",
+    "telemetry": "Keys total, shard count before and after, predicted and actual remapped keys"
+   }
+  },
+  {
+   "primitive_id": "hot_shard",
+   "name": "Hot shards appear when organic load patterns drive more traffic to one particular shard than to others",
+   "verbatim_quote": "Ideally the load on a sharded cache will be perfectly even, but in many cases this isn't true and \"hot shards\" appear because organic load patterns drive more traffic to one particular shard.",
+   "page": "Chapter 6, Hot Sharding Systems",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Load follows real popularity, which is uneven",
+    "A hot shard can be replicated or moved to relieve pressure"
+   ],
+   "breakdown_regime": "Fails when popularity shifts faster than rebalancing, or when replicating a hot shard creates consistency problems for writes",
+   "domain": "sharding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Popularity driven load, such as a heavily followed game or team, will concentrate work on one partition; the engine should detect the hot partition and replicate or split it rather than treating load as uniform.",
+    "source_operator": "hot_shard",
+    "telemetry": "Per shard request rate, latency, and popularity concentration over time"
+   }
+  },
+  {
+   "primitive_id": "scatter_gather_pattern",
+   "name": "Scatter gather is useful when a large amount of mostly independent processing is needed to handle a particular request",
+   "verbatim_quote": "Scatter/gather is quite useful when you have a large amount of mostly independent processing that is needed to handle a particular request.",
+   "page": "Chapter 7, Scatter/Gather",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Subtasks are mostly independent",
+    "A root distributes the request and gathers partial results"
+   ],
+   "breakdown_regime": "Fails when subtasks depend on each other, when gathering waits on the slowest leaf, or when fan out overhead exceeds the parallel gain",
+   "domain": "scatter gather",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Independent evidence lookups for one game or question should be scattered in parallel and gathered into one bundle, with the bundle recording which leaves answered and which did not.",
+    "source_operator": "scatter_gather_pattern",
+    "telemetry": "Fan out size, leaf response rate, gather latency, and missing leaf count per bundle"
+   }
+  },
+  {
+   "primitive_id": "scatter_gather_leaf_count_cost",
+   "name": "Increased parallelization has a cost, so choosing the right number of leaf nodes is critical to a performant scatter gather system",
+   "verbatim_quote": "However, increased parallelization comes at a cost, and thus choosing the right number of leaf nodes in the scatter/gather pattern is critical to designing a performant distributed system.",
+   "page": "Chapter 7, Choosing the Right Number of Leaves",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Each leaf adds overhead that scales with leaf count",
+    "Leaf latencies combine, so tail latency of leaves becomes system latency"
+   ],
+   "breakdown_regime": "Fails when leaves are added past the point where overhead and straggler probability consume the parallel gain",
+   "domain": "scatter gather",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Parallel evidence gathering should be sized by measured overhead and tail latency, not by maximum available parallelism, and the chosen fan out should be recorded per query class.",
+    "source_operator": "scatter_gather_leaf_count_cost",
+    "telemetry": "Fan out size, overhead per leaf, leaf latency percentiles, and end to end latency"
+   }
+  },
+  {
+   "primitive_id": "faas_stateless_functions",
+   "name": "Functions are stateless, so a system built on functions is inherently more modular and decoupled than one built into a single binary",
+   "verbatim_quote": "Functions are stateless and thus any system you build on top of functions is inherently more modular and decoupled than a similar system built into a single binary.",
+   "page": "Chapter 8, The Benefits of FaaS",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Functions execute in response to discrete events",
+    "No significant in memory data must be held between calls"
+   ],
+   "breakdown_regime": "Fails for sustained high rate processing where per request pricing dominates, and for work needing large loaded state or background processing",
+   "domain": "functions and event driven processing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Small stateless transformations are the right unit for on demand engine helpers that wake, transform one input, and exit, keeping components decoupled and independently testable.",
+    "source_operator": "faas_stateless_functions",
+    "telemetry": "Function invocation count, cold start latency, per invocation cost, and error rate"
+   }
+  },
+  {
+   "primitive_id": "faas_decorator_pattern",
+   "name": "Stateless request or response transformations added after the fact are ideal services to implement via FaaS as decorators",
+   "verbatim_quote": "Because decoration transformations are generally stateless, and also because they are often added after the fact to existing code as the service evolves, they are ideal services to implement via FaaS.",
+   "page": "Chapter 8, The Decorator Pattern: Request or Response Transformation",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "The transformation sits between user and service implementation",
+    "Defaulting or enrichment does not change core service logic"
+   ],
+   "breakdown_regime": "Fails when the decorator becomes required for correctness of the core service, hiding essential logic outside the service boundary",
+   "domain": "functions and event driven processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Input defaulting and enrichment for engine requests should live in a decorator layer with its own tests, so core reasoning receives complete inputs and every applied default is logged.",
+    "source_operator": "faas_decorator_pattern",
+    "telemetry": "Defaults applied per request, decorator latency, and downstream errors traced to defaults"
+   }
+  },
+  {
+   "primitive_id": "distributed_ownership",
+   "name": "Establishing distributed ownership is both the most complicated and most important part of designing a reliable distributed system",
+   "verbatim_quote": "Often, establishing distributed ownership is both the most complicated and most important part of designing a reliable distributed system.",
+   "page": "Chapter 9, Ownership Election",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Only one actor should own a given shard or context at a time",
+    "Actors can fail or be paused without notice"
+   ],
+   "breakdown_regime": "Fails when two actors believe they own the same context at once, or when ownership is held by a failed actor with no transfer path",
+   "domain": "ownership election",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exactly one writer should own each engine artifact or queue partition at a time, with ownership recorded and transferable, because concurrent writers are the main source of corrupted shared state.",
+    "source_operator": "distributed_ownership",
+    "telemetry": "Ownership records per artifact, concurrent writer incidents, and ownership transfer events"
+   }
+  },
+  {
+   "primitive_id": "lock_ttl",
+   "name": "A distributed lock should always write with a TTL so a lock whose holder fails is automatically released",
+   "verbatim_quote": "We change our simpleLock function so that it always writes with a TTL, so if we don't unlock within a given time, the lock will automatically unlock.",
+   "page": "Chapter 9, Implementing Locks",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "The store supports time to live on keys",
+    "A watchdog can crash a holder whose TTL has expired"
+   ],
+   "breakdown_regime": "Fails when guarded work runs longer than the TTL, letting a second holder enter while the first still believes it owns the lock",
+   "domain": "ownership election",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any claim on a book, game, or artifact in the engine must expire automatically, with a watchdog that stops work when the claim lapses, so a dead worker never blocks the queue forever.",
+    "source_operator": "lock_ttl",
+    "telemetry": "Claim TTL, expiry events, watchdog stops, and work done after expiry, which must be zero"
+   }
+  },
+  {
+   "primitive_id": "renewable_lease",
+   "name": "A renewable lock can be periodically renewed by its owner so it can be retained for an arbitrary period of time",
+   "verbatim_quote": "Instead, we need to create a renewable lock, which can be periodically renewed by the owner so that the lock can be retained for an arbitrary period of time.",
+   "page": "Chapter 9, Implementing Ownership",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "The owner is alive and able to renew before expiry",
+    "Failure to renew means ownership is lost and the owner must stop"
+   ],
+   "breakdown_regime": "Fails when renewal succeeds but the owner is actually partitioned from the workers it directs, so fencing checks at the worker are still required",
+   "domain": "ownership election",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Long running engine jobs should hold renewable leases rather than permanent claims, renewing while healthy and losing the work cleanly when renewal fails.",
+    "source_operator": "renewable_lease",
+    "telemetry": "Lease duration, renewal success rate, leases lost, and time to reassignment"
+   }
+  },
+  {
+   "primitive_id": "work_queue_system",
+   "name": "A work queue system holds a batch of work to be performed and processes each piece within a target time",
+   "verbatim_quote": "In a work queue system, there is a batch of work to be performed.",
+   "page": "Chapter 10, Work Queue Systems",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Work items are enumerable through a source interface",
+    "Workers are separate from the queue manager and are launched by an orchestrator"
+   ],
+   "breakdown_regime": "Fails when item state tracking is pushed into workers inconsistently, or when the source cannot enumerate remaining work reliably",
+   "domain": "work queues",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Batch engine work should be organized as an explicit queue with a source interface, a manager that tracks processed and remaining items, and interchangeable workers, so progress is always countable.",
+    "source_operator": "work_queue_system",
+    "telemetry": "Queue depth, items processed, items remaining, and per item processing time"
+   }
+  },
+  {
+   "primitive_id": "work_queue_stability",
+   "name": "A work queue is stable only when processing time per item is kept below the interarrival time of new items by adjusting resources",
+   "verbatim_quote": "To have a stable work queue, we need to adjust the number of resources so that the time to process any item is less than the interarrival time of new items.",
+   "page": "Chapter 10, Dynamic Scaling of the Workers",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Arrival rate and per item processing time can be measured over a window",
+    "Parallelism can be increased, subject to a resource limit"
+   ],
+   "breakdown_regime": "Fails when steady state arrivals exceed maximum parallelism, so backlog and completion time grow without bound",
+   "domain": "work queues",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Queue capacity for corpus and sweep processing should be set from measured arrival and service times, with an explicit stability check, rather than from a fixed worker count chosen by habit.",
+    "source_operator": "work_queue_stability",
+    "telemetry": "Arrival rate, service time per item, parallelism in force, and backlog trend"
+   }
+  },
+  {
+   "primitive_id": "copier_pattern",
+   "name": "A copier takes a single stream of work items and duplicates it into two or more identical streams",
+   "verbatim_quote": "The job of a copier is to take a single stream of work items and duplicate it out into two or more identical streams.",
+   "page": "Chapter 11, Copier",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Downstream consumers need identical input",
+    "Duplication cost is lower than recomputing or refetching the stream"
+   ],
+   "breakdown_regime": "Fails when downstream streams diverge in speed and buffering the copy grows without bound, or when duplicated side effects are not idempotent",
+   "domain": "event driven batch processing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "One incoming evidence stream should be copied explicitly to each consumer that needs it, with each copy tracked, rather than consumers competing to read a single stream.",
+    "source_operator": "copier_pattern",
+    "telemetry": "Copies created per stream, per consumer lag, and duplicate delivery incidents"
+   }
+  },
+  {
+   "primitive_id": "filter_pattern",
+   "name": "A filter reduces a stream of work items to a smaller stream by removing items that do not meet particular criteria",
+   "verbatim_quote": "The role of a filter is to reduce a stream of work items to a smaller stream of work items by filtering out work items that don't meet particular criteria.",
+   "page": "Chapter 11, Filter",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Criteria are explicit and can be evaluated per item",
+    "Filtered out items are not needed downstream"
+   ],
+   "breakdown_regime": "Fails when criteria silently discard items that were needed, because a filter makes absence look like nonexistence downstream",
+   "domain": "event driven batch processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Filtering in the engine must record its criteria and its discard count per run, so a filtered out item remains accounted for and the filter can be audited or reversed.",
+    "source_operator": "filter_pattern",
+    "telemetry": "Items in, items out, discard reasons, and filter criteria version per run"
+   }
+  },
+  {
+   "primitive_id": "splitter_pattern",
+   "name": "A splitter evaluates criteria and sends different inputs to different queues instead of eliminating input",
+   "verbatim_quote": "The role of a splitter is to evaluate some criteria-just like a filter-but instead of eliminating input, the splitter sends different inputs to different queues based on that criteria.",
+   "page": "Chapter 11, Splitter",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Every input is routed to at least one queue",
+    "Routing criteria are mutually understood and recorded"
+   ],
+   "breakdown_regime": "Fails when criteria leave gaps where an input routes nowhere, or overlaps that duplicate work unintentionally",
+   "domain": "event driven batch processing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Routing of items to specialized engine queues should be an explicit splitter with recorded criteria and a check that every item landed in at least one queue.",
+    "source_operator": "splitter_pattern",
+    "telemetry": "Items routed per queue, unrouted item count, and multi route item count"
+   }
+  },
+  {
+   "primitive_id": "merger_pattern",
+   "name": "A merger takes two different work queues and turns them into a single work queue, the opposite of a copier",
+   "verbatim_quote": "A merger is the opposite of a copier; the job of a merger is to take two different work queues and turn them into a single work queue.",
+   "page": "Chapter 11, Merger",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Input queues carry compatible item formats or an adapter normalizes them",
+    "Ordering requirements, if any, are stated"
+   ],
+   "breakdown_regime": "Fails when merged streams have incompatible formats or when one fast stream starves or floods the merged consumer",
+   "domain": "event driven batch processing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Separate evidence queues should be merged through one recorded point that normalizes format and preserves source identity, so downstream reasoning sees one stream with provenance intact.",
+    "source_operator": "merger_pattern",
+    "telemetry": "Merged item count per source, format failures, and provenance completeness"
+   }
+  },
+  {
+   "primitive_id": "join_barrier_synchronization",
+   "name": "A join holds parallel work and releases items only after all parallel work items have completed",
+   "verbatim_quote": "The basic idea is that all of the work is happening in parallel, but work items aren't released out of the join until all of the work items that are processed in parallel are completed.",
+   "page": "Chapter 12, Join (or Barrier Synchronization)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "The set of parallel items belonging to one group is known",
+    "Completion of each item can be detected"
+   ],
+   "breakdown_regime": "Fails when one item never completes, blocking the whole group, so joins need timeouts and a record of the missing item",
+   "domain": "coordinated batch processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A reasoning bundle should be released only when all required parallel evidence branches have reported, and if one branch never reports the bundle records exactly which branch is missing.",
+    "source_operator": "join_barrier_synchronization",
+    "telemetry": "Join group size, branches completed, wait time, and missing branch identity"
+   }
+  },
+  {
+   "primitive_id": "reduce_pattern",
+   "name": "Each step of a reduce merges several different outputs into a single output, and reduce can start while the map phase still runs",
+   "verbatim_quote": "With the reduce pattern, each step in the reduce merges several different outputs into a single output.",
+   "page": "Chapter 12, Reduce",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": [
+    "Partial outputs can be combined pairwise or in groups",
+    "The combining operation matches the quantity being aggregated, for example count, sum, or histogram"
+   ],
+   "breakdown_regime": "Fails when the combining operation is not associative for the quantity in question, so grouped reduction gives a different answer than flat reduction",
+   "domain": "coordinated batch processing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Aggregation of partial engine results should proceed by repeated pairwise merging with an operation proven suitable for the quantity, allowing partial aggregates to form before all inputs finish.",
+    "source_operator": "reduce_pattern",
+    "telemetry": "Partial aggregates produced, merge depth, and final aggregate reconciliation against source counts"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "0773c220bc361adc-t1",
+   "think": "This book is a pattern catalog for building distributed systems with containers and container orchestrators, and its central move is to treat recurring structural problems as named, reusable patterns with reusable components, in the same way that algorithmic formalization and object oriented design patterns earlier gave programmers a shared toolkit and a shared language. Burns organizes the material by scale and by job. Single node patterns come first because groups of containers on one machine are the atomic elements of larger systems. The sidecar augments an application container from beside it, which lets a team add HTTPS termination, dynamic configuration, or introspection to a legacy service without rebuilding it, and it raises the design questions that recur through the whole book: parameterize the container, define its API surface carefully because even a change in parameter units is a breaking change, and document it so others can reuse it. The ambassador inverts the direction and brokers everything the application says to the outside world, which is where sharding clients, service brokering, and request splitting for experimentation live. The adapter changes an interface so an existing service conforms to a standard expected of all services, which is how monitoring with Prometheus, normalized logging, and rich health checking are added without modifying the service itself.\n\nThe serving patterns then scale outward. A replicated load balanced service copies a stateless service behind a load balancer for redundancy and horizontal scale, and Burns is careful about the details that make the simple picture work: readiness is distinct from liveness, session tracked services need stable mapping, and a caching layer changes both capacity and failure behavior because a service sized assuming a cache will be overloaded when the cache fails. Sharded services partition stateful work instead of copying it, and the chapter on sharding functions is the most quantitative part of the book: placement is a function of a chosen key, key choice decides locality and load, consistent hashing bounds how many keys move when shards are added or removed, and hot shards appear because real popularity is uneven, so a shard may need replication or relocation. Scatter gather uses replication for time rather than throughput, fanning one request out to leaves and gathering the results, and Burns names its costs plainly: overhead grows with leaf count and the tail latency of leaves becomes the latency of the whole, so more parallelism is not automatically faster. Functions and event driven processing trade long running servers for stateless functions triggered by discrete events, with clear limits: background processing, large in memory state, and sustained request volume priced per request all argue against functions. Ownership election is the reliability core of the serving part: only one replica should act as master for a context, locks need time to live values so a failed holder cannot block forever, renewable leases let a healthy owner keep ownership, and even then a brief window exists where two replicas can believe they hold the lock, so workers should fence by checking current ownership.\n\nThe batch patterns close the book with the same compositional logic. A generic work queue is decomposed into a source interface, a worker interface, and shared infrastructure that tracks which items are done, and its scaling rule is a stability condition: processing time per item must stay below the interarrival time, adjusted by changing parallelism within resource limits. Event driven batch processing links queues with five small operators, copier, filter, splitter, sharder, and merger, usually over publisher subscriber infrastructure such as Kafka topics and partitions. Coordinated batch processing adds the join, which is barrier synchronization that releases nothing until all parallel branches finish, and the reduce, which merges many outputs into one and can begin while the map or shard phase is still running, as in count, sum, and histogram examples and the closing image tagging pipeline that composes sharding, multi worker groups, copier, join, and reduce in one workflow.\n\nFor a reasoning engine the transfer is direct, and it is architectural rather than topical. The book supplies a vocabulary for separating core logic from augmentation, brokering, and adaptation; a discipline of explicit parameters, stable APIs, and documented components; a set of scaling choices that depend on whether work is stateless or stateful; a stability condition for any queue the engine drains; composition operators for streams; and coordination primitives, join and reduce, with their failure modes stated. It also supplies a caution that runs against naive scaling: caches create hidden capacity assumptions, fan out creates tail latency, filters make discarded items invisible downstream, and locks without expiry create permanent blockage. An engine built with these patterns keeps provenance and counts at every operator, treats readiness as distinct from liveness, gives every claim an expiry, and records which pattern was applied to which stage, so behavior can be explained stage by stage instead of only at the final output.  Burns also returns repeatedly to ownership of the pieces themselves: small focused containers let small teams own one thing, deploy it independently, and roll it back without redeploying the whole system, which is an organizational pattern as much as a technical one and explains why the book treats documentation and API stability as first class engineering work rather than as afterthoughts. Where the book breaks is equally clear. It assumes containers and an orchestrator such as Kubernetes, it is written for request serving and batch data processing rather than for inference or judgment under uncertainty, it offers almost no probability, no calibration, and no treatment of conflicting evidence, and several examples depend on specific tools of its period. Its patterns therefore govern how the engine is built and operated, not what the engine should conclude.",
+   "retrocausal_genealogy": "The lineage runs from Donald Knuth formalizing algorithms as objects worth studying independent of any machine, through the gang of four design patterns that gave object oriented programming a shared interface vocabulary in the 1990s, through the rise of open source software that made shared components practical, and into containers and orchestrators, which Burns argues play the role for distributed systems that objects played for programs. Individual patterns carry their own ancestry: sharding and consistent hashing come from large scale storage and caching systems, scatter gather from parallel search, master election and leases from distributed consensus and lock services such as etcd, and join and reduce from MapReduce and concurrent barrier synchronization.",
+   "theory_of_mind": "Burns writes for working developers who have built systems from scratch too many times and who he believes are separated more by vocabulary and missing reusable components than by ability. His model of the reader is a practitioner who knows containers at least roughly, learns from concrete hands on deployments, and will trust a pattern when its trade offs and failure modes are stated alongside its benefits. His model of the domain is that distributed system problems recur in recognizable shapes across products, so experience can be codified once and reused, and that reliability comes from composition of small, well understood, separately owned pieces rather than from one large bespoke system.",
+   "cross_layer_veto": "This work vetoes several habits in any layered reasoning system. A component that is alive but not ready must receive no work, which vetoes emitting output from a stage whose inputs are not loaded and checked. A lock or claim without expiry is vetoed, because a failed holder would block the layer forever. A filter that discards silently is vetoed unless discards are counted, because downstream layers would treat filtered absence as evidence of nonexistence. A cache or fan out layer vetoes capacity claims made without it, since removing it changes load and latency. Finally, a second writer on owned state is vetoed unless ownership is checked at the worker, because election alone leaves a brief double ownership window."
+  }
+ ],
+ "universal_lens": "Any complex system built repeatedly from scratch can be regularized by naming its recurring shapes, giving each shape explicit parameters, a stable interface, stated preconditions, and stated failure modes, and then composing small owned pieces with queues, brokers, adapters, joins, and reductions instead of building one bespoke whole. The template applies wherever work is partitioned, routed, cached, coordinated, or scaled, and its discipline is to record counts and ownership at every operator so the whole remains explainable.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the architectural discipline: a shared pattern vocabulary for teaching system design, the readiness versus liveness distinction, queue stability measured from arrival and service times, and the rule that filters, caches, and claims must leave auditable traces. These become research and teaching material on how reliable pipelines are structured, how hot partitions form under real popularity, and how coordination primitives such as leases, joins, and reductions behave when participants fail or arrive late.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes concrete structure: sidecar augmentation for checks beside core projections, ambassador brokering for external data sources, adapters that normalize heterogeneous feeds into one interface, deterministic sharding of corpus and slate work by stable keys, scatter gather evidence collection with recorded missing leaves, work queues with stability based scaling, renewable leases for artifact ownership, and join and reduce steps that release a bundle only when its branches have reported or are recorded as missing."
+}

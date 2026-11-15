@@ -1,0 +1,824 @@
+{
+ "book_id": "69b5ccc8d58d5467",
+ "source_status": "COMPLETE",
+ "source_note": "George Boole, An Investigation of the Laws of Thought, on Which are Founded the Mathematical Theories of Logic and Probabilities, 1854, originally Walton and Maberly, London. Local file is the Project Gutenberg eBook 15114 edition (release date July 19, 2017) rendered as a PDF, catalogued as Boole-1854-LawsOfThought.pdf in books-must-have. PDF size 1515548 bytes, full sha256 69b5ccc8d58d5467f321d2b2915c78e1be733f4b72ca40cef5ee9ec0705a3de7, book_id is the first 16 hex chars of the scan digest sha256 of str(size) followed by the full PDF bytes. Extracted text is clean ASCII Gutenberg text, 970971 bytes, complete from preface and contents through Chapter XXII, with page headers interleaved; all verbatim quotes were chosen inside single pages and verified as contiguous substrings of the extracted text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "sign_definition",
+   "name": "A sign is an arbitrary mark with fixed interpretation combinable under fixed laws",
+   "verbatim_quote": "A sign is an arbitrary mark, having a fixed interpretation, and susceptible of combination with other signs in subjection to fixed laws dependent upon their mutual interpretation.",
+   "page": "Chapter II, sec. 2, Definition (text lines 1036-1038)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Interpretation stays fixed within one discourse or process of reasoning",
+    "The mark itself is arbitrary; only the fixed interpretation and combination laws matter"
+   ],
+   "breakdown_regime": "Fails when a sign changes meaning mid discourse, because fixed interpretation is a precondition of every later law",
+   "domain": "logic foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine features and signal names are signs in this sense: a named signal keeps one fixed interpretation across a run, and only then may it be combined with other signals under stated rules. Renaming or redefining a signal mid pipeline breaks the calculus exactly as Boole says it breaks discourse.",
+    "source_operator": "sign_definition",
+    "telemetry": "Signal registry entries with versioned definitions and the run manifest showing which definition version each feature used"
+   }
+  },
+  {
+   "primitive_id": "literal_symbol_system",
+   "name": "All reasoning operations reduce to literal symbols, operation signs, and identity",
+   "verbatim_quote": "All the operations of Language, as an instrument of reasoning, may be conducted by a system of signs composed of the following elements, viz.:",
+   "page": "Chapter II, Proposition I (text lines 1077-1078)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Literal symbols represent things as subjects of conception",
+    "Operation signs and the identity sign exhaust the needed machinery for the calculus"
+   ],
+   "breakdown_regime": "Breaks for discourse elements that only express emotion or give precision to a term, which Boole excludes from the province of the understanding in this calculus",
+   "domain": "logic foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning engine needs a small closed operator set rather than open ended prose: typed symbols for entities, a fixed set of combinators, and an explicit equality or identity relation that downstream stages can check mechanically.",
+    "source_operator": "literal_symbol_system",
+    "telemetry": "Operator inventory of the engine and parse trees showing every expression built only from the allowed symbol and operator classes"
+   }
+  },
+  {
+   "primitive_id": "class_symbol_intersection",
+   "name": "Juxtaposition xy is the class to which both descriptions apply at once",
+   "verbatim_quote": "by the combination xy shall be represented that class of things to which the names or descriptions represented by x and y are simultaneously applicable.",
+   "page": "Chapter II, sec. 6 (text lines 1135-1137)",
+   "latex": "xy",
+   "symbol_and_unit_ledger": {
+    "x": "class symbol, dimensionless membership selector",
+    "y": "class symbol, dimensionless membership selector",
+    "xy": "joint class, intersection of x and y"
+   },
+   "assumptions": [
+    "Each symbol represents a class, including the limiting cases of a single individual, Nothing, and Universe",
+    "Simultaneous applicability is well defined for the pair of descriptions"
+   ],
+   "breakdown_regime": "Fails when a description is vague or context shifting, because simultaneous applicability then has no fixed extension to select",
+   "domain": "class algebra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Conjunction of conditions in the engine is intersection: a case qualifies only if every conjoined condition holds of it at once. Feature conjunctions, filter stacks, and matchup conditions inherit this exact semantics instead of an informal and.",
+    "source_operator": "class_symbol_intersection",
+    "telemetry": "Per case membership bits for each condition and for their conjunction, logged so the joint selection can be audited"
+   }
+  },
+  {
+   "primitive_id": "commutative_law",
+   "name": "Order of class symbols is indifferent: xy equals yx",
+   "verbatim_quote": "it is evident, that according to the above combinations, the order in which two symbols are written is indifferent.",
+   "page": "Chapter II, sec. 7 (text lines 1145-1147)",
+   "latex": "xy = yx",
+   "symbol_and_unit_ledger": {
+    "x": "class symbol, dimensionless",
+    "y": "class symbol, dimensionless"
+   },
+   "assumptions": [
+    "Both symbols have fixed and absolute meaning",
+    "No implied reference from one descriptive term to another is left unstated"
+   ],
+   "breakdown_regime": "Fails if one term secretly refers to the other, for example wisdom defined only as wisdom of counsel, until that reference is made explicit in the stated meaning",
+   "domain": "class algebra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Order of applying independent filters or conjoined evidence conditions must not change the resulting set. If reordering conditions changes an engine result, the conditions were not independent selectors and the hidden dependence must be made explicit.",
+    "source_operator": "commutative_law",
+    "telemetry": "Permutation tests on condition order in the pipeline with set equality checks on the selected cases"
+   }
+  },
+  {
+   "primitive_id": "idempotence_law",
+   "name": "Repeating the same class symbol adds nothing: xx equals x, written x squared equals x",
+   "verbatim_quote": "it follows that if the two symbols have exactly the same signification, their combination expresses no more than either of the symbols taken alone would do.",
+   "page": "Chapter II, sec. 9 (text lines 1229-1232)",
+   "latex": "x^2 = x",
+   "symbol_and_unit_ledger": {
+    "x": "class symbol, dimensionless, satisfying the duality law",
+    "x^2": "x combined with itself, equal to x"
+   },
+   "assumptions": [
+    "The two combined symbols have exactly the same signification",
+    "Repetition in strict reasoning has no intensifying effect, unlike rhetorical repetition in ordinary language"
+   ],
+   "breakdown_regime": "Breaks outside strict reasoning where repetition is used for emphasis, and breaks for ordinary numeric symbols other than 0 and 1 which do not satisfy the law",
+   "domain": "class algebra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Duplicate evidence must not double count. If the same signal, source, or condition enters an engine twice under two names, idempotence requires the combined effect to equal the single effect, so deduplication is a logical law and not a cleaning preference.",
+    "source_operator": "idempotence_law",
+    "telemetry": "Duplicate detection logs and ablation runs showing a duplicated signal changes the output by zero after proper identification"
+   }
+  },
+  {
+   "primitive_id": "aggregation_plus",
+   "name": "Plus aggregates distinct partial classes into a whole and commutes",
+   "verbatim_quote": "In this and in all other respects the words \"and\" \"or\" are analogous with the sign + in algebra, and their laws are identical.",
+   "page": "Chapter II, sec. 11 (text lines 1287-1290)",
+   "latex": "x + y = y + x",
+   "symbol_and_unit_ledger": {
+    "x": "partial class, dimensionless",
+    "y": "partial class distinct from x, dimensionless",
+    "+": "aggregation of distinct parts into a whole"
+   },
+   "assumptions": [
+    "The classes joined by and or or are quite distinct, so no member of one is found in another",
+    "Conventional meanings of and and or are set aside in favour of the strict sense"
+   ],
+   "breakdown_regime": "Fails when the joined classes overlap, because Boole plus presupposes disjoint parts; overlapping cases must first be split into exclusive constituents",
+   "domain": "class algebra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Aggregation of evidence groups or population segments is valid as simple addition only over disjoint segments. Overlapping segments must be partitioned first, otherwise totals double count the overlap exactly as a non disjoint plus would.",
+    "source_operator": "aggregation_plus",
+    "telemetry": "Segment overlap matrix and partition checks run before any additive aggregation in a report or model"
+   }
+  },
+  {
+   "primitive_id": "distributive_law",
+   "name": "Class symbols distribute over aggregation and exclusion",
+   "verbatim_quote": "If any quality or circumstance is ascribed to all the members of a group, formed either by aggregation or exclusion of partial groups, the resulting conception is the same as if the quality or circumstance were first ascribed to each member of the partial groups, and the aggregation or exclusion effected afterwards.",
+   "page": "Chapter II, sec. 11 (text lines 1343-1349)",
+   "latex": "z(x + y) = zx + zy",
+   "symbol_and_unit_ledger": {
+    "z": "qualifying class symbol, dimensionless",
+    "x": "partial class, dimensionless",
+    "y": "partial class, dimensionless"
+   },
+   "assumptions": [
+    "The group is formed by aggregation or exclusion of partial groups",
+    "The ascribed quality applies to members as members of the group"
+   ],
+   "breakdown_regime": "Fails when the quality is collective and not memberwise, for example a property of a group as a whole that no member possesses individually",
+   "domain": "class algebra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A global condition applied to a union of cases can be pushed down to each subcase and recombined, which licenses divide and conquer computation: evaluate a filter or transform per segment, then aggregate, with a guarantee the result matches the whole set evaluation.",
+    "source_operator": "distributive_law",
+    "telemetry": "Segmentwise versus whole set evaluation comparisons in tests, with equality asserted on sampled and full partitions"
+   }
+  },
+  {
+   "primitive_id": "subtraction_except",
+   "name": "Minus expresses exclusion of a part from a whole",
+   "verbatim_quote": "This operation we express in common language by the sign except, as, “All men except Asiatics,” “All states except those which are monarchical.”",
+   "page": "Chapter II, sec. 11 (text lines 1316-1317)",
+   "latex": "x - y",
+   "symbol_and_unit_ledger": {
+    "x": "whole class, dimensionless",
+    "y": "excepted part, contained in x, dimensionless"
+   },
+   "assumptions": [
+    "The things excepted form a part of the things from which they are excepted",
+    "The excepted description is expressed on the same universe of discourse"
+   ],
+   "breakdown_regime": "Fails when the excepted class is not contained in the whole, because the result is then not interpretable as a remainder class without further conditions",
+   "domain": "class algebra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exclusion rules in the engine, such as removing cases that meet an exception condition, are remainders and require the exception to be a subset of the base set. An exception drawn from outside the base set signals a specification error, not a smaller set.",
+    "source_operator": "subtraction_except",
+    "telemetry": "Subset checks for every exclusion rule, with counts of base, exception, and remainder logged per run"
+   }
+  },
+  {
+   "primitive_id": "equality_axioms",
+   "name": "Equals may be added, subtracted, transposed, and multiplied by the same class",
+   "verbatim_quote": "If equal things are added to equal things, the wholes are equal.",
+   "page": "Chapter II, sec. 13 (text lines 1396-1397)",
+   "latex": "zx = zy",
+   "symbol_and_unit_ledger": {
+    "x": "class expression, dimensionless",
+    "y": "class expression equal to x, dimensionless",
+    "z": "common qualifying class, dimensionless"
+   },
+   "assumptions": [
+    "The starting equation expresses genuine identity of classes",
+    "The same operation is applied to both members of the equation"
+   ],
+   "breakdown_regime": "The companion division axiom fails in logic: from zx equals zy it does not follow that x equals y, so cancellation is not generally available",
+   "domain": "class algebra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Equation manipulation in a reasoning engine is licensed only for the operations Boole lists. Any step that cancels a common factor must be flagged as unlicensed and replaced by expansion and elimination, which are the valid routes.",
+    "source_operator": "equality_axioms",
+    "telemetry": "Derivation step logs tagged by licensed operation, with cancellation steps rejected by the checker"
+   }
+  },
+  {
+   "primitive_id": "no_cancellation",
+   "name": "From zx equals zy it cannot be inferred that x equals y",
+   "verbatim_quote": "Suppose it true that those members of a class x which possess a certain property z are identical with those members of a class y which possess the same property z, it does not follow that the members of the class x universally are identical with the members of the class y.",
+   "page": "Chapter II, sec. 14 (text lines 1426-1427)",
+   "latex": "zx = zy \\not\\Rightarrow x = y",
+   "symbol_and_unit_ledger": {
+    "z": "common factor class, possibly Nothing, dimensionless",
+    "x": "class, dimensionless",
+    "y": "class, dimensionless"
+   },
+   "assumptions": [
+    "The inference would require a division analogue that the logical system does not possess",
+    "In algebra the parallel inference already fails when the common factor is 0"
+   ],
+   "breakdown_regime": "This is itself a breakdown boundary: any method that silently cancels a shared condition inherits the failure, especially when the shared condition can be empty",
+   "domain": "class algebra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Two groups that agree after a common filter is applied have not been shown to agree unfiltered. Engine comparisons conditioned on a shared qualifier must report the conditioning and must not claim the unconditioned equality.",
+    "source_operator": "no_cancellation",
+    "telemetry": "Conditioned versus unconditioned comparison outputs stored side by side so the gap is visible in review"
+   }
+  },
+  {
+   "primitive_id": "zero_one_algebra",
+   "name": "Logical symbols behave exactly like quantity symbols admitting only 0 and 1",
+   "verbatim_quote": "admit indifferently of the values 0 and 1, and of these values alone. The laws, the axioms, and the processes, of such an Algebra will be identical in their whole extent with the laws, the axioms, and the processes of an Algebra of Logic.",
+   "page": "Chapter II, sec. 15 (text lines 1462-1465)",
+   "latex": "x \\in \\{0, 1\\}, \\quad x^2 = x",
+   "symbol_and_unit_ledger": {
+    "x": "symbol admitting only values 0 and 1, dimensionless",
+    "0": "the Nothing value",
+    "1": "the Universe value"
+   },
+   "assumptions": [
+    "Of the symbols of number only 0 and 1 satisfy x squared equals x",
+    "Difference between the two algebras is difference of interpretation alone"
+   ],
+   "breakdown_regime": "Fails for any symbol admitted to take intermediate numeric values while still being treated as a logical class symbol",
+   "domain": "logic foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binary indicators in the engine are not scores. A membership bit that satisfies the duality law can be manipulated with the full logical calculus, while a graded score needs a different algebra and must not be passed through logical expansion as if it were a bit.",
+    "source_operator": "zero_one_algebra",
+    "telemetry": "Type tags distinguishing binary membership fields from graded numeric fields, enforced at schema validation"
+   }
+  },
+  {
+   "primitive_id": "universe_of_discourse",
+   "name": "The field containing all objects of discourse is the universe of discourse",
+   "verbatim_quote": "whatever may be the extent of the field within which all the objects of our discourse are found, that field may properly be termed the universe of discourse.",
+   "page": "Chapter III, sec. 4 (text lines 1602-1604)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A limitation of the field may be implied without being expressed",
+    "Every name in the discourse selects only objects inside this field"
+   ],
+   "breakdown_regime": "Fails when two parts of an argument silently use different fields, because the same name then selects different extensions in each part",
+   "domain": "logic foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine run must declare its universe: the population, time window, and scope inside which every term is interpreted. Comparisons across runs with different declared universes are invalid until the universes are reconciled.",
+    "source_operator": "universe_of_discourse",
+    "telemetry": "Run manifest fields for population, window, and scope, checked for equality before any cross run comparison"
+   }
+  },
+  {
+   "primitive_id": "zero_is_nothing",
+   "name": "The symbol 0 represents Nothing, a class comprising no beings",
+   "verbatim_quote": "this condition is satisfied if the symbol 0 represent Nothing.",
+   "page": "Chapter III, Proposition II (text lines 1768-1769)",
+   "latex": "0y = 0",
+   "symbol_and_unit_ledger": {
+    "0": "Nothing, the empty class, dimensionless",
+    "y": "arbitrary class, dimensionless"
+   },
+   "assumptions": [
+    "The law 0 times y equals 0 must hold for every class y",
+    "Nothing and Universe are the two limits of class extension"
+   ],
+   "breakdown_regime": "No alternative interpretation satisfies the law for arbitrary y, so any other reading of 0 breaks the calculus at the first multiplication",
+   "domain": "logic foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An empty selection must annihilate every conjunction it enters. In the engine, a condition that selects nothing forces every compound condition containing it to select nothing, which is a hard consistency check on filter code.",
+    "source_operator": "zero_is_nothing",
+    "telemetry": "Empty set propagation tests for compound conditions containing an empty selector"
+   }
+  },
+  {
+   "primitive_id": "one_is_universe",
+   "name": "The symbol 1 represents the Universe, the class containing every individual",
+   "verbatim_quote": "the class represented by 1 must be \"the Universe,\" since this is the only class in which are found all the individuals that exist in any class.",
+   "page": "Chapter III, Proposition II (text lines 1790-1792)",
+   "latex": "1y = y",
+   "symbol_and_unit_ledger": {
+    "1": "Universe, the whole class, dimensionless",
+    "y": "arbitrary class contained in the Universe, dimensionless"
+   },
+   "assumptions": [
+    "The law 1 times y equals y must hold for every class y",
+    "Every individual of any proposed class is found in the Universe"
+   ],
+   "breakdown_regime": "Fails if the supposed Universe omits individuals that some class contains, which is exactly a universe of discourse mismatch",
+   "domain": "logic foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The identity selector must leave every set unchanged. Engine code can use the Universe element as a neutral placeholder in expansions, and a test that multiplying by it changes a set exposes a scope leak.",
+    "source_operator": "one_is_universe",
+    "telemetry": "Identity selector tests on representative sets, plus scope audits comparing the declared universe to the union of all classes in a run"
+   }
+  },
+  {
+   "primitive_id": "complement",
+   "name": "For any class x, 1 minus x represents the contrary or supplementary class",
+   "verbatim_quote": "If x represent any class of objects, then will 1 − x represent the contrary or supplementary class of objects., i.e. the class including all objects which are not comprehended in the class x.",
+   "page": "Chapter III, Proposition III (text lines 1801-1803)",
+   "latex": "1 - x",
+   "symbol_and_unit_ledger": {
+    "1": "Universe, dimensionless",
+    "x": "any class, dimensionless",
+    "1 - x": "contrary class, all objects not in x"
+   },
+   "assumptions": [
+    "The Universe is expressed by 1",
+    "Every individual of the Universe either is or is not comprehended in x"
+   ],
+   "breakdown_regime": "Fails when the universe is left implicit and shifts, because the complement is only defined relative to the declared Universe",
+   "domain": "class algebra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Negation in the engine is complement relative to a declared universe, never an absolute not. Every negated condition must carry its universe with it, and changing the universe changes the negation even when the positive condition is unchanged.",
+    "source_operator": "complement",
+    "telemetry": "Negation audit fields recording the universe identifier alongside every complemented condition"
+   }
+  },
+  {
+   "primitive_id": "contradiction_law",
+   "name": "A class and its contrary have no common member: x times 1 minus x equals 0",
+   "verbatim_quote": "a class whose members are at the same time men and not men does not exist.",
+   "page": "Chapter III, Proposition IV (text lines 1835-1836)",
+   "latex": "x(1 - x) = 0",
+   "symbol_and_unit_ledger": {
+    "x": "any class or quality symbol, dimensionless",
+    "1 - x": "contrary of x, dimensionless",
+    "0": "Nothing, the empty class"
+   },
+   "assumptions": [
+    "The fundamental law x squared equals x holds",
+    "The product of two class expressions represents the class common to both"
+   ],
+   "breakdown_regime": "This is the consistency boundary of the whole system: data or premises that make x and its contrary overlap do not extend the calculus, they violate its fundamental law",
+   "domain": "logic foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mutually exclusive labels must have empty overlap in the data. The engine can run the contradiction product as a data quality gate: any case assigned both a property and its negation fails validation before reasoning begins.",
+    "source_operator": "contradiction_law",
+    "telemetry": "Overlap counts for every property and negation pair in incoming data, with nonzero counts blocking the run"
+   }
+  },
+  {
+   "primitive_id": "law_of_duality_dichotomy",
+   "name": "The second degree fundamental equation grounds division into pairs of opposites",
+   "verbatim_quote": "Thus it is a consequence of the fact that the fundamental equation of thought is of the second degree, that we perform the operation of analysis and classification, by division into pairs of opposites, or, as it is technically said, by dichotomy.",
+   "page": "Chapter III, sec. 15 (text lines 1877-1880)",
+   "latex": "x^2 = x",
+   "symbol_and_unit_ledger": {
+    "x": "class symbol, dimensionless",
+    "second degree": "the fundamental equation is quadratic, grounding twofold division"
+   },
+   "assumptions": [
+    "The fundamental equation is of the second degree and interpretable",
+    "A third degree analogue would require interpreting factors such as 1 plus x, which the system cannot interpret"
+   ],
+   "breakdown_regime": "Breaks for a hypothetical trichotomy: the corresponding third degree equation admits no interpretation in this system, so threefold primitive division has no foundation here",
+   "domain": "logic foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binary splits are the native partition operation of the engine: every classification step divides by a property and its contrary. Multiway categories must be built from nested or combined dichotomies over constituents, not treated as primitive.",
+    "source_operator": "law_of_duality_dichotomy",
+    "telemetry": "Partition trees in model outputs showing each multiway category expressed as a union of binary constituents"
+   }
+  },
+  {
+   "primitive_id": "primary_secondary_division",
+   "name": "Propositions divide into primary relations among things and secondary relations among propositions",
+   "verbatim_quote": "Either it expresses a relation among things, or it expresses, or is equivalent to the expression of, a relation among propositions.",
+   "page": "Chapter IV, Proposition I (text lines 1928-1930)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every assertion can be referred to one of the two kinds",
+    "The same symbols under the same laws serve both classes, with a difference of interpretation only"
+   ],
+   "breakdown_regime": "Particles such as if, either, or do not by themselves decide the class, so surface form alone misclassifies some propositions",
+   "domain": "propositional logic",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine must separate object level claims about cases from meta level claims about other claims, such as confidence, agreement, or conditional dependence between predictions. Mixing the levels in one expression corrupts both.",
+    "source_operator": "primary_secondary_division",
+    "telemetry": "Schema levels distinguishing case level predicates from claim level predicates in stored expressions"
+   }
+  },
+  {
+   "primitive_id": "indefinite_symbol_v",
+   "name": "A particular predicate is expressed with the indefinite class symbol v",
+   "verbatim_quote": "Represent then by v, a class indefinite in every respect but this, viz., that some of its members are mortal beings, and let x stand for \"mortal beings,\" then will vx represent \"some mortal beings.\"",
+   "page": "Chapter IV, sec. 11 (text lines 2236-2239)",
+   "latex": "y = vx",
+   "symbol_and_unit_ledger": {
+    "y": "subject class, dimensionless",
+    "v": "indefinite class symbol, some none or all in interpretation, dimensionless",
+    "x": "predicate class, dimensionless"
+   },
+   "assumptions": [
+    "v is a symbol of the same kind as x and y and satisfies v squared equals v",
+    "Only some members of v need belong to the predicate class"
+   ],
+   "breakdown_regime": "Fails if v is read as all or as a definite class, because the particular proposition asserts neither universality nor a specified portion",
+   "domain": "propositional logic",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Existential and partial claims need an explicit indefinite marker. When the engine states that some cases satisfy a pattern, the claim must carry the indefiniteness instead of being silently upgraded to a universal rule during downstream use.",
+    "source_operator": "indefinite_symbol_v",
+    "telemetry": "Claim records with quantifier type fields distinguishing universal, particular with v, and singular claims"
+   }
+  },
+  {
+   "primitive_id": "primary_proposition_rule",
+   "name": "General rule: equate subject and predicate expressions, attaching v to any particular term, negating the predicate first for negatives",
+   "verbatim_quote": "If the proposition is affirmative, form the expression of the subject and that of the predicate. Should either of them be particular, attach to it the indefinite symbol v, and then equate the resulting expressions.",
+   "page": "Chapter IV, sec. 14, General Rule (text lines 2324-2326)",
+   "latex": "X = vY",
+   "symbol_and_unit_ledger": {
+    "X": "subject expression, dimensionless",
+    "Y": "predicate expression, dimensionless",
+    "v": "indefinite symbol marking particularity"
+   },
+   "assumptions": [
+    "For negative propositions the negative particle is first attached to the predicate",
+    "Subject and predicate expressions are formed by the class term rules before equating"
+   ],
+   "breakdown_regime": "Fails when negation is left attached to the whole proposition instead of the predicate, which changes the expressed relation",
+   "domain": "propositional logic",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A compiler from stated claims to engine expressions needs exactly this normalisation order: build term expressions, mark particularity, move negation to the predicate, then equate. Skipping the negation move produces expressions that parse but mean a different claim.",
+    "source_operator": "primary_proposition_rule",
+    "telemetry": "Compiler tests covering the four traditional proposition forms and their symbolic outputs"
+   }
+  },
+  {
+   "primitive_id": "expansion_theorem",
+   "name": "Any function of a logical symbol develops as f of 1 times x plus f of 0 times 1 minus x",
+   "verbatim_quote": "Hence the values of a and b are determined, and substituting them in the first equation, we have",
+   "page": "Chapter V, Proposition I (text lines 2608-2610)",
+   "latex": "f(x) = f(1)x + f(0)(1 - x)",
+   "symbol_and_unit_ledger": {
+    "f": "any function of the logical symbol x",
+    "x": "logical symbol admitting 0 and 1",
+    "f(1)": "value of f with x set to 1",
+    "f(0)": "value of f with x set to 0",
+    "1 - x": "contrary constituent"
+   },
+   "assumptions": [
+    "x may lawfully be treated as a quantitative symbol susceptible only of the values 0 and 1",
+    "The assumed form a x plus b times 1 minus x can represent the function"
+   ],
+   "breakdown_regime": "The development is always valid for the 0 and 1 valued quantitative reading; for the logical reading the result is interpretable only when the developed form represents a class",
+   "domain": "expansion calculus",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Expansion is the engine canonicalisation step: any expression over binary conditions rewrites into a sum over the cases where each condition is true or false, with coefficients computed by evaluating the expression at the corners. Downstream reasoning then works on one normal form.",
+    "source_operator": "expansion_theorem",
+    "telemetry": "Corner evaluation tables for expressions under canonicalisation, stored with the normal form for verification"
+   }
+  },
+  {
+   "primitive_id": "constituents_partition",
+   "name": "Constituents are mutually exclusive, each satisfies duality, and together they sum to 1",
+   "verbatim_quote": "The product of any two distinct constituents of an expansion is equal to 0, and the sum of all the constituents is equal to 1.",
+   "page": "Chapter V, Proposition III (text lines 2835-2836)",
+   "latex": "t(1 - t) = 0",
+   "symbol_and_unit_ledger": {
+    "t": "any single constituent of an expansion, dimensionless",
+    "1": "Universe, sum of all constituents"
+   },
+   "assumptions": [
+    "Every factor of a constituent is of the form x or 1 minus x",
+    "The square of each such factor equals the factor itself"
+   ],
+   "breakdown_regime": "Fails if constituents are built from symbols that do not satisfy the duality law, because distinct constituents then need not be exclusive",
+   "domain": "expansion calculus",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The constituent partition is a mutually exclusive and exhaustive case split. Engine case analysis, scenario enumeration, and probability mass assignment all rely on the three properties together: no double counting, no missing case, each case internally consistent.",
+    "source_operator": "constituents_partition",
+    "telemetry": "Partition validation output listing constituent count, pairwise overlap checks, and the sum check for each expansion"
+   }
+  },
+  {
+   "primitive_id": "constituent_interpretation",
+   "name": "Constituents represent the exclusive divisions of the universe by predication and denial in every possible way",
+   "verbatim_quote": "The constituents of the expansion of any function of the logical symbols x, y, &c., are interpretable, and represent the several exclusive divisions of the universe of discourse, formed by the predication and denial in every possible way of the qualities denoted by the symbols x, y, &c.",
+   "page": "Chapter VI, Proposition I (text lines 2927-2930)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Expansion has been effected with reference to the symbols x, y, and so on",
+    "Each quality can be predicated or denied of each object in the universe"
+   ],
+   "breakdown_regime": "The number of constituents doubles with each added symbol, so the full division becomes impractical to enumerate for large symbol sets without abbreviation or elimination",
+   "domain": "expansion calculus",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every joint state of a set of binary factors is one constituent. The engine can enumerate the state space of a factor set exactly, assign each observed case to exactly one state, and detect unobserved states as genuine gaps rather than missing data artefacts.",
+    "source_operator": "constituent_interpretation",
+    "telemetry": "State occupancy tables for factor sets, including zero occupancy constituents flagged for review"
+   }
+  },
+  {
+   "primitive_id": "interpretation_rule_v_zero",
+   "name": "To interpret V equals 0, develop V and equate to 0 every constituent whose coefficient does not vanish",
+   "verbatim_quote": "Develop the function V , and equate to 0 every constituent whose coefficient does not vanish. The interpretation of these results collectively will constitute the interpretation of the given equation.",
+   "page": "Chapter VI, Proposition II, Rule (text lines 3029-3031)",
+   "latex": "V = 0",
+   "symbol_and_unit_ledger": {
+    "V": "logical function developed into constituents with numerical coefficients",
+    "0": "Nothing, no existing individuals in the named constituent"
+   },
+   "assumptions": [
+    "Constituents are mutually exclusive, so multiplying by one constituent isolates its term",
+    "A coefficient that does not vanish forces its constituent to vanish"
+   ],
+   "breakdown_regime": "Fractional combinations are excluded from this form and belong to the third form of solution treated separately by Boole",
+   "domain": "expansion calculus",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Constraints in the engine read off expansion coefficients: a nonzero coefficient on a constituent is a forbidden combination. Feasibility checking becomes coefficient inspection on the normal form instead of search over cases.",
+    "source_operator": "interpretation_rule_v_zero",
+    "telemetry": "Forbidden constituent lists generated from premise expansions, with the originating coefficient recorded for each"
+   }
+  },
+  {
+   "primitive_id": "coefficient_canons",
+   "name": "Coefficient 1 takes the whole class, 0 takes none, 0 over 0 takes an indefinite portion, any other coefficient forces the constituent to 0",
+   "verbatim_quote": "The symbol 00 indicates that a perfectly indefinite portion of the class, i.e. some, none, or all of its members are to be taken.",
+   "page": "Chapter VI, sec. 12 (text lines 3340-3341)",
+   "latex": "w = A + \\frac{0}{0}C + D, \\quad D = 0",
+   "symbol_and_unit_ledger": {
+    "w": "class being solved for",
+    "A": "constituents with coefficient 1, taken whole",
+    "C": "constituents with coefficient 0 over 0, taken indefinitely",
+    "D": "constituents with other coefficients, equated to 0 as independent relations"
+   },
+   "assumptions": [
+    "The solution has been obtained by development",
+    "The indefinite symbol is interpreted experimentally as some, none, or all, by analogy with the indefinite class symbol"
+   ],
+   "breakdown_regime": "Coefficients such as 1 over 0 do not describe a portion of a class at all; treating them as large or infinite portions instead of side conditions breaks the interpretation",
+   "domain": "expansion calculus",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Solved expressions in the engine carry three kinds of content that must stay separate: definite inclusions, indefinite remainders that license no definite claim, and side conditions on the inputs. Collapsing an indefinite remainder into a definite inclusion fabricates a conclusion.",
+    "source_operator": "coefficient_canons",
+    "telemetry": "Solution records with definite, indefinite, and side condition parts stored in separate fields"
+   }
+  },
+  {
+   "primitive_id": "interpretability_condition",
+   "name": "A logical function is independently interpretable only if it satisfies V times 1 minus V equals 0",
+   "verbatim_quote": "The condition V (1−V ) = 0 may be termed \"the condition of interpretability of logical functions.\"",
+   "page": "Chapter VI, sec. 13 (text lines 3388-3389)",
+   "latex": "V(1 - V) = 0",
+   "symbol_and_unit_ledger": {
+    "V": "independently interpretable logical function, dimensionless"
+   },
+   "assumptions": [
+    "V is interpretable without presupposing any relation among the things its symbols represent",
+    "All coefficients in the development of V satisfy a times 1 minus a equals 0"
+   ],
+   "breakdown_regime": "Functions such as x minus y fail the condition on their own and presuppose a containment relation, so they are interpretable only relative to such a relation",
+   "domain": "expansion calculus",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Interpretability is a checkable gate on intermediate expressions. The engine can test any derived expression against the condition before interpreting it, and expressions that fail must carry the extra relation that makes them interpretable.",
+    "source_operator": "interpretability_condition",
+    "telemetry": "Gate results for derived expressions, recording pass or the presupposed relation that was supplied"
+   }
+  },
+  {
+   "primitive_id": "elimination_theorem",
+   "name": "Eliminating x from f of x equals 0 gives f of 1 times f of 0 equals 0",
+   "verbatim_quote": "be true, independently of the interpretation of x; and it will be the complete result of the elimination of x from the above equation.",
+   "page": "Chapter VII, Proposition I (text lines 3666-3667)",
+   "latex": "f(1)f(0) = 0",
+   "symbol_and_unit_ledger": {
+    "f": "logical function involving x and possibly other symbols",
+    "f(1)": "f with x set to 1",
+    "f(0)": "f with x set to 0",
+    "x": "symbol to be eliminated"
+   },
+   "assumptions": [
+    "The given equation and the fundamental equation x times 1 minus x equals 0 are both available",
+    "Elimination may yield only the identity 0 equals 0 when no residual relation exists"
+   ],
+   "breakdown_regime": "Unlike ordinary algebra there is no fixed count relation between equations and eliminable symbols; the theorem still holds, but the result may carry no information about the remaining symbols",
+   "domain": "elimination calculus",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Marginalisation over an unwanted variable has an exact logical form: evaluate the constraint with the variable forced true and forced false, and require both branches to be jointly impossible in the recorded way. The engine can remove nuisance factors without sampling or approximation.",
+    "source_operator": "elimination_theorem",
+    "telemetry": "Elimination logs showing both branch evaluations and the combined resultant for each removed factor"
+   }
+  },
+  {
+   "primitive_id": "elimination_rule",
+   "name": "Rule: give the symbol successively the values 1 and 0 and multiply the resulting equations together",
+   "verbatim_quote": "give to the symbol successively the values 1 and 0, and multiply the resulting equations together.",
+   "page": "Chapter VII, sec. 8, Rule (text lines 3767-3768)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Terms have first been brought by transposition to the first side of the equation",
+    "Successive elimination of several symbols may be done in any order with the same final result"
+   ],
+   "breakdown_regime": "Skipping the transposition step or multiplying before both substitutions are complete produces a resultant that is not the complete elimination",
+   "domain": "elimination calculus",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The rule is a directly implementable algorithm with two evaluations and one combination per eliminated symbol, and order independence lets the engine choose the cheapest elimination order without changing the result.",
+    "source_operator": "elimination_rule",
+    "telemetry": "Order variation tests in the elimination module asserting identical resultants across permutations"
+   }
+  },
+  {
+   "primitive_id": "secondary_time_interpretation",
+   "name": "In secondary propositions x selects the portion of time for which proposition X is true, and 1 is the whole of time",
+   "verbatim_quote": "That in the same system 1 represents the universe, or whole of time, to which the discourse is supposed in any manner to relate.",
+   "page": "Chapter XI, sec. 8 (text lines 6175-6176)",
+   "latex": "x = 1",
+   "symbol_and_unit_ledger": {
+    "x": "representative symbol of proposition X over time, dimensionless",
+    "1": "universe or whole of time for the discourse",
+    "0": "nothing in reference to time"
+   },
+   "assumptions": [
+    "The same combination laws hold because the same mental faculty operates on time as on things",
+    "The universe of time may be limited by the discourse, from a moment to eternity"
+   ],
+   "breakdown_regime": "Fails if different assertions in one argument are referred to different periods without expression, because the shared 1 is what makes the assertions comparable",
+   "domain": "propositional logic",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Claims about events over time reuse the same calculus with time as the universe: a claim symbol selects the times it holds, conjunction selects overlap times, and complement selects the times it fails. Temporal reasoning needs no separate logic.",
+    "source_operator": "secondary_time_interpretation",
+    "telemetry": "Time indexed claim records with the discourse window stored as the universe for each argument"
+   }
+  },
+  {
+   "primitive_id": "conditional_expression",
+   "name": "If Y is true then X is true is expressed as y equals v x with v indefinite",
+   "verbatim_quote": "Since whenever the proposition Y is true, the proposition X is true, it is necessary and sufficient here to express, that the time in which the proposition Y is true is time in which the proposition X is true",
+   "page": "Chapter XI, sec. 11 (text lines 6306-6309)",
+   "latex": "y = vx",
+   "symbol_and_unit_ledger": {
+    "y": "time for which antecedent Y is true",
+    "x": "time for which consequent X is true",
+    "v": "indefinite time symbol, whole part or none of x"
+   },
+   "assumptions": [
+    "The conditional asserts no truth of either proposition by itself",
+    "v may realise as the whole of x, a part of x, or no time at all, covering necessity, sufficiency without necessity, and a false antecedent"
+   ],
+   "breakdown_regime": "Reading y equals v x as an assertion that Y or X is actually true breaks the form, because the equation is consistent with Y never being true",
+   "domain": "propositional logic",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Conditional rules in the engine must not be stored as facts. A rule fires only on times or cases inside the antecedent selection, and the indefinite factor records that the consequent may also hold outside the rule, blocking false contrapositive style upgrades.",
+    "source_operator": "conditional_expression",
+    "telemetry": "Rule firing logs showing antecedent selections and the cases where the consequent held without the rule firing"
+   }
+  },
+  {
+   "primitive_id": "probability_measure",
+   "name": "Probability is the ratio of favourable cases to all equally possible cases, favourable or unfavourable",
+   "verbatim_quote": "the measure of the probability of an event is the ratio of the number of cases favourable to that event, to the total number of cases favourable or unfavourable, and all equally possible.",
+   "page": "Chapter XVII, sec. 1 (text lines 9275-9277)",
+   "latex": "p = \\frac{m}{n}",
+   "symbol_and_unit_ledger": {
+    "p": "probability of the event, dimensionless ratio in 0 to 1",
+    "m": "number of cases favourable to the event",
+    "n": "total number of equally possible cases"
+   },
+   "assumptions": [
+    "All counted cases are equally possible",
+    "Certainty corresponds to probability 1 and the contrary event to 1 minus p"
+   ],
+   "breakdown_regime": "Fails when cases are not equally possible and are counted as if they were, because the ratio then measures counting choices rather than the event",
+   "domain": "probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A probability in the engine must be traceable to a case count over a declared set of equally weighted cases, or to a stated generalisation of that ratio. A number without its case base cannot be checked and must not be combined with numbers that have one.",
+    "source_operator": "probability_measure",
+    "telemetry": "Probability records carrying numerator basis, denominator basis, and the equal possibility justification for the case set"
+   }
+  },
+  {
+   "primitive_id": "probability_conjunction_conditional",
+   "name": "Joint probability is the probability of one event times the probability of the other given the first, and the conditional is the ratio of joint to marginal",
+   "verbatim_quote": "Hence, if p be the probability of any event x, and q the probability that if x occur y will occur, the probability of the conjunction xy will be pq.",
+   "page": "Chapter XVII, sec. 1, Principle II (text lines 9328-9329)",
+   "latex": "P(xy) = pq",
+   "symbol_and_unit_ledger": {
+    "p": "probability of event x, dimensionless",
+    "q": "probability of y given that x occurs, dimensionless",
+    "pq": "probability of the conjunction xy, dimensionless"
+   },
+   "assumptions": [
+    "Cases favourable to the first event form the base for the conditional fraction",
+    "Principle III follows at once: the conditional probability is the joint probability divided by the probability of the conditioning event"
+   ],
+   "breakdown_regime": "Fails when the second factor is an unconditional probability while dependence exists, which is the special case Boole separates as independence",
+   "domain": "probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Chained probabilities in the engine must use the conditional factor for the second event, estimated on the subpopulation where the first event occurred. Substituting the overall rate for the conditional rate is the exact error this principle rules out.",
+    "source_operator": "probability_conjunction_conditional",
+    "telemetry": "Conditional rate tables computed on conditioned subpopulations, stored next to the unconditional rates they differ from"
+   }
+  },
+  {
+   "primitive_id": "probability_independence",
+   "name": "Independent events conjoin by the product of their separate probabilities, and independence means expectation of one is unaffected by the other",
+   "verbatim_quote": "Two events are said to be independent when the probability of the happening of either of them is unaffected by our expectation of the occurrence or failure of the other.",
+   "page": "Chapter XVII, sec. 1, Definition (text lines 9347-9349)",
+   "latex": "P(xy) = pq",
+   "symbol_and_unit_ledger": {
+    "p": "probability of event x, dimensionless",
+    "q": "probability of event y, unaffected by x, dimensionless"
+   },
+   "assumptions": [
+    "The definition concerns expectation, so independence is a property of the knowledge state and data, not only of the events in themselves",
+    "Under independence the conditional probability of y given x equals the separate probability of y"
+   ],
+   "breakdown_regime": "Fails as soon as information connects the events, because the conditional factor then departs from the separate probability and the simple product misstates the conjunction",
+   "domain": "probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Product combination in the engine is licensed only by a recorded independence judgement. Every product of probabilities must name the basis for treating the factors as independent, and the licence expires when new connecting information arrives.",
+    "source_operator": "probability_independence",
+    "telemetry": "Independence licence fields on combined probability records, with review triggers when new dependence evidence is ingested"
+   }
+  },
+  {
+   "primitive_id": "probability_general_principle",
+   "name": "Given events are to be regarded as independent of any connexion not expressed or necessarily implied in the data",
+   "verbatim_quote": "The events whose probabilities are given are to be regarded as independent of any connexion but such as is either expressed, or necessarily implied, in the data",
+   "page": "Chapter XVII, sec. 5, Principle VI (text lines 9409-9411)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The logical calculus first determines which combinations of the given events are possible and which combination is sought",
+    "The source or method by which knowledge of a connexion was derived does not change how it is used"
+   ],
+   "breakdown_regime": "Fails when an unexpressed connexion is real and material, because the method then computes the probability of a different problem than the one nature presents; the principle governs reasoning from stated data, not the completeness of the data",
+   "domain": "probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine default for unspecified dependence is explicit: treat events as independent except for connexions stated in the data or forced by logic, and record that default on the result. Hidden dependence assumptions, in either direction, are specification bugs.",
+    "source_operator": "probability_general_principle",
+    "telemetry": "Assumption registers on probability results listing every dependence connexion used and the default applied to the rest"
+   }
+  },
+  {
+   "primitive_id": "probability_logic_reduction",
+   "name": "The general method in probabilities rests on expressing the sought event as a definite combination of given events by the calculus of logic",
+   "verbatim_quote": "we can determine what that combination of the given events is whose probability is required, and what combinations of them are alone possible.",
+   "page": "Chapter XVII, sec. 5 (text lines 9418-9421)",
+   "latex": "\\phi(x, y, z, \\ldots) = 1",
+   "symbol_and_unit_ledger": {
+    "phi": "compound event expressed as a function of simple events",
+    "x, y, z": "simple event symbols, occurrence expressed by the symbol equalling 1"
+   },
+   "assumptions": [
+    "An event x is represented by the logical equation x equals 1",
+    "Combinations excluded by the data are determined by logical inference before any numbers are assigned"
+   ],
+   "breakdown_regime": "Breaks when the sought event cannot be expressed as a combination of the given events, because then the data do not determine the problem and no probability method can repair the gap",
+   "domain": "probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Probability questions in the engine are compiled before they are computed: first express the target event as a combination of base events and list the possible constituents, then assign numbers. Skipping the compilation step is how ill posed probability questions produce confident wrong numbers.",
+    "source_operator": "probability_logic_reduction",
+    "telemetry": "Compiled event expressions and constituent possibility lists stored as the first stage output of every probability job"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "69b5ccc8d58d5467-t1",
+   "think": "The whole architecture of this book can be read as one movement repeated at widening scope. Boole begins with signs, because reasoning as we can inspect it arrives dressed in signs, and he defines a sign by three properties: the mark is arbitrary, the interpretation is fixed within a discourse, and combination is governed by fixed laws that depend on the interpretation. From that austere definition the entire calculus follows, because once interpretation is fixed, the question is no longer what words mean in the loose literary sense but what operations they direct the mind to perform. For class terms the operation is selection. A name or adjective directs us to select, from a previously fixed universe of discourse, exactly the individuals that answer to it, and a second term selects again from the result. Selection explains the first laws without any appeal to number. Applying two selections in either order reaches the same individuals, so the symbols commute. Applying the same selection twice reaches the same individuals as applying it once, so the symbol satisfies the second degree law that its square equals itself. Collecting distinct partial classes into a whole gives the plus operation, which also commutes, and applying a qualifier to a whole formed by aggregation or exclusion gives the same result as applying it part by part, which is distributivity. Exclusion gives minus, but only where the excepted part is contained in the whole, and identity gives the equals sign with the familiar axioms of addition, subtraction, transposition, and multiplication of both sides by the same class, while pointedly lacking a general axiom of division. That single absence matters enormously later, because it forces the method to develop genuine logical machinery, expansion and elimination, instead of borrowing algebraic cancellation that logic cannot support. The bridge to number is then made with great care. Boole does not claim that classes are quantities. He observes that among the symbols of number only 0 and 1 obey the same second degree law, proves that in the logical interpretation 0 must be Nothing and 1 must be the Universe, since those are the only classes satisfying the respective formal laws for arbitrary companions, and concludes that an algebra of symbols admitting only 0 and 1 is identical in laws, axioms, and processes with an algebra of logic, divided from it by interpretation alone. Complement falls out as 1 minus x, the contrary class, and the principle of contradiction falls out as x times 1 minus x equals 0, demoted from a metaphysical axiom to a consequence of the fundamental law, with dichotomy itself explained by the fact that the fundamental equation is of the second degree. With expression secured for primary propositions, including the indefinite symbol v that marks particularity and the rule that negation belongs on the predicate, Boole turns to method. The expansion theorem is the engine room. Any function of a logical symbol equals the value it takes at 1 multiplied by the symbol plus the value it takes at 0 multiplied by the complement, and iterating the move over several symbols produces constituents, the mutually exclusive and jointly exhaustive divisions of the universe formed by affirming and denying each quality in every possible way. Constituents satisfy the duality law individually, distinct constituents multiply to nothing, and all of them sum to the universe, so an expansion is a complete case analysis written as algebra. Interpretation then becomes coefficient reading. In an equation set to zero, every constituent with a non vanishing coefficient names a class that does not exist. In a solved expression, coefficient 1 takes a whole constituent, coefficient 0 takes none of it, the indefinite coefficient takes some none or all of it under a fresh indefinite symbol, and any other coefficient does not describe a portion at all but forces its constituent to vanish as an independent relation among the inputs. The interpretability condition, that a function standing alone must itself satisfy the duality law, separates expressions that mean a class outright from expressions like a difference that secretly presuppose a containment. Elimination completes the method for many premises and middle terms. Because the fundamental equation is always available as an extra premise supplied by thought itself, any symbol can be eliminated from a single equation by setting it to 1 and to 0 and multiplying the results, a freedom with no parallel in ordinary algebra, where equations and eliminable symbols are counted against each other. Secondary propositions then show the reach of the formalism. The same symbols, under a new interpretation in which a symbol selects the portion of time for which a proposition is true and 1 is the whole of time under discussion, obey the identical laws, because the same faculty is at work on a different universe. Truth becomes the equation symbol equals 1, falsity becomes symbol equals 0, exclusive disjunction becomes a sum of the two singly true constituents set equal to 1, and the conditional becomes antecedent equals an indefinite portion of the consequent, an encoding that carefully asserts dependence without asserting either proposition. Finally probability is not bolted on but derived as the same method applied to events. Probability is defined as a ratio of equally possible cases, the conjunction rule introduces the conditional factor, independence is defined through unaffected expectation and licenses the plain product, and the general principle states that given events are to be treated as independent of every connexion except those expressed in or necessarily implied by the data. The practical method is compilation before computation: use the logical calculus to express the sought event as a definite combination of the given events and to determine which combinations are possible at all, and only then assign numbers to constituents. For a modern reasoning engine the lessons are concrete and severe. Declare the universe before negating anything. Treat duplicate evidence as idempotent until distinctness is proved. Never cancel a common condition. Canonicalise expressions into constituents before reading off conclusions, keep definite, indefinite, and side condition content in separate compartments, marginalise by the two branch elimination rule rather than by informal dropping, store conditionals as conditionals, and make every independence assumption an explicit recorded licence with the expressed connexions listed beside it. Where the book breaks is equally instructive. The calculus presupposes fixed interpretations, crisp membership, and a universe that stays put during an argument, and its constituent enumeration doubles with every added symbol, so scale and vagueness are the standing enemies. Boole is candid that rhetorical repetition, collective properties, shifting limitations of discourse, and unexpressed real connexions among events all sit outside the guarantees. A system built on this book should therefore treat its outputs as exactly as strong as its declarations: the universe declaration, the interpretation registry, the partition checks, and the independence register are not documentation around the reasoning, they are part of the reasoning itself.",
+   "retrocausal_genealogy": "Boole writes in a lineage that runs from Aristotle, whose principle of contradiction he quotes and rederives, through the scholastic Organon tradition, Porphyry and Proclus, Anselm and Abelard, Ramus, Descartes, and the protests of Bacon and Locke, all named in his opening survey of how logic had stagnated while probability grew. The mathematical side of the lineage is equally explicit: Pascal at the origin of probability, Laplace in its maturity, Whately and Thomson as the immediate logical guides named in the preface, and his own earlier Mathematical Analysis of Logic as the immature first statement that this treatise generalises. Taylor expansion is invoked in a footnote as the ordinary algebraic analogue that the logical development replaces. The genealogy inside the book is therefore deliberate: an ancient doctrine of propositions, a modern algebra of quantity, and a theory of chances are shown to be one formal system under three interpretations, and later Boolean algebra, propositional calculus, set algebra, and switching theory all descend from that unification.",
+   "theory_of_mind": "Boole models his reader as someone who already knows the standard terms of logic and enough algebra to solve simple equations, with more algebra, especially elimination, expected for the probability chapters. His model of the mind is faculty based and selection centred: conception or imagination forms a general idea, attention fixes regard on the individuals answering to it, and every descriptive term is an instruction to perform another selection on the current result. He trusts that the laws of signs and the laws of thought will coincide because signs stand in the place of conceptions and operations, and he repeatedly prefers a proved formal law to a metaphysical assertion, even when the metaphysical assertion, like the principle of contradiction, turns out to be a consequence. His model of the domain is that reasoning is lawful in the same sense as nature, so patient observation of actual mental operations, not inherited authority, is the right way to find its laws.",
+   "cross_layer_veto": "Several vetoes run across the layers of this system and constrain any engine built on it. The duality law vetoes any interpretation under which a case can fall under both a class and its contrary, so contradictory labelling is a data failure, not a paradox to be reasoned around. The absence of a division axiom vetoes cancellation: agreement after a shared condition never licenses a claim of unconditional agreement. The interpretability condition vetoes reading a bare expression as a class when it secretly presupposes a relation, forcing that relation into the open as a side condition. The coefficient canons veto upgrading an indefinite remainder into a definite inclusion, which is a veto on fabricated certainty in conclusions. In probability, Principle VI vetoes both hidden dependence assumptions and hidden independence assumptions: only connexions expressed or necessarily implied may be used, and everything else must be declared under the default."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a template for turning any disciplined discourse into a calculus: fix the interpretations of a small set of signs, discover the laws their combinations actually obey by watching the operations they represent, prove which extreme symbols the laws force, and then build method out of expansion into exhaustive exclusive cases, coefficient reading, and elimination of what should not appear in the conclusion. The same pattern serves any field where claims must be combined without loss, counted without duplication, and simplified without inventing relations that the premises never contained.",
+ "gsi_mapping": "For the Galaxy Sports Institute the take is methodological: this is a founding text for teaching reasoning as a formal discipline rather than a talent. Its selection model of concepts, its proof that contradiction is a consequence of a simpler law, its case exhaustive expansions, and its compilation before computation approach to probability give a curriculum spine for how analysts should declare a universe of discourse, register definitions, partition cases, and record independence assumptions before any conclusion is drawn or taught.",
+ "gse_mapping": "For the Galaxy Sports Edge engine the take is architectural: represent conditions as class selectors over a declared universe, canonicalise every compound expression into mutually exclusive constituents, read constraints and conclusions off coefficients while keeping indefinite remainders and side conditions separate, eliminate nuisance factors by the two branch rule, encode conditional rules without asserting their antecedents, and compute probabilities only after the target event has been compiled into a combination of base events with every dependence connexion either expressed in the data or recorded under the stated independence default."
+}
