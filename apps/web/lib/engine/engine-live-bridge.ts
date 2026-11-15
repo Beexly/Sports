@@ -121,10 +121,17 @@ export const STAGE0_VERIFIED_DFS_CORE_POOL: readonly DfsCorePoolRow[] = [
   },
   {
     "pos": "WR",
-    "player": "CeeDee Lamb",
-    "sal": "$8,800",
-    "proj": "17.0",
-    "why": "Active Week 10 DAL contributor vs SF projecting 17.0 DK points on a $8,800 salary."
+    "player": "Matthew Golden",
+    "sal": "$7,300",
+    "proj": "15.7",
+    "why": "Active Week 10 GB contributor vs MIN projecting 15.7 DK points on a $7,300 salary."
+  },
+  {
+    "pos": "WR",
+    "player": "Khalil Shakir",
+    "sal": "$5,300",
+    "proj": "11.6",
+    "why": "Active Week 10 BUF contributor vs NYJ projecting 11.6 DK points on a $5,300 salary."
   },
   {
     "pos": "WR",
@@ -132,13 +139,6 @@ export const STAGE0_VERIFIED_DFS_CORE_POOL: readonly DfsCorePoolRow[] = [
     "sal": "$4,000",
     "proj": "11.6",
     "why": "Active Week 10 HOU contributor vs CLE projecting 11.6 DK points on a $4,000 salary."
-  },
-  {
-    "pos": "WR",
-    "player": "Xavier Worthy",
-    "sal": "$4,300",
-    "proj": "10.9",
-    "why": "Active Week 10 KC contributor vs ATL projecting 10.9 DK points on a $4,300 salary."
   },
   {
     "pos": "TE",
@@ -156,10 +156,10 @@ export const STAGE0_VERIFIED_DFS_CORE_POOL: readonly DfsCorePoolRow[] = [
   },
   {
     "pos": "DST",
-    "player": "Cardinals",
-    "sal": "$2,200",
-    "proj": "5.6",
-    "why": "Active Week 10 ARI contributor vs LAR projecting 5.6 DK points on a $2,200 salary."
+    "player": "Vikings",
+    "sal": "$2,800",
+    "proj": "7.6",
+    "why": "Active Week 10 MIN contributor vs GB projecting 7.6 DK points on a $2,800 salary."
   },
   {
     "pos": "WR",
@@ -176,18 +176,18 @@ export const STAGE0_VERIFIED_DFS_CORE_POOL: readonly DfsCorePoolRow[] = [
     "why": "Active Week 10 CLE contributor vs HOU projecting 9.6 DK points on a $4,800 salary."
   },
   {
-    "pos": "DST",
-    "player": "Vikings",
-    "sal": "$2,800",
-    "proj": "7.6",
-    "why": "Active Week 10 MIN contributor vs GB projecting 7.6 DK points on a $2,800 salary."
-  },
-  {
     "pos": "RB",
     "player": "Quinshon Judkins",
     "sal": "$5,500",
     "proj": "14.1",
     "why": "Active Week 10 CLE contributor vs HOU projecting 14.1 DK points on a $5,500 salary."
+  },
+  {
+    "pos": "WR",
+    "player": "Tetairoa McMillan",
+    "sal": "$6,700",
+    "proj": "14.0",
+    "why": "Active Week 10 CAR contributor vs NO projecting 14.0 DK points on a $6,700 salary."
   },
   {
     "pos": "WR",
@@ -201,8 +201,8 @@ export const STAGE0_VERIFIED_DFS_CORE_POOL: readonly DfsCorePoolRow[] = [
 export const STAGE0_VERIFIED_WEEK9_DFS_LINEUPS = {
   "cashFlagship": {
     "tag": "Week 10 Sunday Main Classic Cash Anchor",
-    "salary": "$49,900 / $50,000",
-    "projectedPts": "140.6 med (335.3 p90)",
+    "salary": "$50,000 / $50,000",
+    "projectedPts": "142.0 med (343.0 p90)",
     "slots": [
       {
         "pos": "QB",
@@ -221,18 +221,18 @@ export const STAGE0_VERIFIED_WEEK9_DFS_LINEUPS = {
       },
       {
         "pos": "WR",
-        "player": "CeeDee Lamb (DAL)",
-        "detail": "$8,800 - 17.0 pts"
+        "player": "Matthew Golden (GB)",
+        "detail": "$7,300 - 15.7 pts"
+      },
+      {
+        "pos": "WR",
+        "player": "Khalil Shakir (BUF)",
+        "detail": "$5,300 - 11.6 pts"
       },
       {
         "pos": "WR",
         "player": "Xavier Hutchinson (HOU)",
         "detail": "$4,000 - 11.6 pts"
-      },
-      {
-        "pos": "WR",
-        "player": "Xavier Worthy (KC)",
-        "detail": "$4,300 - 10.9 pts"
       },
       {
         "pos": "TE",
@@ -246,8 +246,8 @@ export const STAGE0_VERIFIED_WEEK9_DFS_LINEUPS = {
       },
       {
         "pos": "DST",
-        "player": "Cardinals (ARI)",
-        "detail": "$2,200 - 5.6 pts"
+        "player": "Vikings (MIN)",
+        "detail": "$2,800 - 7.6 pts"
       }
     ]
   },
@@ -353,13 +353,13 @@ export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
   },
   {
     "matchup": "BUF @ NYJ",
-    "legs": "Josh Allen UNDER 28.5 Total Passing Attempts (incl. overtime) \u00b7 Geno Smith OVER 221.5 Total Passing Yards (incl. overtime)",
-    "fairOdds": "+130",
+    "legs": "Josh Allen UNDER 28.5 Total Passing Attempts (incl. overtime) \u00b7 Geno Smith OVER 222.5 Total Passing Yards (incl. overtime)",
+    "fairOdds": "+131",
     "bookOdds": "+239",
     "edge": "14 out of 100",
-    "conf": "76/100",
+    "conf": "75/100",
     "free": false,
-    "correlation": "Positively correlated 2-leg script across Josh Allen UNDER 28.5 Total Passing Attempts (incl. overtime), Geno Smith OVER 221.5 Total Passing Yards (incl. overtime) (correlation lift 1.04x, joint hit 0.4349 vs market SGP implied 0.2950)."
+    "correlation": "Positively correlated 2-leg script across Josh Allen UNDER 28.5 Total Passing Attempts (incl. overtime), Geno Smith OVER 222.5 Total Passing Yards (incl. overtime) (correlation lift 1.04x, joint hit 0.4328 vs market SGP implied 0.2950)."
   },
   {
     "matchup": "CAR @ NO",
@@ -413,13 +413,13 @@ export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
   },
   {
     "matchup": "MIN @ GB",
-    "legs": "Kirk Cousins OVER 20.5 Total Pass Completions (incl. overtime) \u00b7 Jordan Love UNDER 36.5 Total Passing Attempts (incl. overtime)",
-    "fairOdds": "+151",
-    "bookOdds": "+219",
-    "edge": "9 out of 100",
-    "conf": "68/100",
+    "legs": "Kirk Cousins OVER 21.5 Total Pass Completions (incl. overtime) \u00b7 Jordan Love UNDER 36.5 Total Passing Attempts (incl. overtime)",
+    "fairOdds": "+164",
+    "bookOdds": "+269",
+    "edge": "11 out of 100",
+    "conf": "71/100",
     "free": false,
-    "correlation": "Positively correlated 2-leg script across Kirk Cousins OVER 20.5 Total Pass Completions (incl. overtime), Jordan Love UNDER 36.5 Total Passing Attempts (incl. overtime) (correlation lift 1.05x, joint hit 0.3990 vs market SGP implied 0.3131)."
+    "correlation": "Positively correlated 2-leg script across Kirk Cousins OVER 21.5 Total Pass Completions (incl. overtime), Jordan Love UNDER 36.5 Total Passing Attempts (incl. overtime) (correlation lift 1.06x, joint hit 0.3790 vs market SGP implied 0.2709)."
   },
   {
     "matchup": "LAR @ ARI",

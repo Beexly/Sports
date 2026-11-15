@@ -423,7 +423,7 @@ export function RedlineWorld({
 
           <div className="plate-copy plate-b" data-active={stage === 1} data-no-camera>
             <p className="plate-kicker">LINE OF SCRIMMAGE · WEEK 10 SUNDAY MAIN SLATE &amp; MNF</p>
-            <h1>{headline?.matchup ?? "Detroit Lions @ Miami Dolphins"}</h1>
+            <h1>{headline?.matchup ?? "Houston Texans @ Cleveland Browns"}</h1>
             <p>{headline ? sanitizePlainFootballText(headline.schemeMatchup.coverageShell) : "Official game calls, player props, Same-Game Parlays, and optimal DFS lineups."}</p>
             <div className="scrimmage-rule"><span>LINE OF SCRIMMAGE</span><b /></div>
             <div

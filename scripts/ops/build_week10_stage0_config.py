@@ -167,7 +167,19 @@ def main(argv: list[str] | None = None) -> int:
     latest = max(r["fetchedAt"] for r in injuries)
 
     excluded, excluded_set = [], set()
+    sealed_started_teams = {"NE", "DET", "DAL", "TB"}
+    for bp in baseline.get("excluded_players") or []:
+        if not isinstance(bp, dict):
+            continue
+        tm = str(bp.get("team") or "").strip()
+        nm = str(bp.get("name") or "").strip()
+        if tm in sealed_started_teams and nm and (nm.lower(), tm) not in excluded_set:
+            excluded.append(dict(bp))
+            excluded_set.add((nm.lower(), tm))
+
     for r in injuries:
+        if r["team"] in sealed_started_teams:
+            continue
         st = STATUS_MAP.get(r["reportStatus"])
         if st:
             reason = f'{st} - {r["primaryInjury"] or "no detail"} (Neon injuries wk10, fetched {latest:%Y-%m-%d})'

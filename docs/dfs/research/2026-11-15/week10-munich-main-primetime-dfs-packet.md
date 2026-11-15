@@ -14,8 +14,8 @@ Generated from Stage 3/4 conserved Week 10 game projections under Stage-0 live r
 | Slate Key | Draft Group | Contest Type | Release Status | Pool | Removed | Cash Salary | Cash Median | GPP Lineups | Pure Cash 1-Up CSV | Pure 20-Max GPP CSV | Audit CSV |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | munich_ne_det | 156422 | DK_SHOWDOWN | HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER | 21 | 13 | $49000 | 101.22 | 20 | `data/dfs/week10_munich_ne_det_dk_cash_1up.csv` | `data/dfs/week10_munich_ne_det_dk_20max_gpp.csv` | `data/dfs/week10_munich_ne_det_dk_upload.csv` |
-| sun_main_classic | 156416 | DK_CLASSIC | HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER | 202 | 127 | $49900 | 140.6 | 20 | `data/dfs/week10_sun_main_classic_dk_cash_1up.csv` | `data/dfs/week10_sun_main_classic_dk_20max_gpp.csv` | `data/dfs/week10_sun_main_classic_dk_upload.csv` |
-| sun_mon_expanded | 156418 | DK_CLASSIC | HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER | 242 | 152 | $50000 | 143.19 | 20 | `data/dfs/week10_sun_mon_expanded_dk_cash_1up.csv` | `data/dfs/week10_sun_mon_expanded_dk_20max_gpp.csv` | `data/dfs/week10_sun_mon_expanded_dk_upload.csv` |
+| sun_main_classic | 156416 | DK_CLASSIC | HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER | 197 | 138 | $49800 | 173.58 | 20 | `data/dfs/week10_sun_main_classic_dk_cash_1up.csv` | `data/dfs/week10_sun_main_classic_dk_20max_gpp.csv` | `data/dfs/week10_sun_main_classic_dk_upload.csv` |
+| sun_mon_expanded | 156418 | DK_CLASSIC | HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER | 237 | 163 | $49800 | 173.58 | 20 | `data/dfs/week10_sun_mon_expanded_dk_cash_1up.csv` | `data/dfs/week10_sun_mon_expanded_dk_20max_gpp.csv` | `data/dfs/week10_sun_mon_expanded_dk_upload.csv` |
 | snf_pit_cin | 156433 | DK_SHOWDOWN | HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER | 19 | 11 | $49100 | 98.93 | 20 | `data/dfs/week10_snf_pit_cin_dk_cash_1up.csv` | `data/dfs/week10_snf_pit_cin_dk_20max_gpp.csv` | `data/dfs/week10_snf_pit_cin_dk_upload.csv` |
 | mnf_lac_bal | 156434 | DK_SHOWDOWN | HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER | 25 | 14 | $49800 | 86.48 | 20 | `data/dfs/week10_mnf_lac_bal_dk_cash_1up.csv` | `data/dfs/week10_mnf_lac_bal_dk_20max_gpp.csv` | `data/dfs/week10_mnf_lac_bal_dk_upload.csv` |
 
@@ -39,61 +39,61 @@ Top 20-Max GPP Exposures: Jahmyr Gibbs (DET RB): 19/20, Amon-Ra St. Brown (DET W
 ## Sunday Main 10-Game Classic (DG 156416)
 
 - auto_email_sent: False
-- Master Bundle SHA-256: `af89120ad6a78d1c67b8a3b860d36e6917d8f572312cfbd6c0db44040ceeb338`
-- Cash Total Salary: $49900 | Median Proj: 140.6 | P90 Ceiling: 335.3
+- Master Bundle SHA-256: `d81c1986c962026af8178dc78e93ed1905614772a8c873064d8e3a53338409d3`
+- Cash Total Salary: $49800 | Median Proj: 173.58 | P90 Ceiling: 365.47
 
 | Slot | Player | Team | Pos | Salary | Median Proj | P25 Floor | P90 Ceiling |
 |---|---|---|---|---|---|---|---|
 | QB | C.J. Stroud | HOU | QB | $5900 | 22.49 | 16.42 | 33.38 |
-| RB | James Cook III | BUF | RB | $7400 | 22.39 | 8.57 | 48.87 |
-| RB | Christian McCaffrey | SF | RB | $8500 | 21.14 | 5.72 | 55.76 |
-| WR | CeeDee Lamb | DAL | WR | $8800 | 17.03 | 5.34 | 42.55 |
-| WR | Xavier Hutchinson | HOU | WR | $4000 | 11.61 | 3.18 | 33.42 |
-| WR | Xavier Worthy | KC | WR | $4300 | 10.93 | 3.47 | 28.57 |
-| TE | Dalton Schultz | HOU | TE | $3400 | 12.86 | 3.97 | 31.73 |
-| FLEX | Ashton Jeanty | LV | RB | $5400 | 16.59 | 3.65 | 48.82 |
-| DST | Cardinals | ARI | DST | $2200 | 5.56 | 0.1 | 12.2 |
+| RB | James Cook III | BUF | RB | $7400 | 35.48 | 15.61 | 76.29 |
+| RB | Emmett Johnson | KC | RB | $4700 | 22.12 | 9.73 | 47.55 |
+| WR | CeeDee Lamb | DAL | WR | $8800 | 18.49 | 8.14 | 42.55 |
+| WR | Xavier Worthy | KC | WR | $4300 | 14.01 | 6.16 | 30.12 |
+| WR | Xavier Hutchinson | HOU | WR | $4000 | 12.9 | 5.68 | 33.42 |
+| TE | Dalton Schultz | HOU | TE | $3400 | 14.37 | 6.33 | 31.73 |
+| FLEX | Christian McCaffrey | SF | RB | $8500 | 26.15 | 11.51 | 56.23 |
+| DST | Vikings | MIN | DST | $2800 | 7.57 | 0.1 | 14.2 |
 
-Top 20-Max GPP Exposures: Ashton Jeanty (LV RB): 11/20, C.J. Stroud (HOU QB): 11/20, Christian McCaffrey (SF RB): 11/20, Dalton Schultz (HOU TE): 11/20, James Cook III (BUF RB): 11/20, Quinshon Judkins (CLE RB): 11/20, Xavier Hutchinson (HOU WR): 11/20, Parker Washington (JAX WR): 10/20
+Top 20-Max GPP Exposures: Dalton Schultz (HOU TE): 13/20, James Cook III (BUF RB): 13/20, Raiders (LV DST): 13/20, C.J. Stroud (HOU QB): 12/20, Christian McCaffrey (SF RB): 12/20, Xavier Hutchinson (HOU WR): 12/20, Quinshon Judkins (CLE RB): 11/20, Aaron Jones Sr. (MIN RB): 10/20
 
 ## Sunday-Monday 12-Game Expanded Classic & 14-Core (DG 156418)
 
 - auto_email_sent: False
-- Master Bundle SHA-256: `8d0484d3ebe69e180134195c2c09ef5551714536332d82886bacf6c220fb8631`
-- Cash Total Salary: $50000 | Median Proj: 143.19 | P90 Ceiling: 333.19
+- Master Bundle SHA-256: `840811387589d9bca26fb39f306b03bede6da5bb1922d91502cf61b2c49b7eb3`
+- Cash Total Salary: $49800 | Median Proj: 173.58 | P90 Ceiling: 365.47
 
 | Slot | Player | Team | Pos | Salary | Median Proj | P25 Floor | P90 Ceiling |
 |---|---|---|---|---|---|---|---|
 | QB | C.J. Stroud | HOU | QB | $5900 | 22.49 | 16.42 | 33.38 |
-| RB | James Cook III | BUF | RB | $7400 | 22.39 | 8.57 | 48.87 |
-| RB | Christian McCaffrey | SF | RB | $8500 | 21.14 | 5.72 | 55.76 |
-| WR | Matthew Golden | GB | WR | $7300 | 15.06 | 4.38 | 41.3 |
-| WR | Xavier Hutchinson | HOU | WR | $4000 | 11.61 | 3.18 | 33.42 |
-| WR | Xavier Worthy | KC | WR | $4300 | 10.93 | 3.47 | 28.57 |
-| TE | Dalton Schultz | HOU | TE | $3400 | 12.86 | 3.97 | 31.73 |
-| FLEX | Chase Brown | CIN | RB | $6400 | 19.14 | 4.99 | 45.96 |
+| RB | James Cook III | BUF | RB | $7400 | 35.48 | 15.61 | 76.29 |
+| RB | Emmett Johnson | KC | RB | $4700 | 22.12 | 9.73 | 47.55 |
+| WR | CeeDee Lamb | DAL | WR | $8800 | 18.49 | 8.14 | 42.55 |
+| WR | Xavier Worthy | KC | WR | $4300 | 14.01 | 6.16 | 30.12 |
+| WR | Xavier Hutchinson | HOU | WR | $4000 | 12.9 | 5.68 | 33.42 |
+| TE | Dalton Schultz | HOU | TE | $3400 | 14.37 | 6.33 | 31.73 |
+| FLEX | Christian McCaffrey | SF | RB | $8500 | 26.15 | 11.51 | 56.23 |
 | DST | Vikings | MIN | DST | $2800 | 7.57 | 0.1 | 14.2 |
 
-Top 20-Max GPP Exposures: Ashton Jeanty (LV RB): 11/20, Chase Brown (CIN RB): 11/20, Christian McCaffrey (SF RB): 11/20, Dalton Schultz (HOU TE): 11/20, James Cook III (BUF RB): 11/20, Tetairoa McMillan (CAR WR): 11/20, Xavier Hutchinson (HOU WR): 11/20, C.J. Stroud (HOU QB): 10/20
+Top 20-Max GPP Exposures: Dalton Schultz (HOU TE): 13/20, James Cook III (BUF RB): 13/20, C.J. Stroud (HOU QB): 12/20, Xavier Hutchinson (HOU WR): 12/20, Quinshon Judkins (CLE RB): 11/20, Raiders (LV DST): 11/20, Nico Collins (HOU WR): 10/20, Aaron Jones Sr. (MIN RB): 9/20
 
 ### Sun-Mon Expanded 14-Player Core (2 QB / 4 RB / 4 WR / 2 TE / 2 DST)
 
 | Pos | Player | Team | Matchup Opp | Salary | Median Proj | P90 Ceiling | GPP Exp % |
 |---|---|---|---|---|---|---|---|
-| QB | Trevor Lawrence | JAX | TEN | $6600 | 23.44 | 37.52 | 35.0% |
-| QB | C.J. Stroud | HOU | CLE | $5900 | 22.49 | 33.38 | 50.0% |
-| RB | Christian McCaffrey | SF | DAL | $8500 | 21.14 | 55.76 | 55.0% |
-| RB | James Cook III | BUF | NYJ | $7400 | 22.39 | 48.87 | 55.0% |
-| RB | Chase Brown | CIN | PIT | $6400 | 19.14 | 45.96 | 55.0% |
-| RB | Ashton Jeanty | LV | SEA | $5400 | 16.59 | 48.82 | 55.0% |
-| WR | CeeDee Lamb | DAL | SF | $8800 | 17.03 | 42.55 | 10.0% |
-| WR | Matthew Golden | GB | MIN | $7300 | 15.06 | 41.3 | 15.0% |
-| WR | Tetairoa McMillan | CAR | NO | $6700 | 13.84 | 41.22 | 55.0% |
-| WR | Parker Washington | JAX | TEN | $6200 | 13.75 | 38.89 | 50.0% |
-| TE | Dalton Schultz | HOU | CLE | $3400 | 12.86 | 31.73 | 55.0% |
-| TE | Brenton Strange | JAX | TEN | $4100 | 10.82 | 28.32 | 40.0% |
-| DST | Vikings | MIN | GB | $2800 | 7.57 | 14.2 | 35.0% |
-| DST | Raiders | LV | SEA | $2400 | 6.98 | 15.36 | 30.0% |
+| QB | Trevor Lawrence | JAX | TEN | $6600 | 23.44 | 37.52 | 5.0% |
+| QB | C.J. Stroud | HOU | CLE | $5900 | 22.49 | 33.38 | 60.0% |
+| RB | James Cook III | BUF | NYJ | $7400 | 35.48 | 76.29 | 65.0% |
+| RB | Christian McCaffrey | SF | DAL | $8500 | 26.15 | 56.23 | 45.0% |
+| RB | Chase Brown | CIN | PIT | $6400 | 23.48 | 50.49 | 40.0% |
+| RB | Javonte Williams | DAL | SF | $7500 | 24.05 | 51.7 | 5.0% |
+| WR | CeeDee Lamb | DAL | SF | $8800 | 18.49 | 42.55 | 5.0% |
+| WR | Matthew Golden | GB | MIN | $7300 | 16.59 | 41.87 | 45.0% |
+| WR | Nico Collins | HOU | CLE | $6900 | 15.34 | 40.03 | 50.0% |
+| WR | Tetairoa McMillan | CAR | NO | $6700 | 14.06 | 41.18 | 40.0% |
+| TE | Trey McBride | ARI | LAR | $7100 | 17.11 | 36.8 | 5.0% |
+| TE | Dalton Schultz | HOU | CLE | $3400 | 14.37 | 31.73 | 65.0% |
+| DST | Raiders | LV | SEA | $2400 | 6.98 | 15.36 | 55.0% |
+| DST | Vikings | MIN | GB | $2800 | 7.57 | 14.2 | 10.0% |
 
 ## PIT @ CIN SNF Showdown (DG 156433)
 

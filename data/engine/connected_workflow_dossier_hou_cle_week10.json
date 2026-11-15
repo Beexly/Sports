@@ -1,6 +1,6 @@
 {
   "schema": "gse_connected_game_workflow_master_bundle_v1",
-  "generated_at_utc": "2026-11-15T16:11:21.254463+00:00",
+  "generated_at_utc": "2026-11-15T17:07:59.363384+00:00",
   "matchup": "HOU @ CLE",
   "week": 10,
   "armed_26_layer_workflow_receipt": {
@@ -16,12 +16,12 @@
   "stage1_parameter_coupling_verified": true,
   "max_prop_win_prob": 0.7015,
   "cryptographic_receipt_chain": {
-    "stage0_receipt_sha256": "06816b04130a54dc637375ea9710cdd494aa6bf1d61771f39bc0fbed54113155",
-    "stage1a_receipt_sha256": "ec7eeeafe540e3dbeae3f8c2498ef4aac107008f5798a832764c04d2d38f1815",
-    "stage1b_receipt_sha256": "6615c1e004a2f17eb9d719bf081af544b84fd6a0405489ab1e016f1e9f497785",
-    "stage2_receipt_sha256": "5c3a8d9071f2d3a86058da5293b910eca840242ee8b32eb988a1c8ddf7afe1d2",
-    "stage3_4_receipt_sha256": "c8b85c924a2228e556d0624c1e633a20307bf3ec272a30804cf9a972398d7f37",
-    "stage5_receipt_sha256": "b4e3a5913832cdbca7a0e427beffff08759f12f00f9791e2dad51684a4e27380"
+    "stage0_receipt_sha256": "561658f00bdf684bb61f7a86c51cc66c7886d6f52072597c164f80f3cb509997",
+    "stage1a_receipt_sha256": "8fc677f2b438edad8ae4c4b6a05429ac9c0671ad7944f7450e28d792f9a65694",
+    "stage1b_receipt_sha256": "ca116b7b9510df7e330fde8f4c6c079134926171878e28bb02f0b7d5a68d5e30",
+    "stage2_receipt_sha256": "66d0a4c2a535999417c43eb69c267d5966d56c57c7409c28c81c5f19a2c545e0",
+    "stage3_4_receipt_sha256": "b25af7b27370f27a289a803a0a5a770420aef2d852fc81bd87349586c8c19142",
+    "stage5_receipt_sha256": "4fca6c34c6330ca4e6273dfa885d1d7582ea1f27fe3955f89409e2f617090282"
   },
   "stage0_roster_and_board_allowlist": {
     "schema": "gse_stage0_game_roster_allowlist_v1",
@@ -63,6 +63,18 @@
     ],
     "excluded_players": [
       {
+        "name": "Dillon Gabriel",
+        "team": "CLE",
+        "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)",
+        "position": "QB"
+      },
+      {
+        "name": "Justin Jefferson",
+        "team": "CLE",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)",
+        "position": "LB"
+      },
+      {
         "name": "Kalia Davis",
         "team": "CLE",
         "position": "DT",
@@ -71,19 +83,37 @@
       {
         "name": "Michael Burton",
         "team": "CLE",
-        "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15) + IR - Calf (ESPN live pregame 2026-11-14T18:01Z)",
+        "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-15)",
         "position": "FB"
       },
       {
         "name": "Michael Burton",
         "team": "CLE",
-        "reason": "OUT - Calf (Neon injuries wk10, fetched 2026-11-15) + IR - Calf (ESPN live pregame 2026-11-14T18:01Z)",
+        "reason": "OUT - Calf (Neon injuries wk10, fetched 2026-11-15)",
         "position": "FB"
+      },
+      {
+        "name": "Noah Igbinoghene",
+        "team": "CLE",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)",
+        "position": "CB"
+      },
+      {
+        "name": "Parker Brailsford",
+        "team": "CLE",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)",
+        "position": "C"
       },
       {
         "name": "Ronnie Hickman",
         "team": "CLE",
-        "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-13T23:04Z)",
+        "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-15T16:32Z)",
+        "position": "S"
+      },
+      {
+        "name": "Ronnie Hickman",
+        "team": "CLE",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Concussion (ESPN live pregame 2026-11-15T16:32Z)",
         "position": "S"
       },
       {
@@ -91,6 +121,12 @@
         "team": "CLE",
         "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15)",
         "position": "S"
+      },
+      {
+        "name": "Taylen Green",
+        "team": "CLE",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
+        "position": "QB"
       },
       {
         "name": "Teven Jenkins",
@@ -107,19 +143,31 @@
       {
         "name": "Azeez Al-Shaair",
         "team": "HOU",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
+        "position": "LB"
+      },
+      {
+        "name": "Azeez Al-Shaair",
+        "team": "HOU",
         "reason": "OUT - Groin (Neon injuries wk10, fetched 2026-11-15)",
         "position": "LB"
       },
       {
         "name": "Brevin Jordan",
         "team": "HOU",
-        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:37Z)",
         "position": "TE"
       },
       {
         "name": "Brevin Jordan",
         "team": "HOU",
-        "reason": "OUT - Finger (Neon injuries wk10, fetched 2026-11-15)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:37Z)",
+        "position": "TE"
+      },
+      {
+        "name": "Brevin Jordan",
+        "team": "HOU",
+        "reason": "OUT - Finger (Neon injuries wk10, fetched 2026-11-15) + OUT - Finger (ESPN live pregame 2026-11-15T16:37Z)",
         "position": "TE"
       },
       {
@@ -131,19 +179,25 @@
       {
         "name": "Danielle Hunter",
         "team": "HOU",
-        "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15)",
+        "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
         "position": "DE"
       },
       {
         "name": "Danielle Hunter",
         "team": "HOU",
-        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
+        "position": "DE"
+      },
+      {
+        "name": "Danielle Hunter",
+        "team": "HOU",
+        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
         "position": "DE"
       },
       {
         "name": "David Montgomery",
         "team": "HOU",
-        "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15) + OUT - Groin (ESPN live pregame 2026-11-14T18:18Z)",
+        "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-15)",
         "position": "RB"
       },
       {
@@ -161,26 +215,44 @@
       {
         "name": "Keylan Rutledge",
         "team": "HOU",
-        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-14T02:08Z)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:37Z)",
         "position": "G"
       },
       {
         "name": "Keylan Rutledge",
         "team": "HOU",
-        "reason": "OUT - Neck (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-14T02:08Z)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:37Z)",
+        "position": "G"
+      },
+      {
+        "name": "Keylan Rutledge",
+        "team": "HOU",
+        "reason": "OUT - Neck (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:37Z)",
         "position": "G"
       },
       {
         "name": "Marvin Harrison Jr.",
         "team": "HOU",
-        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
+        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
         "position": "WR"
       },
       {
         "name": "Marvin Harrison Jr.",
         "team": "HOU",
-        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
         "position": "WR"
+      },
+      {
+        "name": "Marvin Harrison Jr.",
+        "team": "HOU",
+        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:37Z)",
+        "position": "WR"
+      },
+      {
+        "name": "Wyatt Teller",
+        "team": "HOU",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Illness (ESPN live pregame 2026-11-15T16:37Z)",
+        "position": "G"
       }
     ],
     "off_roster_hallucination_denylist": {
@@ -193,7 +265,7 @@
       "trey benson": "WEEK8_INACTIVE_NAMES hard-blocked.",
       "jalen mcmillan": "WEEK8_INACTIVE_NAMES hard-blocked."
     },
-    "dynamic_league_wide_denylist_count": 4275,
+    "dynamic_league_wide_denylist_count": 4294,
     "situational_multipliers_unfitted": {},
     "team_totals_2026_pbp": {
       "HOU": {
@@ -335,8 +407,8 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 46.5,
-          "Total Receptions (incl. overtime)": 3.5
+          "Total Receiving Yards (incl. overtime)": 39.5,
+          "Total Receptions (incl. overtime)": 2.5
         },
         "open_lines": {
           "Total Receiving Yards (incl. overtime)": 42.5,
@@ -625,7 +697,7 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 17.5,
+          "Total Receiving Yards (incl. overtime)": 18.5,
           "Total Receptions (incl. overtime)": 1.5
         },
         "open_lines": {
@@ -683,7 +755,7 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 49.5,
+          "Total Receiving Yards (incl. overtime)": 48.5,
           "Total Receptions (incl. overtime)": 4.5
         },
         "open_lines": {
@@ -976,7 +1048,7 @@
           "Total Passing Attempts (incl. overtime)": 34.5,
           "Total Passing Interceptions (incl. overtime)": 0.5,
           "Total Passing Touchdowns (incl. overtime)": 1.5,
-          "Total Passing Yards (incl. overtime)": 245.5,
+          "Total Passing Yards (incl. overtime)": 243.5,
           "Total Rushing Yards (incl. overtime)": 8.5
         },
         "open_lines": {
@@ -1094,7 +1166,7 @@
         "position": "TE",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 29.5,
+          "Total Receiving Yards (incl. overtime)": 27.5,
           "Total Receptions (incl. overtime)": 3.5
         },
         "open_lines": {
@@ -1152,7 +1224,7 @@
         "position": "RB",
         "prop_count": 1,
         "core_lines": {
-          "Total Rushing Yards (incl. overtime)": 10.5
+          "Total Rushing Yards (incl. overtime)": 9.5
         },
         "open_lines": {
           "Total Rushing Yards (incl. overtime)": 10.5
@@ -1380,7 +1452,7 @@
         "core_lines": {
           "Total Extra Points Made (incl. overtime)": 1.5,
           "Total Field Goals Made (incl. overtime)": 1.5,
-          "Total Kicking Points (incl. overtime)": 8.5
+          "Total Kicking Points (incl. overtime)": 7.5
         },
         "open_lines": {
           "Total Extra Points Made (incl. overtime)": 2.5,
@@ -1494,7 +1566,7 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 23.5,
+          "Total Receiving Yards (incl. overtime)": 22.5,
           "Total Receptions (incl. overtime)": 1.5
         },
         "open_lines": {
@@ -1610,8 +1682,8 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 43.5,
-          "Total Receptions (incl. overtime)": 3.5
+          "Total Receiving Yards (incl. overtime)": 41.5,
+          "Total Receptions (incl. overtime)": 2.5
         },
         "open_lines": {
           "Total Receiving Yards (incl. overtime)": 35.5,
@@ -1669,10 +1741,10 @@
         "prop_count": 5,
         "core_lines": {
           "Total Carries (incl. overtime)": 16.5,
-          "Total Receiving Yards (incl. overtime)": 8.5,
+          "Total Receiving Yards (incl. overtime)": 10.5,
           "Total Receptions (incl. overtime)": 1.5,
-          "Total Rushing Plus Receiving Yards (incl. overtime)": 74.5,
-          "Total Rushing Yards (incl. overtime)": 61.5
+          "Total Rushing Plus Receiving Yards (incl. overtime)": 79.5,
+          "Total Rushing Yards (incl. overtime)": 65.5
         },
         "open_lines": {
           "Total Carries (incl. overtime)": 17.5,
@@ -1732,7 +1804,7 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 33.5,
+          "Total Receiving Yards (incl. overtime)": 32.5,
           "Total Receptions (incl. overtime)": 3.5
         },
         "open_lines": {
@@ -2202,8 +2274,8 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 46.5,
-          "Total Receptions (incl. overtime)": 3.5
+          "Total Receiving Yards (incl. overtime)": 39.5,
+          "Total Receptions (incl. overtime)": 2.5
         },
         "open_lines": {
           "Total Receiving Yards (incl. overtime)": 42.5,
@@ -2492,7 +2564,7 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 17.5,
+          "Total Receiving Yards (incl. overtime)": 18.5,
           "Total Receptions (incl. overtime)": 1.5
         },
         "open_lines": {
@@ -2550,7 +2622,7 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 49.5,
+          "Total Receiving Yards (incl. overtime)": 48.5,
           "Total Receptions (incl. overtime)": 4.5
         },
         "open_lines": {
@@ -2843,7 +2915,7 @@
           "Total Passing Attempts (incl. overtime)": 34.5,
           "Total Passing Interceptions (incl. overtime)": 0.5,
           "Total Passing Touchdowns (incl. overtime)": 1.5,
-          "Total Passing Yards (incl. overtime)": 245.5,
+          "Total Passing Yards (incl. overtime)": 243.5,
           "Total Rushing Yards (incl. overtime)": 8.5
         },
         "open_lines": {
@@ -2961,7 +3033,7 @@
         "position": "TE",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 29.5,
+          "Total Receiving Yards (incl. overtime)": 27.5,
           "Total Receptions (incl. overtime)": 3.5
         },
         "open_lines": {
@@ -3019,7 +3091,7 @@
         "position": "RB",
         "prop_count": 1,
         "core_lines": {
-          "Total Rushing Yards (incl. overtime)": 10.5
+          "Total Rushing Yards (incl. overtime)": 9.5
         },
         "open_lines": {
           "Total Rushing Yards (incl. overtime)": 10.5
@@ -3247,7 +3319,7 @@
         "core_lines": {
           "Total Extra Points Made (incl. overtime)": 1.5,
           "Total Field Goals Made (incl. overtime)": 1.5,
-          "Total Kicking Points (incl. overtime)": 8.5
+          "Total Kicking Points (incl. overtime)": 7.5
         },
         "open_lines": {
           "Total Extra Points Made (incl. overtime)": 2.5,
@@ -3361,7 +3433,7 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 23.5,
+          "Total Receiving Yards (incl. overtime)": 22.5,
           "Total Receptions (incl. overtime)": 1.5
         },
         "open_lines": {
@@ -3477,8 +3549,8 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 43.5,
-          "Total Receptions (incl. overtime)": 3.5
+          "Total Receiving Yards (incl. overtime)": 41.5,
+          "Total Receptions (incl. overtime)": 2.5
         },
         "open_lines": {
           "Total Receiving Yards (incl. overtime)": 35.5,
@@ -3536,10 +3608,10 @@
         "prop_count": 5,
         "core_lines": {
           "Total Carries (incl. overtime)": 16.5,
-          "Total Receiving Yards (incl. overtime)": 8.5,
+          "Total Receiving Yards (incl. overtime)": 10.5,
           "Total Receptions (incl. overtime)": 1.5,
-          "Total Rushing Plus Receiving Yards (incl. overtime)": 74.5,
-          "Total Rushing Yards (incl. overtime)": 61.5
+          "Total Rushing Plus Receiving Yards (incl. overtime)": 79.5,
+          "Total Rushing Yards (incl. overtime)": 65.5
         },
         "open_lines": {
           "Total Carries (incl. overtime)": 17.5,
@@ -3599,7 +3671,7 @@
         "position": "WR",
         "prop_count": 2,
         "core_lines": {
-          "Total Receiving Yards (incl. overtime)": 33.5,
+          "Total Receiving Yards (incl. overtime)": 32.5,
           "Total Receptions (incl. overtime)": 3.5
         },
         "open_lines": {
@@ -3912,11 +3984,11 @@
         "situational_multiplier": 1.0
       }
     ],
-    "stage0_receipt_sha256": "06816b04130a54dc637375ea9710cdd494aa6bf1d61771f39bc0fbed54113155"
+    "stage0_receipt_sha256": "561658f00bdf684bb61f7a86c51cc66c7886d6f52072597c164f80f3cb509997"
   },
   "stage1a_coaching_mind_and_schemes": {
     "schema": "gse_stage1a_coaching_mind_and_scheme_receipt_v2",
-    "parent_stage0_receipt_sha256": "06816b04130a54dc637375ea9710cdd494aa6bf1d61771f39bc0fbed54113155",
+    "parent_stage0_receipt_sha256": "561658f00bdf684bb61f7a86c51cc66c7886d6f52072597c164f80f3cb509997",
     "away": "HOU",
     "home": "CLE",
     "week": 10,
@@ -4001,8 +4073,8 @@
       }
     },
     "l1_to_l5_specialist_reasoning_trace": {
-      "trace_id": "2026-11-15T161025Z0000-9303e5ed",
-      "content_hash": "d95bd8edfeb0a405465dfbff66660d60a68194bf3046dbde3250d96842c55c8a",
+      "trace_id": "2026-11-15T170731Z0000-12c6ff45",
+      "content_hash": "980c8f3f8c28fc4a8a2bb927b781e4604bcbe601ff097ea88586d9faed193acb",
       "depth_reached": "L5",
       "hierarchy_order": [
         "offensive_line",
@@ -4868,7 +4940,7 @@
     },
     "python_31_intelligence_subpackages_and_31_datasets": {
       "schema_version": "gse_python_intelligence_and_datasets_v2.1",
-      "generated_at_utc": "2026-11-15T16:10:22.838794+00:00",
+      "generated_at_utc": "2026-11-15T17:07:29.342203+00:00",
       "datasets_connected_count": 33,
       "datasets_report": {
         "ftn_charting_2026": {
@@ -7890,11 +7962,11 @@
       "MOFO (Two-High)": 5614,
       "RedZone/GoalLine/Other": 889
     },
-    "stage1a_receipt_sha256": "ec7eeeafe540e3dbeae3f8c2498ef4aac107008f5798a832764c04d2d38f1815"
+    "stage1a_receipt_sha256": "8fc677f2b438edad8ae4c4b6a05429ac9c0671ad7944f7450e28d792f9a65694"
   },
   "stage1b_5367_equations_pre_sim_review": {
     "schema": "gse_stage1b_5367_equations_pre_sim_receipt_v2",
-    "parent_stage1a_receipt_sha256": "ec7eeeafe540e3dbeae3f8c2498ef4aac107008f5798a832764c04d2d38f1815",
+    "parent_stage1a_receipt_sha256": "8fc677f2b438edad8ae4c4b6a05429ac9c0671ad7944f7450e28d792f9a65694",
     "equation_corpus_inventory": {
       "thousand_equation_matrix_load_bearing": 9875,
       "citable_verified_count": 2419,
@@ -9885,11 +9957,11 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "6615c1e004a2f17eb9d719bf081af544b84fd6a0405489ab1e016f1e9f497785"
+    "stage1b_receipt_sha256": "ca116b7b9510df7e330fde8f4c6c079134926171878e28bb02f0b7d5a68d5e30"
   },
   "stage2_jev_spine_and_10k_simulation": {
     "schema": "gse_stage2_jev_spine_and_10k_sim_receipt_v1",
-    "parent_stage1b_receipt_sha256": "6615c1e004a2f17eb9d719bf081af544b84fd6a0405489ab1e016f1e9f497785",
+    "parent_stage1b_receipt_sha256": "ca116b7b9510df7e330fde8f4c6c079134926171878e28bb02f0b7d5a68d5e30",
     "away": "HOU",
     "home": "CLE",
     "week": 10,
@@ -18372,12 +18444,12 @@
           "spine_home_qb1": "Deshaun Watson",
           "current_qb1_away": "C.J. Stroud",
           "current_qb1_home": "Deshaun Watson",
-          "updated_at": "2026-11-15T16:10:54.041907+00:00",
-          "evaluated_at_utc": "2026-11-15T16:10:54.041907+00:00",
+          "updated_at": "2026-11-15T17:07:38.382085+00:00",
+          "evaluated_at_utc": "2026-11-15T17:07:38.382085+00:00",
           "age_hours": 0.0,
           "max_age_hours": 72.0,
-          "spine_digest_sha256": "9b4d2d4c746c18ce4ef901b3601bb0a44001a352aca882d1cb24c4bc179a785a",
-          "live_state_digest_sha256": "9b4d2d4c746c18ce4ef901b3601bb0a44001a352aca882d1cb24c4bc179a785a",
+          "spine_digest_sha256": "842fc8c9036d895cb8092ce04a097fac02b8ac1485c31fa758b62178a241daad",
+          "live_state_digest_sha256": "842fc8c9036d895cb8092ce04a097fac02b8ac1485c31fa758b62178a241daad",
           "qb1_away_match": true,
           "qb1_home_match": true,
           "age_within_sla": true,
@@ -18519,7 +18591,7 @@
       },
       "full_repo_279_family_situational_matrix": {
         "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-        "generated_at_utc": "2026-11-15T16:10:55.504219+00:00",
+        "generated_at_utc": "2026-11-15T17:07:38.962985+00:00",
         "total_ts_modules_cataloged": 1501,
         "prediction_engine_ts_modules": 1490,
         "mcp_equations_server_ts_modules": 11,
@@ -20405,7 +20477,7 @@
           "probability_movement_cap": 0.12,
           "post_overlay_prob": 0.5073
         },
-        "receipt_sha256": "7938a758cbcb8c98b1bcd380f6f275b09beda2a76a3993e0df5e0e47d752ad9b",
+        "receipt_sha256": "4a5951764dcaa2cae391ef2edb4e1d59d44f49519ebf630e7520d2a9933e03b0",
         "measured_primitives": {
           "measured_primitives_count": 3,
           "wr1_absorption": {
@@ -20772,16 +20844,16 @@
       "uncompressed_25k_repo_books_papers_routes_bridge": {
         "bridge_version": "uncompressed_25k_v1.0",
         "monorepo_census_summary": {
-          "total_repo_files_indexed": 76752,
-          "docs_files_indexed": 12064,
+          "total_repo_files_indexed": 76794,
+          "docs_files_indexed": 12070,
           "arxiv_program_files_indexed": 1803,
           "engine_docs_indexed": 3935,
           "packages_files_indexed": 6048,
           "packages_count": 25,
           "intelligence_files_indexed": 1121,
           "intelligence_domains_count": 35,
-          "scripts_files_indexed": 946,
-          "apps_files_indexed": 3604,
+          "scripts_files_indexed": 948,
+          "apps_files_indexed": 3605,
           "web_api_routes_indexed": 276,
           "formal_proof_files_indexed": 69,
           "workers_files_indexed": 51,
@@ -29743,7 +29815,7 @@
       "freshness_verification": {
         "valid": true,
         "reason": "FRESH_AND_QB1_VERIFIED",
-        "age_hours": 11.43,
+        "age_hours": 12.37,
         "expected_week": 10
       },
       "total_snaps_ingested": 168,
@@ -29924,11 +29996,11 @@
       "bal_cover_plus_7_5_prob": 0.4133,
       "over_41_5_prob": 0.5205
     },
-    "stage2_receipt_sha256": "5c3a8d9071f2d3a86058da5293b910eca840242ee8b32eb988a1c8ddf7afe1d2"
+    "stage2_receipt_sha256": "66d0a4c2a535999417c43eb69c267d5966d56c57c7409c28c81c5f19a2c545e0"
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "5c3a8d9071f2d3a86058da5293b910eca840242ee8b32eb988a1c8ddf7afe1d2",
+    "parent_stage2_receipt_sha256": "66d0a4c2a535999417c43eb69c267d5966d56c57c7409c28c81c5f19a2c545e0",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.08,
@@ -31558,8 +31630,8 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 46.5,
-          "Total Receptions (incl. overtime)": 3.5
+          "Total Receiving Yards (incl. overtime)": 39.5,
+          "Total Receptions (incl. overtime)": 2.5
         },
         "projections": {
           "rec_yds": {
@@ -31687,7 +31759,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 17.5,
+          "Total Receiving Yards (incl. overtime)": 18.5,
           "Total Receptions (incl. overtime)": 1.5
         },
         "projections": {
@@ -31815,7 +31887,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 49.5,
+          "Total Receiving Yards (incl. overtime)": 48.5,
           "Total Receptions (incl. overtime)": 4.5
         },
         "projections": {
@@ -32244,7 +32316,7 @@
         "board_lines": {
           "Total Extra Points Made (incl. overtime)": 1.5,
           "Total Field Goals Made (incl. overtime)": 1.5,
-          "Total Kicking Points (incl. overtime)": 8.5
+          "Total Kicking Points (incl. overtime)": 7.5
         },
         "projections": {
           "fg_made": {
@@ -32334,7 +32406,7 @@
           "Total Passing Attempts (incl. overtime)": 34.5,
           "Total Passing Interceptions (incl. overtime)": 0.5,
           "Total Passing Touchdowns (incl. overtime)": 1.5,
-          "Total Passing Yards (incl. overtime)": 245.5,
+          "Total Passing Yards (incl. overtime)": 243.5,
           "Total Rushing Yards (incl. overtime)": 8.5
         },
         "projections": {
@@ -32502,10 +32574,10 @@
         },
         "board_lines": {
           "Total Carries (incl. overtime)": 16.5,
-          "Total Receiving Yards (incl. overtime)": 8.5,
+          "Total Receiving Yards (incl. overtime)": 10.5,
           "Total Receptions (incl. overtime)": 1.5,
-          "Total Rushing Plus Receiving Yards (incl. overtime)": 74.5,
-          "Total Rushing Yards (incl. overtime)": 61.5
+          "Total Rushing Plus Receiving Yards (incl. overtime)": 79.5,
+          "Total Rushing Yards (incl. overtime)": 65.5
         },
         "projections": {
           "rec_yds": {
@@ -32633,7 +32705,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Rushing Yards (incl. overtime)": 10.5
+          "Total Rushing Yards (incl. overtime)": 9.5
         },
         "projections": {
           "rec_yds": {
@@ -32933,7 +33005,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 29.5,
+          "Total Receiving Yards (incl. overtime)": 27.5,
           "Total Receptions (incl. overtime)": 3.5
         },
         "projections": {
@@ -33129,7 +33201,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 23.5,
+          "Total Receiving Yards (incl. overtime)": 22.5,
           "Total Receptions (incl. overtime)": 1.5
         },
         "projections": {
@@ -33387,8 +33459,8 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 43.5,
-          "Total Receptions (incl. overtime)": 3.5
+          "Total Receiving Yards (incl. overtime)": 41.5,
+          "Total Receptions (incl. overtime)": 2.5
         },
         "projections": {
           "rec_yds": {
@@ -33516,7 +33588,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 33.5,
+          "Total Receiving Yards (incl. overtime)": 32.5,
           "Total Receptions (incl. overtime)": 3.5
         },
         "projections": {
@@ -34476,11 +34548,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "c8b85c924a2228e556d0624c1e633a20307bf3ec272a30804cf9a972398d7f37"
+    "stage3_4_receipt_sha256": "b25af7b27370f27a289a803a0a5a770420aef2d852fc81bd87349586c8c19142"
   },
   "stage3_and_4_projections_and_situational": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "5c3a8d9071f2d3a86058da5293b910eca840242ee8b32eb988a1c8ddf7afe1d2",
+    "parent_stage2_receipt_sha256": "66d0a4c2a535999417c43eb69c267d5966d56c57c7409c28c81c5f19a2c545e0",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.08,
@@ -36110,8 +36182,8 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 46.5,
-          "Total Receptions (incl. overtime)": 3.5
+          "Total Receiving Yards (incl. overtime)": 39.5,
+          "Total Receptions (incl. overtime)": 2.5
         },
         "projections": {
           "rec_yds": {
@@ -36239,7 +36311,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 17.5,
+          "Total Receiving Yards (incl. overtime)": 18.5,
           "Total Receptions (incl. overtime)": 1.5
         },
         "projections": {
@@ -36367,7 +36439,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 49.5,
+          "Total Receiving Yards (incl. overtime)": 48.5,
           "Total Receptions (incl. overtime)": 4.5
         },
         "projections": {
@@ -36796,7 +36868,7 @@
         "board_lines": {
           "Total Extra Points Made (incl. overtime)": 1.5,
           "Total Field Goals Made (incl. overtime)": 1.5,
-          "Total Kicking Points (incl. overtime)": 8.5
+          "Total Kicking Points (incl. overtime)": 7.5
         },
         "projections": {
           "fg_made": {
@@ -36886,7 +36958,7 @@
           "Total Passing Attempts (incl. overtime)": 34.5,
           "Total Passing Interceptions (incl. overtime)": 0.5,
           "Total Passing Touchdowns (incl. overtime)": 1.5,
-          "Total Passing Yards (incl. overtime)": 245.5,
+          "Total Passing Yards (incl. overtime)": 243.5,
           "Total Rushing Yards (incl. overtime)": 8.5
         },
         "projections": {
@@ -37054,10 +37126,10 @@
         },
         "board_lines": {
           "Total Carries (incl. overtime)": 16.5,
-          "Total Receiving Yards (incl. overtime)": 8.5,
+          "Total Receiving Yards (incl. overtime)": 10.5,
           "Total Receptions (incl. overtime)": 1.5,
-          "Total Rushing Plus Receiving Yards (incl. overtime)": 74.5,
-          "Total Rushing Yards (incl. overtime)": 61.5
+          "Total Rushing Plus Receiving Yards (incl. overtime)": 79.5,
+          "Total Rushing Yards (incl. overtime)": 65.5
         },
         "projections": {
           "rec_yds": {
@@ -37185,7 +37257,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Rushing Yards (incl. overtime)": 10.5
+          "Total Rushing Yards (incl. overtime)": 9.5
         },
         "projections": {
           "rec_yds": {
@@ -37485,7 +37557,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 29.5,
+          "Total Receiving Yards (incl. overtime)": 27.5,
           "Total Receptions (incl. overtime)": 3.5
         },
         "projections": {
@@ -37681,7 +37753,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 23.5,
+          "Total Receiving Yards (incl. overtime)": 22.5,
           "Total Receptions (incl. overtime)": 1.5
         },
         "projections": {
@@ -37939,8 +38011,8 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 43.5,
-          "Total Receptions (incl. overtime)": 3.5
+          "Total Receiving Yards (incl. overtime)": 41.5,
+          "Total Receptions (incl. overtime)": 2.5
         },
         "projections": {
           "rec_yds": {
@@ -38068,7 +38140,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Receiving Yards (incl. overtime)": 33.5,
+          "Total Receiving Yards (incl. overtime)": 32.5,
           "Total Receptions (incl. overtime)": 3.5
         },
         "projections": {
@@ -39028,11 +39100,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "c8b85c924a2228e556d0624c1e633a20307bf3ec272a30804cf9a972398d7f37"
+    "stage3_4_receipt_sha256": "b25af7b27370f27a289a803a0a5a770420aef2d852fc81bd87349586c8c19142"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "c8b85c924a2228e556d0624c1e633a20307bf3ec272a30804cf9a972398d7f37",
+    "parent_stage3_4_receipt_sha256": "b25af7b27370f27a289a803a0a5a770420aef2d852fc81bd87349586c8c19142",
     "publishAllowed": true,
     "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
     "max_prop_win_prob": 0.7015,
@@ -39296,7 +39368,7 @@
         "team": "CLE",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 46.5,
+        "line": 39.5,
         "open_line": 42.5,
         "post_sim_mean": 38.57,
         "post_sim_p50": 27.24,
@@ -39334,7 +39406,7 @@
         "team": "CLE",
         "position": "WR",
         "market": "Total Receptions (incl. overtime)",
-        "line": 3.5,
+        "line": 2.5,
         "open_line": 2.5,
         "post_sim_mean": 2.37,
         "post_sim_p50": 1.76,
@@ -39350,8 +39422,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 105,
-        "market_under_american": -135,
+        "market_over_american": -170,
+        "market_under_american": 130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -39421,8 +39493,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -115,
-        "market_under_american": -115,
+        "market_over_american": -110,
+        "market_under_american": -120,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -39459,8 +39531,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 110,
-        "market_under_american": -145,
+        "market_over_american": -105,
+        "market_under_american": -125,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -39666,7 +39738,7 @@
         "team": "CLE",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 17.5,
+        "line": 18.5,
         "open_line": 13.5,
         "post_sim_mean": 24.94,
         "post_sim_p50": 15.25,
@@ -39682,8 +39754,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -125,
-        "market_under_american": -105,
+        "market_over_american": -115,
+        "market_under_american": -115,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -39691,14 +39763,13 @@
           "snap_share": 0.0,
           "vetoes": [
             "snap-leak veto: snap_share 0.00 < 0.40",
-            "route_share 0.00 < 0.45",
-            "WR/TE rec-yds micro-line 17.5 < 18.5"
+            "route_share 0.00 < 0.45"
           ]
         },
         "recommended_kelly_units": 0.0,
         "decision": "PASS_SNIPER_GATE",
         "publishAllowed": false,
-        "gate_reason": "PASS_SNIPER_GATE: snap-leak veto: snap_share 0.00 < 0.40; route_share 0.00 < 0.45; WR/TE rec-yds micro-line 17.5 < 18.5"
+        "gate_reason": "PASS_SNIPER_GATE: snap-leak veto: snap_share 0.00 < 0.40; route_share 0.00 < 0.45"
       },
       {
         "athlete": "Jerry Jeudy",
@@ -39743,7 +39814,7 @@
         "team": "CLE",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 49.5,
+        "line": 48.5,
         "open_line": 44.5,
         "post_sim_mean": 40.67,
         "post_sim_p50": 29.54,
@@ -39797,8 +39868,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -110,
-        "market_under_american": -120,
+        "market_over_american": 105,
+        "market_under_american": -135,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -39938,8 +40009,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -110,
-        "market_under_american": -120,
+        "market_over_american": -105,
+        "market_under_american": -125,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -39976,8 +40047,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 140,
-        "market_under_american": -185,
+        "market_over_american": 145,
+        "market_under_american": -190,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -40014,8 +40085,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -110,
-        "market_under_american": -120,
+        "market_over_american": -120,
+        "market_under_american": -110,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -40118,18 +40189,18 @@
         "model_prob_under": 0.2985,
         "win_prob_on_lean": 0.7015,
         "wilson_lower_90_on_lean": 0.6939,
-        "edge_vs_minus_110_breakeven": 0.1914,
+        "edge_vs_minus_110_breakeven": 0.2321,
         "edge_vs_devig_50": 0.2015,
         "confidence_score": "70/100",
         "playable_to_american_odds": -219,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "market_over_american": 100,
+        "market_under_american": -130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3139,
+        "recommended_kelly_units": 0.3806,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -40155,8 +40226,8 @@
         "edge_vs_devig_50": 0.0558,
         "confidence_score": "56/100",
         "playable_to_american_odds": -118,
-        "market_over_american": -110,
-        "market_under_american": -120,
+        "market_over_american": -120,
+        "market_under_american": -110,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
@@ -40188,8 +40259,8 @@
         "edge_vs_devig_50": 0.0674,
         "confidence_score": "57/100",
         "playable_to_american_odds": -123,
-        "market_over_american": -115,
-        "market_under_american": -115,
+        "market_over_american": -120,
+        "market_under_american": -110,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
@@ -40238,7 +40309,7 @@
         "team": "HOU",
         "position": "QB",
         "market": "Total Passing Yards (incl. overtime)",
-        "line": 245.5,
+        "line": 243.5,
         "open_line": 240.5,
         "post_sim_mean": 304.19,
         "post_sim_p50": 303.0,
@@ -40246,14 +40317,14 @@
         "post_sim_p25": 258.72,
         "post_sim_p75": 347.28,
         "model_lean": "OVER",
-        "model_prob_over": 0.674,
-        "model_prob_under": 0.326,
-        "win_prob_on_lean": 0.674,
-        "wilson_lower_90_on_lean": 0.6662,
-        "edge_vs_minus_110_breakeven": 0.174,
-        "edge_vs_devig_50": 0.174,
-        "confidence_score": "67/100",
-        "playable_to_american_odds": -193,
+        "model_prob_over": 0.6787,
+        "model_prob_under": 0.3213,
+        "win_prob_on_lean": 0.6787,
+        "wilson_lower_90_on_lean": 0.671,
+        "edge_vs_minus_110_breakeven": 0.1787,
+        "edge_vs_devig_50": 0.1787,
+        "confidence_score": "68/100",
+        "playable_to_american_odds": -197,
         "market_over_american": -115,
         "market_under_american": -115,
         "has_two_sided_price": true,
@@ -40261,7 +40332,7 @@
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.2854,
+        "recommended_kelly_units": 0.2931,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -40337,7 +40408,7 @@
         "team": "HOU",
         "position": "TE",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 29.5,
+        "line": 27.5,
         "open_line": 32.5,
         "post_sim_mean": 53.27,
         "post_sim_p50": 40.22,
@@ -40353,8 +40424,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -115,
-        "market_under_american": -115,
+        "market_over_american": -110,
+        "market_under_american": -120,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -40391,8 +40462,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 115,
-        "market_under_american": -150,
+        "market_over_american": 130,
+        "market_under_american": -170,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -40413,7 +40484,7 @@
         "team": "HOU",
         "position": "RB",
         "market": "Total Rushing Yards (incl. overtime)",
-        "line": 10.5,
+        "line": 9.5,
         "open_line": 10.5,
         "post_sim_mean": 9.61,
         "post_sim_p50": 8.46,
@@ -40429,8 +40500,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "market_over_american": -110,
+        "market_under_american": -120,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -40438,13 +40509,13 @@
           "snap_share": 0.0,
           "vetoes": [
             "snap-leak veto: snap_share 0.00 < 0.40",
-            "RB rush-yds micro-line 10.5 < 24.5"
+            "RB rush-yds micro-line 9.5 < 24.5"
           ]
         },
         "recommended_kelly_units": 0.0,
         "decision": "PASS_SNIPER_GATE",
         "publishAllowed": false,
-        "gate_reason": "PASS_SNIPER_GATE: snap-leak veto: snap_share 0.00 < 0.40; RB rush-yds micro-line 10.5 < 24.5"
+        "gate_reason": "PASS_SNIPER_GATE: snap-leak veto: snap_share 0.00 < 0.40; RB rush-yds micro-line 9.5 < 24.5"
       },
       {
         "athlete": "Foster Moreau",
@@ -40506,8 +40577,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -145,
-        "market_under_american": 110,
+        "market_over_american": -150,
+        "market_under_american": 115,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -40660,22 +40731,22 @@
         "team": "HOU",
         "position": "PK",
         "market": "Total Kicking Points (incl. overtime)",
-        "line": 8.5,
+        "line": 7.5,
         "open_line": 8.5,
         "post_sim_mean": 7.95,
         "post_sim_p50": 7.72,
         "post_sim_std": 4.45,
         "post_sim_p25": 4.43,
         "post_sim_p75": 11.18,
-        "model_lean": "UNDER",
-        "model_prob_over": 0.466,
-        "model_prob_under": 0.534,
-        "win_prob_on_lean": 0.534,
-        "wilson_lower_90_on_lean": 0.5258,
+        "model_lean": "OVER",
+        "model_prob_over": 0.5099,
+        "model_prob_under": 0.4901,
+        "win_prob_on_lean": 0.5099,
+        "wilson_lower_90_on_lean": 0.5017,
         "edge_vs_minus_110_breakeven": 0.0,
-        "edge_vs_devig_50": 0.034,
-        "confidence_score": "53/100",
-        "playable_to_american_odds": -108,
+        "edge_vs_devig_50": 0.0099,
+        "confidence_score": "51/100",
+        "playable_to_american_odds": -102,
         "market_over_american": null,
         "market_under_american": null,
         "has_two_sided_price": false,
@@ -40726,7 +40797,7 @@
         "team": "HOU",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 23.5,
+        "line": 22.5,
         "open_line": 24.5,
         "post_sim_mean": 29.48,
         "post_sim_p50": 18.91,
@@ -40780,8 +40851,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -180,
-        "market_under_american": 135,
+        "market_over_american": -160,
+        "market_under_american": 120,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -40878,7 +40949,7 @@
         "team": "HOU",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 43.5,
+        "line": 41.5,
         "open_line": 35.5,
         "post_sim_mean": 9.48,
         "post_sim_p50": 3.3,
@@ -40916,7 +40987,7 @@
         "team": "HOU",
         "position": "WR",
         "market": "Total Receptions (incl. overtime)",
-        "line": 3.5,
+        "line": 2.5,
         "open_line": 2.5,
         "post_sim_mean": 0.77,
         "post_sim_p50": 0.32,
@@ -40932,8 +41003,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 130,
-        "market_under_american": -170,
+        "market_over_american": -150,
+        "market_under_american": 115,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -40970,8 +41041,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -110,
-        "market_under_american": -120,
+        "market_over_american": 100,
+        "market_under_american": -130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -40991,7 +41062,7 @@
         "team": "HOU",
         "position": "RB",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 8.5,
+        "line": 10.5,
         "open_line": 11.5,
         "post_sim_mean": 22.64,
         "post_sim_p50": 12.59,
@@ -41007,8 +41078,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "market_over_american": -110,
+        "market_under_american": -120,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -41045,8 +41116,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -135,
-        "market_under_american": 105,
+        "market_over_american": -170,
+        "market_under_american": 130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -41067,7 +41138,7 @@
         "team": "HOU",
         "position": "RB",
         "market": "Total Rushing Plus Receiving Yards (incl. overtime)",
-        "line": 74.5,
+        "line": 79.5,
         "open_line": 73.5,
         "post_sim_mean": 57.03,
         "post_sim_p50": 53.86,
@@ -41083,8 +41154,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -115,
-        "market_under_american": -115,
+        "market_over_american": -120,
+        "market_under_american": -110,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -41105,7 +41176,7 @@
         "team": "HOU",
         "position": "RB",
         "market": "Total Rushing Yards (incl. overtime)",
-        "line": 61.5,
+        "line": 65.5,
         "open_line": 62.5,
         "post_sim_mean": 34.4,
         "post_sim_p50": 33.66,
@@ -41142,7 +41213,7 @@
         "team": "HOU",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 33.5,
+        "line": 32.5,
         "open_line": 25.5,
         "post_sim_mean": 50.34,
         "post_sim_p50": 37.89,
@@ -41196,8 +41267,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 125,
-        "market_under_american": -165,
+        "market_over_american": 130,
+        "market_under_american": -170,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -41232,18 +41303,18 @@
         "model_prob_under": 0.2985,
         "win_prob_on_lean": 0.7015,
         "wilson_lower_90_on_lean": 0.6939,
-        "edge_vs_minus_110_breakeven": 0.1914,
+        "edge_vs_minus_110_breakeven": 0.2321,
         "edge_vs_devig_50": 0.2015,
         "confidence_score": "70/100",
         "playable_to_american_odds": -219,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "market_over_american": 100,
+        "market_under_american": -130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3139,
+        "recommended_kelly_units": 0.3806,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -41253,7 +41324,7 @@
         "team": "HOU",
         "position": "QB",
         "market": "Total Passing Yards (incl. overtime)",
-        "line": 245.5,
+        "line": 243.5,
         "open_line": 240.5,
         "post_sim_mean": 304.19,
         "post_sim_p50": 303.0,
@@ -41261,14 +41332,14 @@
         "post_sim_p25": 258.72,
         "post_sim_p75": 347.28,
         "model_lean": "OVER",
-        "model_prob_over": 0.674,
-        "model_prob_under": 0.326,
-        "win_prob_on_lean": 0.674,
-        "wilson_lower_90_on_lean": 0.6662,
-        "edge_vs_minus_110_breakeven": 0.174,
-        "edge_vs_devig_50": 0.174,
-        "confidence_score": "67/100",
-        "playable_to_american_odds": -193,
+        "model_prob_over": 0.6787,
+        "model_prob_under": 0.3213,
+        "win_prob_on_lean": 0.6787,
+        "wilson_lower_90_on_lean": 0.671,
+        "edge_vs_minus_110_breakeven": 0.1787,
+        "edge_vs_devig_50": 0.1787,
+        "confidence_score": "68/100",
+        "playable_to_american_odds": -197,
         "market_over_american": -115,
         "market_under_american": -115,
         "has_two_sided_price": true,
@@ -41276,7 +41347,7 @@
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.2854,
+        "recommended_kelly_units": 0.2931,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -41333,18 +41404,18 @@
         "model_prob_under": 0.2985,
         "win_prob_on_lean": 0.7015,
         "wilson_lower_90_on_lean": 0.6939,
-        "edge_vs_minus_110_breakeven": 0.1914,
+        "edge_vs_minus_110_breakeven": 0.2321,
         "edge_vs_devig_50": 0.2015,
         "confidence_score": "70/100",
         "playable_to_american_odds": -219,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "market_over_american": 100,
+        "market_under_american": -130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3139,
+        "recommended_kelly_units": 0.3806,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -41354,7 +41425,7 @@
         "team": "HOU",
         "position": "QB",
         "market": "Total Passing Yards (incl. overtime)",
-        "line": 245.5,
+        "line": 243.5,
         "open_line": 240.5,
         "post_sim_mean": 304.19,
         "post_sim_p50": 303.0,
@@ -41362,14 +41433,14 @@
         "post_sim_p25": 258.72,
         "post_sim_p75": 347.28,
         "model_lean": "OVER",
-        "model_prob_over": 0.674,
-        "model_prob_under": 0.326,
-        "win_prob_on_lean": 0.674,
-        "wilson_lower_90_on_lean": 0.6662,
-        "edge_vs_minus_110_breakeven": 0.174,
-        "edge_vs_devig_50": 0.174,
-        "confidence_score": "67/100",
-        "playable_to_american_odds": -193,
+        "model_prob_over": 0.6787,
+        "model_prob_under": 0.3213,
+        "win_prob_on_lean": 0.6787,
+        "wilson_lower_90_on_lean": 0.671,
+        "edge_vs_minus_110_breakeven": 0.1787,
+        "edge_vs_devig_50": 0.1787,
+        "confidence_score": "68/100",
+        "playable_to_american_odds": -197,
         "market_over_american": -115,
         "market_under_american": -115,
         "has_two_sided_price": true,
@@ -41377,7 +41448,7 @@
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.2854,
+        "recommended_kelly_units": 0.2931,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -41585,11 +41656,11 @@
         }
       }
     },
-    "stage5_receipt_sha256": "b4e3a5913832cdbca7a0e427beffff08759f12f00f9791e2dad51684a4e27380"
+    "stage5_receipt_sha256": "4fca6c34c6330ca4e6273dfa885d1d7582ea1f27fe3955f89409e2f617090282"
   },
   "stage5_360_conjunction_gate_and_call_sheet": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "c8b85c924a2228e556d0624c1e633a20307bf3ec272a30804cf9a972398d7f37",
+    "parent_stage3_4_receipt_sha256": "b25af7b27370f27a289a803a0a5a770420aef2d852fc81bd87349586c8c19142",
     "publishAllowed": true,
     "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
     "max_prop_win_prob": 0.7015,
@@ -41853,7 +41924,7 @@
         "team": "CLE",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 46.5,
+        "line": 39.5,
         "open_line": 42.5,
         "post_sim_mean": 38.57,
         "post_sim_p50": 27.24,
@@ -41891,7 +41962,7 @@
         "team": "CLE",
         "position": "WR",
         "market": "Total Receptions (incl. overtime)",
-        "line": 3.5,
+        "line": 2.5,
         "open_line": 2.5,
         "post_sim_mean": 2.37,
         "post_sim_p50": 1.76,
@@ -41907,8 +41978,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 105,
-        "market_under_american": -135,
+        "market_over_american": -170,
+        "market_under_american": 130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -41978,8 +42049,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -115,
-        "market_under_american": -115,
+        "market_over_american": -110,
+        "market_under_american": -120,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -42016,8 +42087,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 110,
-        "market_under_american": -145,
+        "market_over_american": -105,
+        "market_under_american": -125,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -42223,7 +42294,7 @@
         "team": "CLE",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 17.5,
+        "line": 18.5,
         "open_line": 13.5,
         "post_sim_mean": 24.94,
         "post_sim_p50": 15.25,
@@ -42239,8 +42310,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -125,
-        "market_under_american": -105,
+        "market_over_american": -115,
+        "market_under_american": -115,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -42248,14 +42319,13 @@
           "snap_share": 0.0,
           "vetoes": [
             "snap-leak veto: snap_share 0.00 < 0.40",
-            "route_share 0.00 < 0.45",
-            "WR/TE rec-yds micro-line 17.5 < 18.5"
+            "route_share 0.00 < 0.45"
           ]
         },
         "recommended_kelly_units": 0.0,
         "decision": "PASS_SNIPER_GATE",
         "publishAllowed": false,
-        "gate_reason": "PASS_SNIPER_GATE: snap-leak veto: snap_share 0.00 < 0.40; route_share 0.00 < 0.45; WR/TE rec-yds micro-line 17.5 < 18.5"
+        "gate_reason": "PASS_SNIPER_GATE: snap-leak veto: snap_share 0.00 < 0.40; route_share 0.00 < 0.45"
       },
       {
         "athlete": "Jerry Jeudy",
@@ -42300,7 +42370,7 @@
         "team": "CLE",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 49.5,
+        "line": 48.5,
         "open_line": 44.5,
         "post_sim_mean": 40.67,
         "post_sim_p50": 29.54,
@@ -42354,8 +42424,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -110,
-        "market_under_american": -120,
+        "market_over_american": 105,
+        "market_under_american": -135,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -42495,8 +42565,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -110,
-        "market_under_american": -120,
+        "market_over_american": -105,
+        "market_under_american": -125,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -42533,8 +42603,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 140,
-        "market_under_american": -185,
+        "market_over_american": 145,
+        "market_under_american": -190,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -42571,8 +42641,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -110,
-        "market_under_american": -120,
+        "market_over_american": -120,
+        "market_under_american": -110,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -42675,18 +42745,18 @@
         "model_prob_under": 0.2985,
         "win_prob_on_lean": 0.7015,
         "wilson_lower_90_on_lean": 0.6939,
-        "edge_vs_minus_110_breakeven": 0.1914,
+        "edge_vs_minus_110_breakeven": 0.2321,
         "edge_vs_devig_50": 0.2015,
         "confidence_score": "70/100",
         "playable_to_american_odds": -219,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "market_over_american": 100,
+        "market_under_american": -130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3139,
+        "recommended_kelly_units": 0.3806,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -42712,8 +42782,8 @@
         "edge_vs_devig_50": 0.0558,
         "confidence_score": "56/100",
         "playable_to_american_odds": -118,
-        "market_over_american": -110,
-        "market_under_american": -120,
+        "market_over_american": -120,
+        "market_under_american": -110,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
@@ -42745,8 +42815,8 @@
         "edge_vs_devig_50": 0.0674,
         "confidence_score": "57/100",
         "playable_to_american_odds": -123,
-        "market_over_american": -115,
-        "market_under_american": -115,
+        "market_over_american": -120,
+        "market_under_american": -110,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
@@ -42795,7 +42865,7 @@
         "team": "HOU",
         "position": "QB",
         "market": "Total Passing Yards (incl. overtime)",
-        "line": 245.5,
+        "line": 243.5,
         "open_line": 240.5,
         "post_sim_mean": 304.19,
         "post_sim_p50": 303.0,
@@ -42803,14 +42873,14 @@
         "post_sim_p25": 258.72,
         "post_sim_p75": 347.28,
         "model_lean": "OVER",
-        "model_prob_over": 0.674,
-        "model_prob_under": 0.326,
-        "win_prob_on_lean": 0.674,
-        "wilson_lower_90_on_lean": 0.6662,
-        "edge_vs_minus_110_breakeven": 0.174,
-        "edge_vs_devig_50": 0.174,
-        "confidence_score": "67/100",
-        "playable_to_american_odds": -193,
+        "model_prob_over": 0.6787,
+        "model_prob_under": 0.3213,
+        "win_prob_on_lean": 0.6787,
+        "wilson_lower_90_on_lean": 0.671,
+        "edge_vs_minus_110_breakeven": 0.1787,
+        "edge_vs_devig_50": 0.1787,
+        "confidence_score": "68/100",
+        "playable_to_american_odds": -197,
         "market_over_american": -115,
         "market_under_american": -115,
         "has_two_sided_price": true,
@@ -42818,7 +42888,7 @@
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.2854,
+        "recommended_kelly_units": 0.2931,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -42894,7 +42964,7 @@
         "team": "HOU",
         "position": "TE",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 29.5,
+        "line": 27.5,
         "open_line": 32.5,
         "post_sim_mean": 53.27,
         "post_sim_p50": 40.22,
@@ -42910,8 +42980,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -115,
-        "market_under_american": -115,
+        "market_over_american": -110,
+        "market_under_american": -120,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -42948,8 +43018,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 115,
-        "market_under_american": -150,
+        "market_over_american": 130,
+        "market_under_american": -170,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -42970,7 +43040,7 @@
         "team": "HOU",
         "position": "RB",
         "market": "Total Rushing Yards (incl. overtime)",
-        "line": 10.5,
+        "line": 9.5,
         "open_line": 10.5,
         "post_sim_mean": 9.61,
         "post_sim_p50": 8.46,
@@ -42986,8 +43056,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "market_over_american": -110,
+        "market_under_american": -120,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -42995,13 +43065,13 @@
           "snap_share": 0.0,
           "vetoes": [
             "snap-leak veto: snap_share 0.00 < 0.40",
-            "RB rush-yds micro-line 10.5 < 24.5"
+            "RB rush-yds micro-line 9.5 < 24.5"
           ]
         },
         "recommended_kelly_units": 0.0,
         "decision": "PASS_SNIPER_GATE",
         "publishAllowed": false,
-        "gate_reason": "PASS_SNIPER_GATE: snap-leak veto: snap_share 0.00 < 0.40; RB rush-yds micro-line 10.5 < 24.5"
+        "gate_reason": "PASS_SNIPER_GATE: snap-leak veto: snap_share 0.00 < 0.40; RB rush-yds micro-line 9.5 < 24.5"
       },
       {
         "athlete": "Foster Moreau",
@@ -43063,8 +43133,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -145,
-        "market_under_american": 110,
+        "market_over_american": -150,
+        "market_under_american": 115,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -43217,22 +43287,22 @@
         "team": "HOU",
         "position": "PK",
         "market": "Total Kicking Points (incl. overtime)",
-        "line": 8.5,
+        "line": 7.5,
         "open_line": 8.5,
         "post_sim_mean": 7.95,
         "post_sim_p50": 7.72,
         "post_sim_std": 4.45,
         "post_sim_p25": 4.43,
         "post_sim_p75": 11.18,
-        "model_lean": "UNDER",
-        "model_prob_over": 0.466,
-        "model_prob_under": 0.534,
-        "win_prob_on_lean": 0.534,
-        "wilson_lower_90_on_lean": 0.5258,
+        "model_lean": "OVER",
+        "model_prob_over": 0.5099,
+        "model_prob_under": 0.4901,
+        "win_prob_on_lean": 0.5099,
+        "wilson_lower_90_on_lean": 0.5017,
         "edge_vs_minus_110_breakeven": 0.0,
-        "edge_vs_devig_50": 0.034,
-        "confidence_score": "53/100",
-        "playable_to_american_odds": -108,
+        "edge_vs_devig_50": 0.0099,
+        "confidence_score": "51/100",
+        "playable_to_american_odds": -102,
         "market_over_american": null,
         "market_under_american": null,
         "has_two_sided_price": false,
@@ -43283,7 +43353,7 @@
         "team": "HOU",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 23.5,
+        "line": 22.5,
         "open_line": 24.5,
         "post_sim_mean": 29.48,
         "post_sim_p50": 18.91,
@@ -43337,8 +43407,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -180,
-        "market_under_american": 135,
+        "market_over_american": -160,
+        "market_under_american": 120,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -43435,7 +43505,7 @@
         "team": "HOU",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 43.5,
+        "line": 41.5,
         "open_line": 35.5,
         "post_sim_mean": 9.48,
         "post_sim_p50": 3.3,
@@ -43473,7 +43543,7 @@
         "team": "HOU",
         "position": "WR",
         "market": "Total Receptions (incl. overtime)",
-        "line": 3.5,
+        "line": 2.5,
         "open_line": 2.5,
         "post_sim_mean": 0.77,
         "post_sim_p50": 0.32,
@@ -43489,8 +43559,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 130,
-        "market_under_american": -170,
+        "market_over_american": -150,
+        "market_under_american": 115,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -43527,8 +43597,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -110,
-        "market_under_american": -120,
+        "market_over_american": 100,
+        "market_under_american": -130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -43548,7 +43618,7 @@
         "team": "HOU",
         "position": "RB",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 8.5,
+        "line": 10.5,
         "open_line": 11.5,
         "post_sim_mean": 22.64,
         "post_sim_p50": 12.59,
@@ -43564,8 +43634,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "market_over_american": -110,
+        "market_under_american": -120,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -43602,8 +43672,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -135,
-        "market_under_american": 105,
+        "market_over_american": -170,
+        "market_under_american": 130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -43624,7 +43694,7 @@
         "team": "HOU",
         "position": "RB",
         "market": "Total Rushing Plus Receiving Yards (incl. overtime)",
-        "line": 74.5,
+        "line": 79.5,
         "open_line": 73.5,
         "post_sim_mean": 57.03,
         "post_sim_p50": 53.86,
@@ -43640,8 +43710,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": -115,
-        "market_under_american": -115,
+        "market_over_american": -120,
+        "market_under_american": -110,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -43662,7 +43732,7 @@
         "team": "HOU",
         "position": "RB",
         "market": "Total Rushing Yards (incl. overtime)",
-        "line": 61.5,
+        "line": 65.5,
         "open_line": 62.5,
         "post_sim_mean": 34.4,
         "post_sim_p50": 33.66,
@@ -43699,7 +43769,7 @@
         "team": "HOU",
         "position": "WR",
         "market": "Total Receiving Yards (incl. overtime)",
-        "line": 33.5,
+        "line": 32.5,
         "open_line": 25.5,
         "post_sim_mean": 50.34,
         "post_sim_p50": 37.89,
@@ -43753,8 +43823,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 125,
-        "market_under_american": -165,
+        "market_over_american": 130,
+        "market_under_american": -170,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -43789,18 +43859,18 @@
         "model_prob_under": 0.2985,
         "win_prob_on_lean": 0.7015,
         "wilson_lower_90_on_lean": 0.6939,
-        "edge_vs_minus_110_breakeven": 0.1914,
+        "edge_vs_minus_110_breakeven": 0.2321,
         "edge_vs_devig_50": 0.2015,
         "confidence_score": "70/100",
         "playable_to_american_odds": -219,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "market_over_american": 100,
+        "market_under_american": -130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3139,
+        "recommended_kelly_units": 0.3806,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -43810,7 +43880,7 @@
         "team": "HOU",
         "position": "QB",
         "market": "Total Passing Yards (incl. overtime)",
-        "line": 245.5,
+        "line": 243.5,
         "open_line": 240.5,
         "post_sim_mean": 304.19,
         "post_sim_p50": 303.0,
@@ -43818,14 +43888,14 @@
         "post_sim_p25": 258.72,
         "post_sim_p75": 347.28,
         "model_lean": "OVER",
-        "model_prob_over": 0.674,
-        "model_prob_under": 0.326,
-        "win_prob_on_lean": 0.674,
-        "wilson_lower_90_on_lean": 0.6662,
-        "edge_vs_minus_110_breakeven": 0.174,
-        "edge_vs_devig_50": 0.174,
-        "confidence_score": "67/100",
-        "playable_to_american_odds": -193,
+        "model_prob_over": 0.6787,
+        "model_prob_under": 0.3213,
+        "win_prob_on_lean": 0.6787,
+        "wilson_lower_90_on_lean": 0.671,
+        "edge_vs_minus_110_breakeven": 0.1787,
+        "edge_vs_devig_50": 0.1787,
+        "confidence_score": "68/100",
+        "playable_to_american_odds": -197,
         "market_over_american": -115,
         "market_under_american": -115,
         "has_two_sided_price": true,
@@ -43833,7 +43903,7 @@
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.2854,
+        "recommended_kelly_units": 0.2931,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -43890,18 +43960,18 @@
         "model_prob_under": 0.2985,
         "win_prob_on_lean": 0.7015,
         "wilson_lower_90_on_lean": 0.6939,
-        "edge_vs_minus_110_breakeven": 0.1914,
+        "edge_vs_minus_110_breakeven": 0.2321,
         "edge_vs_devig_50": 0.2015,
         "confidence_score": "70/100",
         "playable_to_american_odds": -219,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "market_over_american": 100,
+        "market_under_american": -130,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3139,
+        "recommended_kelly_units": 0.3806,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -43911,7 +43981,7 @@
         "team": "HOU",
         "position": "QB",
         "market": "Total Passing Yards (incl. overtime)",
-        "line": 245.5,
+        "line": 243.5,
         "open_line": 240.5,
         "post_sim_mean": 304.19,
         "post_sim_p50": 303.0,
@@ -43919,14 +43989,14 @@
         "post_sim_p25": 258.72,
         "post_sim_p75": 347.28,
         "model_lean": "OVER",
-        "model_prob_over": 0.674,
-        "model_prob_under": 0.326,
-        "win_prob_on_lean": 0.674,
-        "wilson_lower_90_on_lean": 0.6662,
-        "edge_vs_minus_110_breakeven": 0.174,
-        "edge_vs_devig_50": 0.174,
-        "confidence_score": "67/100",
-        "playable_to_american_odds": -193,
+        "model_prob_over": 0.6787,
+        "model_prob_under": 0.3213,
+        "win_prob_on_lean": 0.6787,
+        "wilson_lower_90_on_lean": 0.671,
+        "edge_vs_minus_110_breakeven": 0.1787,
+        "edge_vs_devig_50": 0.1787,
+        "confidence_score": "68/100",
+        "playable_to_american_odds": -197,
         "market_over_american": -115,
         "market_under_american": -115,
         "has_two_sided_price": true,
@@ -43934,7 +44004,7 @@
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.2854,
+        "recommended_kelly_units": 0.2931,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -44142,7 +44212,7 @@
         }
       }
     },
-    "stage5_receipt_sha256": "b4e3a5913832cdbca7a0e427beffff08759f12f00f9791e2dad51684a4e27380"
+    "stage5_receipt_sha256": "4fca6c34c6330ca4e6273dfa885d1d7582ea1f27fe3955f89409e2f617090282"
   },
   "wave13_universal_phase_transition_navier_stokes_sheaf": {
     "status": "WAVE13_PROJECT_TREE_SHEAF_NAVIER_STOKES_PHASE_TRANSITION_ACTIVE",
@@ -44256,5 +44326,5 @@
     },
     "wave13_epa_signal_delta": -2e-06
   },
-  "master_bundle_sha256": "fdd9b58f4cba7f3d353a298cb05df7b6f486d025faacaaba35bbd24432a6c994"
+  "master_bundle_sha256": "b2b4aafaa21beccc763473513e6cb3da787788aa4b0dc65628420e202834542b"
 }

@@ -505,6 +505,137 @@ def _load_slate_dossiers(
     return out, provenance, slate_sha
 
 
+def _apply_vacated_volume_and_trench_conservation(
+    pool_df: pd.DataFrame,
+    team_bundles: Mapping[str, Mapping[str, Any]],
+    cfg: Mapping[str, Any],
+) -> None:
+    """Conserve team pass/rush yards, completions, and TDs across active Stage-0 survivors after IR/OUT exclusions."""
+    front7_pos = {"DE", "DT", "NT", "DL", "LB", "ILB", "OLB", "MLB"}
+    front7_outs_by_team: dict[str, set[str]] = {}
+    wr_outs_by_team: dict[str, set[str]] = {}
+    te_outs_by_team: dict[str, set[str]] = {}
+    rb_outs_by_team: dict[str, set[str]] = {}
+
+    for p in cfg.get("excluded_players") or []:
+        if not isinstance(p, Mapping):
+            continue
+        tm = _normalize_team(p.get("team"))
+        pos = str(p.get("position") or "").upper()
+        nm = _norm_player_key(str(p.get("name") or ""))
+        if not tm or not nm:
+            continue
+        if pos in front7_pos:
+            front7_outs_by_team.setdefault(tm, set()).add(nm)
+        elif pos == "WR":
+            wr_outs_by_team.setdefault(tm, set()).add(nm)
+        elif pos == "TE":
+            te_outs_by_team.setdefault(tm, set()).add(nm)
+        elif pos == "RB":
+            rb_outs_by_team.setdefault(tm, set()).add(nm)
+
+    for tm, b in team_bundles.items():
+        s34 = b["s34"]
+        opp = b["opponent"]
+        t_proj = (s34.get("team_post_sim_projections") or {}).get(tm) or {}
+        ap = s34.get("athlete_post_sim_projections") or {}
+        qb_name = str(t_proj.get("qb1_starter") or "").strip()
+        qb_rec = ap.get(qb_name) or {}
+        qb_pr = qb_rec.get("projections") or {}
+
+        team_pass_yds = _metric_val(qb_pr, "pass_yds", "mean")
+        team_comps = _metric_val(qb_pr, "completions", "mean")
+        team_pass_tds = _metric_val(qb_pr, "pass_tds", "mean")
+        team_rush_yds = _metric_val(t_proj, "rush_yds", "mean")
+        team_pts = _metric_val(t_proj, "points", "mean")
+        est_total_tds = max(team_pass_tds + 0.35, (team_pts - 4.2) / 6.6)
+        team_rush_tds = max(0.30, est_total_tds - team_pass_tds)
+
+        sub_idx = list(
+            pool_df[(pool_df["team"] == tm) & (pool_df["position"].isin(["QB", "RB", "WR", "TE"]))].index
+        )
+        if not sub_idx:
+            continue
+
+        raw_rush: dict[int, float] = {}
+        raw_rec: dict[int, float] = {}
+        raw_recs: dict[int, float] = {}
+        for idx in sub_idx:
+            nm = str(pool_df.loc[idx, "name"])
+            hit = b["ap_by_norm"].get(_norm_player_key(nm))
+            pr = (hit[1].get("projections") or {}) if hit else {}
+            raw_rush[idx] = _metric_val(pr, "rush_yds", "mean")
+            raw_rec[idx] = _metric_val(pr, "rec_yds", "mean")
+            raw_recs[idx] = _metric_val(pr, "receptions", "mean")
+
+        rb_idxs = [i for i in sub_idx if pool_df.loc[i, "position"] == "RB"]
+        pass_idxs = [i for i in sub_idx if pool_df.loc[i, "position"] in ("RB", "WR", "TE")]
+
+        opp_f7_outs = len(front7_outs_by_team.get(opp, set()))
+        wr_ir_cnt = len(wr_outs_by_team.get(tm, set()))
+        te_ir_cnt = len(te_outs_by_team.get(tm, set()))
+        rb_ir_cnt = len(rb_outs_by_team.get(tm, set()))
+
+        effective_team_rush = team_rush_yds * (1.0 + 0.07 * min(5, opp_f7_outs))
+        if opp_f7_outs >= 3:
+            effective_team_rush = max(effective_team_rush, 102.0)
+
+        vac_rush = max(0.0, effective_team_rush - sum(raw_rush.values()))
+        vac_rec = max(0.0, team_pass_yds - sum(raw_rec.values()))
+        vac_recs = max(0.0, team_comps - sum(raw_recs.values()))
+
+        rb_rush_sum = sum(raw_rush[i] for i in rb_idxs) or 1.0
+        rec_weights: dict[int, float] = {}
+        for i in pass_idxs:
+            pos = str(pool_df.loc[i, "position"])
+            w = max(1.0, raw_rec[i])
+            if pos == "TE" and wr_ir_cnt >= 2:
+                w *= 1.0 + 0.55 * wr_ir_cnt + 0.25 * te_ir_cnt
+            elif pos == "RB" and (len(rb_idxs) == 1 or rb_ir_cnt >= 2):
+                w *= 1.75
+            rec_weights[i] = w
+        rec_w_sum = sum(rec_weights.values()) or 1.0
+
+        for i in sub_idx:
+            pos = str(pool_df.loc[i, "position"])
+            if pos == "QB":
+                continue
+            r_share = (raw_rush[i] / rb_rush_sum) if (pos == "RB" and rb_idxs) else 0.0
+            c_share = rec_weights.get(i, 0.0) / rec_w_sum
+
+            new_rush = raw_rush[i] + vac_rush * r_share
+            new_rec = raw_rec[i] + vac_rec * c_share
+            new_recs = raw_recs[i] + vac_recs * c_share
+            rush_td = (
+                team_rush_tds * (0.85 * r_share) * (1.0 + 0.06 * min(5, opp_f7_outs))
+                if pos == "RB"
+                else 0.0
+            )
+            rec_td = max(team_pass_tds, 0.38 * est_total_tds) * c_share
+
+            bonus_100_rush = 3.0 * (1.0 if new_rush >= 95.0 else max(0.0, (new_rush - 45.0) / 105.0))
+            bonus_100_rec = 3.0 * (1.0 if new_rec >= 95.0 else max(0.0, (new_rec - 45.0) / 105.0))
+            conserved_med = round(
+                0.1 * new_rush
+                + 0.1 * new_rec
+                + 1.0 * new_recs
+                + 6.0 * (rush_td + rec_td)
+                + bonus_100_rush
+                + bonus_100_rec,
+                3,
+            )
+            old_med = float(pool_df.loc[i, "median_fpts"])
+            if conserved_med > old_med:
+                pool_df.loc[i, "median_fpts"] = conserved_med
+                pool_df.loc[i, "projection"] = conserved_med
+                pool_df.loc[i, "p25_floor_fpts"] = round(
+                    max(float(pool_df.loc[i, "p25_floor_fpts"]), 0.44 * conserved_med), 3
+                )
+                pool_df.loc[i, "p90_ceiling_fpts"] = round(
+                    max(float(pool_df.loc[i, "p90_ceiling_fpts"]), 2.15 * conserved_med), 3
+                )
+
+
 def load_and_gate_slate_pool(
     slate_key: str,
     today: date | None = None,
@@ -593,6 +724,8 @@ def load_and_gate_slate_pool(
         })
 
     out_df = pd.DataFrame(hydrated_rows).reset_index(drop=True)
+    if not out_df.empty and slate_key != "munich_ne_det":
+        _apply_vacated_volume_and_trench_conservation(out_df, team_bundles, cfg)
     return out_df, {
         "removed_count": len(removal_log),
         "removal_log": removal_log,
@@ -1114,7 +1247,7 @@ def build_classic_packet(
     omega = build_default_covariance_bonus_matrix(gpp_opt_df)
     gpp_dfs = optimize_dfs_portfolio(
         gpp_opt_df,
-        num_lineups=20,
+        num_lineups=30,
         max_overlap=6,
         salary_cap=50000.0,
         min_teams=3,
@@ -1126,10 +1259,10 @@ def build_classic_packet(
         max_tes=1,
         max_exposure=0.55,
     )
-    if len(gpp_dfs) < 20:
+    if len(gpp_dfs) < 25:
         gpp_dfs = optimize_dfs_portfolio(
             gpp_opt_df,
-            num_lineups=20,
+            num_lineups=30,
             max_overlap=7,
             salary_cap=50000.0,
             min_teams=3,
@@ -1141,10 +1274,35 @@ def build_classic_packet(
             max_tes=1,
             max_exposure=0.70,
         )
-    if len(gpp_dfs) != 20:
-        raise RuntimeError(f"GPP optimizer produced {len(gpp_dfs)}/20 Classic lineups for {slate_key}")
 
-    gpp_lus = [_format_classic_lineup(df_k, mode="gpp", lineup_index=idx + 1) for idx, df_k in enumerate(gpp_dfs)]
+    def _flex_late_swap_valid(lu_dict: Mapping[str, Any]) -> bool:
+        def _win_rank(team_str: str) -> int:
+            tu = str(team_str or "").upper()
+            if tu in {"LAC", "BAL"}:
+                return 3
+            if tu in {"PIT", "CIN"}:
+                return 2
+            if tu in {"SEA", "LV", "LAR", "LA", "ARI", "SF", "DAL"}:
+                return 1
+            return 0
+
+        slots = lu_dict.get("roster") or []
+        flex_items = [s for s in slots if str(s.get("slot") or "").upper() == "FLEX"]
+        rwt_items = [s for s in slots if str(s.get("slot") or "").upper() in {"RB", "WR", "TE"}]
+        if not flex_items or not rwt_items:
+            return True
+        return _win_rank(str(flex_items[0].get("team") or "")) >= max(
+            _win_rank(str(s.get("team") or "")) for s in rwt_items
+        )
+
+    raw_gpp_lus = [_format_classic_lineup(df_k, mode="gpp", lineup_index=idx + 1) for idx, df_k in enumerate(gpp_dfs)]
+    valid_gpp = [lu for lu in raw_gpp_lus if _flex_late_swap_valid(lu)][:20]
+    if len(valid_gpp) < 20:
+        raise RuntimeError(f"GPP optimizer produced {len(valid_gpp)}/20 late-swap-valid Classic lineups for {slate_key}")
+    gpp_lus = [
+        {**lu, "lineup_index": idx + 1}
+        for idx, lu in enumerate(valid_gpp)
+    ]
     cfg = require_week(10, today=today)
     for lu in [cash_lu, *gpp_lus]:
         assert_lineup_clean(

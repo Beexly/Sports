@@ -1,0 +1,457 @@
+{
+  "schema": "gse.week10.lock2_official_inactives_receipt.v1",
+  "generated_at_utc": "2026-11-15T17:09:47.391688+00:00",
+  "status": "LOCK_2_COMPLETE_OFFICIAL_NOON_INACTIVES_APPLIED",
+  "lock1_commit_sha": "ee96a5b4c",
+  "corpus_conditioner": {
+    "books": 10805,
+    "primitives": 46994,
+    "families": 6
+  },
+  "munich_ne_det_untouched": true,
+  "n_sims_per_game": 10000,
+  "newly_excluded_noon_players_count": 49,
+  "newly_excluded_noon_players": [
+    {
+      "team": "ATL",
+      "player": "Andy Dalton",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:45Z)"
+    },
+    {
+      "team": "ATL",
+      "player": "Avieon Terrell",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "team": "ATL",
+      "player": "Jack Strand",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "team": "ATL",
+      "player": "Robert Longerbeam",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "team": "BUF",
+      "player": "Ar'maj Reed-Adams",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
+    },
+    {
+      "team": "BUF",
+      "player": "Greg Gaines",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
+    },
+    {
+      "team": "BUF",
+      "player": "Jalon Kilgore",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
+    },
+    {
+      "team": "BUF",
+      "player": "Jude Bowry",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
+    },
+    {
+      "team": "BUF",
+      "player": "Mike Danna",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:35Z)"
+    },
+    {
+      "team": "BUF",
+      "player": "Shane Buechele",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "team": "CAR",
+      "player": "AJ Dillon",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "team": "CAR",
+      "player": "Haynes King",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "team": "CAR",
+      "player": "Ja'Tavion Sanders",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "team": "CAR",
+      "player": "Sam Hecht",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "team": "CAR",
+      "player": "TeRah Edwards",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "team": "CAR",
+      "player": "Will Lee III",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "team": "CLE",
+      "player": "Dillon Gabriel",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "team": "CLE",
+      "player": "Justin Jefferson",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "team": "CLE",
+      "player": "Noah Igbinoghene",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "team": "CLE",
+      "player": "Parker Brailsford",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "team": "CLE",
+      "player": "Taylen Green",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "team": "GB",
+      "player": "Donovan Jennings",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "team": "GB",
+      "player": "Kevin Zeitler",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "team": "GB",
+      "player": "Pierre Strong Jr.",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "team": "HOU",
+      "player": "Wyatt Teller",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Illness (ESPN live pregame 2026-11-15T16:37Z)"
+    },
+    {
+      "team": "IND",
+      "player": "Riley Leonard",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)"
+    },
+    {
+      "team": "JAX",
+      "player": "Albert Regis",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "team": "JAX",
+      "player": "CJ Williams",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:42Z)"
+    },
+    {
+      "team": "JAX",
+      "player": "Wesley Williams",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "team": "KC",
+      "player": "Ben VanSumeren",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)"
+    },
+    {
+      "team": "KC",
+      "player": "Garrett Nussmeier",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)"
+    },
+    {
+      "team": "KC",
+      "player": "Jaydn Ott",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:46Z)"
+    },
+    {
+      "team": "KC",
+      "player": "Melvin Smith Jr.",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "team": "MIA",
+      "player": "Caedan Wallace",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "team": "MIA",
+      "player": "Justin Joly",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "team": "MIA",
+      "player": "Marcellas Dial Jr.",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "team": "MIN",
+      "player": "Jordan Addison",
+      "reason": "OUT - Wrist (Neon injuries wk10, fetched 2026-11-15) + OUT - Thumb (ESPN live pregame 2026-11-15T16:38Z)"
+    },
+    {
+      "team": "MIN",
+      "player": "Max Brosmer",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:32Z)"
+    },
+    {
+      "team": "NO",
+      "player": "Jaylan Ford",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "team": "NO",
+      "player": "Mike Reid",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "team": "NO",
+      "player": "Zach Wilson",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "team": "NYJ",
+      "player": "Jarvis Brownlee Jr.",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Illness (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "team": "NYJ",
+      "player": "Jelani Woods",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "team": "NYJ",
+      "player": "Nate Lynn",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "team": "NYJ",
+      "player": "Tim Patrick",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:36Z)"
+    },
+    {
+      "team": "TEN",
+      "player": "Brandon Crenshaw-Dickson",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)"
+    },
+    {
+      "team": "TEN",
+      "player": "Jackie Marshall",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "team": "TEN",
+      "player": "Jaylon Jones",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)"
+    },
+    {
+      "team": "TEN",
+      "player": "Nicholas Singleton",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:40Z)"
+    }
+  ],
+  "totals_across_12_unstarted_games": {
+    "approved_game_lines": 1,
+    "approved_two_sided_props": 48,
+    "approved_correlated_sgps": 4
+  },
+  "games": {
+    "BUF@NYJ": {
+      "master_bundle_sha256": "c394c8487906e71f223129cbb1fef553fd3f275a6012dfd72e2a1261a5f67efd",
+      "generated_at_utc": "2026-11-15T17:08:19.733487+00:00",
+      "props_with_two_sided_prices": 47,
+      "approved_game_lines": [
+        "BUF -8.5"
+      ],
+      "approved_prop_count": 3,
+      "approved_props": [
+        "Josh Allen (BUF) UNDER 28.5 Total Passing Attempts (incl. overtime) @ -115 (mean=25.09, conf=66/100)",
+        "Geno Smith (NYJ) OVER 222.5 Total Passing Yards (incl. overtime) @ -115 (mean=285.0, conf=63/100)",
+        "Geno Smith (NYJ) OVER 5.5 Total Rushing Yards (incl. overtime) @ -120 (mean=12.69, conf=60/100)"
+      ],
+      "approved_sgps": [
+        "BUF @ NYJ 2-Leg Correlated SGP"
+      ]
+    },
+    "CAR@NO": {
+      "master_bundle_sha256": "7b2927df3dd6c1860f94fa073136061bff4c3a82d84de4a620204b3d64eb31b7",
+      "generated_at_utc": "2026-11-15T17:08:10.746406+00:00",
+      "props_with_two_sided_prices": 51,
+      "approved_game_lines": [],
+      "approved_prop_count": 6,
+      "approved_props": [
+        "Bryce Young (CAR) OVER 2.5 Total Carries (incl. overtime) @ 115 (mean=4.88, conf=69/100)",
+        "Bryce Young (CAR) OVER 36.5 Total Passing Attempts (incl. overtime) @ -115 (mean=39.45, conf=61/100)",
+        "Tyler Shough (NO) UNDER 4.5 Total Carries (incl. overtime) @ 105 (mean=3.51, conf=62/100)",
+        "Tyler Shough (NO) UNDER 24.5 Total Pass Completions (incl. overtime) @ -120 (mean=20.13, conf=66/100)",
+        "Tyler Shough (NO) OVER 35.5 Total Passing Attempts (incl. overtime) @ -130 (mean=39.08, conf=61/100)",
+        "Tyler Shough (NO) UNDER 18.5 Total Rushing Yards (incl. overtime) @ -120 (mean=7.07, conf=68/100)"
+      ],
+      "approved_sgps": [
+        "CAR @ NO 2-Leg Correlated SGP"
+      ]
+    },
+    "HOU@CLE": {
+      "master_bundle_sha256": "b2b4aafaa21beccc763473513e6cb3da787788aa4b0dc65628420e202834542b",
+      "generated_at_utc": "2026-11-15T17:07:59.363384+00:00",
+      "props_with_two_sided_prices": 41,
+      "approved_game_lines": [],
+      "approved_prop_count": 3,
+      "approved_props": [
+        "C.J. Stroud (HOU) OVER 20.5 Total Pass Completions (incl. overtime) @ 100 (mean=26.35, conf=70/100)",
+        "C.J. Stroud (HOU) OVER 243.5 Total Passing Yards (incl. overtime) @ -115 (mean=304.19, conf=68/100)",
+        "C.J. Stroud (HOU) OVER 8.5 Total Rushing Yards (incl. overtime) @ -120 (mean=16.29, conf=61/100)"
+      ],
+      "approved_sgps": []
+    },
+    "JAX@TEN": {
+      "master_bundle_sha256": "be5d1bca4d5c98c78e872592986128b251947976c74d9b2663daf6feaae70d34",
+      "generated_at_utc": "2026-11-15T17:07:59.328259+00:00",
+      "props_with_two_sided_prices": 52,
+      "approved_game_lines": [],
+      "approved_prop_count": 5,
+      "approved_props": [
+        "Trevor Lawrence (JAX) OVER 3.5 Total Carries (incl. overtime) @ 115 (mean=6.84, conf=71/100)",
+        "Trevor Lawrence (JAX) OVER 7.5 Total Rushing Yards (incl. overtime) @ -125 (mean=25.91, conf=72/100)",
+        "Cam Ward (TEN) UNDER 20.5 Total Pass Completions (incl. overtime) @ -130 (mean=15.31, conf=70/100)",
+        "Cam Ward (TEN) UNDER 200.5 Total Passing Yards (incl. overtime) @ -115 (mean=147.9, conf=68/100)",
+        "Cam Ward (TEN) UNDER 9.5 Total Rushing Yards (incl. overtime) @ -110 (mean=5.61, conf=61/100)"
+      ],
+      "approved_sgps": []
+    },
+    "KC@ATL": {
+      "master_bundle_sha256": "9910a8bfecddda6b270d6ff3de2fe71b2458a54a9a5744840f7787471d38b8ee",
+      "generated_at_utc": "2026-11-15T17:08:09.557672+00:00",
+      "props_with_two_sided_prices": 43,
+      "approved_game_lines": [],
+      "approved_prop_count": 5,
+      "approved_props": [
+        "Michael Penix Jr. (ATL) UNDER 19.5 Total Pass Completions (incl. overtime) @ 100 (mean=16.14, conf=66/100)",
+        "Patrick Mahomes (KC) OVER 2.5 Total Carries (incl. overtime) @ -150 (mean=4.64, conf=68/100)",
+        "Patrick Mahomes (KC) UNDER 32.5 Total Passing Attempts (incl. overtime) @ 100 (mean=30.29, conf=60/100)",
+        "Patrick Mahomes (KC) OVER 1.5 Total Passing Touchdowns (incl. overtime) @ -150 (mean=2.02, conf=62/100)",
+        "Patrick Mahomes (KC) UNDER 242.5 Total Passing Yards (incl. overtime) @ -115 (mean=219.06, conf=62/100)"
+      ],
+      "approved_sgps": []
+    },
+    "MIA@IND": {
+      "master_bundle_sha256": "7b6bf21fd192b7391a3b7417d745d66a12b3daabf259efb02a9d51c74621c83e",
+      "generated_at_utc": "2026-11-15T17:08:09.678125+00:00",
+      "props_with_two_sided_prices": 42,
+      "approved_game_lines": [],
+      "approved_prop_count": 3,
+      "approved_props": [
+        "Daniel Jones (IND) UNDER 18.5 Total Pass Completions (incl. overtime) @ 100 (mean=15.32, conf=65/100)",
+        "Daniel Jones (IND) UNDER 185.5 Total Passing Yards (incl. overtime) @ -115 (mean=155.0, conf=64/100)",
+        "Kyle McCord (MIA) OVER 5.5 Total Rushing Yards (incl. overtime) @ -120 (mean=13.48, conf=60/100)"
+      ],
+      "approved_sgps": []
+    },
+    "MIN@GB": {
+      "master_bundle_sha256": "60415eba13143e13690d9229766c6a01c32046cc4dd88dadca5a0e75dd17e9e7",
+      "generated_at_utc": "2026-11-15T17:07:59.349423+00:00",
+      "props_with_two_sided_prices": 39,
+      "approved_game_lines": [],
+      "approved_prop_count": 7,
+      "approved_props": [
+        "Jordan Love (GB) UNDER 36.5 Total Passing Attempts (incl. overtime) @ -115 (mean=34.04, conf=60/100)",
+        "Jordan Love (GB) OVER 1.5 Total Passing Touchdowns (incl. overtime) @ -125 (mean=1.75, conf=60/100)",
+        "Jordan Love (GB) OVER 3.5 Total Rushing Yards (incl. overtime) @ -120 (mean=13.25, conf=63/100)",
+        "Kirk Cousins (MIN) OVER 21.5 Total Pass Completions (incl. overtime) @ 105 (mean=23.58, conf=60/100)",
+        "Kirk Cousins (MIN) UNDER 34.5 Total Passing Attempts (incl. overtime) @ -120 (mean=31.29, conf=66/100)",
+        "Kirk Cousins (MIN) UNDER 232.5 Total Passing Yards (incl. overtime) @ -115 (mean=155.0, conf=76/100)",
+        "Kirk Cousins (MIN) OVER 0.5 Total Rushing Yards (incl. overtime) @ -120 (mean=15.53, conf=72/100)"
+      ],
+      "approved_sgps": [
+        "MIN @ GB 2-Leg Correlated SGP"
+      ]
+    },
+    "LAR@ARI": {
+      "master_bundle_sha256": "7e90098b2bbe0018c45af1f22b39f935ed7debf8ef2790cd5c947045cbb5ad3f",
+      "generated_at_utc": "2026-11-15T16:11:53.378186+00:00",
+      "props_with_two_sided_prices": 55,
+      "approved_game_lines": [],
+      "approved_prop_count": 5,
+      "approved_props": [
+        "Carson Beck (ARI) OVER 2.5 Total Carries (incl. overtime) @ -170 (mean=4.26, conf=66/100)",
+        "Carson Beck (ARI) OVER 0.5 Total Passing Touchdowns (incl. overtime) @ -150 (mean=0.86, conf=60/100)",
+        "Matthew Stafford (LAR) UNDER 30.5 Total Passing Attempts (incl. overtime) @ -110 (mean=26.08, conf=70/100)",
+        "Matthew Stafford (LAR) UNDER 208.5 Total Passing Yards (incl. overtime) @ -115 (mean=161.19, conf=72/100)",
+        "Matthew Stafford (LAR) OVER 0.5 Total Rushing Yards (incl. overtime) @ 110 (mean=18.62, conf=74/100)"
+      ],
+      "approved_sgps": []
+    },
+    "SEA@LV": {
+      "master_bundle_sha256": "48ca5375b208716e3854f9df78019395600089589108301b880295d600f74e29",
+      "generated_at_utc": "2026-11-15T16:11:21.241345+00:00",
+      "props_with_two_sided_prices": 0,
+      "approved_game_lines": [],
+      "approved_prop_count": 0,
+      "approved_props": [],
+      "approved_sgps": []
+    },
+    "SF@DAL": {
+      "master_bundle_sha256": "b5cd496aa2d4aa1ee245d5546dd934e45b713458b88d92a113b041f767fb4739",
+      "generated_at_utc": "2026-11-15T16:21:39.516145+00:00",
+      "props_with_two_sided_prices": 44,
+      "approved_game_lines": [],
+      "approved_prop_count": 4,
+      "approved_props": [
+        "Dak Prescott (DAL) UNDER 24.5 Total Pass Completions (incl. overtime) @ -130 (mean=21.55, conf=62/100)",
+        "Brock Purdy (SF) OVER 21.5 Total Pass Completions (incl. overtime) @ -115 (mean=24.39, conf=64/100)",
+        "Brock Purdy (SF) UNDER 31.5 Total Passing Attempts (incl. overtime) @ -110 (mean=28.61, conf=64/100)",
+        "Brock Purdy (SF) UNDER 261.5 Total Passing Yards (incl. overtime) @ -115 (mean=240.56, conf=60/100)"
+      ],
+      "approved_sgps": [
+        "SF @ DAL 2-Leg Correlated SGP"
+      ]
+    },
+    "PIT@CIN": {
+      "master_bundle_sha256": "29a646a6aa3430af22bb11a3ba174079ebc44d9b7000476c58f916e5c4fd4934",
+      "generated_at_utc": "2026-11-15T16:11:42.421246+00:00",
+      "props_with_two_sided_prices": 50,
+      "approved_game_lines": [],
+      "approved_prop_count": 6,
+      "approved_props": [
+        "Joe Burrow (CIN) UNDER 27.5 Total Pass Completions (incl. overtime) @ -135 (mean=23.69, conf=66/100)",
+        "Joe Burrow (CIN) UNDER 37.5 Total Passing Attempts (incl. overtime) @ -115 (mean=34.33, conf=62/100)",
+        "Aaron Rodgers (PIT) UNDER 21.5 Total Pass Completions (incl. overtime) @ -120 (mean=19.0, conf=61/100)",
+        "Aaron Rodgers (PIT) UNDER 35.5 Total Passing Attempts (incl. overtime) @ -120 (mean=28.89, conf=71/100)",
+        "Aaron Rodgers (PIT) UNDER 239.5 Total Passing Yards (incl. overtime) @ -115 (mean=201.92, conf=63/100)",
+        "Aaron Rodgers (PIT) OVER 0.5 Total Rushing Yards (incl. overtime) @ -110 (mean=18.2, conf=74/100)"
+      ],
+      "approved_sgps": []
+    },
+    "LAC@BAL": {
+      "master_bundle_sha256": "fa97a40652c742e092b2de2d3a183693f29018405b2f7fe3841a1caf817a31ac",
+      "generated_at_utc": "2026-11-15T16:11:52.789811+00:00",
+      "props_with_two_sided_prices": 44,
+      "approved_game_lines": [],
+      "approved_prop_count": 1,
+      "approved_props": [
+        "Justin Herbert (LAC) UNDER 21.5 Total Rushing Yards (incl. overtime) @ -110 (mean=14.87, conf=62/100)"
+      ],
+      "approved_sgps": []
+    }
+  },
+  "dfs_slates_rebuilt": [
+    "sun_main_classic",
+    "sun_mon_expanded"
+  ],
+  "all_5_dfs_slates_ready": [
+    "munich_ne_det",
+    "sun_main_classic",
+    "sun_mon_expanded",
+    "snf_pit_cin",
+    "mnf_lac_bal"
+  ],
+  "public_gates_flipped": false
+}

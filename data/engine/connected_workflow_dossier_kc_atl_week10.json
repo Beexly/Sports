@@ -1,6 +1,6 @@
 {
   "schema": "gse_connected_game_workflow_master_bundle_v1",
-  "generated_at_utc": "2026-11-15T16:11:43.065662+00:00",
+  "generated_at_utc": "2026-11-15T17:08:09.557672+00:00",
   "matchup": "KC @ ATL",
   "week": 10,
   "armed_26_layer_workflow_receipt": {
@@ -16,12 +16,12 @@
   "stage1_parameter_coupling_verified": true,
   "max_prop_win_prob": 0.7024,
   "cryptographic_receipt_chain": {
-    "stage0_receipt_sha256": "5feb57d8fef951d6c95c9a0554c1d3be73925981cfa70a3a95e3206bdbb2fb68",
-    "stage1a_receipt_sha256": "5c941758ee86f16029f7a30bb5aeda5c4c01df446acb3c7e8425f5b7653a3b89",
-    "stage1b_receipt_sha256": "49a5b1b34d06e0d9b637ca65575e87381864c800c2aea3a0c1e726513c0627b4",
-    "stage2_receipt_sha256": "f92ebdbe9bf1526eb2f26a1a41d37dfe80312e065ccd1944803912c82ce21f40",
-    "stage3_4_receipt_sha256": "cd1058d212b2ab2f726dd478a4cd01d6eb0f6e5eeee5fcd9b6c04b01ba2f943d",
-    "stage5_receipt_sha256": "794958e0409f0e842d2351114d30a259f3e45b622da4190db89b411d53a3a8a9"
+    "stage0_receipt_sha256": "8bc15a1d66a632da3877d82a427326bcd77a6b5a4abcc2f4c4eea7333dfd7404",
+    "stage1a_receipt_sha256": "e9fea6885e4457eedb7353dc69a1a8fe9417ff433e60346b97466d89e0afb080",
+    "stage1b_receipt_sha256": "2da304012de81f8028e7b28fa2e4115945c0b85237c4bf4766353c3bd3efdb9d",
+    "stage2_receipt_sha256": "095786954fb58021637c5c64006a14cfa191c3cc170a04b65afa225c681632f1",
+    "stage3_4_receipt_sha256": "207acf51b7a434614e25b0afe20a6f5a860986dfbb8968bdcb0dc2356e9631a9",
+    "stage5_receipt_sha256": "3b02c4c3e9c52e69c7f9552048ee2ba81989b8cbe1a7965418ad6515f75a0e1e"
   },
   "stage0_roster_and_board_allowlist": {
     "schema": "gse_stage0_game_roster_allowlist_v1",
@@ -95,6 +95,18 @@
     ],
     "excluded_players": [
       {
+        "name": "Andy Dalton",
+        "team": "ATL",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:45Z)",
+        "position": "QB"
+      },
+      {
+        "name": "Avieon Terrell",
+        "team": "ATL",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
+        "position": "CB"
+      },
+      {
         "name": "Brian Robinson Jr.",
         "team": "ATL",
         "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
@@ -103,20 +115,32 @@
       {
         "name": "Cameron Williams",
         "team": "ATL",
-        "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
         "position": "OL"
       },
       {
         "name": "Divine Deablo",
         "team": "ATL",
-        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Forearm (ESPN live pregame 2026-11-14T22:57Z)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
         "position": "LB"
       },
       {
         "name": "Divine Deablo",
         "team": "ATL",
-        "reason": "DOUBTFUL - Forearm (Neon injuries wk10, fetched 2026-11-15) + OUT - Forearm (ESPN live pregame 2026-11-14T22:57Z)",
+        "reason": "DOUBTFUL - Forearm (Neon injuries wk10, fetched 2026-11-15)",
         "position": "LB"
+      },
+      {
+        "name": "Jack Strand",
+        "team": "ATL",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
+        "position": "QB"
+      },
+      {
+        "name": "Robert Longerbeam",
+        "team": "ATL",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:34Z)",
+        "position": "CB"
       },
       {
         "name": "Samson Ebukam",
@@ -127,37 +151,79 @@
       {
         "name": "Zachariah Branch",
         "team": "ATL",
-        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-13T19:42Z)",
+        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
         "position": "WR"
       },
       {
         "name": "Zachariah Branch",
         "team": "ATL",
-        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-13T19:42Z)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
         "position": "WR"
+      },
+      {
+        "name": "Zachariah Branch",
+        "team": "ATL",
+        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
+        "position": "WR"
+      },
+      {
+        "name": "Ben VanSumeren",
+        "team": "KC",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)",
+        "position": "FB"
+      },
+      {
+        "name": "Garrett Nussmeier",
+        "team": "KC",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Coach's Decision (ESPN live pregame 2026-11-15T16:46Z)",
+        "position": "QB"
+      },
+      {
+        "name": "Jaydn Ott",
+        "team": "KC",
+        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Hamstring (ESPN live pregame 2026-11-15T16:46Z)",
+        "position": "RB"
       },
       {
         "name": "Jaylon Moore",
         "team": "KC",
-        "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T02:02Z)",
+        "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:46Z)",
         "position": "OT"
       },
       {
         "name": "Jaylon Moore",
         "team": "KC",
-        "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-14T02:02Z)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:46Z)",
+        "position": "OT"
+      },
+      {
+        "name": "Jaylon Moore",
+        "team": "KC",
+        "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-15) + OUT - Ankle (ESPN live pregame 2026-11-15T16:46Z)",
         "position": "T"
       },
       {
         "name": "Kenneth Walker III",
         "team": "KC",
-        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15) + OUT - Groin (ESPN live pregame 2026-11-14T16:33Z)",
+        "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-15)",
+        "position": "RB"
+      },
+      {
+        "name": "Kenneth Walker III",
+        "team": "KC",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
         "position": "RB"
       },
       {
         "name": "L'Jarius Sneed",
         "team": "KC",
         "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+        "position": "CB"
+      },
+      {
+        "name": "Melvin Smith Jr.",
+        "team": "KC",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15)",
         "position": "CB"
       },
       {
@@ -169,13 +235,19 @@
       {
         "name": "Peter Woods",
         "team": "KC",
-        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-14T02:00Z)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:46Z)",
         "position": "DT"
       },
       {
         "name": "Peter Woods",
         "team": "KC",
-        "reason": "OUT - Neck (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-14T02:00Z)",
+        "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:46Z)",
+        "position": "DT"
+      },
+      {
+        "name": "Peter Woods",
+        "team": "KC",
+        "reason": "OUT - Neck (Neon injuries wk10, fetched 2026-11-15) + OUT - Neck (ESPN live pregame 2026-11-15T16:46Z)",
         "position": "DT"
       },
       {
@@ -194,7 +266,7 @@
       "trey benson": "WEEK8_INACTIVE_NAMES hard-blocked.",
       "jalen mcmillan": "WEEK8_INACTIVE_NAMES hard-blocked."
     },
-    "dynamic_league_wide_denylist_count": 4307,
+    "dynamic_league_wide_denylist_count": 4327,
     "situational_multipliers_unfitted": {},
     "team_totals_2026_pbp": {
       "KC": {
@@ -804,7 +876,7 @@
         "position": "QB",
         "prop_count": 6,
         "core_lines": {
-          "Total Pass Completions (incl. overtime)": 20.5,
+          "Total Pass Completions (incl. overtime)": 19.5,
           "Total Passing Attempts (incl. overtime)": 31.5,
           "Total Passing Interceptions (incl. overtime)": 0.5,
           "Total Passing Touchdowns (incl. overtime)": 1.5,
@@ -984,7 +1056,7 @@
         "position": "S",
         "prop_count": 1,
         "core_lines": {
-          "Total Tackles Plus Assists (incl. overtime)": 5.5
+          "Total Tackles Plus Assists (incl. overtime)": 6.5
         },
         "open_lines": {
           "Total Tackles Plus Assists (incl. overtime)": 5.5
@@ -1096,11 +1168,11 @@
         "position": "RB",
         "prop_count": 5,
         "core_lines": {
-          "Total Carries (incl. overtime)": 17.5,
+          "Total Carries (incl. overtime)": 16.5,
           "Total Receiving Yards (incl. overtime)": 27.5,
           "Total Receptions (incl. overtime)": 3.5,
-          "Total Rushing Plus Receiving Yards (incl. overtime)": 105.5,
-          "Total Rushing Yards (incl. overtime)": 73.5
+          "Total Rushing Plus Receiving Yards (incl. overtime)": 106.5,
+          "Total Rushing Yards (incl. overtime)": 74.5
         },
         "open_lines": {
           "Total Carries (incl. overtime)": 16.5,
@@ -2513,7 +2585,7 @@
         "position": "QB",
         "prop_count": 6,
         "core_lines": {
-          "Total Pass Completions (incl. overtime)": 20.5,
+          "Total Pass Completions (incl. overtime)": 19.5,
           "Total Passing Attempts (incl. overtime)": 31.5,
           "Total Passing Interceptions (incl. overtime)": 0.5,
           "Total Passing Touchdowns (incl. overtime)": 1.5,
@@ -2693,7 +2765,7 @@
         "position": "S",
         "prop_count": 1,
         "core_lines": {
-          "Total Tackles Plus Assists (incl. overtime)": 5.5
+          "Total Tackles Plus Assists (incl. overtime)": 6.5
         },
         "open_lines": {
           "Total Tackles Plus Assists (incl. overtime)": 5.5
@@ -2805,11 +2877,11 @@
         "position": "RB",
         "prop_count": 5,
         "core_lines": {
-          "Total Carries (incl. overtime)": 17.5,
+          "Total Carries (incl. overtime)": 16.5,
           "Total Receiving Yards (incl. overtime)": 27.5,
           "Total Receptions (incl. overtime)": 3.5,
-          "Total Rushing Plus Receiving Yards (incl. overtime)": 105.5,
-          "Total Rushing Yards (incl. overtime)": 73.5
+          "Total Rushing Plus Receiving Yards (incl. overtime)": 106.5,
+          "Total Rushing Yards (incl. overtime)": 74.5
         },
         "open_lines": {
           "Total Carries (incl. overtime)": 16.5,
@@ -3600,11 +3672,11 @@
         "situational_multiplier": 1.0
       }
     ],
-    "stage0_receipt_sha256": "5feb57d8fef951d6c95c9a0554c1d3be73925981cfa70a3a95e3206bdbb2fb68"
+    "stage0_receipt_sha256": "8bc15a1d66a632da3877d82a427326bcd77a6b5a4abcc2f4c4eea7333dfd7404"
   },
   "stage1a_coaching_mind_and_schemes": {
     "schema": "gse_stage1a_coaching_mind_and_scheme_receipt_v2",
-    "parent_stage0_receipt_sha256": "5feb57d8fef951d6c95c9a0554c1d3be73925981cfa70a3a95e3206bdbb2fb68",
+    "parent_stage0_receipt_sha256": "8bc15a1d66a632da3877d82a427326bcd77a6b5a4abcc2f4c4eea7333dfd7404",
     "away": "KC",
     "home": "ATL",
     "week": 10,
@@ -3686,8 +3758,8 @@
       }
     },
     "l1_to_l5_specialist_reasoning_trace": {
-      "trace_id": "2026-11-15T161137Z0000-23e29d6f",
-      "content_hash": "ef7d86e0b45a475116335022770b69bd034f9010efebdfef71485886d23c3921",
+      "trace_id": "2026-11-15T170802Z0000-283f0b12",
+      "content_hash": "0c01d77d29b7105eb245f015caffd0f73bdfa0cdc9a5554321a54be32b863392",
       "depth_reached": "L5",
       "hierarchy_order": [
         "offensive_line",
@@ -4553,7 +4625,7 @@
     },
     "python_31_intelligence_subpackages_and_31_datasets": {
       "schema_version": "gse_python_intelligence_and_datasets_v2.1",
-      "generated_at_utc": "2026-11-15T16:10:22.838794+00:00",
+      "generated_at_utc": "2026-11-15T17:07:29.342203+00:00",
       "datasets_connected_count": 33,
       "datasets_report": {
         "ftn_charting_2026": {
@@ -7536,11 +7608,11 @@
       "MOFO (Two-High)": 5614,
       "RedZone/GoalLine/Other": 889
     },
-    "stage1a_receipt_sha256": "5c941758ee86f16029f7a30bb5aeda5c4c01df446acb3c7e8425f5b7653a3b89"
+    "stage1a_receipt_sha256": "e9fea6885e4457eedb7353dc69a1a8fe9417ff433e60346b97466d89e0afb080"
   },
   "stage1b_5367_equations_pre_sim_review": {
     "schema": "gse_stage1b_5367_equations_pre_sim_receipt_v2",
-    "parent_stage1a_receipt_sha256": "5c941758ee86f16029f7a30bb5aeda5c4c01df446acb3c7e8425f5b7653a3b89",
+    "parent_stage1a_receipt_sha256": "e9fea6885e4457eedb7353dc69a1a8fe9417ff433e60346b97466d89e0afb080",
     "equation_corpus_inventory": {
       "thousand_equation_matrix_load_bearing": 9875,
       "citable_verified_count": 2419,
@@ -9498,11 +9570,11 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "49a5b1b34d06e0d9b637ca65575e87381864c800c2aea3a0c1e726513c0627b4"
+    "stage1b_receipt_sha256": "2da304012de81f8028e7b28fa2e4115945c0b85237c4bf4766353c3bd3efdb9d"
   },
   "stage2_jev_spine_and_10k_simulation": {
     "schema": "gse_stage2_jev_spine_and_10k_sim_receipt_v1",
-    "parent_stage1b_receipt_sha256": "49a5b1b34d06e0d9b637ca65575e87381864c800c2aea3a0c1e726513c0627b4",
+    "parent_stage1b_receipt_sha256": "2da304012de81f8028e7b28fa2e4115945c0b85237c4bf4766353c3bd3efdb9d",
     "away": "KC",
     "home": "ATL",
     "week": 10,
@@ -17976,12 +18048,12 @@
           "spine_home_qb1": "Michael Penix Jr.",
           "current_qb1_away": "Patrick Mahomes",
           "current_qb1_home": "Michael Penix Jr.",
-          "updated_at": "2026-11-15T16:11:38.215209+00:00",
-          "evaluated_at_utc": "2026-11-15T16:11:38.215209+00:00",
+          "updated_at": "2026-11-15T17:08:03.938544+00:00",
+          "evaluated_at_utc": "2026-11-15T17:08:03.938544+00:00",
           "age_hours": 0.0,
           "max_age_hours": 72.0,
-          "spine_digest_sha256": "eb4a43462706e9f6ea127ba590ed807a65bcb8a80a713d0afcf523c2eb3f80b3",
-          "live_state_digest_sha256": "eb4a43462706e9f6ea127ba590ed807a65bcb8a80a713d0afcf523c2eb3f80b3",
+          "spine_digest_sha256": "85f388a057f48b7570fee59fd3907c828432932a7bb262fc74518f87b6310e49",
+          "live_state_digest_sha256": "85f388a057f48b7570fee59fd3907c828432932a7bb262fc74518f87b6310e49",
           "qb1_away_match": true,
           "qb1_home_match": true,
           "age_within_sla": true,
@@ -18123,7 +18195,7 @@
       },
       "full_repo_279_family_situational_matrix": {
         "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-        "generated_at_utc": "2026-11-15T16:11:38.692644+00:00",
+        "generated_at_utc": "2026-11-15T17:08:04.404398+00:00",
         "total_ts_modules_cataloged": 1501,
         "prediction_engine_ts_modules": 1490,
         "mcp_equations_server_ts_modules": 11,
@@ -20009,7 +20081,7 @@
           "probability_movement_cap": 0.12,
           "post_overlay_prob": 0.5073
         },
-        "receipt_sha256": "a9278bd78876d1fe7ea5a8ede48f53601fa6c24ed3d9d314db6a0c00b855cbb9",
+        "receipt_sha256": "801c5e69c6d50e9e356fd159b57f0d834b720d3a089c81e7ef99e5b14d8b1541",
         "measured_primitives": {
           "measured_primitives_count": 3,
           "wr1_absorption": {
@@ -20371,16 +20443,16 @@
       "uncompressed_25k_repo_books_papers_routes_bridge": {
         "bridge_version": "uncompressed_25k_v1.0",
         "monorepo_census_summary": {
-          "total_repo_files_indexed": 76752,
-          "docs_files_indexed": 12064,
+          "total_repo_files_indexed": 76794,
+          "docs_files_indexed": 12070,
           "arxiv_program_files_indexed": 1803,
           "engine_docs_indexed": 3935,
           "packages_files_indexed": 6048,
           "packages_count": 25,
           "intelligence_files_indexed": 1121,
           "intelligence_domains_count": 35,
-          "scripts_files_indexed": 946,
-          "apps_files_indexed": 3604,
+          "scripts_files_indexed": 948,
+          "apps_files_indexed": 3605,
           "web_api_routes_indexed": 276,
           "formal_proof_files_indexed": 69,
           "workers_files_indexed": 51,
@@ -29332,7 +29404,7 @@
       "freshness_verification": {
         "valid": true,
         "reason": "FRESH_AND_QB1_VERIFIED",
-        "age_hours": 11.43,
+        "age_hours": 12.37,
         "expected_week": 10
       },
       "total_snaps_ingested": 168,
@@ -29513,11 +29585,11 @@
       "bal_cover_plus_7_5_prob": 0.4417,
       "over_41_5_prob": 0.4658
     },
-    "stage2_receipt_sha256": "f92ebdbe9bf1526eb2f26a1a41d37dfe80312e065ccd1944803912c82ce21f40"
+    "stage2_receipt_sha256": "095786954fb58021637c5c64006a14cfa191c3cc170a04b65afa225c681632f1"
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "f92ebdbe9bf1526eb2f26a1a41d37dfe80312e065ccd1944803912c82ce21f40",
+    "parent_stage2_receipt_sha256": "095786954fb58021637c5c64006a14cfa191c3cc170a04b65afa225c681632f1",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.08,
@@ -30198,7 +30270,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Pass Completions (incl. overtime)": 20.5,
+          "Total Pass Completions (incl. overtime)": 19.5,
           "Total Passing Attempts (incl. overtime)": 31.5,
           "Total Passing Interceptions (incl. overtime)": 0.5,
           "Total Passing Touchdowns (incl. overtime)": 1.5,
@@ -31902,11 +31974,11 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Carries (incl. overtime)": 17.5,
+          "Total Carries (incl. overtime)": 16.5,
           "Total Receiving Yards (incl. overtime)": 27.5,
           "Total Receptions (incl. overtime)": 3.5,
-          "Total Rushing Plus Receiving Yards (incl. overtime)": 105.5,
-          "Total Rushing Yards (incl. overtime)": 73.5
+          "Total Rushing Plus Receiving Yards (incl. overtime)": 106.5,
+          "Total Rushing Yards (incl. overtime)": 74.5
         },
         "projections": {
           "rec_yds": {
@@ -32034,7 +32106,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Tackles Plus Assists (incl. overtime)": 5.5
+          "Total Tackles Plus Assists (incl. overtime)": 6.5
         },
         "projections": {
           "tackles_plus_assists": {
@@ -33621,11 +33693,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "cd1058d212b2ab2f726dd478a4cd01d6eb0f6e5eeee5fcd9b6c04b01ba2f943d"
+    "stage3_4_receipt_sha256": "207acf51b7a434614e25b0afe20a6f5a860986dfbb8968bdcb0dc2356e9631a9"
   },
   "stage3_and_4_projections_and_situational": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "f92ebdbe9bf1526eb2f26a1a41d37dfe80312e065ccd1944803912c82ce21f40",
+    "parent_stage2_receipt_sha256": "095786954fb58021637c5c64006a14cfa191c3cc170a04b65afa225c681632f1",
     "pbp_conservation_verified": true,
     "load_bearing_priors_applied": {
       "cqr_interval_width_mult": 1.08,
@@ -34306,7 +34378,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Pass Completions (incl. overtime)": 20.5,
+          "Total Pass Completions (incl. overtime)": 19.5,
           "Total Passing Attempts (incl. overtime)": 31.5,
           "Total Passing Interceptions (incl. overtime)": 0.5,
           "Total Passing Touchdowns (incl. overtime)": 1.5,
@@ -36010,11 +36082,11 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Carries (incl. overtime)": 17.5,
+          "Total Carries (incl. overtime)": 16.5,
           "Total Receiving Yards (incl. overtime)": 27.5,
           "Total Receptions (incl. overtime)": 3.5,
-          "Total Rushing Plus Receiving Yards (incl. overtime)": 105.5,
-          "Total Rushing Yards (incl. overtime)": 73.5
+          "Total Rushing Plus Receiving Yards (incl. overtime)": 106.5,
+          "Total Rushing Yards (incl. overtime)": 74.5
         },
         "projections": {
           "rec_yds": {
@@ -36142,7 +36214,7 @@
           "xp_made": 0
         },
         "board_lines": {
-          "Total Tackles Plus Assists (incl. overtime)": 5.5
+          "Total Tackles Plus Assists (incl. overtime)": 6.5
         },
         "projections": {
           "tackles_plus_assists": {
@@ -37729,11 +37801,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "cd1058d212b2ab2f726dd478a4cd01d6eb0f6e5eeee5fcd9b6c04b01ba2f943d"
+    "stage3_4_receipt_sha256": "207acf51b7a434614e25b0afe20a6f5a860986dfbb8968bdcb0dc2356e9631a9"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "cd1058d212b2ab2f726dd478a4cd01d6eb0f6e5eeee5fcd9b6c04b01ba2f943d",
+    "parent_stage3_4_receipt_sha256": "207acf51b7a434614e25b0afe20a6f5a860986dfbb8968bdcb0dc2356e9631a9",
     "publishAllowed": true,
     "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
     "max_prop_win_prob": 0.7024,
@@ -38664,7 +38736,7 @@
         "team": "ATL",
         "position": "QB",
         "market": "Total Pass Completions (incl. overtime)",
-        "line": 20.5,
+        "line": 19.5,
         "open_line": 19.5,
         "post_sim_mean": 16.14,
         "post_sim_p50": 16.04,
@@ -38672,22 +38744,22 @@
         "post_sim_p25": 12.58,
         "post_sim_p75": 19.51,
         "model_lean": "UNDER",
-        "model_prob_over": 0.3106,
-        "model_prob_under": 0.6894,
-        "win_prob_on_lean": 0.6894,
-        "wilson_lower_90_on_lean": 0.6817,
-        "edge_vs_minus_110_breakeven": 0.1996,
-        "edge_vs_devig_50": 0.1894,
-        "confidence_score": "69/100",
-        "playable_to_american_odds": -207,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "model_prob_over": 0.3411,
+        "model_prob_under": 0.6589,
+        "win_prob_on_lean": 0.6589,
+        "wilson_lower_90_on_lean": 0.6511,
+        "edge_vs_minus_110_breakeven": 0.1895,
+        "edge_vs_devig_50": 0.1589,
+        "confidence_score": "66/100",
+        "playable_to_american_odds": -181,
+        "market_over_american": -130,
+        "market_under_american": 100,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3273,
+        "recommended_kelly_units": 0.3108,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -38972,7 +39044,7 @@
         "team": "KC",
         "position": "S",
         "market": "Total Tackles Plus Assists (incl. overtime)",
-        "line": 5.5,
+        "line": 6.5,
         "open_line": 5.5,
         "post_sim_mean": 5.91,
         "post_sim_p50": 5.23,
@@ -38980,14 +39052,14 @@
         "post_sim_p25": 3.23,
         "post_sim_p75": 7.88,
         "model_lean": "UNDER",
-        "model_prob_over": 0.4832,
-        "model_prob_under": 0.5168,
-        "win_prob_on_lean": 0.5168,
-        "wilson_lower_90_on_lean": 0.5086,
+        "model_prob_over": 0.4229,
+        "model_prob_under": 0.5771,
+        "win_prob_on_lean": 0.5771,
+        "wilson_lower_90_on_lean": 0.569,
         "edge_vs_minus_110_breakeven": 0.0,
-        "edge_vs_devig_50": 0.0168,
-        "confidence_score": "52/100",
-        "playable_to_american_odds": -102,
+        "edge_vs_devig_50": 0.0771,
+        "confidence_score": "58/100",
+        "playable_to_american_odds": -128,
         "market_over_american": null,
         "market_under_american": null,
         "has_two_sided_price": false,
@@ -39038,7 +39110,7 @@
         "team": "KC",
         "position": "RB",
         "market": "Total Carries (incl. overtime)",
-        "line": 17.5,
+        "line": 16.5,
         "open_line": 16.5,
         "post_sim_mean": 3.68,
         "post_sim_p50": 2.35,
@@ -39054,8 +39126,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 100,
-        "market_under_american": -130,
+        "market_over_american": -135,
+        "market_under_american": 105,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -39151,7 +39223,7 @@
         "team": "KC",
         "position": "RB",
         "market": "Total Rushing Plus Receiving Yards (incl. overtime)",
-        "line": 105.5,
+        "line": 106.5,
         "open_line": 25.5,
         "post_sim_mean": 26.0,
         "post_sim_p50": 19.37,
@@ -39189,7 +39261,7 @@
         "team": "KC",
         "position": "RB",
         "market": "Total Rushing Yards (incl. overtime)",
-        "line": 73.5,
+        "line": 74.5,
         "open_line": 9.5,
         "post_sim_mean": 11.8,
         "post_sim_p50": 7.0,
@@ -39958,39 +40030,6 @@
     ],
     "top_15_ranked_prop_plays": [
       {
-        "athlete": "Michael Penix Jr.",
-        "team": "ATL",
-        "position": "QB",
-        "market": "Total Pass Completions (incl. overtime)",
-        "line": 20.5,
-        "open_line": 19.5,
-        "post_sim_mean": 16.14,
-        "post_sim_p50": 16.04,
-        "post_sim_std": 4.27,
-        "post_sim_p25": 12.58,
-        "post_sim_p75": 19.51,
-        "model_lean": "UNDER",
-        "model_prob_over": 0.3106,
-        "model_prob_under": 0.6894,
-        "win_prob_on_lean": 0.6894,
-        "wilson_lower_90_on_lean": 0.6817,
-        "edge_vs_minus_110_breakeven": 0.1996,
-        "edge_vs_devig_50": 0.1894,
-        "confidence_score": "69/100",
-        "playable_to_american_odds": -207,
-        "market_over_american": -120,
-        "market_under_american": -110,
-        "has_two_sided_price": true,
-        "is_decoy_trap": false,
-        "student_t_copula_df_nu": 4.5,
-        "afml_meta_label_kelly_multiplier": 0.82,
-        "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3273,
-        "decision": "PLAY",
-        "publishAllowed": true,
-        "gate_reason": "CLEARED_TWO_SIDED_GATE"
-      },
-      {
         "athlete": "Patrick Mahomes",
         "team": "KC",
         "position": "QB",
@@ -40019,6 +40058,39 @@
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
         "recommended_kelly_units": 0.1838,
+        "decision": "PLAY",
+        "publishAllowed": true,
+        "gate_reason": "CLEARED_TWO_SIDED_GATE"
+      },
+      {
+        "athlete": "Michael Penix Jr.",
+        "team": "ATL",
+        "position": "QB",
+        "market": "Total Pass Completions (incl. overtime)",
+        "line": 19.5,
+        "open_line": 19.5,
+        "post_sim_mean": 16.14,
+        "post_sim_p50": 16.04,
+        "post_sim_std": 4.27,
+        "post_sim_p25": 12.58,
+        "post_sim_p75": 19.51,
+        "model_lean": "UNDER",
+        "model_prob_over": 0.3411,
+        "model_prob_under": 0.6589,
+        "win_prob_on_lean": 0.6589,
+        "wilson_lower_90_on_lean": 0.6511,
+        "edge_vs_minus_110_breakeven": 0.1895,
+        "edge_vs_devig_50": 0.1589,
+        "confidence_score": "66/100",
+        "playable_to_american_odds": -181,
+        "market_over_american": -130,
+        "market_under_american": 100,
+        "has_two_sided_price": true,
+        "is_decoy_trap": false,
+        "student_t_copula_df_nu": 4.5,
+        "afml_meta_label_kelly_multiplier": 0.82,
+        "cqr_interval_width_mult": 1.08,
+        "recommended_kelly_units": 0.3108,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -40125,39 +40197,6 @@
     ],
     "top_15_ranked_prop_plays_at_reference_juice": [
       {
-        "athlete": "Michael Penix Jr.",
-        "team": "ATL",
-        "position": "QB",
-        "market": "Total Pass Completions (incl. overtime)",
-        "line": 20.5,
-        "open_line": 19.5,
-        "post_sim_mean": 16.14,
-        "post_sim_p50": 16.04,
-        "post_sim_std": 4.27,
-        "post_sim_p25": 12.58,
-        "post_sim_p75": 19.51,
-        "model_lean": "UNDER",
-        "model_prob_over": 0.3106,
-        "model_prob_under": 0.6894,
-        "win_prob_on_lean": 0.6894,
-        "wilson_lower_90_on_lean": 0.6817,
-        "edge_vs_minus_110_breakeven": 0.1996,
-        "edge_vs_devig_50": 0.1894,
-        "confidence_score": "69/100",
-        "playable_to_american_odds": -207,
-        "market_over_american": -120,
-        "market_under_american": -110,
-        "has_two_sided_price": true,
-        "is_decoy_trap": false,
-        "student_t_copula_df_nu": 4.5,
-        "afml_meta_label_kelly_multiplier": 0.82,
-        "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3273,
-        "decision": "PLAY",
-        "publishAllowed": true,
-        "gate_reason": "CLEARED_TWO_SIDED_GATE"
-      },
-      {
         "athlete": "Patrick Mahomes",
         "team": "KC",
         "position": "QB",
@@ -40186,6 +40225,39 @@
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
         "recommended_kelly_units": 0.1838,
+        "decision": "PLAY",
+        "publishAllowed": true,
+        "gate_reason": "CLEARED_TWO_SIDED_GATE"
+      },
+      {
+        "athlete": "Michael Penix Jr.",
+        "team": "ATL",
+        "position": "QB",
+        "market": "Total Pass Completions (incl. overtime)",
+        "line": 19.5,
+        "open_line": 19.5,
+        "post_sim_mean": 16.14,
+        "post_sim_p50": 16.04,
+        "post_sim_std": 4.27,
+        "post_sim_p25": 12.58,
+        "post_sim_p75": 19.51,
+        "model_lean": "UNDER",
+        "model_prob_over": 0.3411,
+        "model_prob_under": 0.6589,
+        "win_prob_on_lean": 0.6589,
+        "wilson_lower_90_on_lean": 0.6511,
+        "edge_vs_minus_110_breakeven": 0.1895,
+        "edge_vs_devig_50": 0.1589,
+        "confidence_score": "66/100",
+        "playable_to_american_odds": -181,
+        "market_over_american": -130,
+        "market_under_american": 100,
+        "has_two_sided_price": true,
+        "is_decoy_trap": false,
+        "student_t_copula_df_nu": 4.5,
+        "afml_meta_label_kelly_multiplier": 0.82,
+        "cqr_interval_width_mult": 1.08,
+        "recommended_kelly_units": 0.3108,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -40459,11 +40531,11 @@
         }
       }
     },
-    "stage5_receipt_sha256": "794958e0409f0e842d2351114d30a259f3e45b622da4190db89b411d53a3a8a9"
+    "stage5_receipt_sha256": "3b02c4c3e9c52e69c7f9552048ee2ba81989b8cbe1a7965418ad6515f75a0e1e"
   },
   "stage5_360_conjunction_gate_and_call_sheet": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "cd1058d212b2ab2f726dd478a4cd01d6eb0f6e5eeee5fcd9b6c04b01ba2f943d",
+    "parent_stage3_4_receipt_sha256": "207acf51b7a434614e25b0afe20a6f5a860986dfbb8968bdcb0dc2356e9631a9",
     "publishAllowed": true,
     "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
     "max_prop_win_prob": 0.7024,
@@ -41394,7 +41466,7 @@
         "team": "ATL",
         "position": "QB",
         "market": "Total Pass Completions (incl. overtime)",
-        "line": 20.5,
+        "line": 19.5,
         "open_line": 19.5,
         "post_sim_mean": 16.14,
         "post_sim_p50": 16.04,
@@ -41402,22 +41474,22 @@
         "post_sim_p25": 12.58,
         "post_sim_p75": 19.51,
         "model_lean": "UNDER",
-        "model_prob_over": 0.3106,
-        "model_prob_under": 0.6894,
-        "win_prob_on_lean": 0.6894,
-        "wilson_lower_90_on_lean": 0.6817,
-        "edge_vs_minus_110_breakeven": 0.1996,
-        "edge_vs_devig_50": 0.1894,
-        "confidence_score": "69/100",
-        "playable_to_american_odds": -207,
-        "market_over_american": -120,
-        "market_under_american": -110,
+        "model_prob_over": 0.3411,
+        "model_prob_under": 0.6589,
+        "win_prob_on_lean": 0.6589,
+        "wilson_lower_90_on_lean": 0.6511,
+        "edge_vs_minus_110_breakeven": 0.1895,
+        "edge_vs_devig_50": 0.1589,
+        "confidence_score": "66/100",
+        "playable_to_american_odds": -181,
+        "market_over_american": -130,
+        "market_under_american": 100,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "student_t_copula_df_nu": 4.5,
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3273,
+        "recommended_kelly_units": 0.3108,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -41702,7 +41774,7 @@
         "team": "KC",
         "position": "S",
         "market": "Total Tackles Plus Assists (incl. overtime)",
-        "line": 5.5,
+        "line": 6.5,
         "open_line": 5.5,
         "post_sim_mean": 5.91,
         "post_sim_p50": 5.23,
@@ -41710,14 +41782,14 @@
         "post_sim_p25": 3.23,
         "post_sim_p75": 7.88,
         "model_lean": "UNDER",
-        "model_prob_over": 0.4832,
-        "model_prob_under": 0.5168,
-        "win_prob_on_lean": 0.5168,
-        "wilson_lower_90_on_lean": 0.5086,
+        "model_prob_over": 0.4229,
+        "model_prob_under": 0.5771,
+        "win_prob_on_lean": 0.5771,
+        "wilson_lower_90_on_lean": 0.569,
         "edge_vs_minus_110_breakeven": 0.0,
-        "edge_vs_devig_50": 0.0168,
-        "confidence_score": "52/100",
-        "playable_to_american_odds": -102,
+        "edge_vs_devig_50": 0.0771,
+        "confidence_score": "58/100",
+        "playable_to_american_odds": -128,
         "market_over_american": null,
         "market_under_american": null,
         "has_two_sided_price": false,
@@ -41768,7 +41840,7 @@
         "team": "KC",
         "position": "RB",
         "market": "Total Carries (incl. overtime)",
-        "line": 17.5,
+        "line": 16.5,
         "open_line": 16.5,
         "post_sim_mean": 3.68,
         "post_sim_p50": 2.35,
@@ -41784,8 +41856,8 @@
         "edge_vs_devig_50": 0.0,
         "confidence_score": "0/100",
         "playable_to_american_odds": null,
-        "market_over_american": 100,
-        "market_under_american": -130,
+        "market_over_american": -135,
+        "market_under_american": 105,
         "has_two_sided_price": true,
         "is_decoy_trap": false,
         "sniper_gate": {
@@ -41881,7 +41953,7 @@
         "team": "KC",
         "position": "RB",
         "market": "Total Rushing Plus Receiving Yards (incl. overtime)",
-        "line": 105.5,
+        "line": 106.5,
         "open_line": 25.5,
         "post_sim_mean": 26.0,
         "post_sim_p50": 19.37,
@@ -41919,7 +41991,7 @@
         "team": "KC",
         "position": "RB",
         "market": "Total Rushing Yards (incl. overtime)",
-        "line": 73.5,
+        "line": 74.5,
         "open_line": 9.5,
         "post_sim_mean": 11.8,
         "post_sim_p50": 7.0,
@@ -42688,39 +42760,6 @@
     ],
     "top_15_ranked_prop_plays": [
       {
-        "athlete": "Michael Penix Jr.",
-        "team": "ATL",
-        "position": "QB",
-        "market": "Total Pass Completions (incl. overtime)",
-        "line": 20.5,
-        "open_line": 19.5,
-        "post_sim_mean": 16.14,
-        "post_sim_p50": 16.04,
-        "post_sim_std": 4.27,
-        "post_sim_p25": 12.58,
-        "post_sim_p75": 19.51,
-        "model_lean": "UNDER",
-        "model_prob_over": 0.3106,
-        "model_prob_under": 0.6894,
-        "win_prob_on_lean": 0.6894,
-        "wilson_lower_90_on_lean": 0.6817,
-        "edge_vs_minus_110_breakeven": 0.1996,
-        "edge_vs_devig_50": 0.1894,
-        "confidence_score": "69/100",
-        "playable_to_american_odds": -207,
-        "market_over_american": -120,
-        "market_under_american": -110,
-        "has_two_sided_price": true,
-        "is_decoy_trap": false,
-        "student_t_copula_df_nu": 4.5,
-        "afml_meta_label_kelly_multiplier": 0.82,
-        "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3273,
-        "decision": "PLAY",
-        "publishAllowed": true,
-        "gate_reason": "CLEARED_TWO_SIDED_GATE"
-      },
-      {
         "athlete": "Patrick Mahomes",
         "team": "KC",
         "position": "QB",
@@ -42749,6 +42788,39 @@
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
         "recommended_kelly_units": 0.1838,
+        "decision": "PLAY",
+        "publishAllowed": true,
+        "gate_reason": "CLEARED_TWO_SIDED_GATE"
+      },
+      {
+        "athlete": "Michael Penix Jr.",
+        "team": "ATL",
+        "position": "QB",
+        "market": "Total Pass Completions (incl. overtime)",
+        "line": 19.5,
+        "open_line": 19.5,
+        "post_sim_mean": 16.14,
+        "post_sim_p50": 16.04,
+        "post_sim_std": 4.27,
+        "post_sim_p25": 12.58,
+        "post_sim_p75": 19.51,
+        "model_lean": "UNDER",
+        "model_prob_over": 0.3411,
+        "model_prob_under": 0.6589,
+        "win_prob_on_lean": 0.6589,
+        "wilson_lower_90_on_lean": 0.6511,
+        "edge_vs_minus_110_breakeven": 0.1895,
+        "edge_vs_devig_50": 0.1589,
+        "confidence_score": "66/100",
+        "playable_to_american_odds": -181,
+        "market_over_american": -130,
+        "market_under_american": 100,
+        "has_two_sided_price": true,
+        "is_decoy_trap": false,
+        "student_t_copula_df_nu": 4.5,
+        "afml_meta_label_kelly_multiplier": 0.82,
+        "cqr_interval_width_mult": 1.08,
+        "recommended_kelly_units": 0.3108,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -42855,39 +42927,6 @@
     ],
     "top_15_ranked_prop_plays_at_reference_juice": [
       {
-        "athlete": "Michael Penix Jr.",
-        "team": "ATL",
-        "position": "QB",
-        "market": "Total Pass Completions (incl. overtime)",
-        "line": 20.5,
-        "open_line": 19.5,
-        "post_sim_mean": 16.14,
-        "post_sim_p50": 16.04,
-        "post_sim_std": 4.27,
-        "post_sim_p25": 12.58,
-        "post_sim_p75": 19.51,
-        "model_lean": "UNDER",
-        "model_prob_over": 0.3106,
-        "model_prob_under": 0.6894,
-        "win_prob_on_lean": 0.6894,
-        "wilson_lower_90_on_lean": 0.6817,
-        "edge_vs_minus_110_breakeven": 0.1996,
-        "edge_vs_devig_50": 0.1894,
-        "confidence_score": "69/100",
-        "playable_to_american_odds": -207,
-        "market_over_american": -120,
-        "market_under_american": -110,
-        "has_two_sided_price": true,
-        "is_decoy_trap": false,
-        "student_t_copula_df_nu": 4.5,
-        "afml_meta_label_kelly_multiplier": 0.82,
-        "cqr_interval_width_mult": 1.08,
-        "recommended_kelly_units": 0.3273,
-        "decision": "PLAY",
-        "publishAllowed": true,
-        "gate_reason": "CLEARED_TWO_SIDED_GATE"
-      },
-      {
         "athlete": "Patrick Mahomes",
         "team": "KC",
         "position": "QB",
@@ -42916,6 +42955,39 @@
         "afml_meta_label_kelly_multiplier": 0.82,
         "cqr_interval_width_mult": 1.08,
         "recommended_kelly_units": 0.1838,
+        "decision": "PLAY",
+        "publishAllowed": true,
+        "gate_reason": "CLEARED_TWO_SIDED_GATE"
+      },
+      {
+        "athlete": "Michael Penix Jr.",
+        "team": "ATL",
+        "position": "QB",
+        "market": "Total Pass Completions (incl. overtime)",
+        "line": 19.5,
+        "open_line": 19.5,
+        "post_sim_mean": 16.14,
+        "post_sim_p50": 16.04,
+        "post_sim_std": 4.27,
+        "post_sim_p25": 12.58,
+        "post_sim_p75": 19.51,
+        "model_lean": "UNDER",
+        "model_prob_over": 0.3411,
+        "model_prob_under": 0.6589,
+        "win_prob_on_lean": 0.6589,
+        "wilson_lower_90_on_lean": 0.6511,
+        "edge_vs_minus_110_breakeven": 0.1895,
+        "edge_vs_devig_50": 0.1589,
+        "confidence_score": "66/100",
+        "playable_to_american_odds": -181,
+        "market_over_american": -130,
+        "market_under_american": 100,
+        "has_two_sided_price": true,
+        "is_decoy_trap": false,
+        "student_t_copula_df_nu": 4.5,
+        "afml_meta_label_kelly_multiplier": 0.82,
+        "cqr_interval_width_mult": 1.08,
+        "recommended_kelly_units": 0.3108,
         "decision": "PLAY",
         "publishAllowed": true,
         "gate_reason": "CLEARED_TWO_SIDED_GATE"
@@ -43189,7 +43261,7 @@
         }
       }
     },
-    "stage5_receipt_sha256": "794958e0409f0e842d2351114d30a259f3e45b622da4190db89b411d53a3a8a9"
+    "stage5_receipt_sha256": "3b02c4c3e9c52e69c7f9552048ee2ba81989b8cbe1a7965418ad6515f75a0e1e"
   },
   "wave13_universal_phase_transition_navier_stokes_sheaf": {
     "status": "WAVE13_PROJECT_TREE_SHEAF_NAVIER_STOKES_PHASE_TRANSITION_ACTIVE",
@@ -43303,5 +43375,5 @@
     },
     "wave13_epa_signal_delta": -1.9e-05
   },
-  "master_bundle_sha256": "0599555b3587c9539a20361b18475a84909ae7db765d51791df2fd039d1c5e01"
+  "master_bundle_sha256": "9910a8bfecddda6b270d6ff3de2fe71b2458a54a9a5744840f7787471d38b8ee"
 }
