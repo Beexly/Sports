@@ -176,8 +176,8 @@ def test_week10_stage0_live_roster_config_fresh_on_2026_11_14() -> None:
     cfg = require_week(10, today=date(2026, 11, 14))
     assert cfg["week"] == 10
     assert cfg["as_of"] == "2026-11-14"
-  with pytest.raises(PreflightRosterGateError):
-      require_week(10, today=date(2026, 11, 19))
+    with pytest.raises(PreflightRosterGateError):
+        require_week(10, today=date(2026, 11, 19))
     excluded_names = {p["name"] for p in cfg["excluded_players"]}
     assert "TreVeyon Henderson" in excluded_names
     assert "Kenneth Walker III" in excluded_names
